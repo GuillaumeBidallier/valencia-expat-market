@@ -40,6 +40,9 @@ export default function Navbar() {
                 <Link href="/deposer-annonce">
                   <Button size="md">Déposer une annonce</Button>
                 </Link>
+                <button onClick={logout} className="text-sm text-gray-500 hover:text-navy font-medium transition-colors">
+                  Déconnexion
+                </button>
               </>
             ) : (
               <>

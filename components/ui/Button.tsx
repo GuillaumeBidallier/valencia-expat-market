@@ -10,7 +10,7 @@ export default function Button({ variant = 'primary', size = 'md', className, ch
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-colors cursor-pointer',
+        'inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
         {
           'bg-orange-primary text-white hover:bg-orange-dark': variant === 'primary',
           'border-2 border-orange-primary text-orange-primary hover:bg-orange-soft': variant === 'outline',

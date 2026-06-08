@@ -23,8 +23,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem('vem_user')
-    if (stored) setUser(JSON.parse(stored))
+    try {
+      const stored = localStorage.getItem('vem_user')
+      if (stored) setUser(JSON.parse(stored))
+    } catch {
+      localStorage.removeItem('vem_user')
+    }
   }, [])
 
   const login = (email: string, _password: string): boolean => {
