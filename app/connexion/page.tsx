@@ -53,7 +53,7 @@ export default function ConnexionPage() {
         </form>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          Pas encore de compte ? <Link href="/inscription" className="text-orange-primary hover:underline font-medium">S&apos;inscrire pour 20 €/an</Link>
+          Pas encore de compte ? <Link href="/inscription" className="text-orange-primary hover:underline font-medium">S&apos;inscrire gratuitement</Link>
         </p>
       </div>
     </div>

@@ -63,21 +63,16 @@ export default function MonComptePage() {
         <div className="lg:col-span-3 space-y-6">
           <h1 className="text-2xl font-bold text-navy">Mon compte</h1>
 
-          {/* Subscription */}
+          {/* Account status */}
           <div className="bg-white rounded-xl border border-gray-100 p-6">
-            <h2 className="font-semibold text-navy mb-4">Mon abonnement</h2>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">Statut :</span>
-                  <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">
-                    <CheckCircle size={12} /> Actif
-                  </span>
-                </div>
-                <p className="text-sm text-gray-500">Prochain renouvellement : <strong className="text-navy">{user.subscriptionRenewal}</strong></p>
-              </div>
-              <Button variant="outline" size="sm">Renouveler (20 €)</Button>
+            <h2 className="font-semibold text-navy mb-4">Mon compte</h2>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Statut :</span>
+              <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                <CheckCircle size={12} /> Actif — Gratuit
+              </span>
             </div>
+            <p className="text-sm text-gray-400 mt-2">Publiez autant d&apos;annonces que vous voulez, c&apos;est entièrement gratuit.</p>
           </div>
 
           {/* My listings */}

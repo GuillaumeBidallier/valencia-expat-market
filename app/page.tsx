@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button'
 import { mockListings } from '@/data/listings'
 
 const steps = [
-  { icon: Users, title: '1. Inscrivez-vous', desc: 'Créez votre compte et abonnez-vous pour 20 €/an.' },
+  { icon: Users, title: '1. Inscrivez-vous', desc: 'Créez votre compte gratuitement en 2 minutes.' },
   { icon: PenLine, title: '2. Publiez vos annonces', desc: "Déposez autant d'annonces que vous voulez, avec photos et description." },
   { icon: Phone, title: '3. Contactez facilement', desc: 'Contactez les vendeurs directement via WhatsApp ou par téléphone.' },
   { icon: Handshake, title: '4. Rencontrez-vous', desc: 'Les échanges et paiements se font uniquement en main propre.' },
@@ -29,8 +29,7 @@ export default function HomePage() {
                 <span className="text-orange-primary">une seconde vie</span>{' '}
                 à vos affaires entre expatriés à Valencia.
               </h1>
-              <p className="text-gray-500 text-lg mb-2">Le site de petites annonces des expatriés à Valencia.</p>
-              <p className="text-gray-500 text-sm mb-8">Annonces illimitées pour seulement <strong className="text-navy">20 €/an</strong>.</p>
+              <p className="text-gray-500 text-lg mb-8">Le site <strong className="text-navy">gratuit</strong> des petites annonces entre expatriés à Valencia.</p>
               <div className="flex flex-wrap gap-3">
                 <Link href="/annonces"><Button size="lg">Voir les annonces</Button></Link>
                 <Link href="/#comment-ca-marche"><Button size="lg" variant="outline">Comment ça marche ?</Button></Link>
@@ -38,8 +37,8 @@ export default function HomePage() {
             </div>
             <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-video lg:aspect-[4/3]">
               <Image
-                src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&h=600&fit=crop"
-                alt="Valencia City of Arts and Sciences"
+                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop"
+                alt="Valencia City of Arts and Sciences au coucher de soleil"
                 fill
                 className="object-cover"
                 unoptimized
@@ -109,8 +108,8 @@ export default function HomePage() {
       <section className="bg-orange-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h2 className="text-3xl font-bold text-white mb-3">Rejoignez la communauté Valencia Expat Market !</h2>
-          <p className="text-white/80 mb-8">Des centaines d&apos;expatriés nous font déjà confiance.</p>
-          <Link href="/inscription"><Button size="lg" className="bg-white text-orange-primary hover:bg-gray-100">S&apos;inscrire maintenant</Button></Link>
+          <p className="text-white/80 mb-8">Des centaines d&apos;expatriés nous font déjà confiance. C&apos;est gratuit.</p>
+          <Link href="/inscription"><Button size="lg" className="bg-white text-orange-primary hover:bg-gray-100">S&apos;inscrire gratuitement</Button></Link>
         </div>
       </section>
     </div>
