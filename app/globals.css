@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-orange-primary: #E8571A;
+  --color-orange-dark: #C4471A;
+  --color-orange-soft: #FDF5F0;
+  --color-navy: #1A1F36;
+  --color-whatsapp: #25D366;
+
+  --font-family-sans: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #1A1F36;
+}
