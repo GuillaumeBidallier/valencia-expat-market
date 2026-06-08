@@ -48,7 +48,7 @@ export default function Navbar() {
               <>
                 <Link href="/connexion" className="text-sm text-gray-600 hover:text-navy font-medium">Se connecter</Link>
                 <Link href="/inscription">
-                  <Button size="md">S&apos;inscrire</Button>
+                  <Button size="md" variant="secondary">S&apos;inscrire</Button>
                 </Link>
               </>
             )}

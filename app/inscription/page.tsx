@@ -43,7 +43,7 @@ export default function InscriptionPage() {
           <Input id="email" label="Adresse e-mail" type="email" placeholder="marie@exemple.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
           <Input id="password" label="Mot de passe" type="password" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
 
-          <Button type="submit" className="w-full" size="lg" disabled={loading}>
+          <Button type="submit" variant="secondary" className="w-full" size="lg" disabled={loading}>
             {loading ? 'Création du compte...' : 'Créer mon compte gratuitement'}
           </Button>
         </form>
