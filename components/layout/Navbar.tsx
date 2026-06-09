@@ -138,12 +138,6 @@ export default function Navbar() {
                   <Plus size={15} />
                   Déposer une annonce
                 </Link>
-                <button
-                  onClick={logout}
-                  className={`text-sm font-medium transition-colors ${transparent ? 'text-white/70 hover:text-white' : 'text-gray-400 hover:text-navy'}`}
-                >
-                  Déconnexion
-                </button>
               </>
             ) : (
               <>
@@ -202,7 +196,6 @@ export default function Navbar() {
             <>
               <Link href="/mon-compte" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>Mon compte</Link>
               <Link href="/deposer-annonce" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center">Déposer une annonce</Link>
-              <button onClick={() => { logout(); setMenuOpen(false) }} className="text-sm text-gray-400 text-left">Déconnexion</button>
             </>
           ) : (
             <>
