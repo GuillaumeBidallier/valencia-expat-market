@@ -1,14 +1,16 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Send, Plus, ArrowLeft } from 'lucide-react'
+import { Send, Plus, ArrowLeft, Check, CheckCheck } from 'lucide-react'
+import { getPusherClient } from '@/lib/pusher-client'
 
 type Message = {
   id: string
   body: string
   createdAt: string
   senderId: string
+  readAt: string | null
   sender: { id: string; name: string }
 }
 
@@ -51,16 +53,73 @@ export default function MessagesClient({ conversationId, conversations, listing,
   const [messages, setMessages] = useState(initialMessages)
   const [body, setBody] = useState('')
   const [sending, setSending] = useState(false)
+  const [otherTyping, setOtherTyping] = useState(false)
+  const [otherTypingName, setOtherTypingName] = useState('')
   const bottomRef = useRef<HTMLDivElement>(null)
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const typingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView()
-  }, [messages])
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, otherTyping])
+
+  // Pusher real-time
+  useEffect(() => {
+    const pusher = getPusherClient()
+    if (!pusher) return
+
+    const channel = pusher.subscribe(`conv-${conversationId}`)
+
+    channel.bind('new-message', (msg: Message) => {
+      setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
+      // Mark as read if the message is from the other person
+      if (msg.senderId !== currentUserId) {
+        fetch(`/api/messages/${conversationId}/read`, { method: 'POST' }).catch(() => {})
+      }
+    })
+
+    channel.bind('messages-read', ({ readAt }: { readAt: string }) => {
+      setMessages(prev => prev.map(m =>
+        m.senderId === currentUserId && !m.readAt ? { ...m, readAt } : m
+      ))
+    })
+
+    channel.bind('typing', ({ isTyping, userId, name }: { isTyping: boolean; userId: string; name: string }) => {
+      if (userId === currentUserId) return
+      setOtherTypingName(name)
+      setOtherTyping(isTyping)
+      if (isTyping) {
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
+        typingTimeoutRef.current = setTimeout(() => setOtherTyping(false), 3500)
+      }
+    })
+
+    return () => {
+      pusher.unsubscribe(`conv-${conversationId}`)
+    }
+  }, [conversationId, currentUserId])
+
+  const sendTypingSignal = useCallback((isTyping: boolean) => {
+    fetch(`/api/messages/${conversationId}/typing`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isTyping }),
+    }).catch(() => {})
+  }, [conversationId])
+
+  const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBody(e.target.value)
+    if (typingDebounceRef.current) clearTimeout(typingDebounceRef.current)
+    sendTypingSignal(true)
+    typingDebounceRef.current = setTimeout(() => sendTypingSignal(false), 2500)
+  }
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!body.trim() || sending) return
     setSending(true)
+    if (typingDebounceRef.current) clearTimeout(typingDebounceRef.current)
+    sendTypingSignal(false)
     const res = await fetch(`/api/messages/${conversationId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -68,7 +127,7 @@ export default function MessagesClient({ conversationId, conversations, listing,
     })
     if (res.ok) {
       const msg = await res.json()
-      setMessages(prev => [...prev, msg])
+      setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
       setBody('')
     }
     setSending(false)
@@ -82,6 +141,9 @@ export default function MessagesClient({ conversationId, conversations, listing,
     if (!last || last.date !== d) groups.push({ date: d, msgs: [msg] })
     else last.msgs.push(msg)
   }
+
+  // Last message I sent (for read receipt)
+  const lastSentId = [...messages].reverse().find(m => m.senderId === currentUserId)?.id
 
   const cover = listing.images[0]?.url
   const priceLabel = listing.price != null ? `${listing.price} €` : 'Gratuit'
@@ -174,8 +236,9 @@ export default function MessagesClient({ conversationId, conversations, listing,
               <div className="flex flex-col gap-1.5">
                 {group.msgs.map(msg => {
                   const isMe = msg.senderId === currentUserId
+                  const isLastSent = msg.id === lastSentId
                   return (
-                    <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                    <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                       <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl ${
                         isMe
                           ? 'bg-navy text-white rounded-br-sm'
@@ -186,12 +249,43 @@ export default function MessagesClient({ conversationId, conversations, listing,
                           {new Date(msg.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
+                      {/* Read receipt on last sent message */}
+                      {isMe && isLastSent && (
+                        <div className="flex items-center gap-1 mt-0.5 mr-1">
+                          {msg.readAt ? (
+                            <>
+                              <CheckCheck size={12} className="text-orange-primary" />
+                              <span className="text-[10px] text-orange-primary font-medium">Lu</span>
+                            </>
+                          ) : (
+                            <>
+                              <Check size={12} className="text-gray-400" />
+                              <span className="text-[10px] text-gray-400">Envoyé</span>
+                            </>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )
                 })}
               </div>
             </div>
           ))}
+
+          {/* Typing indicator */}
+          {otherTyping && (
+            <div className="flex items-center gap-2 mt-3">
+              <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-sm shadow-sm px-4 py-2.5">
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-gray-400 mr-1">{otherTypingName} écrit</span>
+                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+              </div>
+            </div>
+          )}
+
           <div ref={bottomRef} />
         </div>
 
@@ -206,7 +300,7 @@ export default function MessagesClient({ conversationId, conversations, listing,
             </button>
             <input
               value={body}
-              onChange={e => setBody(e.target.value)}
+              onChange={handleBodyChange}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(e as unknown as React.FormEvent) } }}
               placeholder="Écrivez votre message..."
               className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-orange-primary transition-all"

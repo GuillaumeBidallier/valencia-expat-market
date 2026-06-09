@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { pusherServer } from '@/lib/pusher'
 
 type Params = Promise<{ conversationId: string }>
 
@@ -77,5 +78,16 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
     include: { sender: { select: { id: true, name: true } } },
   })
 
-  return NextResponse.json(message, { status: 201 })
+  const payload = {
+    id: message.id,
+    body: message.body,
+    createdAt: message.createdAt.toISOString(),
+    readAt: message.readAt?.toISOString() ?? null,
+    senderId: message.senderId,
+    sender: message.sender,
+  }
+
+  await pusherServer?.trigger(`conv-${conversationId}`, 'new-message', payload)
+
+  return NextResponse.json(payload, { status: 201 })
 }

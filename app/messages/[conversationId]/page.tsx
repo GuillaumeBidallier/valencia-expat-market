@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { pusherServer } from '@/lib/pusher'
 import MessagesClient from './MessagesClient'
 
 type Props = { params: Promise<{ conversationId: string }> }
@@ -94,10 +95,16 @@ export default async function ConversationPage({ params }: Props) {
   const sellerId = listing.userId
   if (userId !== buyerId && userId !== sellerId) notFound()
 
-  await prisma.message.updateMany({
+  const readAt = new Date()
+  const updated = await prisma.message.updateMany({
     where: { listingId, receiverId: userId, readAt: null },
-    data: { readAt: new Date() },
+    data: { readAt },
   })
+  if (updated.count > 0) {
+    await pusherServer?.trigger(`conv-${conversationId}`, 'messages-read', {
+      readAt: readAt.toISOString(),
+    })
+  }
 
   return (
     <MessagesClient

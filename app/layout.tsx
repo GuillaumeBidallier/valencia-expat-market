@@ -5,7 +5,7 @@ import { SessionProvider } from 'next-auth/react'
 import { AuthProvider } from '@/context/AuthContext'
 import { ListingsProvider } from '@/context/ListingsContext'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
+import ConditionalFooter from '@/components/layout/ConditionalFooter'
 
 const inter = Inter({ subsets: ['latin'] })
 const nunito = Nunito({
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ListingsProvider>
               <Navbar />
               <main className="pt-16">{children}</main>
-              <Footer />
+              <ConditionalFooter />
             </ListingsProvider>
           </AuthProvider>
         </SessionProvider>
