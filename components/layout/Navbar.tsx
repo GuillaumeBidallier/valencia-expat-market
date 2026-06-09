@@ -15,11 +15,11 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-9 h-9 bg-orange-primary rounded-full flex items-center justify-center">
+            <div className="w-9 h-9 bg-blue-valencia rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-lg leading-none">V</span>
             </div>
             <div className="leading-tight">
-              <div className="text-orange-primary font-bold text-sm tracking-wider uppercase">Valencia</div>
+              <div className="text-blue-valencia font-bold text-sm tracking-wider uppercase">Valencia</div>
               <div className="text-navy font-bold text-sm tracking-wider uppercase">Expat Market</div>
             </div>
           </Link>
@@ -48,7 +48,7 @@ export default function Navbar() {
               <>
                 <Link href="/connexion" className="text-sm text-gray-600 hover:text-navy font-medium">Se connecter</Link>
                 <Link href="/inscription">
-                  <Button size="md" variant="secondary">S&apos;inscrire</Button>
+                  <Button size="md" variant="primary">S&apos;inscrire</Button>
                 </Link>
               </>
             )}

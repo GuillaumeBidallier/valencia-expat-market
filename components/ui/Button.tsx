@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'outline' | 'secondary' | 'whatsapp' | 'ghost'
+  variant?: 'primary' | 'outline' | 'secondary' | 'blue' | 'whatsapp' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
 }
 
@@ -16,7 +16,7 @@ export default function Button({ variant = 'primary', size = 'md', className, ch
         {
           'bg-orange-primary text-white hover:bg-orange-dark': variant === 'primary',
           'border-2 border-orange-primary text-orange-primary hover:bg-orange-soft': variant === 'outline',
-          'bg-violet-primary text-white hover:bg-violet-dark': variant === 'secondary',
+          'bg-blue-valencia text-white hover:bg-blue-dark': variant === 'secondary' || variant === 'blue',
           'bg-whatsapp text-white hover:bg-green-600': variant === 'whatsapp',
           'text-navy hover:bg-gray-100': variant === 'ghost',
         },
