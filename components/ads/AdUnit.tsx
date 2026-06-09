@@ -102,20 +102,20 @@ export default function AdUnit({ size = 'inline', seed = 0, className = '' }: Ad
 
   if (size === 'skyscraper') {
     return (
-      <div className={`w-36 flex flex-col gap-2 ${className}`}>
-        <div className="text-[10px] text-gray-400 text-center uppercase tracking-wide">Annonces</div>
+      <div className={`w-52 flex flex-col gap-3 ${className}`}>
+        <div className="text-[11px] text-gray-400 text-center uppercase tracking-wide font-medium">Annonces sponsorisées</div>
         {[ad, ad2, ad3, ad4].map((a, i) => (
-          <div key={i} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+          <div key={i} className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
             {/* Colored header */}
-            <div className="h-20 flex items-center justify-center text-4xl" style={{ backgroundColor: a.color + '15', borderBottom: `2px solid ${a.color}30` }}>
+            <div className="h-28 flex items-center justify-center text-5xl" style={{ backgroundColor: a.color + '15', borderBottom: `2px solid ${a.color}30` }}>
               {a.emoji}
             </div>
-            <div className="p-2.5">
-              <p className="font-bold text-navy text-[11px] leading-tight mb-1">{a.title}</p>
-              <p className="text-[10px] text-green-700 mb-1.5">{a.url}</p>
-              <p className="text-[10px] text-gray-500 leading-relaxed mb-2 line-clamp-3">{a.description}</p>
+            <div className="p-3">
+              <p className="font-bold text-navy text-xs leading-tight mb-1">{a.title}</p>
+              <p className="text-[11px] text-green-700 mb-2">{a.url}</p>
+              <p className="text-[11px] text-gray-500 leading-relaxed mb-3 line-clamp-3">{a.description}</p>
               <button
-                className="w-full text-white text-[10px] font-semibold px-2 py-1.5 rounded"
+                className="w-full text-white text-xs font-semibold px-2 py-2 rounded-lg"
                 style={{ backgroundColor: a.color }}
               >
                 {a.cta}
@@ -123,7 +123,7 @@ export default function AdUnit({ size = 'inline', seed = 0, className = '' }: Ad
             </div>
           </div>
         ))}
-        <div className="text-[9px] text-gray-300 text-center">Google Ads</div>
+        <div className="text-[10px] text-gray-300 text-center">Google Ads</div>
       </div>
     )
   }
