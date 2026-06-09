@@ -126,17 +126,18 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <Link
-                  href="/mon-compte"
-                  className={`text-sm font-medium transition-colors ${transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'}`}
-                >
-                  {user?.name ?? 'Mon compte'}
-                </Link>
-                <Link
                   href="/deposer-annonce"
                   className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
                   <Plus size={15} />
                   Déposer une annonce
+                </Link>
+                <Link
+                  href="/mon-compte"
+                  className="w-9 h-9 rounded-full bg-indigo-primary flex items-center justify-center text-white font-bold text-sm hover:bg-indigo-dark transition-colors shrink-0"
+                  title={user?.name ?? 'Mon compte'}
+                >
+                  {(user?.name ?? 'M').charAt(0).toUpperCase()}
                 </Link>
               </>
             ) : (
