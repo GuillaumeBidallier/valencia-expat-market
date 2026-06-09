@@ -2,8 +2,9 @@ import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: NextRequest) {
-  const { email, password } = await req.json()
+export async function GET(req: NextRequest) {
+  const email = req.nextUrl.searchParams.get('email') ?? 'demo@vendo.es'
+  const password = req.nextUrl.searchParams.get('password') ?? 'demo1234'
   try {
     const user = await prisma.user.findUnique({ where: { email } })
     if (!user) return NextResponse.json({ result: 'user-not-found', email })
