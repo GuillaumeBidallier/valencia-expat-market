@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Search, MapPin, Shield, Users, Tag, Home, Briefcase, Car, Sofa, Smartphone, PawPrint, Wrench, Globe } from 'lucide-react'
 import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
+import VendoLogo from '@/components/layout/VendoLogo'
 import { mockListings } from '@/data/listings'
 
 const categoryItems = [
@@ -59,20 +60,14 @@ export default function HomePage() {
         </div>
 
         {/* Hero content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-14 pb-28 sm:pt-20 sm:pb-32">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-12 pb-28 sm:pt-16 sm:pb-32">
           <div className="max-w-xl">
-            {/* Logo / Brand */}
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-orange-primary rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-xl">V</span>
-              </div>
-              <div className="leading-tight">
-                <div className="text-white font-black text-2xl tracking-tight">VALENCIA</div>
-                <div className="text-orange-primary font-bold text-sm tracking-widest uppercase">Expat Market</div>
-              </div>
+            {/* Vendo logo — large, light theme */}
+            <div className="mb-6">
+              <VendoLogo size="xl" theme="light" />
             </div>
 
-            <h1 className="text-4xl sm:text-5xl font-black text-white leading-tight mb-4">
+            <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-4">
               Le site gratuit des<br />
               petites annonces entre<br />
               <span className="text-orange-primary">expatriés.</span>
@@ -112,6 +107,16 @@ export default function HomePage() {
           </Link>
         </div>
       </div>
+
+      {/* ===== CATEGORIES + ANNONCES + SKYSCRAPERS ===== */}
+      <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 flex gap-4 items-start">
+
+        {/* Left skyscraper */}
+        <div className="hidden xl:block shrink-0 sticky top-20 pt-10">
+          <AdUnit size="skyscraper" seed={0} />
+        </div>
+
+        <div className="flex-1 min-w-0">
 
       {/* ===== CATEGORIES ===== */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
@@ -163,6 +168,15 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+        </div>{/* end flex-1 */}
+
+        {/* Right skyscraper */}
+        <div className="hidden xl:block shrink-0 sticky top-20 pt-10">
+          <AdUnit size="skyscraper" seed={4} />
+        </div>
+
+      </div>{/* end skyscraper wrapper */}
 
       {/* ===== TRUST BAR ===== */}
       <section className="bg-hero-dark">

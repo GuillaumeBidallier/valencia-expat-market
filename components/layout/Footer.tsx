@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import VendoLogo from '@/components/layout/VendoLogo'
 
 export default function Footer() {
   return (
@@ -7,16 +8,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Col 1 - Brand */}
           <div>
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 bg-orange-primary rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">V</span>
-              </div>
-              <div className="leading-tight">
-                <div className="text-orange-primary font-bold text-sm tracking-wider uppercase">Valencia</div>
-                <div className="text-white font-bold text-sm tracking-wider uppercase">Expat Market</div>
-              </div>
+            <div className="mb-3">
+              <VendoLogo size="md" theme="light" />
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed">Le site de petites annonces des expatriés à Valencia.</p>
+            <p className="text-gray-400 text-sm leading-relaxed mt-2">Le site gratuit des petites annonces entre expatriés à Valencia.</p>
             <div className="flex items-center gap-3 mt-4">
               {/* Facebook */}
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
