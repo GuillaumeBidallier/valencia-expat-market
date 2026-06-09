@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import { SlidersHorizontal, X } from 'lucide-react'
 import ListingRow from '@/components/listings/ListingRow'
 import SearchBar from '@/components/listings/SearchBar'
+import AdUnit from '@/components/ads/AdUnit'
 import { useListings } from '@/context/ListingsContext'
 import { categories, neighborhoods } from '@/lib/categories'
 
@@ -122,6 +123,10 @@ function AnnoncesContent() {
                   <option value="price_desc">Prix décroissant</option>
                 </select>
               </div>
+
+              {/* Sidebar ad */}
+              <AdUnit size="rectangle" seed={2} className="mt-2" />
+              <AdUnit size="rectangle" seed={5} className="mt-2" />
             </div>
           </aside>
 
@@ -171,12 +176,18 @@ function AnnoncesContent() {
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                {filtered.map(listing => (
-                  <ListingRow key={listing.id} listing={listing} />
+                {filtered.map((listing, i) => (
+                  <>
+                    <ListingRow key={listing.id} listing={listing} />
+                    {(i + 1) % 6 === 0 && (
+                      <AdUnit key={`ad-${i}`} size="banner" seed={i} />
+                    )}
+                  </>
                 ))}
               </div>
             )}
           </div>
+
         </div>
       </div>
     </div>

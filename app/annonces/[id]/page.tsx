@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import AdUnit from '@/components/ads/AdUnit'
 import { notFound } from 'next/navigation'
 import { MapPin, Calendar, ChevronRight, Phone, Flag, ShieldCheck } from 'lucide-react'
 import { useListings } from '@/context/ListingsContext'
@@ -75,7 +76,7 @@ export default function ListingDetailPage() {
           </div>
         </div>
 
-        {/* Right: Contact + security */}
+        {/* Right: Contact + security + ads */}
         <div className="flex flex-col gap-4">
           <div className="bg-white rounded-xl border border-gray-100 p-5 sticky top-20">
             <h2 className="font-semibold text-navy mb-1">Contacter le vendeur</h2>
@@ -113,8 +114,15 @@ export default function ListingDetailPage() {
               <Flag size={12} /> Signaler cette annonce
             </button>
           </div>
+
+          {/* Ads in sidebar */}
+          <AdUnit size="rectangle" seed={1} />
+          <AdUnit size="rectangle" seed={3} />
         </div>
       </div>
+
+      {/* Bottom ad banner */}
+      <AdUnit size="inline" seed={6} className="mt-6" />
 
       {/* Report modal */}
       {reportOpen && (

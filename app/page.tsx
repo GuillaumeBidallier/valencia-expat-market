@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Search, Plus } from 'lucide-react'
 import ListingRow from '@/components/listings/ListingRow'
+import AdUnit from '@/components/ads/AdUnit'
 import { mockListings } from '@/data/listings'
 import { categories } from '@/lib/categories'
 
@@ -56,10 +57,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Ad banner — top of page, high visibility */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-3">
+        <AdUnit size="banner" seed={0} />
+      </div>
+
       {/* Categories */}
-      <section className="bg-white border-b border-gray-200">
+      <section className="bg-white border-b border-gray-200 mt-3">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+          <div className="flex gap-2 overflow-x-auto pb-1">
             {categories.map(cat => (
               <Link
                 key={cat.slug}
@@ -87,12 +93,21 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          {recent.map(listing => (
-            <ListingRow key={listing.id} listing={listing} />
+          {recent.map((listing, i) => (
+            <>
+              <ListingRow key={listing.id} listing={listing} />
+              {/* Ad after every 5th listing */}
+              {(i + 1) % 5 === 0 && i < recent.length - 1 && (
+                <AdUnit key={`ad-${i}`} size="inline" seed={Math.floor(i / 5) * 2} />
+              )}
+            </>
           ))}
         </div>
 
-        <div className="text-center mt-6">
+        {/* Ad before "see all" button */}
+        <AdUnit size="inline" seed={4} className="mt-4" />
+
+        <div className="text-center mt-4">
           <Link
             href="/annonces"
             className="inline-flex items-center gap-2 border-2 border-blue-valencia text-blue-valencia px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-blue-soft transition-colors"
