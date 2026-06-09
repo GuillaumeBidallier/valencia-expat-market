@@ -17,11 +17,11 @@ export default function ConnexionPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    const ok = await login(form.email, form.password)
-    if (ok) {
+    const result = await login(form.email, form.password)
+    if (result === true) {
       window.location.href = '/'
     } else {
-      setError('Email ou mot de passe incorrect.')
+      setError(typeof result === 'string' ? result : 'Email ou mot de passe incorrect.')
     }
     setLoading(false)
   }

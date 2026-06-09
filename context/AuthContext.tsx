@@ -7,7 +7,7 @@ import { User } from '@/types'
 interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
-  login: (email: string, password: string) => Promise<boolean>
+  login: (email: string, password: string) => Promise<boolean | string>
   logout: () => void
 }
 
@@ -26,9 +26,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     : null
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    const { error } = await loginAction(email, password)
-    return !error
+  const login = async (email: string, password: string): Promise<boolean | string> => {
+    const { error, debug } = await loginAction(email, password)
+    if (!error) return true
+    return debug ? `${error} [${debug}]` : error
   }
 
   const logout = () => signOut({ callbackUrl: '/' })
