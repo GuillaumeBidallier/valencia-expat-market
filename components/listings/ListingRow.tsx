@@ -19,8 +19,8 @@ export default function ListingRow({ listing, distanceKm }: { listing: Listing; 
       href={`/annonces/${listing.id}`}
       className="flex gap-4 bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-valencia hover:shadow-md transition-all"
     >
-      {/* Image — plus grande */}
-      <div className="relative w-44 h-36 sm:w-56 sm:h-40 shrink-0 rounded-lg overflow-hidden bg-gray-100">
+      {/* Image */}
+      <div className="relative w-28 h-24 sm:w-44 sm:h-36 md:w-56 md:h-40 shrink-0 rounded-lg overflow-hidden bg-gray-100">
         <Image
           src={listing.images[0]?.url ?? ''}
           alt={listing.title}
@@ -31,35 +31,35 @@ export default function ListingRow({ listing, distanceKm }: { listing: Listing; 
       </div>
 
       {/* Content */}
-      <div className="flex flex-col justify-between flex-1 min-w-0 py-1">
+      <div className="flex flex-col justify-between flex-1 min-w-0 py-0.5">
         <div>
-          <h3 className="font-semibold text-navy text-base sm:text-lg line-clamp-2 leading-snug mb-2">
+          <h3 className="font-semibold text-navy text-sm sm:text-base md:text-lg line-clamp-2 leading-snug mb-1 sm:mb-2">
             {listing.title}
           </h3>
           <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed hidden sm:block">
             {listing.description.slice(0, 130)}...
           </p>
         </div>
-        <div className="flex items-end justify-between gap-2 mt-3">
-          <div className="font-bold text-navy text-xl">
+        <div className="flex items-end justify-between gap-1 sm:gap-2 mt-2 sm:mt-3">
+          <div className="font-bold text-navy text-base sm:text-xl shrink-0">
             {listing.price !== null
               ? `${listing.price} €`
-              : <span className="text-green-600 text-lg">Gratuit</span>
+              : <span className="text-green-600 text-sm sm:text-lg">Gratuit</span>
             }
           </div>
-          <div className="flex flex-col items-end gap-1 text-right shrink-0">
-            <div className="flex items-center gap-1 text-gray-400 text-sm">
-              <MapPin size={12} />
-              <span>{listing.neighborhood}</span>
+          <div className="flex flex-col items-end gap-0.5 text-right min-w-0">
+            <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm">
+              <MapPin size={11} className="shrink-0" />
+              <span className="truncate max-w-[90px] sm:max-w-none">{listing.neighborhood}</span>
             </div>
             {distanceKm !== undefined && (
               <div className="flex items-center gap-1 text-xs text-blue-500 font-medium">
-                <Navigation size={11} />
+                <Navigation size={11} className="shrink-0" />
                 <span>{distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m` : `${distanceKm.toFixed(1)} km`}</span>
               </div>
             )}
-            <div className="flex items-center gap-1 text-gray-400 text-sm">
-              <Clock size={12} />
+            <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm">
+              <Clock size={11} className="shrink-0" />
               <span>{timeAgo(listing.publishedAt)}</span>
             </div>
           </div>

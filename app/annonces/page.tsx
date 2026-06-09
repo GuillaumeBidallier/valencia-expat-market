@@ -150,7 +150,7 @@ async function AnnoncesContent({ searchParams }: Props) {
       </div>
 
       <div className="max-w-screen-2xl mx-auto px-3 lg:px-6 py-5">
-        <div className="flex gap-4 items-start">
+        <div className="flex flex-col lg:flex-row gap-4 items-start">
 
           <Suspense fallback={null}>
             <AnnoncesFilters totalCount={displayTotal} />
