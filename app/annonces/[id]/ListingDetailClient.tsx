@@ -7,10 +7,11 @@ import AdUnit from '@/components/ads/AdUnit'
 import { MapPin, Calendar, ChevronRight, Phone, Flag, ShieldCheck, MessageSquare, X } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
+import FavoriteButton from '@/components/listings/FavoriteButton'
 import { Listing } from '@/types'
 import { useAuth } from '@/context/AuthContext'
 
-export default function ListingDetailClient({ listing }: { listing: Listing }) {
+export default function ListingDetailClient({ listing, isFavorited }: { listing: Listing; isFavorited?: boolean }) {
   const { isAuthenticated, user } = useAuth()
   const router = useRouter()
   const [activeImg, setActiveImg] = useState(0)
@@ -69,6 +70,12 @@ export default function ListingDetailClient({ listing }: { listing: Listing }) {
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm">Pas de photo</div>
             )}
+            <FavoriteButton
+              listingId={listing.id}
+              initialFavorited={isFavorited}
+              iconSize={16}
+              className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:scale-110"
+            />
           </div>
           {/* Thumbnails */}
           {listing.images.length > 1 && (
@@ -141,6 +148,19 @@ export default function ListingDetailClient({ listing }: { listing: Listing }) {
                   </>
                 )}
               </>
+            )}
+
+            {/* Save to favorites */}
+            {!isOwner && (
+              <div className="mt-3 flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 hover:border-red-300 transition-colors">
+                <FavoriteButton
+                  listingId={listing.id}
+                  initialFavorited={isFavorited}
+                  iconSize={15}
+                  className="shrink-0"
+                />
+                <span className="text-sm text-gray-500 select-none">Sauvegarder l&apos;annonce</span>
+              </div>
             )}
 
             {/* Security notice */}

@@ -1,15 +1,17 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Heart, MapPin } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { Listing } from '@/types'
+import FavoriteButton from './FavoriteButton'
 
 interface ListingCardProps {
   listing: Listing
   badge?: 'une' | 'nouveau'
+  isFavorited?: boolean
 }
 
-export default function ListingCard({ listing, badge }: ListingCardProps) {
+export default function ListingCard({ listing, badge, isFavorited }: ListingCardProps) {
   return (
     <Link href={`/annonces/${listing.id}`} className="group bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg hover:border-indigo-primary/30 transition-all duration-200 flex flex-col">
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
@@ -25,12 +27,12 @@ export default function ListingCard({ listing, badge }: ListingCardProps) {
             {badge === 'une' ? 'À la une' : 'Nouveau'}
           </div>
         )}
-        <button
-          className="absolute top-2.5 right-2.5 w-7 h-7 bg-white/90 rounded-full flex items-center justify-center shadow hover:text-orange-primary transition-colors"
-          onClick={e => e.preventDefault()}
-        >
-          <Heart size={13} className="text-gray-400" />
-        </button>
+        <FavoriteButton
+          listingId={listing.id}
+          initialFavorited={isFavorited}
+          iconSize={13}
+          className="absolute top-2.5 right-2.5 w-7 h-7 bg-white/90 rounded-full shadow hover:scale-110"
+        />
       </div>
 
       <div className="p-3.5 flex flex-col gap-1 flex-1">
