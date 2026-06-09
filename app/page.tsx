@@ -1,8 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, MapPin, Shield, Users, Tag, Home, Briefcase, Car, Sofa, Smartphone, PawPrint, Wrench, Globe } from 'lucide-react'
+import { Shield, Users, Tag, Home, Briefcase, Car, Sofa, Smartphone, PawPrint, Wrench, Globe } from 'lucide-react'
 import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
+import SearchWidget from '@/components/listings/SearchWidget'
+import PromoBanner from '@/components/home/PromoBanner'
 import { mockListings } from '@/data/listings'
 
 const categoryItems = [
@@ -54,48 +56,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== FLOATING SEARCH BAR ===== */}
-      <div className="-mt-16 relative z-20 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="rounded-2xl shadow-2xl overflow-hidden">
-          {/* Location banner */}
-          <div className="bg-hero-dark px-4 py-2.5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin size={14} className="text-orange-primary shrink-0" />
-              <span className="text-white text-sm font-semibold">Tout l&apos;Espagne</span>
-            </div>
-            <Link
-              href="/deposer-annonce"
-              className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
-            >
-              <Tag size={13} />
-              Déposer une annonce
-            </Link>
-          </div>
-          {/* Search row */}
-          <div className="bg-white p-2 sm:p-3 flex gap-2">
-            <div className="flex-1 flex items-center gap-2 bg-gray-50 rounded-xl px-4">
-              <Search size={16} className="text-gray-400 shrink-0" />
-              <input
-                type="text"
-                placeholder="Que recherchez-vous ?"
-                className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none"
-              />
-            </div>
-            <select className="px-3 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white hidden sm:block min-w-[160px]">
-              <option value="">Toutes les catégories</option>
-              {categoryItems.map(c => (
-                <option key={c.slug} value={c.slug}>{c.label}</option>
-              ))}
-            </select>
-            <Link
-              href="/annonces"
-              className="flex items-center gap-2 bg-orange-primary text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap"
-            >
-              <Search size={16} />
-              <span className="hidden sm:inline">Rechercher</span>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <SearchWidget categoryItems={categoryItems.map(c => ({ label: c.label, slug: c.slug }))} />
 
       {/* ===== CATEGORIES + ANNONCES + SKYSCRAPERS ===== */}
       <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 flex gap-4 items-start">
@@ -122,6 +83,9 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ===== PROMO BANNER ===== */}
+      <PromoBanner />
 
       {/* ===== DERNIÈRES ANNONCES ===== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
