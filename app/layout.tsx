@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Nunito } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['800', '900'],
+  variable: '--font-nunito',
+})
 import { AuthProvider } from '@/context/AuthContext'
 import { ListingsProvider } from '@/context/ListingsContext'
 import Navbar from '@/components/layout/Navbar'
@@ -16,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${nunito.variable}`}>
         <AuthProvider>
           <ListingsProvider>
             <Navbar />
