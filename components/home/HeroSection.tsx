@@ -1,9 +1,9 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { MapPin, Search, ChevronDown, ShieldCheck } from 'lucide-react'
+import { MapPin, ChevronDown, ShieldCheck } from 'lucide-react'
 import GeoModal, { GeoState } from '@/components/listings/GeoModal'
+import SearchWidget from '@/components/listings/SearchWidget'
 
 interface CategoryItem {
   label: string
@@ -61,60 +61,8 @@ export default function HeroSection({ categoryItems }: { categoryItems: Category
         </div>
       </section>
 
-      {/* Floating search bar */}
-      <div className="-mt-16 relative z-20 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="bg-white rounded-2xl shadow-2xl p-3">
-          {/* Mobile layout */}
-          <div className="flex flex-col gap-2 sm:hidden">
-            <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-4">
-              <Search size={16} className="text-gray-400 shrink-0" />
-              <input
-                type="text"
-                placeholder="Que recherchez-vous ?"
-                className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none"
-              />
-            </div>
-            <select className="flex-1 px-3 py-2.5 text-xs text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white cursor-pointer">
-              <option value="">Toutes les catégories</option>
-              {categoryItems.map(c => (
-                <option key={c.slug} value={c.slug}>{c.label}</option>
-              ))}
-            </select>
-            <Link
-              href="/annonces"
-              className="flex items-center justify-center gap-2 bg-orange-primary text-white py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors"
-            >
-              <Search size={16} />
-              Rechercher
-            </Link>
-          </div>
-
-          {/* Desktop layout */}
-          <div className="hidden sm:flex gap-2">
-            <div className="flex-1 flex items-center gap-2 bg-gray-50 rounded-xl px-4">
-              <Search size={16} className="text-gray-400 shrink-0" />
-              <input
-                type="text"
-                placeholder="Que recherchez-vous ?"
-                className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none min-w-0"
-              />
-            </div>
-            <select className="px-4 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white cursor-pointer hover:border-indigo-primary transition-colors min-w-[170px]">
-              <option value="">Toutes les catégories</option>
-              {categoryItems.map(c => (
-                <option key={c.slug} value={c.slug}>{c.label}</option>
-              ))}
-            </select>
-            <Link
-              href="/annonces"
-              className="flex items-center gap-2 bg-orange-primary text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap shrink-0"
-            >
-              <Search size={16} />
-              Rechercher
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* Floating search bar — reuse SearchWidget as-is */}
+      <SearchWidget categoryItems={categoryItems} geo={geo} onGeoOpen={() => setGeoModalOpen(true)} />
 
       <GeoModal
         isOpen={geoModalOpen}
