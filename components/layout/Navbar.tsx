@@ -77,7 +77,7 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
 }
 
 export default function Navbar() {
-  const { isAuthenticated, logout } = useAuth()
+  const { isAuthenticated, user, logout } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
@@ -129,7 +129,7 @@ export default function Navbar() {
                   href="/mon-compte"
                   className={`text-sm font-medium transition-colors ${transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'}`}
                 >
-                  Mon compte
+                  {user?.name ?? 'Mon compte'}
                 </Link>
                 <Link
                   href="/deposer-annonce"

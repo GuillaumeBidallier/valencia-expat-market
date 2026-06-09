@@ -13,7 +13,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   const user: User | null = session?.user
     ? {
@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => signOut({ callbackUrl: '/' })
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!session, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: status === 'authenticated', login, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -19,8 +19,7 @@ export default function ConnexionPage() {
     setError('')
     const ok = await login(form.email, form.password)
     if (ok) {
-      router.push('/')
-      router.refresh()
+      window.location.href = '/'
     } else {
       setError('Email ou mot de passe incorrect.')
     }
