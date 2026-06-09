@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { Menu, X, ChevronDown } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
 
@@ -79,6 +80,8 @@ export default function Navbar() {
   const { isAuthenticated, logout } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+  const isHome = pathname === '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -87,7 +90,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const transparent = !scrolled && !menuOpen
+  const transparent = isHome && !scrolled && !menuOpen
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
