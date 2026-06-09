@@ -167,13 +167,21 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className={`md:hidden p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
-            onClick={() => setMenuOpen(o => !o)}
-          >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile : Déposer + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <Link
+              href="/deposer-annonce"
+              className="bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
+            >
+              + Déposer
+            </Link>
+            <button
+              className={`p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
+              onClick={() => setMenuOpen(o => !o)}
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
