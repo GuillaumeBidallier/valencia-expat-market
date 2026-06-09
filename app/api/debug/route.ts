@@ -2,16 +2,23 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function GET() {
-  const urlPreview = process.env.DATABASE_URL
-    ? process.env.DATABASE_URL.replace(/:([^:@]+)@/, ':***@').substring(0, 80)
-    : 'NOT SET'
+  const raw = process.env.DATABASE_URL ?? ''
+  let host = '', database = '', params = ''
+  try {
+    const u = new URL(raw)
+    host = u.hostname
+    database = u.pathname.replace(/^\//, '') || '(empty!)'
+    params = u.search
+  } catch {
+    host = 'parse error'
+  }
 
   try {
     const count = await prisma.listing.count()
-    return NextResponse.json({ ok: true, count, url: urlPreview })
+    return NextResponse.json({ ok: true, count, host, database })
   } catch (e) {
     return NextResponse.json(
-      { ok: false, error: String(e), url: urlPreview },
+      { ok: false, error: String(e), host, database, params },
       { status: 500 },
     )
   }

@@ -4,7 +4,12 @@ import { PrismaNeon } from '@prisma/adapter-neon'
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
 function createClient() {
-  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! })
+  const raw = process.env.DATABASE_URL!
+  // Strip pgbouncer param — not needed with @neondatabase/serverless HTTP driver
+  const url = new URL(raw)
+  url.searchParams.delete('pgbouncer')
+  const connectionString = url.toString()
+  const adapter = new PrismaNeon({ connectionString })
   return new PrismaClient({ adapter })
 }
 
