@@ -5,7 +5,7 @@ import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
 import HeroSection from '@/components/home/HeroSection'
 import PromoBanner from '@/components/home/PromoBanner'
-import { mockListings } from '@/data/listings'
+import { prisma } from '@/lib/prisma'
 
 const categoryItems = [
   { icon: Home, label: 'Immobilier', slug: 'meubles' },
@@ -24,8 +24,20 @@ const trustItems = [
   { icon: Users, title: 'Communauté', desc: "Une communauté d'expatriés à travers toute l'Espagne" },
 ]
 
-export default function HomePage() {
-  const featured = mockListings.slice(0, 8)
+export default async function HomePage() {
+  const rows = await prisma.listing.findMany({
+    where: { status: 'ACTIVE' },
+    include: { images: { take: 1, orderBy: { order: 'asc' } } },
+    orderBy: [{ featuredAt: 'desc' }, { publishedAt: 'desc' }],
+    take: 8,
+  })
+  const featured = rows.map(l => ({
+    ...l,
+    boostExpiresAt: l.boostExpiresAt?.toISOString() ?? null,
+    featuredAt: l.featuredAt?.toISOString() ?? null,
+    publishedAt: l.publishedAt.toISOString(),
+    updatedAt: l.updatedAt.toISOString(),
+  }))
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -91,7 +103,7 @@ export default function HomePage() {
             href="/annonces"
             className="inline-flex items-center gap-2 bg-indigo-primary text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-indigo-dark transition-colors"
           >
-            Voir toutes les annonces ({mockListings.length})
+            Voir toutes les annonces
           </Link>
         </div>
       </section>
