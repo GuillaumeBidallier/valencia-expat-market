@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useContext, ReactNode } from 'react'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
+import { loginAction } from '@/app/actions/login'
 import { User } from '@/types'
 
 interface AuthContextType {
@@ -26,8 +27,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     : null
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    const result = await signIn('credentials', { email, password, redirect: false })
-    return result?.ok ?? false
+    const { error } = await loginAction(email, password)
+    return !error
   }
 
   const logout = () => signOut({ callbackUrl: '/' })
