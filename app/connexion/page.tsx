@@ -20,6 +20,7 @@ export default function ConnexionPage() {
     const ok = await login(form.email, form.password)
     if (ok) {
       router.push('/')
+      router.refresh()
     } else {
       setError('Email ou mot de passe incorrect.')
     }
@@ -40,12 +41,12 @@ export default function ConnexionPage() {
         </div>
 
         <h1 className="text-xl font-bold text-navy mb-1 text-center">Se connecter</h1>
-        <p className="text-sm text-gray-400 mb-6 text-center">Compte démo : <strong>demo@valenciaexpat.com</strong> / <strong>demo1234</strong></p>
+        <p className="text-sm text-gray-400 mb-6 text-center">Compte démo : <strong>demo@vendo.es</strong> / <strong>demo1234</strong></p>
 
         {error && <div className="bg-red-50 text-red-600 text-sm rounded-lg px-4 py-2.5 mb-4">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input id="email" label="Adresse e-mail" type="email" placeholder="demo@valenciaexpat.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
+          <Input id="email" label="Adresse e-mail" type="email" placeholder="demo@vendo.es" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
           <Input id="password" label="Mot de passe" type="password" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
           <div className="text-right">
             <a href="#" className="text-xs text-orange-primary hover:underline">Mot de passe oublié ?</a>
