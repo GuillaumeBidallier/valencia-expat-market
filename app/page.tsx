@@ -49,38 +49,51 @@ export default function HomePage() {
               petites annonces entre<br />
               <span className="text-orange-primary">expatriés.</span>
             </h1>
-
-            <div className="flex items-center gap-1.5 text-white/80 text-sm">
-              <MapPin size={14} className="text-orange-primary" />
-              <span>Tout Valencia &amp; alentours</span>
-            </div>
           </div>
         </div>
       </section>
 
       {/* ===== FLOATING SEARCH BAR ===== */}
-      <div className="-mt-14 relative z-20 max-w-3xl mx-auto px-4 sm:px-6">
-        <div className="bg-white rounded-2xl shadow-2xl p-2 sm:p-3 flex gap-2">
-          <div className="flex-1 flex items-center gap-2 bg-gray-50 rounded-xl px-4">
-            <Search size={16} className="text-gray-400 shrink-0" />
-            <input
-              type="text"
-              placeholder="Que recherchez-vous ?"
-              className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none"
-            />
+      <div className="-mt-16 relative z-20 max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="rounded-2xl shadow-2xl overflow-hidden">
+          {/* Location banner */}
+          <div className="bg-hero-dark px-4 py-2.5 flex items-center gap-2">
+            <MapPin size={14} className="text-orange-primary shrink-0" />
+            <span className="text-white text-sm font-semibold">Tout l&apos;Espagne</span>
           </div>
-          <select className="px-3 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white hidden sm:block min-w-[160px]">
-            <option value="">Toutes les catégories</option>
-            {categoryItems.map(c => (
-              <option key={c.slug} value={c.slug}>{c.label}</option>
-            ))}
-          </select>
+          {/* Search row */}
+          <div className="bg-white p-2 sm:p-3 flex gap-2">
+            <div className="flex-1 flex items-center gap-2 bg-gray-50 rounded-xl px-4">
+              <Search size={16} className="text-gray-400 shrink-0" />
+              <input
+                type="text"
+                placeholder="Que recherchez-vous ?"
+                className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none"
+              />
+            </div>
+            <select className="px-3 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white hidden sm:block min-w-[160px]">
+              <option value="">Toutes les catégories</option>
+              {categoryItems.map(c => (
+                <option key={c.slug} value={c.slug}>{c.label}</option>
+              ))}
+            </select>
+            <Link
+              href="/annonces"
+              className="flex items-center gap-2 bg-orange-primary text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap"
+            >
+              <Search size={16} />
+              <span className="hidden sm:inline">Rechercher</span>
+            </Link>
+          </div>
+        </div>
+        {/* Déposer une annonce */}
+        <div className="flex justify-end mt-3">
           <Link
-            href="/annonces"
-            className="flex items-center gap-2 bg-orange-primary text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap"
+            href="/deposer-annonce"
+            className="flex items-center gap-2 bg-indigo-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-indigo-dark transition-colors shadow-lg"
           >
-            <Search size={16} />
-            <span className="hidden sm:inline">Rechercher</span>
+            <Tag size={15} />
+            Déposer une annonce
           </Link>
         </div>
       </div>
