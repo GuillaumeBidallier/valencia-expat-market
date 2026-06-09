@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { MapPin, Search, Tag, ChevronDown } from 'lucide-react'
+import { MapPin, Search, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import GeoModal, { GeoState } from './GeoModal'
 
@@ -22,12 +22,11 @@ export default function SearchWidget({ categoryItems }: SearchWidgetProps) {
   return (
     <>
       <div className="-mt-14 relative z-20 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="bg-white rounded-2xl shadow-2xl p-2 sm:p-3">
-          {/* Single search row */}
-          <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+        <div className="bg-white rounded-2xl shadow-2xl p-2 sm:p-3 flex flex-col gap-2">
 
-            {/* Search input */}
-            <div className="flex-1 min-w-0 flex items-center gap-2 bg-gray-50 rounded-xl px-4">
+          {/* Row 1 : search + button */}
+          <div className="flex gap-2">
+            <div className="flex-1 flex items-center gap-2 bg-gray-50 rounded-xl px-4">
               <Search size={16} className="text-gray-400 shrink-0" />
               <input
                 type="text"
@@ -35,26 +34,6 @@ export default function SearchWidget({ categoryItems }: SearchWidgetProps) {
                 className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none min-w-0"
               />
             </div>
-
-            {/* Geo selector — looks like a clickable input */}
-            <button
-              onClick={() => setGeoModalOpen(true)}
-              className="flex items-center gap-2 px-3 py-3 border border-gray-200 rounded-xl bg-white hover:border-indigo-primary hover:bg-indigo-soft transition-colors text-sm text-gray-600 whitespace-nowrap shrink-0"
-            >
-              <MapPin size={15} className="text-orange-primary shrink-0" />
-              <span className="hidden sm:inline font-medium max-w-[140px] truncate">{locationLabel}</span>
-              <ChevronDown size={14} className="text-gray-400 shrink-0" />
-            </button>
-
-            {/* Category selector */}
-            <select className="px-3 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white hidden lg:block min-w-[160px] cursor-pointer hover:border-indigo-primary transition-colors">
-              <option value="">Toutes les catégories</option>
-              {categoryItems.map(c => (
-                <option key={c.slug} value={c.slug}>{c.label}</option>
-              ))}
-            </select>
-
-            {/* Rechercher */}
             <Link
               href="/annonces"
               className="flex items-center gap-2 bg-orange-primary text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap shrink-0"
@@ -62,17 +41,27 @@ export default function SearchWidget({ categoryItems }: SearchWidgetProps) {
               <Search size={16} />
               <span>Rechercher</span>
             </Link>
-
-            {/* Déposer une annonce */}
-            <Link
-              href="/deposer-annonce"
-              className="flex items-center gap-2 bg-indigo-primary text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-indigo-dark transition-colors whitespace-nowrap shrink-0"
-            >
-              <Tag size={15} />
-              <span className="hidden sm:inline">Déposer une annonce</span>
-              <span className="sm:hidden">Déposer</span>
-            </Link>
           </div>
+
+          {/* Row 2 : geo + categories */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setGeoModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-xl bg-white hover:border-orange-primary hover:bg-orange-soft transition-colors text-sm text-gray-600 whitespace-nowrap flex-1 sm:flex-none"
+            >
+              <MapPin size={15} className="text-orange-primary shrink-0" />
+              <span className="font-medium truncate max-w-[160px]">{locationLabel}</span>
+              <ChevronDown size={14} className="text-gray-400 shrink-0 ml-auto sm:ml-0" />
+            </button>
+
+            <select className="flex-1 px-4 py-2.5 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white cursor-pointer hover:border-indigo-primary transition-colors">
+              <option value="">Toutes les catégories</option>
+              {categoryItems.map(c => (
+                <option key={c.slug} value={c.slug}>{c.label}</option>
+              ))}
+            </select>
+          </div>
+
         </div>
       </div>
 
