@@ -88,7 +88,7 @@ export default function HomePage() {
             <AdUnit size="skyscraper" seed={1} />
           </div>
 
-          <div className="flex-1 min-w-0 max-w-5xl mx-auto">
+          <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-navy text-base">
             Annonces récentes

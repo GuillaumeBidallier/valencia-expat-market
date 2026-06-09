@@ -46,8 +46,8 @@ function AnnoncesContent() {
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 py-5">
-        <div className="flex gap-4 items-start">
+      <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 py-5">
+        <div className="flex gap-3 items-start">
           {/* Sidebar filters — desktop */}
           <aside className="hidden lg:block w-56 shrink-0">
             <div className="bg-white border border-gray-200 rounded-lg p-4 sticky top-32">
