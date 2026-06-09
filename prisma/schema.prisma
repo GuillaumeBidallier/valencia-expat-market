@@ -41,6 +41,7 @@ model Listing {
   images         ListingImage[]
   favorites      Favorite[]
   messages       Message[]
+  phone          String?
   isPremium      Boolean       @default(false)
   boostExpiresAt DateTime?
   featuredAt     DateTime?

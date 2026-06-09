@@ -15,10 +15,9 @@ export interface Listing {
   featuredAt: string | null
   publishedAt: string
   updatedAt: string
+  phone?: string | null
   // Champs de compatibilité frontend
   category?: string
-  whatsapp?: string
-  phone?: string
   userName?: string
 }
 
@@ -28,7 +27,7 @@ export interface NewListing {
   price: number | null
   description: string
   neighborhood: string
-  whatsapp?: string
+  phone?: string
 }
 
 export interface User {

@@ -24,7 +24,7 @@ export default function DeposerAnnoncePage() {
     price: '',
     description: '',
     neighborhood: '',
-    whatsapp: '',
+    phone: '',
   })
   const [files, setFiles] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
@@ -83,6 +83,7 @@ export default function DeposerAnnoncePage() {
         price: form.price ? Number(form.price) : null,
         description: form.description,
         neighborhood: form.neighborhood,
+        phone: form.phone || undefined,
       })
 
       if (files.length > 0) {
@@ -189,7 +190,7 @@ export default function DeposerAnnoncePage() {
             </select>
             {errors.neighborhood && <p className="text-xs text-red-500">{errors.neighborhood}</p>}
           </div>
-          <Input id="whatsapp" label="Numéro WhatsApp" type="tel" placeholder="+34 6XX XXX XXX" value={form.whatsapp} onChange={set('whatsapp')} />
+          <Input id="phone" label="Numéro de téléphone / WhatsApp" type="tel" placeholder="+34 6XX XXX XXX" value={form.phone} onChange={set('phone')} />
         </div>
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>

@@ -17,11 +17,11 @@ export default auth((req) => {
   }
 
   // Redirect unauthenticated users away from protected pages
-  if (!isAuthenticated && (pathname === '/deposer-annonce' || pathname === '/mon-compte')) {
+  if (!isAuthenticated && (pathname === '/deposer-annonce' || pathname === '/mon-compte' || pathname.startsWith('/messages'))) {
     return NextResponse.redirect(new URL('/connexion', req.url))
   }
 })
 
 export const config = {
-  matcher: ['/connexion', '/inscription', '/deposer-annonce', '/mon-compte'],
+  matcher: ['/connexion', '/inscription', '/deposer-annonce', '/mon-compte', '/messages/:path*'],
 }

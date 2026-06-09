@@ -40,7 +40,7 @@ export function ListingsProvider({ children }: { children: ReactNode }) {
     const res = await fetch('/api/listings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, city: 'Valencia' }),
+      body: JSON.stringify({ ...data, city: 'Valencia', phone: data.phone }),
     })
     if (!res.ok) throw new Error('Erreur lors de la création de l\'annonce')
     const listing = await res.json()

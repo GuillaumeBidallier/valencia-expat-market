@@ -42,6 +42,7 @@ const createSchema = z.object({
   categorySlug: z.string().min(1),
   city: z.string().min(1),
   neighborhood: z.string().min(1),
+  phone: z.string().optional(),
 })
 
 export async function POST(req: NextRequest) {

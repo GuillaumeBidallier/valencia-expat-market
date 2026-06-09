@@ -9,6 +9,15 @@ const prisma = new PrismaClient({
   adapter: new PrismaNeon({ connectionString: url.toString() }),
 })
 
+const PHONES = [
+  '+34 612 345 678', '+34 623 456 789', '+34 634 567 890', '+34 645 678 901',
+  '+34 656 789 012', '+34 667 890 123', '+34 678 901 234', '+34 689 012 345',
+  '+34 690 123 456', '+34 601 234 567', '+34 611 111 222', '+34 622 222 333',
+  '+34 633 333 444', '+34 644 444 555', '+34 655 555 666', '+34 666 666 777',
+  '+34 677 777 888', '+34 688 888 999', '+34 699 999 000', '+34 600 000 111',
+  '+34 610 111 222', '+34 621 222 333', '+34 632 333 444',
+]
+
 const LISTINGS: {
   id: string
   title: string
@@ -17,6 +26,7 @@ const LISTINGS: {
   categorySlug: string
   city: string
   neighborhood: string
+  phone: string
   isPremium?: boolean
   images: string[]
 }[] = [
@@ -28,6 +38,7 @@ const LISTINGS: {
     categorySlug: 'meubles',
     city: 'Valencia',
     neighborhood: 'Ruzafa',
+    phone: PHONES[0],
     images: [
       'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80',
       'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80',
@@ -41,6 +52,7 @@ const LISTINGS: {
     categorySlug: 'enfants',
     city: 'Valencia',
     neighborhood: 'Benimaclet',
+    phone: PHONES[1],
     images: [
       'https://images.unsplash.com/photo-1575585269294-7d28bb912db8?w=600&q=80',
     ],
@@ -53,6 +65,7 @@ const LISTINGS: {
     categorySlug: 'electromenager',
     city: 'Valencia',
     neighborhood: 'Alboraya',
+    phone: PHONES[2],
     images: [
       'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=600&q=80',
     ],
@@ -65,6 +78,7 @@ const LISTINGS: {
     categorySlug: 'meubles',
     city: 'Valencia',
     neighborhood: 'El Cabanyal',
+    phone: PHONES[3],
     isPremium: true,
     images: [
       'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80',
@@ -79,6 +93,7 @@ const LISTINGS: {
     categorySlug: 'electromenager',
     city: 'Madrid',
     neighborhood: 'Malasaña',
+    phone: PHONES[4],
     images: [
       'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=600&q=80',
     ],
@@ -91,6 +106,7 @@ const LISTINGS: {
     categorySlug: 'vehicules',
     city: 'Barcelona',
     neighborhood: 'Gràcia',
+    phone: PHONES[5],
     images: [
       'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80',
       'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
@@ -104,6 +120,7 @@ const LISTINGS: {
     categorySlug: 'electromenager',
     city: 'Barcelona',
     neighborhood: 'Eixample',
+    phone: PHONES[6],
     isPremium: true,
     images: [
       'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&q=80',
@@ -117,6 +134,7 @@ const LISTINGS: {
     categorySlug: 'enfants',
     city: 'Valencia',
     neighborhood: 'Ruzafa',
+    phone: PHONES[7],
     images: [
       'https://images.unsplash.com/photo-1565687981296-535f09db714e?w=600&q=80',
     ],
@@ -129,6 +147,7 @@ const LISTINGS: {
     categorySlug: 'electromenager',
     city: 'Alicante',
     neighborhood: 'Centro',
+    phone: PHONES[8],
     images: [
       'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600&q=80',
     ],
@@ -141,6 +160,7 @@ const LISTINGS: {
     categorySlug: 'meubles',
     city: 'Valencia',
     neighborhood: 'Patraix',
+    phone: PHONES[9],
     images: [
       'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80',
     ],
@@ -153,6 +173,7 @@ const LISTINGS: {
     categorySlug: 'sports',
     city: 'Valencia',
     neighborhood: 'Campanar',
+    phone: PHONES[10],
     images: [
       'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=600&q=80',
     ],
@@ -165,6 +186,7 @@ const LISTINGS: {
     categorySlug: 'services',
     city: 'Valencia',
     neighborhood: 'Benimaclet',
+    phone: PHONES[11],
     images: [
       'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
     ],
@@ -177,6 +199,7 @@ const LISTINGS: {
     categorySlug: 'enfants',
     city: 'Malaga',
     neighborhood: 'Centro Histórico',
+    phone: PHONES[12],
     images: [
       'https://images.unsplash.com/photo-1566454419290-57a64afe8c68?w=600&q=80',
     ],
@@ -189,6 +212,7 @@ const LISTINGS: {
     categorySlug: 'vehicules',
     city: 'Valencia',
     neighborhood: 'Centro',
+    phone: PHONES[13],
     isPremium: true,
     images: [
       'https://images.unsplash.com/photo-1558618047-f31e9c3f96f4?w=600&q=80',
@@ -202,6 +226,7 @@ const LISTINGS: {
     categorySlug: 'electromenager',
     city: 'Barcelona',
     neighborhood: 'Gràcia',
+    phone: PHONES[14],
     images: [
       'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80',
     ],
@@ -214,6 +239,7 @@ const LISTINGS: {
     categorySlug: 'livres',
     city: 'Seville',
     neighborhood: 'Triana',
+    phone: PHONES[15],
     images: [
       'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80',
     ],
@@ -226,6 +252,7 @@ const LISTINGS: {
     categorySlug: 'animaux',
     city: 'Valencia',
     neighborhood: 'Benimaclet',
+    phone: PHONES[16],
     images: [
       'https://images.unsplash.com/photo-1535338454770-8be927b5a00b?w=600&q=80',
     ],
@@ -238,6 +265,7 @@ const LISTINGS: {
     categorySlug: 'meubles',
     city: 'Madrid',
     neighborhood: 'Lavapiés',
+    phone: PHONES[17],
     images: [
       'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&q=80',
     ],
@@ -250,6 +278,7 @@ const LISTINGS: {
     categorySlug: 'vetements',
     city: 'Valencia',
     neighborhood: 'El Carmen',
+    phone: PHONES[18],
     images: [
       'https://images.unsplash.com/photo-1548712027-b6b73f130c7f?w=600&q=80',
     ],
@@ -262,6 +291,7 @@ const LISTINGS: {
     categorySlug: 'sports',
     city: 'Valencia',
     neighborhood: 'La Malvarrosa',
+    phone: PHONES[19],
     images: [
       'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80',
     ],
@@ -274,6 +304,7 @@ const LISTINGS: {
     categorySlug: 'sports',
     city: 'Alicante',
     neighborhood: 'San Juan',
+    phone: PHONES[20],
     images: [
       'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80',
     ],
@@ -286,6 +317,7 @@ const LISTINGS: {
     categorySlug: 'electromenager',
     city: 'Valencia',
     neighborhood: 'Russafa',
+    phone: PHONES[21],
     images: [
       'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
     ],
@@ -298,6 +330,7 @@ const LISTINGS: {
     categorySlug: 'meubles',
     city: 'Valencia',
     neighborhood: 'Eixample',
+    phone: PHONES[22],
     images: [
       'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=600&q=80',
     ],
@@ -309,18 +342,28 @@ async function main() {
   await prisma.listing.deleteMany()
 
   const passwordHash = await bcrypt.hash('demo1234', 12)
-  const user = await prisma.user.upsert({
+
+  const user1 = await prisma.user.upsert({
     where: { email: 'demo@vendo.es' },
     update: {},
     create: { name: 'Marie Dupont', email: 'demo@vendo.es', passwordHash },
   })
 
-  for (const { images, isPremium, ...data } of LISTINGS) {
+  const user2 = await prisma.user.upsert({
+    where: { email: 'demo2@vendo.es' },
+    update: {},
+    create: { name: 'Thomas Martin', email: 'demo2@vendo.es', passwordHash },
+  })
+
+  // Annonces 1-15 → Marie, 16-23 → Thomas
+  for (const [i, { images, isPremium, phone, ...data }] of LISTINGS.entries()) {
+    const userId = i < 15 ? user1.id : user2.id
     await prisma.listing.create({
       data: {
         ...data,
+        phone,
         isPremium: isPremium ?? false,
-        userId: user.id,
+        userId,
         images: {
           create: images.map((url, order) => ({ url, order })),
         },
@@ -328,7 +371,7 @@ async function main() {
     })
   }
 
-  console.log(`✅ Seed terminé — ${LISTINGS.length} annonces créées (demo@vendo.es / demo1234)`)
+  console.log(`✅ Seed terminé — ${LISTINGS.length} annonces (demo@vendo.es / demo2@vendo.es — mot de passe : demo1234)`)
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect())
