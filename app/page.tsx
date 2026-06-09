@@ -27,19 +27,26 @@ const trustItems = [
 ]
 
 export default async function HomePage() {
-  const rows = await prisma.listing.findMany({
-    where: { status: 'ACTIVE' },
-    include: { images: { take: 1, orderBy: { order: 'asc' } } },
-    orderBy: [{ featuredAt: 'desc' }, { publishedAt: 'desc' }],
-    take: 8,
-  })
-  const featured = rows.map(l => ({
-    ...l,
-    boostExpiresAt: l.boostExpiresAt?.toISOString() ?? null,
-    featuredAt: l.featuredAt?.toISOString() ?? null,
-    publishedAt: l.publishedAt.toISOString(),
-    updatedAt: l.updatedAt.toISOString(),
-  }))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let featured: any[] = []
+
+  try {
+    const rows = await prisma.listing.findMany({
+      where: { status: 'ACTIVE' },
+      include: { images: { take: 1, orderBy: { order: 'asc' } } },
+      orderBy: [{ featuredAt: 'desc' }, { publishedAt: 'desc' }],
+      take: 8,
+    })
+    featured = rows.map(l => ({
+      ...l,
+      boostExpiresAt: l.boostExpiresAt?.toISOString() ?? null,
+      featuredAt: l.featuredAt?.toISOString() ?? null,
+      publishedAt: l.publishedAt.toISOString(),
+      updatedAt: l.updatedAt.toISOString(),
+    }))
+  } catch (e) {
+    console.error('[HomePage] DB error:', e)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
