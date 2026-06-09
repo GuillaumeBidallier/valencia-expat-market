@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, Plus } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
@@ -133,8 +133,9 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/deposer-annonce"
-                  className="bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
+                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
+                  <Plus size={15} />
                   Déposer une annonce
                 </Link>
                 <button
@@ -174,9 +175,10 @@ export default function Navbar() {
           <div className="md:hidden flex items-center gap-2">
             <Link
               href="/deposer-annonce"
-              className="bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
+              className="flex items-center gap-1 bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
             >
-              + Déposer
+              <Plus size={13} />
+              Déposer une annonce
             </Link>
             <button
               className={`p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
