@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { Search, MapPin, Shield, Users, Tag, Home, Briefcase, Car, Sofa, Smartphone, PawPrint, Wrench, Globe } from 'lucide-react'
 import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
-import VendoLogo from '@/components/layout/VendoLogo'
 import { mockListings } from '@/data/listings'
 
 const categoryItems = [
@@ -32,41 +31,19 @@ export default function HomePage() {
       <section className="relative min-h-[420px] sm:min-h-[500px] overflow-hidden">
         {/* Background image */}
         <Image
-          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=700&fit=crop"
-          alt="Valencia"
+          src="/valencia-hero.jpg"
+          alt="Valencia City of Arts and Sciences"
           fill
           className="object-cover object-center"
-          unoptimized
           priority
         />
         {/* Gradient overlay — dark on left, transparent right */}
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/90 via-hero-dark/60 to-hero-dark/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/40 via-transparent to-hero-dark/30" />
 
-        {/* Top-right action buttons */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 flex items-center gap-3 z-10">
-          <Link
-            href="/deposer-annonce"
-            className="hidden sm:flex items-center gap-2 bg-orange-primary text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors shadow"
-          >
-            Déposer une annonce
-          </Link>
-          <Link
-            href="/connexion"
-            className="flex items-center gap-2 border-2 border-white text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-white/10 transition-colors"
-          >
-            Se connecter
-          </Link>
-        </div>
-
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-12 pb-28 sm:pt-16 sm:pb-32">
           <div className="max-w-xl">
-            {/* Vendo logo — large, light theme */}
-            <div className="mb-6">
-              <VendoLogo size="xl" theme="light" />
-            </div>
-
             <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-4">
               Le site gratuit des<br />
               petites annonces entre<br />
