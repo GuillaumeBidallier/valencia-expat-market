@@ -1,8 +1,6 @@
 'use client'
-import { useState } from 'react'
 import Image from 'next/image'
-import { MapPin, ChevronDown, ShieldCheck } from 'lucide-react'
-import GeoModal, { GeoState } from '@/components/listings/GeoModal'
+import { ShieldCheck } from 'lucide-react'
 import SearchWidget from '@/components/listings/SearchWidget'
 
 interface CategoryItem {
@@ -11,11 +9,6 @@ interface CategoryItem {
 }
 
 export default function HeroSection({ categoryItems }: { categoryItems: CategoryItem[] }) {
-  const [geoModalOpen, setGeoModalOpen] = useState(false)
-  const [geo, setGeo] = useState<GeoState | null>(null)
-
-  const locationLabel = geo ? `${geo.city}, ${geo.radius} km` : "Tout l'Espagne"
-
   return (
     <>
       <section className="relative -mt-16 min-h-[560px] sm:min-h-[620px] overflow-hidden">
@@ -48,28 +41,11 @@ export default function HeroSection({ categoryItems }: { categoryItems: Category
               </p>
             </div>
 
-            {/* Clickable location */}
-            <button
-              onClick={() => setGeoModalOpen(true)}
-              className="flex items-center gap-2 text-white hover:text-orange-primary transition-colors mb-4 group"
-            >
-              <MapPin size={16} className="text-orange-primary shrink-0" />
-              <span className="font-semibold text-base group-hover:underline underline-offset-2">{locationLabel}</span>
-              <ChevronDown size={14} className="text-white/60 group-hover:text-orange-primary" />
-            </button>
           </div>
         </div>
       </section>
 
-      {/* Floating search bar — reuse SearchWidget as-is */}
-      <SearchWidget categoryItems={categoryItems} geo={geo} onGeoOpen={() => setGeoModalOpen(true)} />
-
-      <GeoModal
-        isOpen={geoModalOpen}
-        onClose={() => setGeoModalOpen(false)}
-        onValidate={g => setGeo(g)}
-        currentGeo={geo}
-      />
+      <SearchWidget categoryItems={categoryItems} />
     </>
   )
 }
