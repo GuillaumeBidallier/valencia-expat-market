@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { z } from 'zod'
+import { neighborhoodCoords } from '@/lib/neighborhoods'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
@@ -57,8 +58,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Données invalides', details: parsed.error.flatten() }, { status: 400 })
   }
 
+  const coords = neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']
   const listing = await prisma.listing.create({
-    data: { ...parsed.data, userId: session.user.id },
+    data: { ...parsed.data, userId: session.user.id, lat: coords.lat, lng: coords.lng },
   })
 
   return NextResponse.json(listing, { status: 201 })

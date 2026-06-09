@@ -47,6 +47,8 @@ model Listing {
   featuredAt     DateTime?
   publishedAt    DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+  lat            Float?
+  lng            Float?
 }
 
 enum ListingStatus {

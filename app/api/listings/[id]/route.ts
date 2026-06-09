@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { z } from 'zod'
+import { neighborhoodCoords } from '@/lib/neighborhoods'
 
 type Params = Promise<{ id: string }>
 
@@ -39,7 +40,13 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   const parsed = updateSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides' }, { status: 400 })
 
-  const updated = await prisma.listing.update({ where: { id }, data: parsed.data })
+  const coords = parsed.data.neighborhood
+    ? neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']
+    : undefined
+  const updated = await prisma.listing.update({
+    where: { id },
+    data: { ...parsed.data, ...(coords && { lat: coords.lat, lng: coords.lng }) },
+  })
   return NextResponse.json(updated)
 }
 

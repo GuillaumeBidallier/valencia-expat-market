@@ -1,208 +1,251 @@
-'use client'
-import { useMemo, useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { SlidersHorizontal, X } from 'lucide-react'
-import ListingRow from '@/components/listings/ListingRow'
+import { Suspense } from 'react'
+import Link from 'next/link'
+import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
+import { prisma } from '@/lib/prisma'
+import { Listing } from '@/types'
 import SearchBar from '@/components/listings/SearchBar'
+import ListingRow from '@/components/listings/ListingRow'
+import AnnoncesFilters from './AnnoncesFilters'
 import AdUnit from '@/components/ads/AdUnit'
-import { useListings } from '@/context/ListingsContext'
-import { categories, neighborhoods } from '@/lib/categories'
+import { categories } from '@/lib/categories'
+import { haversineKm, boundingBox } from '@/lib/neighborhoods'
 
-function AnnoncesContent() {
-  const searchParams = useSearchParams()
-  const { listings } = useListings()
+const PER_PAGE = 20
 
-  const [priceMin, setPriceMin] = useState('')
-  const [priceMax, setPriceMax] = useState('')
-  const [sortBy, setSortBy] = useState<'date' | 'price_asc' | 'price_desc'>('date')
-  const [showFilters, setShowFilters] = useState(false)
+type RawListing = Awaited<ReturnType<typeof prisma.listing.findMany<{
+  include: { images: { orderBy: { order: 'asc' }; take: 1 } }
+}>>>[number]
 
-  const q = searchParams.get('q') || ''
-  const cat = searchParams.get('cat') || ''
-  const ville = searchParams.get('ville') || ''
+type ListingWithDist = Listing & { distanceKm?: number }
 
-  const filtered = useMemo(() => {
-    let result = listings.filter(l => {
-      const matchQ = !q || l.title.toLowerCase().includes(q.toLowerCase()) || l.description.toLowerCase().includes(q.toLowerCase())
-      const matchCat = !cat || l.categorySlug === cat
-      const matchVille = !ville || l.neighborhood === ville || l.city === ville
-      const matchMin = !priceMin || (l.price !== null && l.price >= Number(priceMin))
-      const matchMax = !priceMax || (l.price !== null && l.price <= Number(priceMax))
-      return matchQ && matchCat && matchVille && matchMin && matchMax
-    })
-    if (sortBy === 'price_asc') result = [...result].sort((a, b) => (a.price ?? 0) - (b.price ?? 0))
-    if (sortBy === 'price_desc') result = [...result].sort((a, b) => (b.price ?? 0) - (a.price ?? 0))
-    return result
-  }, [listings, q, cat, ville, priceMin, priceMax, sortBy])
+type Props = {
+  searchParams: Promise<{
+    q?: string; cat?: string; ville?: string
+    priceMin?: string; priceMax?: string; sort?: string; page?: string
+    lat?: string; lng?: string; radius?: string
+  }>
+}
 
-  const activeFiltersCount = [cat, ville, priceMin, priceMax].filter(Boolean).length
+function toListingWithDist(l: RawListing & { images: { id: string; url: string; order: number }[] }, distanceKm?: number): ListingWithDist {
+  return {
+    ...l,
+    publishedAt:    l.publishedAt.toISOString(),
+    updatedAt:      l.updatedAt.toISOString(),
+    featuredAt:     l.featuredAt?.toISOString()     ?? null,
+    boostExpiresAt: l.boostExpiresAt?.toISOString() ?? null,
+    images:         l.images,
+    distanceKm,
+  }
+}
+
+async function AnnoncesContent({ searchParams }: Props) {
+  const params   = await searchParams
+  const q        = params.q        ?? ''
+  const cat      = params.cat      ?? ''
+  const ville    = params.ville    ?? ''
+  const priceMin = params.priceMin ? Number(params.priceMin) : undefined
+  const priceMax = params.priceMax ? Number(params.priceMax) : undefined
+  const sort     = params.sort     ?? ''
+  const page     = Math.max(1, parseInt(params.page ?? '1'))
+  const userLat  = params.lat    ? Number(params.lat)    : undefined
+  const userLng  = params.lng    ? Number(params.lng)    : undefined
+  const radius   = params.radius ? Number(params.radius) : 10
+
+  const hasLocation = userLat !== undefined && userLng !== undefined
+
+  // Build bounding-box pre-filter when searching by position
+  const bbox = hasLocation ? boundingBox(userLat!, userLng!, radius) : null
+
+  const where = {
+    status: 'ACTIVE' as const,
+    ...(cat   && { categorySlug: cat }),
+    ...(ville && { neighborhood: ville }),
+    ...(q && {
+      OR: [
+        { title:       { contains: q, mode: 'insensitive' as const } },
+        { description: { contains: q, mode: 'insensitive' as const } },
+      ],
+    }),
+    ...((priceMin !== undefined || priceMax !== undefined) && {
+      price: {
+        ...(priceMin !== undefined && { gte: priceMin }),
+        ...(priceMax !== undefined && { lte: priceMax }),
+      },
+    }),
+    ...(bbox && {
+      lat: { gte: bbox.latMin, lte: bbox.latMax },
+      lng: { gte: bbox.lngMin, lte: bbox.lngMax },
+    }),
+  }
+
+  const orderByDb =
+    sort === 'price_asc'  ? [{ price: { sort: 'asc'  as const, nulls: 'last' as const } }] :
+    sort === 'price_desc' ? [{ price: { sort: 'desc' as const, nulls: 'last' as const } }] :
+    [{ featuredAt: 'desc' as const }, { publishedAt: 'desc' as const }]
+
+  // When sorting by distance, fetch all from bounding box without skip/take
+  const fetchAll = hasLocation && sort === 'distance'
+
+  const [rawListings, total] = await Promise.all([
+    prisma.listing.findMany({
+      where,
+      include: { images: { orderBy: { order: 'asc' }, take: 1 } },
+      orderBy: fetchAll ? undefined : orderByDb,
+      skip: fetchAll ? undefined : (page - 1) * PER_PAGE,
+      take: fetchAll ? undefined : PER_PAGE,
+    }),
+    prisma.listing.count({ where }),
+  ])
+
+  let listings: ListingWithDist[]
+
+  if (hasLocation) {
+    // Attach distance + exact Haversine filter (bounding box can overshoot corners)
+    const withDist = rawListings
+      .map(l => {
+        const km = l.lat != null && l.lng != null
+          ? haversineKm(userLat!, userLng!, l.lat, l.lng)
+          : undefined
+        return { l, km }
+      })
+      .filter(({ km }) => km === undefined || km <= radius)
+
+    if (sort === 'distance') {
+      withDist.sort((a, b) => (a.km ?? 999) - (b.km ?? 999))
+      const start = (page - 1) * PER_PAGE
+      listings = withDist.slice(start, start + PER_PAGE).map(({ l, km }) => toListingWithDist(l, km))
+    } else {
+      listings = withDist.map(({ l, km }) => toListingWithDist(l, km))
+    }
+  } else {
+    listings = rawListings.map(l => toListingWithDist(l))
+  }
+
+  const displayTotal = fetchAll ? listings.length : total
+  const pages = Math.ceil((fetchAll ? listings.length : total) / PER_PAGE)
+
+  const buildUrl = (p: number) => {
+    const sp = new URLSearchParams()
+    if (q)     sp.set('q',     q)
+    if (cat)   sp.set('cat',   cat)
+    if (ville) sp.set('ville', ville)
+    if (priceMin !== undefined) sp.set('priceMin', String(priceMin))
+    if (priceMax !== undefined) sp.set('priceMax', String(priceMax))
+    if (sort)  sp.set('sort',  sort)
+    if (userLat !== undefined) sp.set('lat', String(userLat))
+    if (userLng !== undefined) sp.set('lng', String(userLng))
+    if (hasLocation) sp.set('radius', String(radius))
+    if (p > 1) sp.set('page', String(p))
+    return `/annonces?${sp.toString()}`
+  }
+
+  const activeCat = categories.find(c => c.slug === cat)
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top bar */}
-      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
+      <div className="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <SearchBar defaultQuery={q} defaultCategory={cat} defaultCity={ville} />
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 py-5">
-        <div className="flex gap-3 items-start">
-          {/* Sidebar filters — desktop */}
-          <aside className="hidden lg:block w-56 shrink-0">
-            <div className="bg-white border border-gray-200 rounded-lg p-4 sticky top-32">
-              <h3 className="font-bold text-navy text-sm mb-4">Filtres</h3>
+      <div className="max-w-screen-2xl mx-auto px-3 lg:px-6 py-5">
+        <div className="flex gap-4 items-start">
 
-              {/* Category */}
-              <div className="mb-4">
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Catégorie</label>
-                <select
-                  value={cat}
-                  onChange={e => {
-                    const params = new URLSearchParams(window.location.search)
-                    e.target.value ? params.set('cat', e.target.value) : params.delete('cat')
-                    window.history.pushState({}, '', `/annonces?${params}`)
-                    window.location.href = `/annonces?${params}`
-                  }}
-                  className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-valencia"
-                >
-                  <option value="">Toutes</option>
-                  {categories.map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}
-                </select>
-              </div>
+          <Suspense fallback={null}>
+            <AnnoncesFilters totalCount={displayTotal} />
+          </Suspense>
 
-              {/* Price */}
-              <div className="mb-4">
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Prix (€)</label>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={priceMin}
-                    onChange={e => setPriceMin(e.target.value)}
-                    className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-valencia"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={priceMax}
-                    onChange={e => setPriceMax(e.target.value)}
-                    className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-valencia"
-                  />
-                </div>
-              </div>
-
-              {/* Neighborhood */}
-              <div className="mb-4">
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Quartier</label>
-                <select
-                  value={ville}
-                  onChange={e => {
-                    const params = new URLSearchParams(window.location.search)
-                    e.target.value ? params.set('ville', e.target.value) : params.delete('ville')
-                    window.history.pushState({}, '', `/annonces?${params}`)
-                    window.location.href = `/annonces?${params}`
-                  }}
-                  className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-valencia"
-                >
-                  <option value="">Tous les quartiers</option>
-                  {neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
-                </select>
-              </div>
-
-              {/* Sort */}
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Trier par</label>
-                <select
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value as typeof sortBy)}
-                  className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-valencia"
-                >
-                  <option value="date">Plus récentes</option>
-                  <option value="price_asc">Prix croissant</option>
-                  <option value="price_desc">Prix décroissant</option>
-                </select>
-              </div>
-
-              {/* Sidebar ad */}
-              <AdUnit size="rectangle" seed={2} className="mt-2" />
-              <AdUnit size="rectangle" seed={5} className="mt-2" />
-            </div>
-          </aside>
-
-          {/* Main content */}
           <div className="flex-1 min-w-0">
-            {/* Mobile filters toggle + count */}
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-600 font-medium">
-                <strong className="text-navy">{filtered.length}</strong> annonce{filtered.length > 1 ? 's' : ''}
-                {cat && <span className="ml-2 text-xs bg-blue-soft text-blue-valencia px-2 py-0.5 rounded-full">{categories.find(c => c.slug === cat)?.label}</span>}
-                {ville && <span className="ml-1 text-xs bg-blue-soft text-blue-valencia px-2 py-0.5 rounded-full">{ville}</span>}
+            <div className="hidden lg:flex items-center gap-2 mb-3">
+              <span className="text-sm text-gray-500">
+                <strong className="text-navy">{displayTotal}</strong> annonce{displayTotal !== 1 ? 's' : ''}
+                {activeCat && (
+                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-orange-soft text-orange-primary px-2 py-0.5 rounded-full font-medium">
+                    {activeCat.icon} {activeCat.label}
+                  </span>
+                )}
+                {ville && <span className="ml-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{ville}</span>}
+                {hasLocation && (
+                  <span className="ml-1 text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                    <MapPin size={10} /> {radius} km autour de vous
+                  </span>
+                )}
               </span>
-              <button
-                onClick={() => setShowFilters(f => !f)}
-                className="lg:hidden flex items-center gap-1.5 text-sm font-medium text-blue-valencia border border-blue-valencia px-3 py-1.5 rounded-lg"
-              >
-                <SlidersHorizontal size={14} />
-                Filtres {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-              </button>
             </div>
 
-            {/* Mobile filters panel */}
-            {showFilters && (
-              <div className="lg:hidden bg-white border border-gray-200 rounded-lg p-4 mb-4">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-bold text-navy text-sm">Filtres</span>
-                  <button onClick={() => setShowFilters(false)}><X size={16} className="text-gray-400" /></button>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Prix min (€)</label>
-                    <input type="number" placeholder="0" value={priceMin} onChange={e => setPriceMin(e.target.value)} className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Prix max (€)</label>
-                    <input type="number" placeholder="∞" value={priceMax} onChange={e => setPriceMax(e.target.value)} className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none" />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Listing rows */}
-            {filtered.length === 0 ? (
-              <div className="text-center py-16 text-gray-400 bg-white rounded-lg border border-gray-200">
-                <p className="text-lg">Aucune annonce trouvée.</p>
-                <p className="text-sm mt-1">Essayez d&apos;autres filtres.</p>
+            {listings.length === 0 ? (
+              <div className="text-center py-20 bg-white rounded-xl border border-gray-100">
+                <p className="text-4xl mb-3">🔍</p>
+                <p className="font-semibold text-navy text-lg">Aucune annonce trouvée</p>
+                <p className="text-sm text-gray-400 mt-1">Essayez d&apos;autres filtres ou un rayon plus grand.</p>
+                <Link href="/annonces" className="inline-block mt-4 text-sm text-orange-primary font-semibold hover:underline">
+                  Voir toutes les annonces
+                </Link>
               </div>
             ) : (
-              <div className="flex flex-col gap-2">
-                {filtered.map((listing, i) => (
-                  <>
-                    <ListingRow key={listing.id} listing={listing} />
-                    {(i + 1) % 6 === 0 && (
-                      <AdUnit key={`ad-${i}`} size="banner" seed={i} />
+              <>
+                <div className="flex flex-col gap-2">
+                  {listings.map((listing, i) => (
+                    <div key={listing.id}>
+                      <ListingRow listing={listing} distanceKm={listing.distanceKm} />
+                      {(i + 1) % 6 === 0 && <AdUnit size="banner" seed={i} />}
+                    </div>
+                  ))}
+                </div>
+
+                {pages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-6">
+                    {page > 1 && (
+                      <Link href={buildUrl(page - 1)} className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <ChevronLeft size={14} /> Précédent
+                      </Link>
                     )}
-                  </>
-                ))}
-              </div>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: Math.min(pages, 7) }, (_, i) => {
+                        const p = page <= 4 ? i + 1 : page >= pages - 3 ? pages - 6 + i : page - 3 + i
+                        if (p < 1 || p > pages) return null
+                        return (
+                          <Link
+                            key={p}
+                            href={buildUrl(p)}
+                            className={`w-9 h-9 flex items-center justify-center text-sm rounded-lg font-medium transition-colors ${
+                              p === page ? 'bg-orange-primary text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+                            }`}
+                          >
+                            {p}
+                          </Link>
+                        )
+                      })}
+                    </div>
+                    {page < pages && (
+                      <Link href={buildUrl(page + 1)} className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        Suivant <ChevronRight size={14} />
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
 
-          {/* Right skyscraper — desktop only */}
           <div className="hidden xl:block shrink-0 sticky top-32">
             <AdUnit size="skyscraper" seed={3} />
           </div>
-
         </div>
       </div>
     </div>
   )
 }
 
-export default function AnnoncesPage() {
+export default function AnnoncesPage(props: Props) {
   return (
-    <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-8 text-center text-gray-400">Chargement...</div>}>
-      <AnnoncesContent />
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-400 text-sm">Chargement des annonces…</div>
+      </div>
+    }>
+      <AnnoncesContent {...props} />
     </Suspense>
   )
 }

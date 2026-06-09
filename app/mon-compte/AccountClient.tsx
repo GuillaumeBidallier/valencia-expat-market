@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import {
   Plus, ExternalLink, Trash2, CheckCircle2, RefreshCcw,
   HeartOff, LogOut, LayoutList, Heart, User, MessageSquare,
-  ChevronRight, CheckCheck,
+  ChevronRight, CheckCheck, Pencil,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
@@ -164,24 +164,23 @@ export default function AccountClient({ user, initialListings, initialFavorites 
             <>
               {/* Desktop: icon buttons */}
               <div className="hidden sm:flex items-center gap-1">
-                <Link href={`/annonces/${listing.id}`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-navy px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors" title="Voir">
-                  <ExternalLink size={12} />
-                  <span>Voir</span>
+                <Link href={`/annonces/${listing.id}`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-navy px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+                  <ExternalLink size={12} /><span>Voir</span>
+                </Link>
+                <Link href={`/annonces/${listing.id}/modifier`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-orange-primary px-2.5 py-1.5 rounded-lg hover:bg-orange-soft transition-colors">
+                  <Pencil size={12} /><span>Modifier</span>
                 </Link>
                 {listing.status === 'ACTIVE' ? (
-                  <button onClick={() => handleStatusChange(listing.id, 'SOLD')} disabled={isLoading} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-emerald-600 px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 transition-colors disabled:opacity-40" title="Marquer vendu">
-                    <CheckCircle2 size={12} />
-                    <span>Vendu</span>
+                  <button onClick={() => handleStatusChange(listing.id, 'SOLD')} disabled={isLoading} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-emerald-600 px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 transition-colors disabled:opacity-40">
+                    <CheckCircle2 size={12} /><span>Vendu</span>
                   </button>
                 ) : (
-                  <button onClick={() => handleStatusChange(listing.id, 'ACTIVE')} disabled={isLoading} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-600 px-2.5 py-1.5 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-40" title="Remettre en ligne">
-                    <RefreshCcw size={12} />
-                    <span>Remettre en ligne</span>
+                  <button onClick={() => handleStatusChange(listing.id, 'ACTIVE')} disabled={isLoading} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-600 px-2.5 py-1.5 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-40">
+                    <RefreshCcw size={12} /><span>Remettre en ligne</span>
                   </button>
                 )}
-                <button onClick={() => setConfirmDeleteId(listing.id)} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-500 px-2.5 py-1.5 rounded-lg hover:bg-red-50 transition-colors" title="Supprimer">
-                  <Trash2 size={12} />
-                  <span>Supprimer</span>
+                <button onClick={() => setConfirmDeleteId(listing.id)} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-500 px-2.5 py-1.5 rounded-lg hover:bg-red-50 transition-colors">
+                  <Trash2 size={12} /><span>Supprimer</span>
                 </button>
               </div>
 
@@ -189,6 +188,9 @@ export default function AccountClient({ user, initialListings, initialFavorites 
               <div className="flex sm:hidden items-center gap-2 w-full">
                 <Link href={`/annonces/${listing.id}`} className="flex-1 flex items-center justify-center gap-1.5 text-xs text-gray-500 font-semibold py-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
                   <ExternalLink size={12} /> Voir
+                </Link>
+                <Link href={`/annonces/${listing.id}/modifier`} className="flex-1 flex items-center justify-center gap-1.5 text-xs text-orange-primary font-semibold py-2 rounded-xl bg-orange-soft hover:bg-orange-soft/80 transition-colors">
+                  <Pencil size={12} /> Modifier
                 </Link>
                 {listing.status === 'ACTIVE' ? (
                   <button onClick={() => handleStatusChange(listing.id, 'SOLD')} disabled={isLoading} className="flex-1 flex items-center justify-center gap-1.5 text-xs text-emerald-600 font-semibold py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 transition-colors disabled:opacity-40">

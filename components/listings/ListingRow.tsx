@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { MapPin, Clock } from 'lucide-react'
+import { MapPin, Clock, Navigation } from 'lucide-react'
 import { Listing } from '@/types'
 
 function timeAgo(dateStr: string): string {
@@ -13,7 +13,7 @@ function timeAgo(dateStr: string): string {
   return `Il y a ${days}j`
 }
 
-export default function ListingRow({ listing }: { listing: Listing }) {
+export default function ListingRow({ listing, distanceKm }: { listing: Listing; distanceKm?: number }) {
   return (
     <Link
       href={`/annonces/${listing.id}`}
@@ -52,6 +52,12 @@ export default function ListingRow({ listing }: { listing: Listing }) {
               <MapPin size={12} />
               <span>{listing.neighborhood}</span>
             </div>
+            {distanceKm !== undefined && (
+              <div className="flex items-center gap-1 text-xs text-blue-500 font-medium">
+                <Navigation size={11} />
+                <span>{distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m` : `${distanceKm.toFixed(1)} km`}</span>
+              </div>
+            )}
             <div className="flex items-center gap-1 text-gray-400 text-sm">
               <Clock size={12} />
               <span>{timeAgo(listing.publishedAt)}</span>

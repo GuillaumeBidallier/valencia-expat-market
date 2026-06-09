@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -10,6 +11,8 @@ import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/listings/FavoriteButton'
 import { Listing } from '@/types'
 import { useAuth } from '@/context/AuthContext'
+
+const ListingMap = dynamic(() => import('@/components/listings/ListingMap'), { ssr: false })
 
 export default function ListingDetailClient({ listing, isFavorited }: { listing: Listing; isFavorited?: boolean }) {
   const { isAuthenticated, user } = useAuth()
@@ -108,6 +111,16 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
               <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">{listing.description}</p>
             </div>
           </div>
+
+          {/* Map */}
+          {listing.lat != null && listing.lng != null && (
+            <div className="bg-white rounded-xl border border-gray-100 p-4">
+              <h2 className="font-semibold text-navy mb-3 flex items-center gap-1.5">
+                <MapPin size={15} className="text-orange-primary" /> Localisation
+              </h2>
+              <ListingMap lat={listing.lat} lng={listing.lng} neighborhood={listing.neighborhood} />
+            </div>
+          )}
         </div>
 
         {/* Right: Contact + security + ads */}

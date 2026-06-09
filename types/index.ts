@@ -16,6 +16,8 @@ export interface Listing {
   publishedAt: string
   updatedAt: string
   phone?: string | null
+  lat?: number | null
+  lng?: number | null
   // Champs de compatibilité frontend
   category?: string
   userName?: string
