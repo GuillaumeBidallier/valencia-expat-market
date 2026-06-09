@@ -20,7 +20,7 @@ export default function ListingDetailPage() {
 
   if (!listing) return notFound()
 
-  const waLink = `https://wa.me/${listing.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour, je suis intéressé(e) par votre annonce "${listing.title}" sur Valencia Expat Market.`)}`
+  const waLink = `https://wa.me/${(listing.whatsapp ?? '').replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour, je suis intéressé(e) par votre annonce "${listing.title}" sur Valencia Expat Market.`)}`
   const publishDate = new Date(listing.publishedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 
   return (
@@ -31,7 +31,7 @@ export default function ListingDetailPage() {
         <ChevronRight size={12} />
         <Link href="/annonces" className="hover:text-orange-primary">Annonces</Link>
         <ChevronRight size={12} />
-        <Link href={`/annonces?cat=${listing.categorySlug}`} className="hover:text-orange-primary">{listing.category}</Link>
+        <Link href={`/annonces?cat=${listing.categorySlug}`} className="hover:text-orange-primary">{listing.category ?? listing.categorySlug}</Link>
         <ChevronRight size={12} />
         <span className="text-navy line-clamp-1">{listing.title}</span>
       </nav>
@@ -41,14 +41,14 @@ export default function ListingDetailPage() {
         <div className="lg:col-span-2">
           {/* Main image */}
           <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 mb-3">
-            <Image src={listing.images[activeImg]} alt={listing.title} fill className="object-cover" unoptimized />
+            <Image src={listing.images[activeImg]?.url ?? ''} alt={listing.title} fill className="object-cover" unoptimized />
           </div>
           {/* Thumbnails */}
           {listing.images.length > 1 && (
             <div className="flex gap-2 mb-6">
               {listing.images.map((img, i) => (
                 <button key={i} onClick={() => setActiveImg(i)} className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${activeImg === i ? 'border-orange-primary' : 'border-transparent'}`}>
-                  <Image src={img} alt="" fill className="object-cover" unoptimized />
+                  <Image src={img.url} alt="" fill className="object-cover" unoptimized />
                 </button>
               ))}
             </div>
@@ -58,7 +58,7 @@ export default function ListingDetailPage() {
           <div className="bg-white rounded-xl border border-gray-100 p-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <Badge className="mb-2">{listing.category}</Badge>
+                <Badge className="mb-2">{listing.category ?? listing.categorySlug}</Badge>
                 <h1 className="text-2xl font-bold text-navy">{listing.title}</h1>
               </div>
               <div className="text-2xl font-extrabold text-navy shrink-0">
@@ -80,7 +80,7 @@ export default function ListingDetailPage() {
         <div className="flex flex-col gap-4">
           <div className="bg-white rounded-xl border border-gray-100 p-5 sticky top-20">
             <h2 className="font-semibold text-navy mb-1">Contacter le vendeur</h2>
-            <p className="text-xs text-gray-400 mb-4">Publié par {listing.userName}</p>
+            <p className="text-xs text-gray-400 mb-4">Publié par {listing.userName ?? listing.user?.name ?? 'Vendeur'}</p>
 
             <a href={waLink} target="_blank" rel="noopener noreferrer" className="w-full block mb-3">
               <Button variant="whatsapp" className="w-full text-sm">

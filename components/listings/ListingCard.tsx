@@ -14,7 +14,7 @@ export default function ListingCard({ listing, badge }: ListingCardProps) {
     <Link href={`/annonces/${listing.id}`} className="group bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg hover:border-indigo-primary/30 transition-all duration-200 flex flex-col">
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
         <Image
-          src={listing.images[0]}
+          src={listing.images[0]?.url ?? ''}
           alt={listing.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"

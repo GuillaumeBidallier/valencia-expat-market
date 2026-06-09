@@ -53,15 +53,13 @@ export default function DeposerAnnoncePage() {
     return Object.keys(e).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validate()) return
     setLoading(true)
-    const cat = categories.find(c => c.slug === form.categorySlug)
-    setTimeout(() => {
-      const id = addListing({
+    try {
+      const id = await addListing({
         title: form.title,
-        category: cat?.label || '',
         categorySlug: form.categorySlug,
         price: form.price ? Number(form.price) : null,
         description: form.description,
@@ -69,7 +67,10 @@ export default function DeposerAnnoncePage() {
         whatsapp: form.whatsapp,
       })
       router.push(`/annonces/${id}`)
-    }, 800)
+    } catch (err) {
+      console.error('Erreur lors de la publication', err)
+      setLoading(false)
+    }
   }
 
   if (!isAuthenticated) return null

@@ -90,7 +90,7 @@ export default function MonComptePage() {
                 {myListings.map(listing => (
                   <Link key={listing.id} href={`/annonces/${listing.id}`} className="flex items-center gap-4 p-3 border border-gray-100 rounded-xl hover:border-orange-primary transition-colors">
                     <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                      <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" unoptimized />
+                      <Image src={listing.images[0]?.url ?? ''} alt={listing.title} fill className="object-cover" unoptimized />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-navy text-sm truncate">{listing.title}</p>

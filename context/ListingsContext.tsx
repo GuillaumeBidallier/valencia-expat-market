@@ -1,42 +1,55 @@
 'use client'
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
 import { Listing, NewListing } from '@/types'
-import { mockListings } from '@/data/listings'
 import { useAuth } from './AuthContext'
 
 interface ListingsContextType {
   listings: Listing[]
+  loading: boolean
   getListing: (id: string) => Listing | undefined
-  addListing: (data: NewListing) => string
+  addListing: (data: NewListing) => Promise<string>
+  refreshListings: () => Promise<void>
 }
 
 const ListingsContext = createContext<ListingsContextType | null>(null)
 
 export function ListingsProvider({ children }: { children: ReactNode }) {
-  const [listings, setListings] = useState<Listing[]>(mockListings)
+  const [listings, setListings] = useState<Listing[]>([])
+  const [loading, setLoading] = useState(true)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = useAuth()
+
+  const refreshListings = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/listings?limit=50')
+      const data = await res.json()
+      setListings(data.listings ?? [])
+    } catch (err) {
+      console.error('Failed to fetch listings', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { refreshListings() }, [refreshListings])
 
   const getListing = (id: string) => listings.find(l => l.id === id)
 
-  const addListing = (data: NewListing): string => {
-    const id = `new-${Date.now()}`
-    const newListing: Listing = {
-      ...data,
-      id,
-      city: 'Valencia',
-      images: ['https://picsum.photos/seed/new1/800/600'],
-      phone: data.whatsapp,
-      publishedAt: new Date().toISOString(),
-      status: 'active',
-      userId: user?.id || 'demo',
-      userName: user?.name || 'Utilisateur',
-    }
-    setListings(prev => [newListing, ...prev])
-    return id
+  const addListing = async (data: NewListing): Promise<string> => {
+    const res = await fetch('/api/listings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...data, city: 'Valencia' }),
+    })
+    if (!res.ok) throw new Error('Erreur lors de la création de l\'annonce')
+    const listing = await res.json()
+    await refreshListings()
+    return listing.id
   }
 
   return (
-    <ListingsContext.Provider value={{ listings, getListing, addListing }}>
+    <ListingsContext.Provider value={{ listings, loading, getListing, addListing, refreshListings }}>
       {children}
     </ListingsContext.Provider>
   )

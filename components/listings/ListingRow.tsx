@@ -22,7 +22,7 @@ export default function ListingRow({ listing }: { listing: Listing }) {
       {/* Image — plus grande */}
       <div className="relative w-44 h-36 sm:w-56 sm:h-40 shrink-0 rounded-lg overflow-hidden bg-gray-100">
         <Image
-          src={listing.images[0]}
+          src={listing.images[0]?.url ?? ''}
           alt={listing.title}
           fill
           className="object-cover"

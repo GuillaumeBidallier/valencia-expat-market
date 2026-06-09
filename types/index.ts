@@ -1,29 +1,34 @@
 export interface Listing {
   id: string
   title: string
-  category: string
-  categorySlug: string
-  price: number | null
   description: string
-  images: string[]
-  neighborhood: string
+  price: number | null
+  categorySlug: string
   city: string
-  whatsapp: string
-  phone: string
-  publishedAt: string
-  status: 'active' | 'sold' | 'expired'
+  neighborhood: string
+  status: 'ACTIVE' | 'SOLD' | 'EXPIRED' | 'DELETED'
   userId: string
-  userName: string
+  user?: { name: string }
+  images: { id: string; url: string; order: number }[]
+  isPremium: boolean
+  boostExpiresAt: string | null
+  featuredAt: string | null
+  publishedAt: string
+  updatedAt: string
+  // Champs de compatibilité frontend
+  category?: string
+  whatsapp?: string
+  phone?: string
+  userName?: string
 }
 
 export interface NewListing {
   title: string
-  category: string
   categorySlug: string
   price: number | null
   description: string
   neighborhood: string
-  whatsapp: string
+  whatsapp?: string
 }
 
 export interface User {
