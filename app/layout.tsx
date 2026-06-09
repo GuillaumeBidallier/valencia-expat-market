@@ -14,8 +14,8 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
-  title: 'Vendo — Petites annonces de la communauté francophone en Espagne',
-  description: 'Achetez, vendez et donnez une seconde vie à vos affaires au sein de la communauté francophone en Espagne.',
+  title: 'Vendo — Petites annonces entre expatriés en Espagne',
+  description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
