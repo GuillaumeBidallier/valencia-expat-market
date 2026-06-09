@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(USER)
+  createdAt    DateTime  @default(now())
+  listings         Listing[]
+  favorites        Favorite[]
+  sentMessages     Message[] @relation("Sender")
+  receivedMessages Message[] @relation("Receiver")
+}
+
+enum Role {
+  USER
+  PRO
+  ADMIN
+}
+
+model Listing {
+  id             String        @id @default(cuid())
+  title          String
+  description    String
+  price          Float?
+  categorySlug   String
+  city           String
+  neighborhood   String
+  status         ListingStatus @default(ACTIVE)
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  images         ListingImage[]
+  favorites      Favorite[]
+  messages       Message[]
+  isPremium      Boolean       @default(false)
+  boostExpiresAt DateTime?
+  featuredAt     DateTime?
+  publishedAt    DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  EXPIRED
+  DELETED
+}
+
+model ListingImage {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int     @default(0)
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@unique([userId, listingId])
+}
+
+model Message {
+  id         String    @id @default(cuid())
+  listingId  String
+  listing    Listing   @relation(fields: [listingId], references: [id])
+  senderId   String
+  sender     User      @relation("Sender", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User      @relation("Receiver", fields: [receiverId], references: [id])
+  body       String
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+}
