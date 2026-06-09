@@ -54,12 +54,21 @@ export default function HomePage() {
       </section>
 
       {/* ===== FLOATING SEARCH BAR ===== */}
-      <div className="-mt-16 relative z-20 max-w-3xl mx-auto px-4 sm:px-6">
+      <div className="-mt-16 relative z-20 max-w-5xl mx-auto px-4 sm:px-6">
         <div className="rounded-2xl shadow-2xl overflow-hidden">
           {/* Location banner */}
-          <div className="bg-hero-dark px-4 py-2.5 flex items-center gap-2">
-            <MapPin size={14} className="text-orange-primary shrink-0" />
-            <span className="text-white text-sm font-semibold">Tout l&apos;Espagne</span>
+          <div className="bg-hero-dark px-4 py-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MapPin size={14} className="text-orange-primary shrink-0" />
+              <span className="text-white text-sm font-semibold">Tout l&apos;Espagne</span>
+            </div>
+            <Link
+              href="/deposer-annonce"
+              className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
+            >
+              <Tag size={13} />
+              Déposer une annonce
+            </Link>
           </div>
           {/* Search row */}
           <div className="bg-white p-2 sm:p-3 flex gap-2">
@@ -85,16 +94,6 @@ export default function HomePage() {
               <span className="hidden sm:inline">Rechercher</span>
             </Link>
           </div>
-        </div>
-        {/* Déposer une annonce */}
-        <div className="flex justify-end mt-3">
-          <Link
-            href="/deposer-annonce"
-            className="flex items-center gap-2 bg-indigo-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-indigo-dark transition-colors shadow-lg"
-          >
-            <Tag size={15} />
-            Déposer une annonce
-          </Link>
         </div>
       </div>
 
