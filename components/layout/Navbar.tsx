@@ -154,9 +154,10 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/inscription"
-                  className="bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
+                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
-                  S&apos;inscrire
+                  <Plus size={15} />
+                  Déposer une annonce
                 </Link>
               </>
             )}
@@ -201,7 +202,10 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/connexion" onClick={() => setMenuOpen(false)} className="border border-gray-300 text-navy px-4 py-2.5 rounded-lg font-semibold text-sm text-center">Se connecter</Link>
-              <Link href="/inscription" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center">S&apos;inscrire</Link>
+              <Link href="/inscription" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center flex items-center justify-center gap-2">
+                <Plus size={15} />
+                Déposer une annonce
+              </Link>
             </>
           )}
           <hr />
