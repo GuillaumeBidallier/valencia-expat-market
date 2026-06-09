@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { pusherServer } from '@/lib/pusher'
+import { sendMessageNotification } from '@/lib/email'
 
 type Params = Promise<{ conversationId: string }>
 
@@ -73,6 +74,12 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
 
   const receiverId = userId === buyerId ? sellerId : buyerId
 
+  // Check if this is the first unread message (to avoid email spam)
+  const [existingUnread, receiver] = await Promise.all([
+    prisma.message.count({ where: { listingId, receiverId, readAt: null } }),
+    prisma.user.findUnique({ where: { id: receiverId }, select: { email: true, name: true } }),
+  ])
+
   const message = await prisma.message.create({
     data: { listingId, senderId: userId, receiverId, body: body.trim() },
     include: { sender: { select: { id: true, name: true } } },
@@ -88,6 +95,18 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
   }
 
   await pusherServer?.trigger(`conv-${conversationId}`, 'new-message', payload)
+
+  // Send email only on first unread (receiver not caught up yet = already notified)
+  if (existingUnread === 0 && receiver) {
+    sendMessageNotification({
+      to: receiver.email,
+      toName: receiver.name,
+      fromName: session.user.name ?? 'Quelqu\'un',
+      listingTitle: listing.title,
+      messageBody: body.trim(),
+      conversationId,
+    }).catch(() => {})
+  }
 
   return NextResponse.json(payload, { status: 201 })
 }

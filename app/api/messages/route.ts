@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { sendMessageNotification } from '@/lib/email'
 
 export async function GET() {
   const session = await auth()
@@ -65,6 +66,10 @@ export async function POST(req: NextRequest) {
   if (!listing) return NextResponse.json({ error: 'Annonce introuvable' }, { status: 404 })
   if (listing.userId === session.user.id) return NextResponse.json({ error: 'Vous ne pouvez pas vous contacter vous-même' }, { status: 400 })
 
+  const [receiver] = await Promise.all([
+    prisma.user.findUnique({ where: { id: listing.userId }, select: { email: true, name: true } }),
+  ])
+
   await prisma.message.create({
     data: {
       listingId,
@@ -75,5 +80,18 @@ export async function POST(req: NextRequest) {
   })
 
   const conversationId = `${listingId}_${session.user.id}`
+
+  // Always notify on first-ever message in this conversation
+  if (receiver) {
+    sendMessageNotification({
+      to: receiver.email,
+      toName: receiver.name,
+      fromName: session.user.name ?? 'Quelqu\'un',
+      listingTitle: listing.title,
+      messageBody: body.trim(),
+      conversationId,
+    }).catch(() => {})
+  }
+
   return NextResponse.json({ conversationId }, { status: 201 })
 }
