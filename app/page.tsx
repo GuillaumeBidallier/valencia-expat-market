@@ -58,6 +58,14 @@ export default function HomePage() {
       {/* ===== FLOATING SEARCH BAR ===== */}
       <SearchWidget categoryItems={categoryItems.map(c => ({ label: c.label, slug: c.slug }))} />
 
+      {/* Safety notice */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-3">
+        <p className="text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
+          <Shield size={12} className="text-gray-400 shrink-0" />
+          Tous les échanges se font en main propre — aucun envoi, aucun paiement sur le site.
+        </p>
+      </div>
+
       {/* ===== CATEGORIES + ANNONCES + SKYSCRAPERS ===== */}
       <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 flex gap-4 items-start">
 
