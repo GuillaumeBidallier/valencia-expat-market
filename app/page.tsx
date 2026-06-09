@@ -27,8 +27,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ===== HERO ===== */}
-      <section className="relative min-h-[420px] sm:min-h-[500px] overflow-hidden">
+      {/* ===== HERO — remonte sous la navbar fixed ===== */}
+      <section className="relative -mt-16 min-h-[500px] sm:min-h-[580px] overflow-hidden">
         {/* Background image */}
         <Image
           src="/valencia-hero.jpg"
@@ -41,8 +41,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/90 via-hero-dark/60 to-hero-dark/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/40 via-transparent to-hero-dark/30" />
 
-        {/* Hero content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-12 pb-28 sm:pt-16 sm:pb-32">
+        {/* Hero content — pt-24 pour compenser la navbar (64px) + espace visuel */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-24 pb-28 sm:pt-28 sm:pb-32">
           <div className="max-w-xl">
             <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-4">
               Le site gratuit des<br />

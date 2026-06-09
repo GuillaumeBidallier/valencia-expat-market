@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <ListingsProvider>
             <Navbar />
-            <main>{children}</main>
+            <main className="pt-16">{children}</main>
             <Footer />
           </ListingsProvider>
         </AuthProvider>

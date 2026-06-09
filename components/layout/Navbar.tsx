@@ -20,7 +20,7 @@ export default function Navbar() {
   const transparent = !scrolled && !menuOpen
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       transparent
         ? 'bg-transparent border-transparent'
         : 'bg-white border-b border-gray-100 shadow-sm'
