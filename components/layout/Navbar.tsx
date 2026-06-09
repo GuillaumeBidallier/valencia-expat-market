@@ -1,9 +1,79 @@
 'use client'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import { Menu, X } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
+
+const LANGUAGES = [
+  { code: 'fr', label: 'Français',  flag: '🇫🇷' },
+  { code: 'en', label: 'English',   flag: '🇬🇧' },
+  { code: 'es', label: 'Español',   flag: '🇪🇸' },
+  { code: 'de', label: 'Deutsch',   flag: '🇩🇪' },
+  { code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+]
+
+function LanguagePicker({ transparent }: { transparent: boolean }) {
+  const [open, setOpen] = useState(false)
+  const [lang, setLang] = useState('fr')
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const stored = localStorage.getItem('vem_lang')
+    if (stored) setLang(stored)
+  }, [])
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const current = LANGUAGES.find(l => l.code === lang) ?? LANGUAGES[0]
+
+  const select = (code: string) => {
+    setLang(code)
+    localStorage.setItem('vem_lang', code)
+    setOpen(false)
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+          transparent
+            ? 'text-white/90 hover:bg-white/10'
+            : 'text-gray-600 hover:bg-gray-100'
+        }`}
+      >
+        <span className="text-base leading-none">{current.flag}</span>
+        <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wide">{current.code}</span>
+        <ChevronDown size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-1.5 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 min-w-[150px]">
+          {LANGUAGES.map(l => (
+            <button
+              key={l.code}
+              onClick={() => select(l.code)}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
+                l.code === lang ? 'text-orange-primary font-semibold' : 'text-navy'
+              }`}
+            >
+              <span className="text-base">{l.flag}</span>
+              <span>{l.label}</span>
+              {l.code === lang && <span className="ml-auto text-orange-primary text-xs">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth()
@@ -49,7 +119,7 @@ export default function Navbar() {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
             {isAuthenticated ? (
               <>
                 <Link
@@ -91,6 +161,10 @@ export default function Navbar() {
                 </Link>
               </>
             )}
+            {/* Language picker */}
+            <div className="ml-1 border-l pl-3 border-white/20">
+              <LanguagePicker transparent={transparent} />
+            </div>
           </div>
 
           {/* Mobile hamburger */}
@@ -123,6 +197,23 @@ export default function Navbar() {
               <Link href="/inscription" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center">S&apos;inscrire</Link>
             </>
           )}
+          <hr />
+          {/* Language selector mobile */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {LANGUAGES.map(l => (
+              <button
+                key={l.code}
+                onClick={() => {
+                  localStorage.setItem('vem_lang', l.code)
+                  setMenuOpen(false)
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:border-orange-primary hover:text-orange-primary transition-colors"
+              >
+                <span>{l.flag}</span>
+                <span className="font-medium">{l.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </header>
