@@ -13,14 +13,17 @@ export default function ConnexionPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    setTimeout(() => {
-      login(form.email, form.password)
-      router.push('/mon-compte')
-    }, 600)
+    const ok = await login(form.email, form.password)
+    if (ok) {
+      router.push('/')
+    } else {
+      setError('Email ou mot de passe incorrect.')
+    }
+    setLoading(false)
   }
 
   return (

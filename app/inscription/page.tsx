@@ -11,14 +11,27 @@ export default function InscriptionPage() {
   const { login } = useAuth()
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      login(form.email, form.password)
-      router.push('/mon-compte')
-    }, 800)
+    setError('')
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),
+      })
+      if (res.status === 409) { setError('Cet email est déjà utilisé.'); return }
+      if (!res.ok) { setError('Une erreur est survenue.'); return }
+      await login(form.email, form.password)
+      router.push('/')
+    } catch {
+      setError('Impossible de contacter le serveur.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -37,6 +50,8 @@ export default function InscriptionPage() {
 
         <h1 className="text-xl font-bold text-navy mb-1 text-center">S&apos;inscrire gratuitement</h1>
         <p className="text-sm text-gray-400 mb-6 text-center">Rejoignez la communauté des expatriés en Espagne. C&apos;est 100% gratuit.</p>
+
+        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input id="name" label="Nom complet" type="text" placeholder="Marie Dupont" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
