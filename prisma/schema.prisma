@@ -74,7 +74,7 @@ model Favorite {
 model Message {
   id         String    @id @default(cuid())
   listingId  String
-  listing    Listing   @relation(fields: [listingId], references: [id])
+  listing    Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
   senderId   String
   sender     User      @relation("Sender", fields: [senderId], references: [id])
   receiverId String
