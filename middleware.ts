@@ -8,11 +8,20 @@ const { auth } = NextAuth({
 })
 
 export default auth((req) => {
-  if (!req.auth) {
+  const isAuthenticated = !!req.auth
+  const { pathname } = req.nextUrl
+
+  // Redirect logged-in users away from auth pages
+  if (isAuthenticated && (pathname === '/connexion' || pathname === '/inscription')) {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+
+  // Redirect unauthenticated users away from protected pages
+  if (!isAuthenticated && (pathname === '/deposer-annonce' || pathname === '/mon-compte')) {
     return NextResponse.redirect(new URL('/connexion', req.url))
   }
 })
 
 export const config = {
-  matcher: ['/deposer-annonce', '/mon-compte'],
+  matcher: ['/connexion', '/inscription', '/deposer-annonce', '/mon-compte'],
 }
