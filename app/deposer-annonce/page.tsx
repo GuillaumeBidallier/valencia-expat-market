@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ImagePlus, X } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
@@ -8,16 +8,15 @@ import { categories, neighborhoods } from '@/lib/categories'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
-const PLACEHOLDER_IMAGES = [
-  'https://picsum.photos/seed/upload1/800/600',
-  'https://picsum.photos/seed/upload2/800/600',
-  'https://picsum.photos/seed/upload3/800/600',
-]
+const MAX_IMAGES = 5
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const MAX_SIZE = 5 * 1024 * 1024
 
 export default function DeposerAnnoncePage() {
   const router = useRouter()
   const { isAuthenticated } = useAuth()
   const { addListing } = useListings()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [form, setForm] = useState({
     title: '',
@@ -27,20 +26,41 @@ export default function DeposerAnnoncePage() {
     neighborhood: '',
     whatsapp: '',
   })
-  const [mockImages, setMockImages] = useState<string[]>([])
+  const [files, setFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (!isAuthenticated) router.replace('/connexion')
   }, [isAuthenticated, router])
 
+  useEffect(() => {
+    return () => previews.forEach(URL.revokeObjectURL)
+  }, [previews])
+
   const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [key]: e.target.value }))
 
-  const addMockImage = () => {
-    if (mockImages.length >= 8) return
-    setMockImages(imgs => [...imgs, PLACEHOLDER_IMAGES[imgs.length % PLACEHOLDER_IMAGES.length]])
+  const handleFiles = (selected: FileList | null) => {
+    if (!selected) return
+    const incoming = Array.from(selected)
+    const valid = incoming.filter(f => ALLOWED_TYPES.includes(f.type) && f.size <= MAX_SIZE)
+    const rejected = incoming.length - valid.length
+    if (rejected > 0) setUploadError(`${rejected} fichier(s) ignoré(s) — JPG/PNG/WebP, max 5 Mo.`)
+    else setUploadError('')
+
+    const slots = MAX_IMAGES - files.length
+    const toAdd = valid.slice(0, slots)
+    setFiles(prev => [...prev, ...toAdd])
+    setPreviews(prev => [...prev, ...toAdd.map(f => URL.createObjectURL(f))])
+  }
+
+  const removeImage = (i: number) => {
+    URL.revokeObjectURL(previews[i])
+    setFiles(prev => prev.filter((_, j) => j !== i))
+    setPreviews(prev => prev.filter((_, j) => j !== i))
   }
 
   const validate = () => {
@@ -48,7 +68,6 @@ export default function DeposerAnnoncePage() {
     if (!form.title.trim()) e.title = 'Le titre est obligatoire'
     if (!form.categorySlug) e.categorySlug = 'Choisissez une catégorie'
     if (!form.neighborhood) e.neighborhood = 'Choisissez un quartier'
-    if (!form.whatsapp.trim()) e.whatsapp = 'Le numéro WhatsApp est obligatoire'
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -64,8 +83,15 @@ export default function DeposerAnnoncePage() {
         price: form.price ? Number(form.price) : null,
         description: form.description,
         neighborhood: form.neighborhood,
-        whatsapp: form.whatsapp,
       })
+
+      if (files.length > 0) {
+        const fd = new FormData()
+        files.forEach(f => fd.append('files', f))
+        const res = await fetch(`/api/listings/${id}/images`, { method: 'POST', body: fd })
+        if (!res.ok) console.error('Upload images failed', await res.text())
+      }
+
       router.push(`/annonces/${id}`)
     } catch (err) {
       console.error('Erreur lors de la publication', err)
@@ -81,9 +107,10 @@ export default function DeposerAnnoncePage() {
       <p className="text-sm text-gray-400 mb-8">Remplissez les informations ci-dessous pour publier votre annonce.</p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Infos */}
         <div className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
           <h2 className="font-semibold text-navy">Informations de l&apos;annonce</h2>
-          <Input id="title" label="Titre de l'annonce *" placeholder="Ex: Canapé 3 places IKEA gris" value={form.title} onChange={set('title')} error={errors.title} />
+          <Input id="title" label="Titre *" placeholder="Ex : Canapé 3 places IKEA gris" value={form.title} onChange={set('title')} error={errors.title} />
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-navy">Catégorie *</label>
@@ -94,7 +121,7 @@ export default function DeposerAnnoncePage() {
             {errors.categorySlug && <p className="text-xs text-red-500">{errors.categorySlug}</p>}
           </div>
 
-          <Input id="price" label="Prix en euros (laisser vide pour un don)" type="number" placeholder="Ex: 150" value={form.price} onChange={set('price')} />
+          <Input id="price" label="Prix en euros (laisser vide pour un don)" type="number" placeholder="Ex : 150" value={form.price} onChange={set('price')} />
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-navy">Description</label>
@@ -111,18 +138,39 @@ export default function DeposerAnnoncePage() {
         {/* Photos */}
         <div className="bg-white rounded-xl border border-gray-100 p-6">
           <h2 className="font-semibold text-navy mb-1">Photos</h2>
-          <p className="text-xs text-gray-400 mb-4">Jusqu&apos;à 8 photos. La première sera l&apos;image principale.</p>
+          <p className="text-xs text-gray-400 mb-4">Jusqu&apos;à {MAX_IMAGES} photos · JPG, PNG ou WebP · max 5 Mo chacune.</p>
+
+          {uploadError && <p className="text-xs text-red-500 mb-3">{uploadError}</p>}
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            className="hidden"
+            onChange={e => handleFiles(e.target.files)}
+          />
+
           <div className="grid grid-cols-4 gap-2">
-            {mockImages.map((img, i) => (
+            {previews.map((src, i) => (
               <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-                <img src={img} alt="" className="w-full h-full object-cover" />
-                <button type="button" onClick={() => setMockImages(imgs => imgs.filter((_, j) => j !== i))} className="absolute top-1 right-1 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeImage(i)}
+                  className="absolute top-1 right-1 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center"
+                >
                   <X size={10} className="text-white" />
                 </button>
               </div>
             ))}
-            {mockImages.length < 8 && (
-              <button type="button" onClick={addMockImage} className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-1 hover:border-orange-primary transition-colors text-gray-400 hover:text-orange-primary">
+            {previews.length < MAX_IMAGES && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-1 hover:border-orange-primary transition-colors text-gray-400 hover:text-orange-primary"
+              >
                 <ImagePlus size={20} />
                 <span className="text-xs">Ajouter</span>
               </button>
@@ -130,7 +178,7 @@ export default function DeposerAnnoncePage() {
           </div>
         </div>
 
-        {/* Location + Contact */}
+        {/* Localisation + contact */}
         <div className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
           <h2 className="font-semibold text-navy">Localisation &amp; contact</h2>
           <div className="flex flex-col gap-1">
@@ -141,7 +189,7 @@ export default function DeposerAnnoncePage() {
             </select>
             {errors.neighborhood && <p className="text-xs text-red-500">{errors.neighborhood}</p>}
           </div>
-          <Input id="whatsapp" label="Numéro WhatsApp *" type="tel" placeholder="+34 6XX XXX XXX" value={form.whatsapp} onChange={set('whatsapp')} error={errors.whatsapp} />
+          <Input id="whatsapp" label="Numéro WhatsApp" type="tel" placeholder="+34 6XX XXX XXX" value={form.whatsapp} onChange={set('whatsapp')} />
         </div>
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
