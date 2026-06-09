@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Shield, Users, Tag, Home, Briefcase, Car, Sofa, Smartphone, PawPrint, Wrench, Globe } from 'lucide-react'
 import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
-import SearchWidget from '@/components/listings/SearchWidget'
+import HeroSection from '@/components/home/HeroSection'
 import PromoBanner from '@/components/home/PromoBanner'
 import { mockListings } from '@/data/listings'
 
@@ -29,42 +29,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ===== HERO — remonte sous la navbar fixed ===== */}
-      <section className="relative -mt-16 min-h-[500px] sm:min-h-[580px] overflow-hidden">
-        {/* Background image */}
-        <Image
-          src="/valencia-hero.jpg"
-          alt="Valencia City of Arts and Sciences"
-          fill
-          className="object-cover object-center"
-          priority
-        />
-        {/* Gradient overlay — dark on left, transparent right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/90 via-hero-dark/60 to-hero-dark/20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/40 via-transparent to-hero-dark/30" />
-
-        {/* Hero content — pt-24 pour compenser la navbar (64px) + espace visuel */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-24 pb-28 sm:pt-28 sm:pb-32">
-          <div className="max-w-xl">
-            <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-4">
-              Le site gratuit des<br />
-              petites annonces entre<br />
-              <span className="text-orange-primary">expatriés.</span>
-            </h1>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== FLOATING SEARCH BAR ===== */}
-      <SearchWidget categoryItems={categoryItems.map(c => ({ label: c.label, slug: c.slug }))} />
-
-      {/* Safety notice */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-3">
-        <p className="text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
-          <Shield size={12} className="text-gray-400 shrink-0" />
-          Tous les échanges se font en main propre — aucun envoi, aucun paiement sur le site.
-        </p>
-      </div>
+      {/* ===== HERO + SEARCH ===== */}
+      <HeroSection categoryItems={categoryItems.map(c => ({ label: c.label, slug: c.slug }))} />
 
       {/* ===== CATEGORIES + ANNONCES + SKYSCRAPERS ===== */}
       <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 flex gap-4 items-start">
