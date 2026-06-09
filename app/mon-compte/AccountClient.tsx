@@ -378,24 +378,28 @@ export default function AccountClient({ user, initialListings, initialFavorites 
         </div>
 
         {/* Mobile sticky tab bar */}
-        <div className="sticky top-16 z-30 bg-white border-b border-gray-100 px-4 flex shadow-sm">
+        <div className="sticky top-16 z-30 bg-white border-b border-gray-100 flex shadow-sm">
           {navItems.map(item => (
             <button
               key={item.key}
               onClick={() => setTab(item.key)}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-3 text-[11px] font-bold transition-colors border-b-2 -mb-px ${
+              className={`flex-1 flex flex-col items-center gap-1 py-3 text-[11px] font-bold transition-colors border-b-2 -mb-px ${
                 tab === item.key
                   ? 'border-orange-primary text-orange-primary'
                   : 'border-transparent text-gray-400'
               }`}
             >
-              <item.icon size={17} />
+              <div className="relative">
+                <item.icon size={17} />
+                {!!item.count && item.count > 0 && (
+                  <span className={`absolute -top-2 -right-3 min-w-[16px] h-4 flex items-center justify-center text-[9px] font-black px-1 rounded-full leading-none ${
+                    tab === item.key ? 'bg-orange-primary text-white' : 'bg-gray-200 text-gray-500'
+                  }`}>
+                    {item.count}
+                  </span>
+                )}
+              </div>
               <span>{item.label.split(' ')[1] ?? item.label}</span>
-              {!!item.count && item.count > 0 && (
-                <span className={`absolute -top-0 text-[9px] font-black px-1 rounded-full ${tab === item.key ? 'bg-orange-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
-                  {item.count}
-                </span>
-              )}
             </button>
           ))}
         </div>
