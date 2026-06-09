@@ -80,8 +80,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Listings */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Listings + lateral skyscrapers */}
+      <main className="py-6">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 flex gap-4 items-start">
+          {/* Left skyscraper */}
+          <div className="hidden xl:block shrink-0 sticky top-20">
+            <AdUnit size="skyscraper" seed={1} />
+          </div>
+
+          <div className="flex-1 min-w-0 max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-navy text-base">
             Annonces récentes
@@ -114,6 +121,13 @@ export default function HomePage() {
           >
             Voir toutes les annonces ({mockListings.length})
           </Link>
+        </div>
+          </div>
+
+          {/* Right skyscraper */}
+          <div className="hidden xl:block shrink-0 sticky top-20">
+            <AdUnit size="skyscraper" seed={4} />
+          </div>
         </div>
       </main>
     </div>

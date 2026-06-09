@@ -86,7 +86,7 @@ const ADS: Ad[] = [
   },
 ]
 
-type AdSize = 'banner' | 'rectangle' | 'inline'
+type AdSize = 'banner' | 'rectangle' | 'inline' | 'skyscraper'
 
 interface AdUnitProps {
   size?: AdSize
@@ -97,6 +97,36 @@ interface AdUnitProps {
 export default function AdUnit({ size = 'inline', seed = 0, className = '' }: AdUnitProps) {
   const ad = useMemo(() => ADS[seed % ADS.length], [seed])
   const ad2 = useMemo(() => ADS[(seed + 1) % ADS.length], [seed])
+  const ad3 = useMemo(() => ADS[(seed + 2) % ADS.length], [seed])
+  const ad4 = useMemo(() => ADS[(seed + 3) % ADS.length], [seed])
+
+  if (size === 'skyscraper') {
+    return (
+      <div className={`w-36 flex flex-col gap-2 ${className}`}>
+        <div className="text-[10px] text-gray-400 text-center uppercase tracking-wide">Annonces</div>
+        {[ad, ad2, ad3, ad4].map((a, i) => (
+          <div key={i} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+            {/* Colored header */}
+            <div className="h-20 flex items-center justify-center text-4xl" style={{ backgroundColor: a.color + '15', borderBottom: `2px solid ${a.color}30` }}>
+              {a.emoji}
+            </div>
+            <div className="p-2.5">
+              <p className="font-bold text-navy text-[11px] leading-tight mb-1">{a.title}</p>
+              <p className="text-[10px] text-green-700 mb-1.5">{a.url}</p>
+              <p className="text-[10px] text-gray-500 leading-relaxed mb-2 line-clamp-3">{a.description}</p>
+              <button
+                className="w-full text-white text-[10px] font-semibold px-2 py-1.5 rounded"
+                style={{ backgroundColor: a.color }}
+              >
+                {a.cta}
+              </button>
+            </div>
+          </div>
+        ))}
+        <div className="text-[9px] text-gray-300 text-center">Google Ads</div>
+      </div>
+    )
+  }
 
   if (size === 'rectangle') {
     return (
