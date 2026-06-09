@@ -12,7 +12,7 @@ export default function VendoLogo({ size = 'md', theme = 'dark' }: VendoLogoProp
 
   // Circle sized to match cap-height of the letters
   const r = fontSize * 0.44        // outer radius of the ring
-  const strokeW = r * 0.18         // ring thickness
+  const strokeW = r * 0.28         // ring thickness
   const innerR = r - strokeW / 2   // inner edge of ring (for smile positioning)
 
   // SVG canvas: circle + rays extending top-right
