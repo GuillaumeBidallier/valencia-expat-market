@@ -5,6 +5,7 @@ import { Menu, X, ChevronDown, Plus, MessageSquare } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
+import { useUnreadCount } from '@/hooks/useUnreadCount'
 
 const LANGUAGES = [
   { code: 'fr', label: 'Français',  flag: '🇫🇷' },
@@ -82,6 +83,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const isHome = pathname === '/'
+  const unreadCount = useUnreadCount(isAuthenticated)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -134,12 +136,17 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/messages"
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+                  className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
                     transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   title="Messages"
                 >
                   <MessageSquare size={18} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center px-1 leading-none">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   href="/mon-compte"
@@ -205,7 +212,14 @@ export default function Navbar() {
           <hr />
           {isAuthenticated ? (
             <>
-              <Link href="/messages" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>Messages</Link>
+              <Link href="/messages" className="flex items-center gap-2 text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>
+                Messages
+                {unreadCount > 0 && (
+                  <span className="min-w-[18px] h-[18px] rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center px-1">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </Link>
               <Link href="/mon-compte" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>Mon compte</Link>
               <Link href="/deposer-annonce" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center">Déposer une annonce</Link>
             </>
