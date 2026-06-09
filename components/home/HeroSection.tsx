@@ -30,7 +30,7 @@ export default function HeroSection({ categoryItems }: { categoryItems: Category
             <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight mb-5">
               Le site gratuit des<br />
               petites annonces entre<br />
-              <span className="text-orange-primary">expatriés.</span>
+              <span className="text-orange-primary">la communauté francophone en Espagne.</span>
             </h1>
 
             {/* Safety notice box */}

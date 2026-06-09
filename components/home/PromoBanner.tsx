@@ -15,8 +15,8 @@ const SLIDES = [
   {
     bg: 'bg-gradient-to-r from-blue-valencia to-blue-dark',
     tag: 'COMMUNAUTÉ',
-    title: 'Des milliers d\'expatriés',
-    subtitle: 'Connectés partout en Espagne',
+    title: 'La communauté francophone',
+    subtitle: 'Connectée partout en Espagne',
     cta: 'Voir les annonces',
     href: '/annonces',
     emoji: '🌍',

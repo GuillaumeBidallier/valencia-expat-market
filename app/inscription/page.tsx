@@ -36,7 +36,7 @@ export default function InscriptionPage() {
         </div>
 
         <h1 className="text-xl font-bold text-navy mb-1 text-center">S&apos;inscrire gratuitement</h1>
-        <p className="text-sm text-gray-400 mb-6 text-center">Rejoignez la communauté des expatriés de Valencia. C&apos;est 100% gratuit.</p>
+        <p className="text-sm text-gray-400 mb-6 text-center">Rejoignez la communauté francophone en Espagne. C&apos;est 100% gratuit.</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input id="name" label="Nom complet" type="text" placeholder="Marie Dupont" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />

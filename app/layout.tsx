@@ -14,8 +14,8 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
-  title: 'Valencia Expat Market — Petites annonces entre expatriés',
-  description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés à Valencia.',
+  title: 'Vendo — Petites annonces de la communauté francophone en Espagne',
+  description: 'Achetez, vendez et donnez une seconde vie à vos affaires au sein de la communauté francophone en Espagne.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

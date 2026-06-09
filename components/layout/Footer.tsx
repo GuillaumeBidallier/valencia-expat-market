@@ -11,7 +11,7 @@ export default function Footer() {
             <div className="mb-3">
               <VendoLogo size="md" theme="light" />
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mt-2">Le site gratuit des petites annonces entre expatriés à Valencia.</p>
+            <p className="text-gray-400 text-sm leading-relaxed mt-2">Le site gratuit des petites annonces de la communauté francophone en Espagne.</p>
             <div className="flex items-center gap-3 mt-4">
               {/* Facebook */}
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -67,7 +67,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500 text-xs">
-          © 2026 Valencia Expat Market — Tous droits réservés. Réalisé avec ❤️ pour les expatriés à Valencia.
+          © 2026 Vendo — Tous droits réservés. Réalisé avec ❤️ pour la communauté francophone en Espagne.
         </div>
       </div>
     </footer>

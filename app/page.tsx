@@ -21,7 +21,7 @@ const categoryItems = [
 const trustItems = [
   { icon: Tag, title: '100% gratuit', desc: 'Déposez et consultez vos annonces gratuitement' },
   { icon: Shield, title: 'Sécurisé', desc: 'Des échanges en toute confiance' },
-  { icon: Users, title: 'Communauté', desc: "Une communauté d'expatriés à travers toute l'Espagne" },
+  { icon: Users, title: 'Communauté', desc: "La communauté francophone à travers toute l'Espagne" },
 ]
 
 export default function HomePage() {
