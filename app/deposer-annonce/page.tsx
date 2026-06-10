@@ -281,7 +281,7 @@ function DeposerAnnonceForm() {
                   ) : (
                     <Sparkles size={14} />
                   )}
-                  3 photos supplémentaires — 1,99€
+                  3 photos supplémentaires — 7,99€
                 </button>
               </div>
             </div>

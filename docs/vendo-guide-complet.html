@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Vendo — Guide Complet</title>
+<style>
+/* ─── RESET & PAGE ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@page {
+  size: A4;
+  margin: 0;
+}
+@page :first { margin: 0; }
+
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.55;
+  color: #1A1F36;
+  background: white;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ─── COVER ──────────────────────────────────────────── */
+.cover {
+  width: 210mm;
+  height: 297mm;
+  background: linear-gradient(155deg, #1A1F36 0%, #252C4A 45%, #C44A10 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 60px;
+  page-break-after: always;
+  position: relative;
+  overflow: hidden;
+}
+.cover-circle1 {
+  position: absolute; top: -100px; right: -80px;
+  width: 420px; height: 420px; border-radius: 50%;
+  background: rgba(232,87,26,0.12);
+}
+.cover-circle2 {
+  position: absolute; bottom: -80px; left: 40px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.cover-line {
+  width: 48px; height: 4px; background: #E8571A; border-radius: 2px; margin-bottom: 24px;
+}
+.cover h1 {
+  font-size: 52pt; font-weight: 900; color: white;
+  letter-spacing: -2px; line-height: 1; margin-bottom: 10px;
+}
+.cover-tagline {
+  font-size: 14pt; color: rgba(255,255,255,0.5);
+  font-weight: 300; letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 48px;
+}
+.cover-doc-title {
+  font-size: 18pt; font-weight: 700; color: white; margin-bottom: 8px;
+}
+.cover-doc-sub {
+  font-size: 11pt; color: rgba(255,255,255,0.5); font-weight: 400;
+}
+.cover-badges { display: flex; gap: 10px; margin-top: 56px; }
+.cover-badge {
+  padding: 7px 18px; border-radius: 30px;
+  font-size: 8.5pt; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.65);
+}
+.cover-footer {
+  position: absolute; bottom: 36px; left: 60px; right: 60px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cover-footer span { font-size: 8pt; color: rgba(255,255,255,0.25); }
+
+/* ─── TOC ────────────────────────────────────────────── */
+.toc-page {
+  width: 210mm; min-height: 297mm;
+  padding: 56px 60px;
+  page-break-after: always;
+}
+.toc-title { font-size: 22pt; font-weight: 900; color: #1A1F36; margin-bottom: 40px; }
+.toc-group { margin-bottom: 28px; page-break-inside: avoid; }
+.toc-group-label {
+  font-size: 7.5pt; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #9CA3AF; margin-bottom: 8px;
+  padding-bottom: 6px; border-bottom: 1px solid #F3F4F6;
+}
+.toc-row {
+  display: flex; align-items: baseline; gap: 6px;
+  padding: 4.5px 0; color: #4B5563; font-size: 9.5pt;
+}
+.toc-num { font-weight: 800; color: #E8571A; font-size: 8.5pt; min-width: 22px; }
+.toc-label { flex: 1; }
+.toc-dots { flex: 1; border-bottom: 1px dotted #E5E7EB; margin: 0 4px 3px; min-width: 20px; }
+.toc-pg { font-size: 8.5pt; color: #9CA3AF; min-width: 16px; text-align: right; }
+
+/* ─── SECTION PAGES ──────────────────────────────────── */
+.section-page {
+  width: 210mm;
+  padding: 0;
+  page-break-before: always;
+}
+
+/* Section banner */
+.section-banner {
+  padding: 40px 60px 32px;
+  border-bottom: 1px solid #E5E7EB;
+  margin-bottom: 0;
+}
+.section-banner .chip {
+  display: inline-block;
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 7.5pt; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.chip-user    { background: #DBEAFE; color: #1E40AF; }
+.chip-pro     { background: #EDE9FE; color: #5B21B6; }
+.chip-admin   { background: #FEE2E2; color: #991B1B; }
+.chip-email   { background: #D1FAE5; color: #065F46; }
+
+.section-banner h2 {
+  font-size: 26pt; font-weight: 900; color: #1A1F36;
+  letter-spacing: -0.8px; line-height: 1.1; margin-bottom: 8px;
+}
+.section-banner p { font-size: 10pt; color: #6B7280; }
+
+.section-body { padding: 28px 60px 40px; }
+
+/* ─── HEADINGS ───────────────────────────────────────── */
+h3 {
+  font-size: 11.5pt; font-weight: 800; color: #1A1F36;
+  margin: 28px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #F3F4F6;
+  page-break-after: avoid;
+}
+h3:first-child { margin-top: 0; }
+
+/* ─── STEPS ──────────────────────────────────────────── */
+.steps { margin: 12px 0; }
+.step {
+  display: flex; gap: 14px; margin-bottom: 12px;
+  page-break-inside: avoid;
+}
+.step-num {
+  min-width: 26px; height: 26px; border-radius: 50%;
+  background: #E8571A; color: white; font-weight: 800;
+  font-size: 9pt; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.step h4 { font-size: 9.5pt; font-weight: 700; color: #1A1F36; margin-bottom: 2px; }
+.step p   { font-size: 9pt; color: #6B7280; }
+
+/* ─── GRID ───────────────────────────────────────────── */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0; }
+
+/* ─── CARD ───────────────────────────────────────────── */
+.card {
+  background: #F9FAFB; border-radius: 10px; padding: 16px 18px;
+  border: 1px solid #E5E7EB; page-break-inside: avoid;
+}
+.card h4 { font-size: 9.5pt; font-weight: 700; color: #1A1F36; margin-bottom: 5px; }
+.card p  { font-size: 9pt; color: #6B7280; line-height: 1.5; }
+.card-icon { font-size: 18px; margin-bottom: 6px; display: block; }
+
+/* ─── TIER CARDS ─────────────────────────────────────── */
+.tier { border-radius: 12px; padding: 18px 20px; page-break-inside: avoid; }
+.tier-free    { background: #F9FAFB; border: 2px solid #E5E7EB; }
+.tier-premium { background: #EEF2FF; border: 2px solid #4F46E5; }
+.tier-plus    { background: #FFF7ED; border: 2px solid #E8571A; }
+.tier h4 { font-size: 10pt; font-weight: 800; margin-bottom: 2px; }
+.tier-free h4    { color: #6B7280; }
+.tier-premium h4 { color: #4338CA; }
+.tier-plus h4    { color: #C2410C; }
+.tier-price { font-size: 24pt; font-weight: 900; line-height: 1; margin: 8px 0 2px; }
+.tier-free .tier-price    { color: #6B7280; }
+.tier-premium .tier-price { color: #4338CA; }
+.tier-plus .tier-price    { color: #C2410C; }
+.tier-desc { font-size: 8pt; color: #9CA3AF; margin-bottom: 10px; }
+.tier ul { list-style: none; }
+.tier li { font-size: 8.5pt; color: #6B7280; padding: 2.5px 0; display: flex; gap: 6px; }
+.tier li::before { content: '✓'; font-weight: 800; flex-shrink: 0; }
+.tier-free li::before    { color: #9CA3AF; }
+.tier-premium li::before { color: #4338CA; }
+.tier-plus li::before    { color: #C2410C; }
+
+/* ─── TABLE ──────────────────────────────────────────── */
+.tbl { width: 100%; border-collapse: collapse; margin: 12px 0; page-break-inside: avoid; font-size: 9pt; }
+.tbl th {
+  background: #1A1F36; color: white; font-weight: 700;
+  padding: 9px 12px; text-align: left; font-size: 8pt;
+  letter-spacing: 0.3px;
+}
+.tbl th:first-child { border-radius: 6px 0 0 0; }
+.tbl th:last-child  { border-radius: 0 6px 0 0; }
+.tbl td { padding: 8px 12px; border-bottom: 1px solid #F3F4F6; color: #4B5563; vertical-align: top; }
+.tbl tr:nth-child(even) td { background: #F9FAFB; }
+.tbl tr:last-child td { border-bottom: none; }
+
+/* ─── CALLOUT ────────────────────────────────────────── */
+.callout { border-radius: 8px; padding: 12px 16px; margin: 12px 0; display: flex; gap: 12px; page-break-inside: avoid; }
+.callout-info    { background: #EFF6FF; border-left: 3px solid #3B82F6; }
+.callout-warn    { background: #FFFBEB; border-left: 3px solid #F59E0B; }
+.callout-success { background: #F0FDF4; border-left: 3px solid #22C55E; }
+.callout-danger  { background: #FEF2F2; border-left: 3px solid #EF4444; }
+.callout-ico { font-size: 14px; flex-shrink: 0; padding-top: 1px; }
+.callout p { font-size: 9pt; color: #4B5563; margin: 0; line-height: 1.5; }
+.callout strong { color: #1A1F36; }
+
+/* ─── INLINE ─────────────────────────────────────────── */
+code {
+  background: #F3F4F6; padding: 1px 5px; border-radius: 3px;
+  font-family: 'Courier New', monospace; font-size: 8.5pt; color: #C2410C;
+}
+p { margin-bottom: 8px; color: #4B5563; }
+ul.list { padding-left: 18px; margin: 8px 0; }
+ul.list li { color: #4B5563; font-size: 9pt; padding: 2px 0; }
+
+.badge-status {
+  display: inline-block; padding: 2px 9px; border-radius: 20px;
+  font-size: 8pt; font-weight: 700;
+}
+.s-active  { background: #D1FAE5; color: #065F46; }
+.s-pending { background: #FEF3C7; color: #92400E; }
+.s-refused { background: #FEE2E2; color: #991B1B; }
+
+/* ─── PAGE FOOTER BAND ───────────────────────────────── */
+.footer-band {
+  margin-top: 32px; padding: 10px 0 0;
+  border-top: 1px solid #F3F4F6;
+  display: flex; justify-content: space-between;
+  font-size: 7.5pt; color: #D1D5DB;
+}
+
+/* ─── PRIORITY BOX ───────────────────────────────────── */
+.priority-box {
+  display: flex; gap: 0; margin: 12px 0; border-radius: 10px;
+  overflow: hidden; border: 1px solid #E5E7EB;
+}
+.priority-item {
+  flex: 1; padding: 14px 16px; page-break-inside: avoid;
+}
+.priority-item:not(:last-child) { border-right: 1px solid #E5E7EB; }
+.priority-item .pnum {
+  font-size: 20pt; font-weight: 900; line-height: 1; margin-bottom: 4px;
+}
+.priority-item h5 { font-size: 9pt; font-weight: 700; color: #1A1F36; margin-bottom: 3px; }
+.priority-item p  { font-size: 8.5pt; color: #6B7280; margin: 0; }
+.p1 { background: #FFF7ED; } .p1 .pnum { color: #C2410C; }
+.p2 { background: #EEF2FF; } .p2 .pnum { color: #4338CA; }
+.p3 { background: #F9FAFB; } .p3 .pnum { color: #9CA3AF; }
+
+/* ─── CREDENTIALS BOX ───────────────────────────────── */
+.creds-box {
+  background: #1A1F36; border-radius: 10px; padding: 20px 24px; margin: 12px 0;
+  page-break-inside: avoid;
+}
+.creds-box .cred-row { display: flex; gap: 16px; align-items: center; padding: 6px 0; }
+.creds-box .cred-row:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.08); }
+.creds-box .cred-label { font-size: 8pt; color: rgba(255,255,255,0.4); min-width: 120px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.creds-box .cred-val   { font-size: 10pt; font-weight: 700; color: white; font-family: 'Courier New', monospace; }
+
+/* ─── STAT BLOCKS ────────────────────────────────────── */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0; }
+.stat-block { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 16px; page-break-inside: avoid; }
+.stat-block .val { font-size: 22pt; font-weight: 900; line-height: 1; }
+.stat-block .lbl { font-size: 8pt; color: #9CA3AF; margin-top: 4px; font-weight: 600; }
+.col-orange { color: #E8571A; }
+.col-indigo { color: #4338CA; }
+.col-green  { color: #059669; }
+.col-navy   { color: #1A1F36; }
+.col-gray   { color: #9CA3AF; }
+</style>
+</head>
+<body>
+
+<!-- ████████████ COVER ████████████ -->
+<div class="cover">
+  <div class="cover-circle1"></div>
+  <div class="cover-circle2"></div>
+  <div class="cover-line"></div>
+  <h1>Vendo</h1>
+  <div class="cover-tagline">Valencia Expat Market</div>
+  <div class="cover-doc-title">Guide Complet de la Plateforme</div>
+  <div class="cover-doc-sub">Référentiel fonctionnel — Utilisateurs · Professionnels · Administrateurs</div>
+  <div class="cover-badges">
+    <div class="cover-badge">👤 Utilisateurs</div>
+    <div class="cover-badge">⭐ Professionnels</div>
+    <div class="cover-badge">🛡 Administrateurs</div>
+  </div>
+  <div class="cover-footer">
+    <span>Version 1.0 — Juin 2026</span>
+    <span>vendo.es</span>
+  </div>
+</div>
+
+<!-- ████████████ TABLE DES MATIÈRES ████████████ -->
+<div class="toc-page">
+  <div class="toc-title">Table des matières</div>
+
+  <div class="toc-group">
+    <div class="toc-group-label">👤 Espace Utilisateur</div>
+    <div class="toc-row"><span class="toc-num">1</span><span class="toc-label">Inscription et création de compte</span><span class="toc-dots"></span><span class="toc-pg">3</span></div>
+    <div class="toc-row"><span class="toc-num">2</span><span class="toc-label">Connexion et mot de passe oublié</span><span class="toc-dots"></span><span class="toc-pg">3</span></div>
+    <div class="toc-row"><span class="toc-num">3</span><span class="toc-label">Tableau de bord — Mon compte</span><span class="toc-dots"></span><span class="toc-pg">4</span></div>
+    <div class="toc-row"><span class="toc-num">4</span><span class="toc-label">Déposer une annonce</span><span class="toc-dots"></span><span class="toc-pg">4</span></div>
+    <div class="toc-row"><span class="toc-num">5</span><span class="toc-label">Upgrade photos — 7,99€</span><span class="toc-dots"></span><span class="toc-pg">5</span></div>
+    <div class="toc-row"><span class="toc-num">6</span><span class="toc-label">Rechercher et filtrer les annonces</span><span class="toc-dots"></span><span class="toc-pg">5</span></div>
+    <div class="toc-row"><span class="toc-num">7</span><span class="toc-label">Messagerie privée et contact</span><span class="toc-dots"></span><span class="toc-pg">6</span></div>
+    <div class="toc-row"><span class="toc-num">8</span><span class="toc-label">Favoris et signalement</span><span class="toc-dots"></span><span class="toc-pg">6</span></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-group-label">⭐ Espace Professionnel</div>
+    <div class="toc-row"><span class="toc-num">9</span><span class="toc-label">Présentation de l'annuaire</span><span class="toc-dots"></span><span class="toc-pg">7</span></div>
+    <div class="toc-row"><span class="toc-num">10</span><span class="toc-label">Offres FREE, Premium et Premium+</span><span class="toc-dots"></span><span class="toc-pg">7</span></div>
+    <div class="toc-row"><span class="toc-num">11</span><span class="toc-label">Géo Pub — Ciblage géographique</span><span class="toc-dots"></span><span class="toc-pg">8</span></div>
+    <div class="toc-row"><span class="toc-num">12</span><span class="toc-label">Badge Recommandé</span><span class="toc-dots"></span><span class="toc-pg">8</span></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-group-label">🛡 Espace Administrateur</div>
+    <div class="toc-row"><span class="toc-num">13</span><span class="toc-label">Accès au back-office</span><span class="toc-dots"></span><span class="toc-pg">9</span></div>
+    <div class="toc-row"><span class="toc-num">14</span><span class="toc-label">Modération des annonces</span><span class="toc-dots"></span><span class="toc-pg">9</span></div>
+    <div class="toc-row"><span class="toc-num">15</span><span class="toc-label">Gestion des utilisateurs</span><span class="toc-dots"></span><span class="toc-pg">10</span></div>
+    <div class="toc-row"><span class="toc-num">16</span><span class="toc-label">Gestion des professionnels</span><span class="toc-dots"></span><span class="toc-pg">10</span></div>
+    <div class="toc-row"><span class="toc-num">17</span><span class="toc-label">Statistiques et reporting</span><span class="toc-dots"></span><span class="toc-pg">11</span></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-group-label">📧 Système email</div>
+    <div class="toc-row"><span class="toc-num">18</span><span class="toc-label">Emails transactionnels automatiques</span><span class="toc-dots"></span><span class="toc-pg">12</span></div>
+    <div class="toc-row"><span class="toc-num">19</span><span class="toc-label">Variables d'environnement</span><span class="toc-dots"></span><span class="toc-pg">12</span></div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 3 — Inscription & Connexion ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-user">👤 Espace Utilisateur</div>
+    <h2>Inscription & Connexion</h2>
+    <p>Créer un compte gratuit, se connecter et récupérer un mot de passe oublié.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>1 — Inscription</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div><h4>Accéder à la page d'inscription</h4><p>Cliquer sur <em>S'inscrire gratuitement</em> dans la navbar ou aller directement sur <code>/inscription</code>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div><h4>Remplir le formulaire</h4><p>Champs : <strong>Nom complet</strong>, <strong>adresse e-mail</strong>, <strong>mot de passe</strong> (8 caractères minimum). Validation instantanée côté serveur.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div><h4>Email de bienvenue automatique</h4><p>Un email HTML est envoyé immédiatement avec un bouton <em>Déposer ma première annonce</em>. Aucune confirmation d'email n'est requise : le compte est actif dès la création.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div><h4>Connexion automatique</h4><p>L'utilisateur est connecté et redirigé vers la page d'accueil sans étape supplémentaire.</p></div>
+      </div>
+    </div>
+
+    <h3>2 — Connexion</h3>
+    <p>Page <code>/connexion</code> — saisir email et mot de passe. Un compte bloqué par l'administrateur se voit refuser l'accès avec un message d'erreur explicite.</p>
+
+    <h3>3 — Mot de passe oublié</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div><h4>Cliquer sur "Mot de passe oublié ?"</h4><p>Lien sous le formulaire de connexion → <code>/mot-de-passe-oublie</code>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div><h4>Saisir son adresse e-mail</h4><p>Un lien sécurisé est envoyé par email, <strong>valable 1 heure</strong>. La réponse est toujours positive (ne révèle pas si l'email existe).</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div><h4>Saisir le nouveau mot de passe</h4><p>Page <code>/reinitialiser-mot-de-passe?token=…</code> — saisir et confirmer le nouveau mot de passe. Redirection automatique vers la connexion après validation.</p></div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-ico">⚠️</span>
+      <p><strong>Sécurité :</strong> le token de réinitialisation est à usage unique. Une nouvelle demande invalide tous les tokens précédents pour ce compte.</p>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 4 — Mon Compte & Déposer ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-user">👤 Espace Utilisateur</div>
+    <h2>Mon compte & Déposer une annonce</h2>
+    <p>Tableau de bord personnel et publication d'annonces en quelques minutes.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>3 — Tableau de bord (Mon compte)</h3>
+    <p>Accessible sur <code>/mon-compte</code> après connexion. Trois onglets :</p>
+    <div class="grid2">
+      <div class="card">
+        <span class="card-icon">📋</span>
+        <h4>Mes annonces</h4>
+        <p>Liste complète avec statut. Actions : Voir, Modifier, Marquer comme vendu, Remettre en ligne, Supprimer (confirmation requise).</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">❤️</span>
+        <h4>Mes favoris</h4>
+        <p>Annonces sauvegardées. Accès direct ou suppression du favori en un clic.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">👤</span>
+        <h4>Mon profil</h4>
+        <p>Modifier le nom affiché. Changer le mot de passe (saisie de l'ancien requis). Informations du compte.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💬</span>
+        <h4>Messages</h4>
+        <p>Lien vers la messagerie privée. Badge rouge dans la navbar indiquant les messages non lus.</p>
+      </div>
+    </div>
+
+    <h3>4 — Déposer une annonce</h3>
+    <p>Page <code>/deposer-annonce</code> (connexion requise).</p>
+    <table class="tbl">
+      <tr><th>Champ</th><th>Requis</th><th>Description</th></tr>
+      <tr><td>Titre</td><td>✓</td><td>Nom du bien ou service mis en vente</td></tr>
+      <tr><td>Catégorie</td><td>✓</td><td>Parmi les 9 catégories disponibles</td></tr>
+      <tr><td>Prix (€)</td><td>—</td><td>Laisser vide pour afficher "Don"</td></tr>
+      <tr><td>Description</td><td>—</td><td>État, dimensions, raisons de la vente…</td></tr>
+      <tr><td>Localisation</td><td>✓</td><td>Autocomplétion libre via OpenStreetMap (quartier, ville, commune)</td></tr>
+      <tr><td>Téléphone / WhatsApp</td><td>—</td><td>Affiché sur la page annonce</td></tr>
+      <tr><td>Photos</td><td>—</td><td>JPG, PNG ou WebP · max 5 Mo chacune</td></tr>
+    </table>
+
+    <div class="callout callout-info">
+      <span class="callout-ico">ℹ️</span>
+      <p><strong>Statut de publication :</strong> selon le paramètre admin, l'annonce est publiée immédiatement <span class="badge-status s-active">ACTIVE</span> ou placée en attente de validation <span class="badge-status s-pending">EN ATTENTE</span>.</p>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 5 — Photos & Recherche ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-user">👤 Espace Utilisateur</div>
+    <h2>Photos & Recherche d'annonces</h2>
+    <p>Limite de photos par rôle, upgrade payant, moteur de recherche multi-critères.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>5 — Limites photos et upgrade 7,99€</h3>
+    <div class="grid3">
+      <div class="tier tier-free">
+        <h4>Compte Gratuit</h4>
+        <div class="tier-price">3</div>
+        <div class="tier-desc">photos incluses</div>
+        <ul>
+          <li>JPG, PNG, WebP</li>
+          <li>5 Mo max par photo</li>
+          <li>Upgrade à 7,99€ disponible</li>
+        </ul>
+      </div>
+      <div class="tier tier-premium">
+        <h4>Compte Premium</h4>
+        <div class="tier-price">6</div>
+        <div class="tier-desc">photos incluses</div>
+        <ul>
+          <li>JPG, PNG, WebP</li>
+          <li>5 Mo max par photo</li>
+          <li>Inclus sans surcoût</li>
+        </ul>
+      </div>
+      <div class="tier tier-plus">
+        <h4>Administrateur</h4>
+        <div class="tier-price">10</div>
+        <div class="tier-desc">photos maximum</div>
+        <ul>
+          <li>JPG, PNG, WebP</li>
+          <li>5 Mo max par photo</li>
+          <li>Accès maximal</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>Processus d'upgrade :</strong> quand la limite de 3 photos est atteinte, un bouton <em>"3 photos supplémentaires — 7,99€"</em> apparaît. Paiement via Stripe Checkout (sans abonnement). Après paiement validé, 3 slots supplémentaires sont débloqués pour cette annonce uniquement.</p>
+
+    <h3>6 — Rechercher et filtrer les annonces</h3>
+    <p>Page <code>/annonces</code> avec sidebar de filtres et barre de recherche persistante.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <span class="card-icon">🔤</span>
+        <h4>Recherche textuelle</h4>
+        <p>Recherche dans le titre et la description de toutes les annonces actives.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏷</span>
+        <h4>Filtre par catégorie</h4>
+        <p>Sélection d'une catégorie parmi les pills de filtre ou via la barre de recherche.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💰</span>
+        <h4>Fourchette de prix</h4>
+        <p>Prix minimum et/ou maximum. Annonces "Don" (prix nul) toujours incluses.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📍</span>
+        <h4>Géolocalisation</h4>
+        <p>Rayon autour d'une position GPS ou d'une ville : 5 / 10 / 20 / 50 km. Tri par distance disponible.</p>
+      </div>
+    </div>
+
+    <p>Résultats paginés par 20 annonces. Toutes les 6 annonces, un encart publicitaire de professionnel s'affiche (ciblé par zone géographique ou catégorie).</p>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 6 — Messagerie & Favoris ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-user">👤 Espace Utilisateur</div>
+    <h2>Messagerie, Favoris & Signalement</h2>
+    <p>Communication privée, sauvegarde d'annonces et signalement de contenus.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>7 — Messagerie privée</h3>
+    <div class="grid2">
+      <div class="card">
+        <span class="card-icon">✉️</span>
+        <h4>Envoyer un message</h4>
+        <p>Bouton <em>Envoyer un message</em> sur la page annonce. Ouvre une modale, crée une conversation dans <code>/messages</code>.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📱</span>
+        <h4>WhatsApp direct</h4>
+        <p>Si le vendeur a renseigné un numéro, un bouton vert ouvre WhatsApp avec un message pré-rempli.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔔</span>
+        <h4>Notification email</h4>
+        <p>Email automatique envoyé au destinataire à chaque nouveau message, avec aperçu et lien de réponse.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">✍️</span>
+        <h4>Indicateur de frappe</h4>
+        <p>Affichage temps réel <em>"en train d'écrire…"</em> dans les conversations (Pusher).</p>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-ico">⚠️</span>
+      <p><strong>Compte requis :</strong> la messagerie et le contact WhatsApp nécessitent d'être connecté. Les visiteurs non connectés sont redirigés vers <code>/connexion</code>.</p>
+    </div>
+
+    <h3>8 — Favoris</h3>
+    <p>Le bouton <strong>"Sauvegarder l'annonce"</strong> (icône cœur + texte cliquable) sur la page annonce ajoute celle-ci aux favoris. Le label bascule vers <em>"Annonce sauvegardée"</em> en rouge. Les favoris sont accessibles dans <code>/mon-compte</code> → onglet Mes favoris. Des cœurs sont également présents sur chaque carte d'annonce dans les listes.</p>
+
+    <h3>8 — Signaler une annonce</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div><h4>Cliquer sur "Signaler cette annonce"</h4><p>Lien discret sous la sidebar de contact de la page annonce.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div><h4>Choisir un motif</h4><p>Contenu inapproprié · Arnaque ou fraude · Annonce incorrecte · Spam ou doublon.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div><h4>Envoi du signalement</h4><p>Un seul signalement par utilisateur par annonce. L'admin est notifié dans l'onglet Signalements du back-office.</p></div>
+      </div>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 7 — Professionnels ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-pro">⭐ Espace Professionnel</div>
+    <h2>Module Professionnels</h2>
+    <p>Annuaire de professionnels francophones en Espagne — visible sur <code>/professionnels</code> et sur la page d'accueil.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>9 — Présentation de l'annuaire</h3>
+    <p>Le module Professionnels référence des prestataires de services francophones partout en Espagne : avocats, agents immobiliers, comptables, déménageurs, médecins, etc. L'annuaire est filtrable par catégorie et affiche des cards visuelles différenciées selon le tier.</p>
+
+    <table class="tbl">
+      <tr><th>Catégorie</th><th>Icône</th><th>Catégorie</th><th>Icône</th></tr>
+      <tr><td>Immobilier</td><td>🏠</td><td>Éducation & Formation</td><td>🎓</td></tr>
+      <tr><td>Juridique & Notariat</td><td>⚖️</td><td>Banque & Finance</td><td>🏦</td></tr>
+      <tr><td>Comptabilité & Fiscalité</td><td>📊</td><td>Assurance</td><td>🛡</td></tr>
+      <tr><td>Déménagement</td><td>🚛</td><td>Automobile</td><td>🚗</td></tr>
+      <tr><td>Santé & Médecine</td><td>🏥</td><td>Autres services</td><td>💼</td></tr>
+    </table>
+
+    <h3>10 — Les trois offres tarifaires</h3>
+    <div class="grid3">
+      <div class="tier tier-free">
+        <h4>FREE — Gratuit</h4>
+        <div class="tier-price">0€</div>
+        <div class="tier-desc">fiche de base</div>
+        <ul>
+          <li>Nom et ville</li>
+          <li>Téléphone uniquement</li>
+          <li>Icône de catégorie</li>
+          <li>Fond gris neutre</li>
+        </ul>
+      </div>
+      <div class="tier tier-premium">
+        <h4>PREMIUM — 50€/an</h4>
+        <div class="tier-price">50€</div>
+        <div class="tier-desc">fiche enrichie</div>
+        <ul>
+          <li>Logo d'entreprise</li>
+          <li>Description</li>
+          <li>Tél + WhatsApp + Site</li>
+          <li>Badge ⭐ Premium</li>
+          <li>Bordure indigo</li>
+          <li>Ciblage Géo Pub</li>
+        </ul>
+      </div>
+      <div class="tier tier-plus">
+        <h4>PREMIUM+ — 100€/an</h4>
+        <div class="tier-price">100€</div>
+        <div class="tier-desc">visibilité maximale</div>
+        <ul>
+          <li>Tout le Premium</li>
+          <li>Badge ⭐ Premium+</li>
+          <li>Bordure et ring orange</li>
+          <li>Position prioritaire</li>
+          <li>Bloc homepage</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 8 — Géo Pub & Recommandé ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-pro">⭐ Espace Professionnel</div>
+    <h2>Géo Pub & Badge Recommandé</h2>
+    <p>Système de publicité ciblée géographiquement et mise en avant éditoriale.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>11 — Géo Pub — Ciblage géographique</h3>
+    <p>Les professionnels PREMIUM et PREMIUM+ peuvent être associés à une ou plusieurs <strong>zones géographiques espagnoles</strong>. Leurs annonces apparaissent alors en priorité dans les encarts publicitaires visibles par les utilisateurs recherchant dans ces zones.</p>
+
+    <p><strong>Zones disponibles :</strong> Valencia · Alicante · Málaga · Barcelona · Madrid · Murcia · Torrevieja · Benidorm · Marbella · Canarias</p>
+
+    <p><strong>Système de priorité à 3 niveaux (sans doublons) :</strong></p>
+    <div class="priority-box">
+      <div class="priority-item p1">
+        <div class="pnum">1</div>
+        <h5>Correspondance géographique</h5>
+        <p>Pros dont la zone correspond exactement à la localisation de la recherche.</p>
+      </div>
+      <div class="priority-item p2">
+        <div class="pnum">2</div>
+        <h5>Correspondance de catégorie</h5>
+        <p>Pros de la même catégorie que l'annonce consultée.</p>
+      </div>
+      <div class="priority-item p3">
+        <div class="pnum">3</div>
+        <h5>Remplissage général</h5>
+        <p>Tout pro PREMIUM/PREMIUM+ pour compléter les emplacements disponibles.</p>
+      </div>
+    </div>
+
+    <h3>12 — Badge Recommandé</h3>
+    <p>L'administrateur peut cocher <strong>Recommandé ⭐</strong> sur n'importe quelle fiche professionnelle. Effets :</p>
+    <div class="grid2">
+      <div class="card">
+        <span class="card-icon">🏅</span>
+        <h4>Badge visuel vert</h4>
+        <p>Un badge vert <em>"✓ Recommandé"</em> s'affiche sur la card du professionnel, prioritaire sur le badge de tier.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏠</span>
+        <h4>Priorité homepage</h4>
+        <p>Les pros recommandés apparaissent en tête du bloc <em>"⭐ Professionnels francophones recommandés"</em> sur la page d'accueil.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-ico">ℹ️</span>
+      <p>Le bloc homepage affiche les pros <strong>recommandés + PREMIUM + PREMIUM+</strong>, triés par : recommandé → Premium+ → Premium. Maximum 6 fiches affichées.</p>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 9 — Admin Accès & Modération ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-admin">🛡 Espace Administrateur</div>
+    <h2>Accès au back-office & Modération</h2>
+    <p>Panneau d'administration complet — accès exclusif au rôle ADMIN.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>13 — Accès au back-office</h3>
+    <div class="creds-box">
+      <div class="cred-row"><span class="cred-label">Email</span><span class="cred-val">admin@vendo.es</span></div>
+      <div class="cred-row"><span class="cred-label">Mot de passe</span><span class="cred-val">Vendo@Admin2026!</span></div>
+      <div class="cred-row"><span class="cred-label">URL</span><span class="cred-val">/admin</span></div>
+    </div>
+
+    <p>Après connexion, une icône <strong>🛡 Admin</strong> apparaît dans la navbar (desktop) et dans le menu mobile. Le panneau présente 4 tuiles : Modération · Utilisateurs · Professionnels · Statistiques.</p>
+
+    <div class="callout callout-danger">
+      <span class="callout-ico">🔴</span>
+      <p><strong>Important :</strong> changer le mot de passe admin dès la mise en production via Mon compte → Changer le mot de passe.</p>
+    </div>
+
+    <h3>14 — Modération des annonces</h3>
+    <p><strong>Toggle Auto-publication :</strong> en haut de la page, un interrupteur permet de basculer entre publication immédiate et modération obligatoire.</p>
+
+    <table class="tbl">
+      <tr><th>Onglet</th><th>Statut concerné</th><th>Actions disponibles</th></tr>
+      <tr><td>📌 En attente</td><td><span class="badge-status s-pending">PENDING</span></td><td>Approuver → ACTIVE · Refuser → REJECTED</td></tr>
+      <tr><td>✅ Publiées</td><td><span class="badge-status s-active">ACTIVE</span></td><td>Dépublier → PENDING</td></tr>
+      <tr><td>❌ Refusées</td><td><span class="badge-status s-refused">REJECTED</span></td><td>Republier → ACTIVE</td></tr>
+      <tr><td>🚩 Signalements</td><td>Tous statuts</td><td>Voir les motifs · Bloquer l'auteur · Débloquer</td></tr>
+    </table>
+
+    <div class="callout callout-info">
+      <span class="callout-ico">ℹ️</span>
+      <p>Le blocage d'un utilisateur prend effet immédiatement : toute tentative de connexion ultérieure est refusée avec un message d'erreur. L'action est réversible depuis cet onglet ou depuis la page Utilisateurs.</p>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 10 — Utilisateurs & Pros Admin ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-admin">🛡 Espace Administrateur</div>
+    <h2>Gestion des utilisateurs & Professionnels</h2>
+    <p>Contrôle complet des comptes utilisateurs et des fiches professionnels.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>15 — Gestion des utilisateurs</h3>
+    <p>Page <code>/admin/utilisateurs</code> — liste complète avec barre de recherche temps réel (nom ou email).</p>
+
+    <div class="stats-row" style="grid-template-columns:repeat(4,1fr);">
+      <div class="stat-block"><div class="val col-navy">N</div><div class="lbl">Total inscrits</div></div>
+      <div class="stat-block"><div class="val col-indigo">N</div><div class="lbl">Comptes Premium</div></div>
+      <div class="stat-block"><div class="val col-orange">N</div><div class="lbl">Administrateurs</div></div>
+      <div class="stat-block"><div class="val col-gray">N</div><div class="lbl">Bloqués</div></div>
+    </div>
+
+    <table class="tbl">
+      <tr><th>Action</th><th>Description</th><th>Restriction</th></tr>
+      <tr><td>Changer le rôle</td><td>Select inline : USER → PREMIUM → ADMIN</td><td>Impossible sur son propre compte</td></tr>
+      <tr><td>Bloquer</td><td>Empêche la connexion immédiatement</td><td>Impossible sur son propre compte</td></tr>
+      <tr><td>Débloquer</td><td>Restaure l'accès au compte</td><td>—</td></tr>
+    </table>
+
+    <h3>16 — Gestion des professionnels</h3>
+    <p>Page <code>/admin/professionnels</code> — CRUD complet des fiches. Bouton <strong>Ajouter</strong> pour créer une fiche.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>Champs disponibles</h4>
+        <p>Nom · Slug · Catégorie · Ville · Tier · Téléphone · WhatsApp · Site web · Logo (URL) · Description · Photos · Zones géo · Recommandé ⭐ · Vérifié ✓</p>
+      </div>
+      <div class="card">
+        <h4>Actions</h4>
+        <p>✏️ <strong>Modifier</strong> : édition inline dans le formulaire.<br>🗑 <strong>Supprimer</strong> : suppression définitive avec confirmation requise.<br>⭐ <strong>Recommandé</strong> : case à cocher → badge vert sur la fiche.</p>
+      </div>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 11 — Statistiques ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-admin">🛡 Espace Administrateur</div>
+    <h2>Statistiques & Reporting</h2>
+    <p>Tableau de bord KPIs en temps réel — données directement depuis la base de données.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>17 — Indicateurs disponibles</h3>
+
+    <table class="tbl">
+      <tr><th colspan="2" style="background:#1A1F36;">👥 Utilisateurs</th></tr>
+      <tr><td>Total inscrits</td><td>Nombre total de comptes créés</td></tr>
+      <tr><td>Nouveaux ce mois</td><td>Inscriptions depuis le 1er du mois en cours</td></tr>
+      <tr><td>Croissance mensuelle</td><td>Comparaison avec le mois précédent (en %)</td></tr>
+      <tr><td>Taux Premium</td><td>% d'utilisateurs avec le rôle PREMIUM</td></tr>
+    </table>
+
+    <table class="tbl">
+      <tr><th colspan="2" style="background:#1A1F36;">📋 Annonces</th></tr>
+      <tr><td>Total annonces</td><td>Toutes annonces hors statut DELETED</td></tr>
+      <tr><td>Annonces en ligne</td><td>Statut ACTIVE</td></tr>
+      <tr><td>En attente de validation</td><td>Statut PENDING (badge orange si &gt; 0)</td></tr>
+      <tr><td>Annonces vendues</td><td>Statut SOLD</td></tr>
+      <tr><td>Publiées ce mois</td><td>Nouvelles annonces depuis le 1er du mois</td></tr>
+      <tr><td>Taux de vente</td><td>% d'annonces passées en statut SOLD</td></tr>
+    </table>
+
+    <table class="tbl">
+      <tr><th colspan="2" style="background:#1A1F36;">⭐ Professionnels & 💰 Revenus</th></tr>
+      <tr><td>Répartition par tier</td><td>FREE / Premium / Premium+</td></tr>
+      <tr><td>Upgrades photos vendus</td><td>Nombre total de paiements Stripe validés</td></tr>
+      <tr><td>Revenus estimés</td><td>Upgrades × 7,99€</td></tr>
+      <tr><td>Taux de conversion upgrade</td><td>% d'utilisateurs ayant acheté un upgrade photo</td></tr>
+    </table>
+
+    <p><strong>Top catégories :</strong> classement des 8 catégories les plus actives avec barre de progression et pourcentage par rapport au total des annonces actives.</p>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████ PAGE 12 — Emails & Env ████████████ -->
+<div class="section-page">
+  <div class="section-banner">
+    <div class="chip chip-email">📧 Système Email</div>
+    <h2>Emails automatiques & Configuration</h2>
+    <p>Tous les emails sont envoyés via Resend avec des templates HTML aux couleurs de Vendo.</p>
+  </div>
+  <div class="section-body">
+
+    <h3>18 — Emails transactionnels</h3>
+    <table class="tbl">
+      <tr><th>Déclencheur</th><th>Destinataire</th><th>Objet</th></tr>
+      <tr><td>Création de compte</td><td>Nouvel inscrit</td><td>Bienvenue sur Vendo ! 🎉</td></tr>
+      <tr><td>Demande de réinitialisation</td><td>Demandeur</td><td>Réinitialisation de votre mot de passe Vendo</td></tr>
+      <tr><td>Message reçu</td><td>Vendeur</td><td>[Prénom] vous a envoyé un message sur Vendo</td></tr>
+    </table>
+
+    <div class="callout callout-info">
+      <span class="callout-ico">ℹ️</span>
+      <p>En l'absence de <code>RESEND_API_KEY</code>, les emails sont silencieusement ignorés (aucun crash). La plateforme reste pleinement fonctionnelle.</p>
+    </div>
+
+    <h3>19 — Variables d'environnement requises</h3>
+    <table class="tbl">
+      <tr><th>Variable</th><th>Service</th><th>Obligatoire</th></tr>
+      <tr><td><code>DATABASE_URL</code></td><td>PostgreSQL (Neon) — connexion poolée</td><td>✓</td></tr>
+      <tr><td><code>DIRECT_URL</code></td><td>PostgreSQL (Neon) — connexion directe (migrations)</td><td>✓</td></tr>
+      <tr><td><code>AUTH_SECRET</code></td><td>Signature des sessions NextAuth.js</td><td>✓</td></tr>
+      <tr><td><code>BLOB_READ_WRITE_TOKEN</code></td><td>Upload des photos (Vercel Blob)</td><td>✓</td></tr>
+      <tr><td><code>RESEND_API_KEY</code></td><td>Envoi d'emails transactionnels</td><td>Recommandé</td></tr>
+      <tr><td><code>STRIPE_SECRET_KEY</code></td><td>Paiements Stripe — upgrade photos</td><td>Recommandé</td></tr>
+      <tr><td><code>PUSHER_APP_ID</code> / <code>PUSHER_KEY</code> / <code>PUSHER_SECRET</code></td><td>Messagerie temps réel</td><td>Recommandé</td></tr>
+      <tr><td><code>NEXT_PUBLIC_APP_URL</code></td><td>URL de base (liens dans les emails)</td><td>✓ en production</td></tr>
+    </table>
+
+    <div class="callout callout-success">
+      <span class="callout-ico">✅</span>
+      <p><strong>Déploiement :</strong> la plateforme est déployée sur Vercel avec déploiement continu depuis GitHub. Chaque push sur la branche <code>main</code> déclenche automatiquement un nouveau déploiement de production.</p>
+    </div>
+
+    <div class="footer-band">
+      <span>Vendo — Guide Complet · Version 1.0</span>
+      <span>vendo.es · Juin 2026</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
