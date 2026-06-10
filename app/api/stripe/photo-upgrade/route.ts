@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { stripe, PHOTO_UPGRADE_PRICE_CENTS } from '@/lib/stripe'
+import { getStripe, PHOTO_UPGRADE_PRICE_CENTS } from '@/lib/stripe'
 
 // POST — create Stripe Checkout session
 export async function POST(req: Request) {
@@ -9,9 +9,8 @@ export async function POST(req: Request) {
   if (!session?.user?.id) return NextResponse.json({ error: 'Non connecté' }, { status: 401 })
 
   const { returnUrl } = await req.json()
-  const origin = new URL(returnUrl).origin
 
-  const checkout = await stripe.checkout.sessions.create({
+  const checkout = await getStripe().checkout.sessions.create({
     mode: 'payment',
     line_items: [{
       price_data: {

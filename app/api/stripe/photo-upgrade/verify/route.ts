@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 
 export async function POST(req: Request) {
   const session = await auth()
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true })
   }
 
-  const checkout = await stripe.checkout.sessions.retrieve(stripeSessionId)
+  const checkout = await getStripe().checkout.sessions.retrieve(stripeSessionId)
   if (checkout.payment_status !== 'paid') {
     return NextResponse.json({ ok: false })
   }
