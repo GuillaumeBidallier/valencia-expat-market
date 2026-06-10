@@ -48,7 +48,7 @@ export default function ConnexionPage() {
           <Input id="email" label="Adresse e-mail" type="email" placeholder="demo@vendo.es" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
           <Input id="password" label="Mot de passe" type="password" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
           <div className="text-right">
-            <a href="#" className="text-xs text-orange-primary hover:underline">Mot de passe oublié ?</a>
+            <Link href="/mot-de-passe-oublie" className="text-xs text-orange-primary hover:underline">Mot de passe oublié ?</Link>
           </div>
           <Button type="submit" className="w-full" size="lg" disabled={loading}>
             {loading ? 'Connexion...' : 'Se connecter'}

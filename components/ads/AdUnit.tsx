@@ -77,8 +77,12 @@ function ProCard({ pro, compact = false }: { pro: ProAd; compact?: boolean }) {
           ? <img src={pro.logo} alt={pro.name} className="w-full h-full object-cover" />
           : <span className="text-4xl">{icon}</span>
         }
-        <span className="absolute top-1.5 right-1.5 bg-orange-primary/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-          Sponsorisé
+        <span className={`absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded ${
+          (pro as ProAd & { recommended?: boolean }).recommended
+            ? 'bg-indigo-600/90'
+            : 'bg-orange-primary/90'
+        }`}>
+          {(pro as ProAd & { recommended?: boolean }).recommended ? 'Recommandé' : 'Sponsorisé'}
         </span>
       </div>
       {/* Content */}
@@ -122,10 +126,11 @@ interface AdUnitProps {
   size?: AdSize
   seed?: number
   category?: string
+  neighborhood?: string
   className?: string
 }
 
-export default function AdUnit({ size = 'inline', seed = 0, category, className = '' }: AdUnitProps) {
+export default function AdUnit({ size = 'inline', seed = 0, category, neighborhood, className = '' }: AdUnitProps) {
   const [pros, setPros]     = useState<ProAd[]>([])
   const [loaded, setLoaded] = useState(false)
   const count = COUNTS[size]
@@ -133,12 +138,13 @@ export default function AdUnit({ size = 'inline', seed = 0, category, className 
 
   useEffect(() => {
     const params = new URLSearchParams({ count: String(count) })
-    if (category) params.set('category', category)
+    if (category)     params.set('category', category)
+    if (neighborhood) params.set('neighborhood', neighborhood)
     fetch(`/api/ads?${params}`)
       .then(r => r.json())
       .then((data: ProAd[]) => { setPros(data); setLoaded(true) })
       .catch(() => setLoaded(true))
-  }, [category, count])
+  }, [category, neighborhood, count])
 
   /* ── SKYSCRAPER ── */
   if (size === 'skyscraper') {

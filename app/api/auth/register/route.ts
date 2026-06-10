@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
+import { sendWelcomeEmail } from '@/lib/email'
 
 const schema = z.object({
   name: z.string().min(2).max(60),
@@ -28,6 +29,9 @@ export async function POST(req: NextRequest) {
     data: { name, email, passwordHash },
     select: { id: true, name: true, email: true },
   })
+
+  // Send welcome email (non-blocking)
+  sendWelcomeEmail({ to: email, name }).catch(() => {})
 
   return NextResponse.json(user, { status: 201 })
 }

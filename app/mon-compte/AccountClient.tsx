@@ -60,6 +60,10 @@ export default function AccountClient({ user, initialListings, initialFavorites 
   const [profileName, setProfileName]         = useState(user.name)
   const [savingProfile, setSavingProfile]     = useState(false)
   const [profileSaved, setProfileSaved]       = useState(false)
+  const [pwdForm, setPwdForm]                 = useState({ current: '', next: '', confirm: '' })
+  const [pwdError, setPwdError]               = useState('')
+  const [pwdSaved, setPwdSaved]               = useState(false)
+  const [savingPwd, setSavingPwd]             = useState(false)
 
   const activeCount  = listings.filter(l => l.status === 'ACTIVE').length
   const soldCount    = listings.filter(l => l.status === 'SOLD').length
@@ -89,6 +93,27 @@ export default function AccountClient({ user, initialListings, initialFavorites 
   const handleUnfavorite = async (favoriteId: string, listingId: string) => {
     setFavorites(fs => fs.filter(f => f.id !== favoriteId))
     await fetch(`/api/favorites/${listingId}`, { method: 'DELETE' })
+  }
+
+  const handleSavePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (pwdForm.next !== pwdForm.confirm) { setPwdError('Les mots de passe ne correspondent pas.'); return }
+    if (pwdForm.next.length < 8) { setPwdError('Le nouveau mot de passe doit contenir au moins 8 caractères.'); return }
+    setSavingPwd(true); setPwdError(''); setPwdSaved(false)
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: pwdForm.current, newPassword: pwdForm.next }),
+    })
+    if (!res.ok) {
+      const d = await res.json()
+      setPwdError(d.error ?? 'Erreur lors du changement de mot de passe.')
+    } else {
+      setPwdSaved(true)
+      setPwdForm({ current: '', next: '', confirm: '' })
+      setTimeout(() => setPwdSaved(false), 4000)
+    }
+    setSavingPwd(false)
   }
 
   const handleSaveProfile = async (e: React.FormEvent) => {
@@ -297,6 +322,51 @@ export default function AccountClient({ user, initialListings, initialFavorites 
               >
                 {savingProfile ? 'Enregistrement…' : profileSaved ? '✓ Enregistré' : 'Enregistrer'}
               </button>
+            </div>
+
+            {/* Change password */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-sm font-bold text-navy mb-4">Changer le mot de passe</h3>
+              <form onSubmit={handleSavePassword} className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Mot de passe actuel</label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={pwdForm.current}
+                    onChange={e => { setPwdForm(f => ({ ...f, current: e.target.value })); setPwdError(''); setPwdSaved(false) }}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Nouveau mot de passe</label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={pwdForm.next}
+                    onChange={e => { setPwdForm(f => ({ ...f, next: e.target.value })); setPwdError(''); setPwdSaved(false) }}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Confirmer le nouveau mot de passe</label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={pwdForm.confirm}
+                    onChange={e => { setPwdForm(f => ({ ...f, confirm: e.target.value })); setPwdError(''); setPwdSaved(false) }}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition-all"
+                  />
+                </div>
+                {pwdError && <p className="text-xs text-red-500">{pwdError}</p>}
+                <button
+                  type="submit"
+                  disabled={savingPwd || !pwdForm.current || !pwdForm.next || !pwdForm.confirm}
+                  className="w-full bg-navy text-white py-3 rounded-xl font-bold text-sm hover:bg-navy/90 transition-colors disabled:opacity-30"
+                >
+                  {savingPwd ? 'Enregistrement…' : pwdSaved ? '✓ Mot de passe modifié' : 'Changer le mot de passe'}
+                </button>
+              </form>
             </div>
 
             {/* Account info */}

@@ -21,6 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: (session.user as { id: string }).id,
         name: session.user.name ?? '',
         email: session.user.email ?? '',
+        role: (session.user as { role?: string }).role,
         subscriptionStatus: 'active',
         subscriptionRenewal: '',
       }

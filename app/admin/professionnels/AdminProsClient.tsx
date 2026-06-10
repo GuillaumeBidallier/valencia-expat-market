@@ -11,10 +11,16 @@ const TIER_COLORS = {
   PREMIUM_PLUS: 'bg-orange-100 text-orange-700',
 }
 
+const ALL_ZONES = [
+  'Valencia', 'Alicante', 'Málaga', 'Barcelona', 'Madrid',
+  'Murcia', 'Torrevieja', 'Benidorm', 'Marbella', 'Canarias',
+]
+
 const EMPTY: Partial<Professional> = {
   name: '', slug: '', category: 'immobilier', city: 'Valencia',
   description: '', phone: '', whatsapp: '', website: '', logo: '',
   photos: [], tier: 'FREE', verified: false, featured: false,
+  recommended: false, zones: [],
 }
 
 export default function AdminProsClient({ initialPros }: { initialPros: Professional[] }) {
@@ -95,7 +101,7 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
                   <option value="PREMIUM_PLUS">Premium+ (100€/an)</option>
                 </select>
               </Field>
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-5 flex-wrap">
                 <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
                   <input type="checkbox" checked={editing.verified ?? false} onChange={e => set('verified', e.target.checked)} className="w-4 h-4" />
                   Vérifié
@@ -104,6 +110,30 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
                   <input type="checkbox" checked={editing.featured ?? false} onChange={e => set('featured', e.target.checked)} className="w-4 h-4" />
                   Featured
                 </label>
+                <label className="flex items-center gap-2 text-sm text-indigo-600 cursor-pointer font-medium">
+                  <input type="checkbox" checked={(editing as { recommended?: boolean }).recommended ?? false} onChange={e => set('recommended' as keyof Professional, e.target.checked)} className="w-4 h-4 accent-indigo-600" />
+                  Recommandé ⭐
+                </label>
+              </div>
+              <div className="sm:col-span-2">
+                <Field label="Zones géo-ciblées (Géo Pub)">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {ALL_ZONES.map(z => {
+                      const zones = (editing as { zones?: string[] }).zones ?? []
+                      const active = zones.includes(z)
+                      return (
+                        <button
+                          key={z}
+                          type="button"
+                          onClick={() => set('zones' as keyof Professional, active ? zones.filter(x => x !== z) : [...zones, z])}
+                          className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${active ? 'bg-orange-primary text-white border-orange-primary' : 'bg-white text-gray-500 border-gray-200 hover:border-orange-primary'}`}
+                        >
+                          {z}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </Field>
               </div>
               <div className="sm:col-span-2">
                 <Field label="Description">

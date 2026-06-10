@@ -14,12 +14,15 @@ import { useAuth } from '@/context/AuthContext'
 
 const ListingMap = dynamic(() => import('@/components/listings/ListingMap'), { ssr: false })
 
-export default function ListingDetailClient({ listing, isFavorited }: { listing: Listing; isFavorited?: boolean }) {
+export default function ListingDetailClient({ listing, isFavorited }: { listing: Listing & { neighborhood: string }; isFavorited?: boolean }) {
   const { isAuthenticated, user } = useAuth()
   const router = useRouter()
   const [activeImg, setActiveImg] = useState(0)
   const [showPhone, setShowPhone] = useState(false)
   const [reportOpen, setReportOpen] = useState(false)
+  const [reportReason, setReportReason] = useState('')
+  const [reportSent, setReportSent] = useState(false)
+  const [reportSending, setReportSending] = useState(false)
   const [messageOpen, setMessageOpen] = useState(false)
   const [messageBody, setMessageBody] = useState('')
   const [messageSending, setMessageSending] = useState(false)
@@ -190,13 +193,13 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
           </div>
 
           {/* Ads in sidebar */}
-          <AdUnit size="rectangle" seed={1} />
-          <AdUnit size="rectangle" seed={3} />
+          <AdUnit size="rectangle" seed={1} category={listing.categorySlug} neighborhood={listing.neighborhood} />
+          <AdUnit size="rectangle" seed={3} category={listing.categorySlug} neighborhood={listing.neighborhood} />
         </div>
       </div>
 
       {/* Bottom ad banner */}
-      <AdUnit size="inline" seed={6} className="mt-6" />
+      <AdUnit size="inline" seed={6} category={listing.categorySlug} neighborhood={listing.neighborhood} className="mt-6" />
 
       {/* Message modal */}
       {messageOpen && (
@@ -244,19 +247,49 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
 
       {/* Report modal */}
       {reportOpen && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setReportOpen(false)}>
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setReportOpen(false); setReportSent(false); setReportReason('') }}>
           <div className="bg-white rounded-xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
-            <h3 className="font-bold text-navy mb-3">Signaler cette annonce</h3>
-            <p className="text-sm text-gray-500 mb-4">Pourquoi souhaitez-vous signaler cette annonce ?</p>
-            {['Annonce frauduleuse', 'Produit interdit', 'Contenu inapproprié', 'Doublon', 'Autre'].map(r => (
-              <label key={r} className="flex items-center gap-2 py-2 text-sm cursor-pointer hover:text-orange-primary">
-                <input type="radio" name="reason" value={r} className="accent-orange-primary" /> {r}
-              </label>
-            ))}
-            <div className="flex gap-2 mt-4">
-              <Button variant="outline" className="flex-1 text-sm" onClick={() => setReportOpen(false)}>Annuler</Button>
-              <Button className="flex-1 text-sm" onClick={() => setReportOpen(false)}>Envoyer</Button>
-            </div>
+            {reportSent ? (
+              <div className="text-center py-4">
+                <p className="text-3xl mb-3">✅</p>
+                <h3 className="font-bold text-navy mb-1">Signalement envoyé</h3>
+                <p className="text-sm text-gray-500 mb-4">Merci, notre équipe va examiner cette annonce.</p>
+                <Button className="w-full text-sm" onClick={() => { setReportOpen(false); setReportSent(false); setReportReason('') }}>Fermer</Button>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-navy">Signaler cette annonce</h3>
+                  <button onClick={() => setReportOpen(false)} className="text-gray-400 hover:text-navy"><X size={18} /></button>
+                </div>
+                <p className="text-sm text-gray-500 mb-4">Pourquoi souhaitez-vous signaler cette annonce ?</p>
+                {['Annonce frauduleuse', 'Produit interdit', 'Contenu inapproprié', 'Doublon', 'Autre'].map(r => (
+                  <label key={r} className="flex items-center gap-2 py-2 text-sm cursor-pointer hover:text-orange-primary">
+                    <input type="radio" name="reason" value={r} checked={reportReason === r} onChange={() => setReportReason(r)} className="accent-orange-primary" /> {r}
+                  </label>
+                ))}
+                <div className="flex gap-2 mt-4">
+                  <Button variant="outline" className="flex-1 text-sm" onClick={() => setReportOpen(false)}>Annuler</Button>
+                  <Button
+                    className="flex-1 text-sm"
+                    disabled={!reportReason || reportSending}
+                    onClick={async () => {
+                      if (!reportReason) return
+                      setReportSending(true)
+                      await fetch(`/api/listings/${listing.id}/report`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ reason: reportReason }),
+                      })
+                      setReportSending(false)
+                      setReportSent(true)
+                    }}
+                  >
+                    {reportSending ? 'Envoi…' : 'Envoyer'}
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

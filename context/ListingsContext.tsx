@@ -7,7 +7,7 @@ interface ListingsContextType {
   listings: Listing[]
   loading: boolean
   getListing: (id: string) => Listing | undefined
-  addListing: (data: NewListing) => Promise<string>
+  addListing: (data: NewListing) => Promise<{ id: string; pendingReview: boolean }>
   refreshListings: () => Promise<void>
 }
 
@@ -36,16 +36,16 @@ export function ListingsProvider({ children }: { children: ReactNode }) {
 
   const getListing = (id: string) => listings.find(l => l.id === id)
 
-  const addListing = async (data: NewListing): Promise<string> => {
+  const addListing = async (data: NewListing): Promise<{ id: string; pendingReview: boolean }> => {
     const res = await fetch('/api/listings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, city: 'Valencia', phone: data.phone }),
+      body: JSON.stringify({ ...data, city: data.neighborhood, phone: data.phone }),
     })
     if (!res.ok) throw new Error('Erreur lors de la création de l\'annonce')
     const listing = await res.json()
     await refreshListings()
-    return listing.id
+    return { id: listing.id, pendingReview: listing.pendingReview ?? false }
   }
 
   return (

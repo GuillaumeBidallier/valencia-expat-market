@@ -43,6 +43,8 @@ const createSchema = z.object({
   categorySlug: z.string().min(1),
   city: z.string().min(1),
   neighborhood: z.string().min(1),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
   phone: z.string().optional(),
 })
 
@@ -58,10 +60,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Données invalides', details: parsed.error.flatten() }, { status: 400 })
   }
 
-  const coords = neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']
+  const settings = await prisma.siteSettings.findUnique({ where: { id: 'default' } })
+  const autoPublish = settings?.autoPublish ?? true
+
+  const fallback = neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']
+  const lat = parsed.data.lat ?? fallback.lat
+  const lng = parsed.data.lng ?? fallback.lng
+
+  const { lat: _lat, lng: _lng, ...listingData } = parsed.data
+  void _lat; void _lng
+
   const listing = await prisma.listing.create({
-    data: { ...parsed.data, userId: session.user.id, lat: coords.lat, lng: coords.lng },
+    data: {
+      ...listingData,
+      userId: session.user.id,
+      lat,
+      lng,
+      status: autoPublish ? 'ACTIVE' : 'PENDING',
+    },
   })
 
-  return NextResponse.json(listing, { status: 201 })
+  return NextResponse.json({ ...listing, pendingReview: !autoPublish }, { status: 201 })
 }

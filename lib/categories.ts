@@ -6,7 +6,6 @@ export const categories: Category[] = [
   { label: 'Enfants & Famille', slug: 'enfants', icon: '👶' },
   { label: 'Véhicules', slug: 'vehicules', icon: '🚗' },
   { label: 'Mode & Vêtements', slug: 'mode', icon: '👗' },
-  { label: 'Animaux', slug: 'animaux', icon: '🐶' },
   { label: 'Services', slug: 'services', icon: '🔧' },
   { label: 'Dons', slug: 'dons', icon: '🎁' },
   { label: 'Livres & Loisirs', slug: 'livres', icon: '📚' },

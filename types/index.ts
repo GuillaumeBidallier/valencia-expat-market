@@ -6,7 +6,7 @@ export interface Listing {
   categorySlug: string
   city: string
   neighborhood: string
-  status: 'ACTIVE' | 'SOLD' | 'EXPIRED' | 'DELETED'
+  status: 'ACTIVE' | 'SOLD' | 'EXPIRED' | 'DELETED' | 'PENDING' | 'REJECTED'
   userId: string
   user?: { name: string }
   images: { id: string; url: string; order: number }[]
@@ -29,6 +29,8 @@ export interface NewListing {
   price: number | null
   description: string
   neighborhood: string
+  lat?: number
+  lng?: number
   phone?: string
 }
 
@@ -36,6 +38,7 @@ export interface User {
   id: string
   name: string
   email: string
+  role?: string
   subscriptionStatus: 'active' | 'expired'
   subscriptionRenewal: string
 }

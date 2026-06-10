@@ -44,8 +44,13 @@ export default async function HomePage() {
         take: 8,
       }),
       prisma.professional.findMany({
-        where: { tier: 'PREMIUM_PLUS' },
-        orderBy: [{ featured: 'desc' }, { name: 'asc' }],
+        where: {
+          OR: [
+            { recommended: true },
+            { tier: { in: ['PREMIUM', 'PREMIUM_PLUS'] } },
+          ],
+        },
+        orderBy: [{ recommended: 'desc' }, { tier: 'desc' }, { featured: 'desc' }, { name: 'asc' }],
         take: 6,
       }),
       session?.user?.id
