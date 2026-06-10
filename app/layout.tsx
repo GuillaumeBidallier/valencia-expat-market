@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Nunito } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { SessionProvider } from 'next-auth/react'
 import { AuthProvider } from '@/context/AuthContext'
@@ -23,6 +24,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr">
       <body className={`${inter.className} ${nunito.variable}`}>
+        {process.env.NEXT_PUBLIC_ADSENSE_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
         <SessionProvider>
           <AuthProvider>
             <ListingsProvider>

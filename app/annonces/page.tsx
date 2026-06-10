@@ -167,6 +167,7 @@ async function AnnoncesContent({ searchParams }: Props) {
             <AnnoncesFilters totalCount={displayTotal} />
           </Suspense>
 
+
           <div className="flex-1 min-w-0">
             <div className="hidden lg:flex items-center gap-2 mb-3">
               <span className="text-sm text-gray-500">
@@ -200,7 +201,7 @@ async function AnnoncesContent({ searchParams }: Props) {
                   {listings.map((listing, i) => (
                     <div key={listing.id}>
                       <ListingRow listing={listing} distanceKm={listing.distanceKm} isFavorited={favoritedIds.has(listing.id)} />
-                      {(i + 1) % 6 === 0 && <AdUnit size="banner" seed={i} />}
+                      {(i + 1) % 6 === 0 && <AdUnit size="banner" seed={i} category={cat || undefined} />}
                     </div>
                   ))}
                 </div>
@@ -241,7 +242,7 @@ async function AnnoncesContent({ searchParams }: Props) {
           </div>
 
           <div className="hidden xl:block shrink-0 sticky top-32">
-            <AdUnit size="skyscraper" seed={3} />
+            <AdUnit size="skyscraper" seed={3} category={cat || undefined} />
           </div>
         </div>
       </div>

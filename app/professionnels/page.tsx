@@ -40,7 +40,7 @@ export default async function ProfessionnelsPage({ searchParams }: Props) {
 
           {/* Skyscraper gauche */}
           <div className="hidden xl:block shrink-0 sticky top-20">
-            <AdUnit size="skyscraper" seed={10} />
+            <AdUnit size="skyscraper" seed={10} category={cat || undefined} />
           </div>
 
           {/* Contenu central */}
@@ -81,7 +81,7 @@ export default async function ProfessionnelsPage({ searchParams }: Props) {
             </p>
 
             {/* Bannière pub */}
-            <AdUnit size="banner" seed={11} className="mb-5" />
+            <AdUnit size="banner" seed={11} category={cat || undefined} className="mb-5" />
 
             {pros.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-xl border border-gray-100">
@@ -114,7 +114,7 @@ export default async function ProfessionnelsPage({ searchParams }: Props) {
 
           {/* Skyscraper droit */}
           <div className="hidden xl:block shrink-0 sticky top-20">
-            <AdUnit size="skyscraper" seed={12} />
+            <AdUnit size="skyscraper" seed={12} category={cat || undefined} />
           </div>
 
         </div>
