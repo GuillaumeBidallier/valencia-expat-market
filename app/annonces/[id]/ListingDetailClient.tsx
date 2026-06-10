@@ -127,8 +127,8 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
         </div>
 
         {/* Right: Contact + security + ads */}
-        <div className="flex flex-col gap-4">
-          <div className="bg-white rounded-xl border border-gray-100 p-5 sticky top-20">
+        <div className="flex flex-col gap-4 self-start sticky top-20">
+          <div className="bg-white rounded-xl border border-gray-100 p-5">
             <h2 className="font-semibold text-navy mb-1">Contacter le vendeur</h2>
             <p className="text-xs text-gray-400 mb-4">Publié par {listing.userName ?? listing.user?.name ?? 'Vendeur'}</p>
 
