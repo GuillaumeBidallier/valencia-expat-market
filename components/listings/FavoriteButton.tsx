@@ -7,12 +7,12 @@ import { useAuth } from '@/context/AuthContext'
 type Props = {
   listingId: string
   initialFavorited?: boolean
-  /** Extra classes applied to the outer button */
+  showLabel?: boolean
   className?: string
   iconSize?: number
 }
 
-export default function FavoriteButton({ listingId, initialFavorited = false, className = '', iconSize = 14 }: Props) {
+export default function FavoriteButton({ listingId, initialFavorited = false, showLabel = false, className = '', iconSize = 14 }: Props) {
   const { isAuthenticated } = useAuth()
   const router = useRouter()
   const [favorited, setFavorited] = useState(initialFavorited)
@@ -37,14 +37,19 @@ export default function FavoriteButton({ listingId, initialFavorited = false, cl
       onClick={toggle}
       disabled={loading}
       title={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-      className={`flex items-center justify-center transition-all disabled:opacity-60 ${className}`}
+      className={`transition-all disabled:opacity-60 ${className}`}
     >
       <Heart
         size={iconSize}
-        className={`transition-colors duration-150 ${
-          favorited ? 'fill-red-500 text-red-500' : 'text-gray-400 group-hover:text-red-400'
+        className={`shrink-0 transition-colors duration-150 ${
+          favorited ? 'fill-red-500 text-red-500' : 'text-gray-400'
         }`}
       />
+      {showLabel && (
+        <span className={`text-sm select-none ${favorited ? 'text-red-500' : 'text-gray-500'}`}>
+          {favorited ? 'Annonce sauvegardée' : "Sauvegarder l'annonce"}
+        </span>
+      )}
     </button>
   )
 }

@@ -168,15 +168,13 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
 
             {/* Save to favorites */}
             {!isOwner && (
-              <div className="mt-3 flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 hover:border-red-300 transition-colors">
-                <FavoriteButton
-                  listingId={listing.id}
-                  initialFavorited={isFavorited}
-                  iconSize={15}
-                  className="shrink-0"
-                />
-                <span className="text-sm text-gray-500 select-none">Sauvegarder l&apos;annonce</span>
-              </div>
+              <FavoriteButton
+                listingId={listing.id}
+                initialFavorited={isFavorited}
+                iconSize={15}
+                showLabel
+                className="mt-3 w-full flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 hover:border-red-300 transition-colors"
+              />
             )}
 
             {/* Security notice */}
