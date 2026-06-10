@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ImagePlus, X, Lock, Sparkles, CheckCircle2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
@@ -14,7 +14,7 @@ const ADMIN_MAX = 10
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE = 5 * 1024 * 1024
 
-export default function DeposerAnnoncePage() {
+function DeposerAnnonceForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { isAuthenticated, user } = useAuth()
@@ -318,5 +318,17 @@ export default function DeposerAnnoncePage() {
         </Button>
       </form>
     </div>
+  )
+}
+
+export default function DeposerAnnoncePage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-2xl mx-auto px-4 py-16 flex items-center justify-center">
+        <Loader2 size={24} className="animate-spin text-orange-primary" />
+      </div>
+    }>
+      <DeposerAnnonceForm />
+    </Suspense>
   )
 }
