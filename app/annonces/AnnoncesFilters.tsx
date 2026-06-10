@@ -68,6 +68,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
         params.set('lat', pos.coords.latitude.toFixed(5))
         params.set('lng', pos.coords.longitude.toFixed(5))
         params.set('radius', radius || '10')
+        params.set('geoLabel', 'Ma position')
         params.delete('page')
         router.push(`/annonces?${params.toString()}`)
         setGeoLoading(false)

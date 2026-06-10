@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { Listing } from '@/types'
 import SearchBar from '@/components/listings/SearchBar'
+import type { GeoState } from '@/components/listings/GeoModal'
 import ListingRow from '@/components/listings/ListingRow'
 import AnnoncesFilters from './AnnoncesFilters'
 import AdUnit from '@/components/ads/AdUnit'
@@ -22,7 +23,7 @@ type Props = {
   searchParams: Promise<{
     q?: string; cat?: string; ville?: string
     priceMin?: string; priceMax?: string; sort?: string; page?: string
-    lat?: string; lng?: string; radius?: string
+    lat?: string; lng?: string; radius?: string; geoLabel?: string
   }>
 }
 
@@ -50,8 +51,12 @@ async function AnnoncesContent({ searchParams }: Props) {
   const userLat  = params.lat    ? Number(params.lat)    : undefined
   const userLng  = params.lng    ? Number(params.lng)    : undefined
   const radius   = params.radius ? Number(params.radius) : 10
+  const geoLabel = params.geoLabel ?? 'Ma position'
 
   const hasLocation = userLat !== undefined && userLng !== undefined
+  const defaultGeo: GeoState | null = hasLocation
+    ? { city: geoLabel, lat: userLat!, lng: userLng!, radius }
+    : null
 
   // Build bounding-box pre-filter when searching by position
   const bbox = hasLocation ? boundingBox(userLat!, userLng!, radius) : null
@@ -134,7 +139,7 @@ async function AnnoncesContent({ searchParams }: Props) {
     if (sort)  sp.set('sort',  sort)
     if (userLat !== undefined) sp.set('lat', String(userLat))
     if (userLng !== undefined) sp.set('lng', String(userLng))
-    if (hasLocation) sp.set('radius', String(radius))
+    if (hasLocation) { sp.set('radius', String(radius)); sp.set('geoLabel', geoLabel) }
     if (p > 1) sp.set('page', String(p))
     return `/annonces?${sp.toString()}`
   }
@@ -145,7 +150,7 @@ async function AnnoncesContent({ searchParams }: Props) {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <SearchBar defaultQuery={q} defaultCategory={cat} defaultCity={ville} />
+          <SearchBar defaultQuery={q} defaultCategory={cat} defaultGeo={defaultGeo} />
         </div>
       </div>
 

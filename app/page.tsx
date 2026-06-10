@@ -51,7 +51,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ===== HERO + SEARCH ===== */}
-      <HeroSection categoryItems={categoryItems.map(c => ({ label: c.label, slug: c.slug }))} />
+      <HeroSection />
 
       {/* ===== CATEGORIES + ANNONCES + SKYSCRAPERS ===== */}
       <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 flex gap-4 items-start">
