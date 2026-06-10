@@ -3,7 +3,7 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import {
-  ClipboardList, Users, Star, BarChart3,
+  ClipboardList, Users, Star, BarChart3, Flag,
   AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight,
 } from 'lucide-react'
 
@@ -20,7 +20,7 @@ export default async function AdminPage() {
     pendingCount, activeCount, soldCount,
     usersCount, newUsersMonth, premiumUsers, blockedUsers,
     prosCount, premiumPros, plusPros,
-    reportsCount,
+    reportsCount, reportedListingsCount,
   ] = await Promise.all([
     prisma.listing.count({ where: { status: 'PENDING' } }),
     prisma.listing.count({ where: { status: 'ACTIVE' } }),
@@ -33,10 +33,11 @@ export default async function AdminPage() {
     prisma.professional.count({ where: { tier: 'PREMIUM' } }),
     prisma.professional.count({ where: { tier: 'PREMIUM_PLUS' } }),
     prisma.report.count(),
+    prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' } } }),
   ])
 
-  const freePros = prosCount - premiumPros - plusPros
-  const hasAlerts = pendingCount > 0 || reportsCount > 0 || blockedUsers > 0
+  const freePros  = prosCount - premiumPros - plusPros
+  const hasAlerts = pendingCount > 0 || reportedListingsCount > 0 || blockedUsers > 0
 
   return (
     <div className="min-h-screen bg-[#F4F5F7]">
@@ -75,13 +76,13 @@ export default async function AdminPage() {
               urgent: pendingCount > 0,
             },
             {
-              label: 'Signalements',
-              value: reportsCount,
+              label: 'Annonces signalées',
+              value: reportedListingsCount,
               icon: <AlertTriangle size={18} />,
-              color: reportsCount > 0 ? 'text-red-500' : 'text-gray-400',
-              bg: reportsCount > 0 ? 'bg-red-50' : 'bg-gray-50',
-              sub: reportsCount > 0 ? 'Non résolus' : 'Aucun actif',
-              urgent: reportsCount > 0,
+              color: reportedListingsCount > 0 ? 'text-red-500' : 'text-gray-400',
+              bg: reportedListingsCount > 0 ? 'bg-red-50' : 'bg-gray-50',
+              sub: reportedListingsCount > 0 ? `${reportsCount} signalement${reportsCount > 1 ? 's' : ''}` : 'Aucun actif',
+              urgent: reportedListingsCount > 0,
             },
             {
               label: 'Utilisateurs inscrits',
@@ -121,7 +122,7 @@ export default async function AdminPage() {
         {/* ── Navigation modules ─────────────────────────────── */}
         <div>
           <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Modules</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {[
               {
                 href: '/admin/annonces',
@@ -166,6 +167,20 @@ export default async function AdminPage() {
                 ],
               },
               {
+                href: '/admin/signalements',
+                icon: <Flag size={22} />,
+                label: 'Signalements',
+                color: reportedListingsCount > 0 ? 'text-red-500' : 'text-gray-400',
+                bg: reportedListingsCount > 0 ? 'bg-red-50' : 'bg-gray-50',
+                badge: reportedListingsCount > 0 ? reportedListingsCount : null,
+                badgeColor: 'bg-red-500',
+                items: [
+                  { label: 'Annonces signalées', value: reportedListingsCount, dot: reportedListingsCount > 0 ? 'bg-red-400' : 'bg-gray-200' },
+                  { label: 'Total signalements', value: reportsCount, dot: 'bg-amber-400' },
+                  { label: 'Haute priorité (≥3)', value: 0, dot: 'bg-gray-200' },
+                ],
+              },
+              {
                 href: '/admin/statistiques',
                 icon: <BarChart3 size={22} />,
                 label: 'Statistiques',
@@ -174,9 +189,9 @@ export default async function AdminPage() {
                 badge: null,
                 badgeColor: '',
                 items: [
-                  { label: 'Signalements', value: reportsCount, dot: 'bg-red-300' },
                   { label: 'Nouveaux/mois', value: newUsersMonth, dot: 'bg-emerald-400' },
                   { label: 'Taux premium', value: `${usersCount > 0 ? Math.round((premiumUsers / usersCount) * 100) : 0}%`, dot: 'bg-blue-400' },
+                  { label: 'Pros référencés', value: prosCount, dot: 'bg-indigo-400' },
                 ],
               },
             ].map(m => (
