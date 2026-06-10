@@ -18,7 +18,7 @@ const categoryItems = [
   { icon: Smartphone, label: 'Électronique', slug: 'electromenager' },
   { icon: PawPrint, label: 'Animaux', slug: 'animaux' },
   { icon: Wrench, label: 'Services', slug: 'services' },
-  { icon: Globe, label: 'Communauté', slug: 'dons' },
+  { icon: Globe, label: 'Divers', slug: 'autres' },
 ]
 
 const trustItems = [
