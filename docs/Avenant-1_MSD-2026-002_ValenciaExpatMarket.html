@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Avenant n°1 — Devis MSD-2026-002</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 10pt;
+    color: #1a1a1a;
+    background: #fff;
+    padding: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 18mm 18mm 14mm 18mm;
+    position: relative;
+    background: #fff;
+  }
+
+  /* N badge */
+  .badge-n {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    background: #1a1a2e;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 9pt;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  /* Parties */
+  .parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 22px;
+  }
+
+  .party {
+    padding: 14px 16px;
+  }
+
+  .party:first-child {
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .party-label {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .party-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2px 8px;
+    font-size: 8.5pt;
+    margin-bottom: 2px;
+  }
+
+  .party-row .label { color: #888; }
+  .party-row .value { font-weight: 600; }
+
+  /* Objet */
+  .objet {
+    border-left: 3px solid #1a1a2e;
+    padding: 8px 12px;
+    margin-bottom: 22px;
+    font-size: 9pt;
+  }
+  .objet strong { font-size: 8pt; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #555; margin-right: 6px; }
+
+  /* Référence avenant */
+  .ref-box {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-left: 3px solid #e87c2b;
+    padding: 10px 14px;
+    margin-bottom: 22px;
+    font-size: 9pt;
+  }
+  .ref-box strong { color: #e87c2b; }
+
+  /* Section title */
+  .section-title {
+    font-weight: 700;
+    font-size: 11pt;
+    margin: 18px 0 10px 0;
+    color: #1a1a1a;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    font-size: 9pt;
+  }
+
+  thead tr {
+    background: #1a1a1a;
+    color: #fff;
+  }
+
+  thead th {
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 8pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  thead th:last-child { text-align: right; }
+  thead th:nth-child(3) { text-align: center; }
+
+  tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  tbody tr:nth-child(even) { background: #fafafa; }
+
+  tbody tr.new-line {
+    background: #fff8f3;
+    border-bottom: 2px solid #e87c2b;
+    border-top: 2px solid #e87c2b;
+  }
+
+  tbody td {
+    padding: 9px 10px;
+    vertical-align: top;
+  }
+
+  .td-num { width: 24px; color: #888; font-size: 8pt; }
+  .td-desc strong { font-weight: 600; display: block; margin-bottom: 2px; }
+  .td-desc p { color: #555; font-size: 8pt; line-height: 1.5; }
+  .td-dur { width: 70px; text-align: center; color: #555; font-size: 8.5pt; }
+  .td-prix { width: 80px; text-align: right; font-weight: 700; white-space: nowrap; }
+
+  .new-badge {
+    display: inline-block;
+    background: #e87c2b;
+    color: #fff;
+    font-size: 7pt;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+    letter-spacing: 0.03em;
+  }
+
+  /* Total row */
+  .total-row {
+    background: #1a1a1a !important;
+    color: #fff;
+    border: none !important;
+  }
+  .total-row td {
+    padding: 10px 10px;
+    font-weight: 700;
+    font-size: 10pt;
+  }
+  .total-row .label-total {
+    text-align: right;
+    letter-spacing: 0.06em;
+    font-size: 8.5pt;
+  }
+  .total-row .val-total {
+    text-align: right;
+    font-size: 11pt;
+  }
+
+  .tva-note {
+    font-size: 7.5pt;
+    color: #888;
+    margin-top: 4px;
+    text-align: right;
+  }
+
+  /* Planning */
+  .planning-table { margin-bottom: 18px; }
+  .planning-table thead tr { background: #1a1a1a; }
+  .planning-table tbody tr.new-line-plan {
+    background: #fff8f3;
+    border-bottom: 2px solid #e87c2b;
+    border-top: 2px solid #e87c2b;
+  }
+  .planning-table td:last-child { text-align: right; font-weight: 600; }
+
+  /* Récap */
+  .recap-table { margin-bottom: 6px; }
+  .recap-table tr.new-line-recap {
+    background: #fff8f3;
+    border-bottom: 2px solid #e87c2b;
+    border-top: 2px solid #e87c2b;
+  }
+  .recap-table td:last-child { text-align: right; font-weight: 600; }
+
+  /* Conditions */
+  .conditions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .cond-box {
+    border: 1px solid #e0e0e0;
+    padding: 12px 14px;
+    font-size: 8.5pt;
+  }
+
+  .cond-box h4 {
+    font-size: 8.5pt;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .paiement-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 8.5pt;
+  }
+  .pct-badge {
+    background: #1a1a1a;
+    color: #fff;
+    font-weight: 700;
+    padding: 4px 7px;
+    font-size: 9pt;
+    min-width: 36px;
+    text-align: center;
+  }
+  .paiement-row .desc { flex: 1; color: #444; }
+  .paiement-row .montant { font-weight: 700; }
+
+  .vire-note { font-size: 7.5pt; color: #888; margin-top: 6px; }
+
+  .incl-badge {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 4px 10px;
+    margin-top: 8px;
+  }
+
+  /* Signatures */
+  .sign-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .sign-box {
+    border: 1px solid #e0e0e0;
+    padding: 12px 14px;
+    min-height: 80px;
+  }
+
+  .sign-box h4 {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  .sign-box p {
+    font-size: 8.5pt;
+    color: #444;
+  }
+
+  .date-line {
+    font-size: 8.5pt;
+    color: #888;
+    margin-top: 12px;
+  }
+
+  /* Footer */
+  .footer {
+    position: fixed;
+    bottom: 8mm;
+    left: 18mm;
+    right: 18mm;
+    font-size: 7.5pt;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #eee;
+    padding-top: 4px;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; padding: 18mm 18mm 14mm 18mm; }
+    .footer { position: fixed; bottom: 8mm; }
+    @page { margin: 0; size: A4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page">
+  <div class="badge-n">N</div>
+
+  <h1>Avenant n°1</h1>
+  <p class="subtitle">au Devis MSD-2026-002 · 09 juin 2026 · Valide 30 jours</p>
+
+  <div class="parties">
+    <div class="party">
+      <div class="party-label">Émetteur</div>
+      <div class="party-row"><span class="label">Société :</span><span class="value">NovaTeck Studio || MYLOSTACK DEVELOPMENT</span></div>
+      <div class="party-row"><span class="label">Contact :</span><span class="value">Guillaume Bidallier</span></div>
+      <div class="party-row"><span class="label">Adresse :</span><span class="value">14 chemin de la prée, 17380 Saint Loup</span></div>
+      <div class="party-row"><span class="label">Pays :</span><span class="value">France</span></div>
+      <div class="party-row"><span class="label">N° entreprise :</span><span class="value">92421320000018</span></div>
+      <div class="party-row"><span class="label">Téléphone :</span><span class="value">06 23 49 09 53</span></div>
+      <div class="party-row"><span class="label">Email :</span><span class="value">bidallierguillaume@gmail.com</span></div>
+      <div class="party-row"><span class="label">Site :</span><span class="value">novateckstudio.com</span></div>
+    </div>
+    <div class="party">
+      <div class="party-label">Destinataire</div>
+      <div class="party-row"><span class="label">Société :</span><span class="value">—</span></div>
+      <div class="party-row"><span class="label">Contact :</span><span class="value">Dufour Christina</span></div>
+      <div class="party-row"><span class="label">Adresse :</span><span class="value">—</span></div>
+      <div class="party-row"><span class="label">Pays :</span><span class="value">Belgique</span></div>
+      <div class="party-row"><span class="label">Téléphone :</span><span class="value">+32 471 49 08 03</span></div>
+      <div class="party-row"><span class="label">Email :</span><span class="value">Agence1991@gmail.com</span></div>
+      <div class="party-row"><span class="label">N° TVA :</span><span class="value">—</span></div>
+    </div>
+  </div>
+
+  <div class="objet">
+    <strong>Objet :</strong> Développement site Valencia Expat Market — Ajout module Professionnels recommandés
+  </div>
+
+  <div class="ref-box">
+    Cet avenant complète le <strong>Devis MSD-2026-002</strong> signé le 09 juin 2026. Il ajoute la ligne de prestation n°8 « Professionnels recommandés » et porte le total général de <strong>1 350 € HT</strong> à <strong>1 550 € HT</strong>. Toutes les autres conditions (paiement, délais, garantie, CGV) du devis initial restent inchangées.
+  </div>
+
+  <div class="section-title">Prestations détaillées — Devis complet mis à jour</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Phase &amp; Description</th>
+        <th>Durée</th>
+        <th>Montant HT</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-num">1</td>
+        <td class="td-desc">
+          <strong>Analyse &amp; Conception</strong>
+          <p>Analyse du cahier des charges · architecture technique · modélisation base de données · parcours utilisateurs · wireframes</p>
+        </td>
+        <td class="td-dur">3 jours</td>
+        <td class="td-prix">150 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">2</td>
+        <td class="td-desc">
+          <strong>Design UI / UX</strong>
+          <p>Conception des écrans · charte graphique (orange + bleu Valencia) · design responsive · composants UI · design system</p>
+        </td>
+        <td class="td-dur">1 sem.</td>
+        <td class="td-prix">250 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">3</td>
+        <td class="td-desc">
+          <strong>Développement Frontend</strong>
+          <p>Homepage · liste des annonces · détail annonce · inscription · connexion · mon compte · déposer une annonce · composants réutilisables · optimisation SEO de base</p>
+        </td>
+        <td class="td-dur">2 sem.</td>
+        <td class="td-prix">400 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">4</td>
+        <td class="td-desc">
+          <strong>Fonctionnalités métier</strong>
+          <p>Authentification utilisateurs · gestion des annonces (création, modification, suppression) · recherche et filtres · 11 catégories · contact WhatsApp · espaces publicitaires · tableau de bord</p>
+        </td>
+        <td class="td-dur">1 sem.</td>
+        <td class="td-prix">250 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">5</td>
+        <td class="td-desc">
+          <strong>Déploiement &amp; Configuration</strong>
+          <p>Déploiement Vercel · configuration nom de domaine · certificat SSL · variables d'environnement · tests de mise en production</p>
+        </td>
+        <td class="td-dur">2 jours</td>
+        <td class="td-prix">100 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">6</td>
+        <td class="td-desc">
+          <strong>Hébergement 1 an — inclus</strong>
+          <p>Hébergement Vercel 1 an · bande passante illimitée · déploiements automatiques · SSL inclus · CDN mondial · uptime 99.9%</p>
+        </td>
+        <td class="td-dur">inclus</td>
+        <td class="td-prix">100 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">7</td>
+        <td class="td-desc">
+          <strong>Maintenance 6 mois — inclus</strong>
+          <p>Corrections de bugs · mises à jour de sécurité · assistance technique par email · surveillance du site · interventions mineures (max. 2h/mois)</p>
+        </td>
+        <td class="td-dur">inclus</td>
+        <td class="td-prix">100 €</td>
+      </tr>
+      <tr class="new-line">
+        <td class="td-num">8</td>
+        <td class="td-desc">
+          <strong>Professionnels recommandés <span class="new-badge">NOUVEAU</span></strong>
+          <p>
+            Annuaire des professionnels francophones en Espagne · page /professionnels avec filtres (catégorie, ville) · fiches détaillées (/professionnels/[slug]) · bloc homepage "⭐ Professionnels recommandés" ·
+            3 tiers : Gratuit / Premium 50 €/an (logo, description, téléphone, WhatsApp, site, photos) / Premium+ 100 €/an (tête de catégorie, badge ⭐ Recommandé, mise en avant homepage) ·
+            10 catégories : Immobilier · Juridique · Comptabilité · Déménagement · Assurance · Santé · Automobile · Services · Éducation · Autres ·
+            Panel admin pour valider et gérer les fiches
+          </p>
+        </td>
+        <td class="td-dur">1 sem.</td>
+        <td class="td-prix" style="color:#e87c2b;">200 €</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="3" class="label-total">TOTAL GÉNÉRAL HT</td>
+        <td class="val-total">1 550 €</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="tva-note">TVA non applicable, art. 293 B du CGI</p>
+
+  <div class="footer">
+    <span>Avenant n°1 au Devis MSD-2026-002 · NovaTeck Studio || MYLOSTACK DEVELOPMENT</span>
+    <span>Page 1</span>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" style="margin-top: 10mm;">
+  <div class="badge-n">N</div>
+
+  <div class="section-title">Planning prévisionnel mis à jour</div>
+
+  <table class="planning-table">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th style="text-align:right">Durée estimée</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Analyse &amp; Conception</td><td style="text-align:right;font-weight:600;">3 jours</td></tr>
+      <tr><td>Design UI / UX</td><td style="text-align:right;font-weight:600;">1 semaine</td></tr>
+      <tr><td>Développement Frontend</td><td style="text-align:right;font-weight:600;">2 semaines</td></tr>
+      <tr><td>Fonctionnalités métier</td><td style="text-align:right;font-weight:600;">1 semaine</td></tr>
+      <tr class="new-line-plan"><td>Professionnels recommandés <span class="new-badge">NOUVEAU</span></td><td style="text-align:right;font-weight:600;color:#e87c2b;">1 semaine</td></tr>
+      <tr><td>Tests &amp; Corrections</td><td style="text-align:right;font-weight:600;">3 jours</td></tr>
+      <tr><td>Déploiement &amp; Mise en production</td><td style="text-align:right;font-weight:600;">2 jours</td></tr>
+      <tr style="background:#1a1a1a;color:#fff;"><td style="padding:9px 10px;font-weight:700;">Durée totale estimée</td><td style="padding:9px 10px;text-align:right;font-weight:700;">~6 semaines</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Récapitulatif budgétaire</div>
+
+  <table class="recap-table">
+    <thead>
+      <tr>
+        <th>Prestation</th>
+        <th style="text-align:right">Montant HT</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Analyse &amp; Conception</td><td style="text-align:right;font-weight:600;">150 €</td></tr>
+      <tr><td>Design UI / UX</td><td style="text-align:right;font-weight:600;">250 €</td></tr>
+      <tr><td>Développement Frontend</td><td style="text-align:right;font-weight:600;">400 €</td></tr>
+      <tr><td>Fonctionnalités métier</td><td style="text-align:right;font-weight:600;">250 €</td></tr>
+      <tr><td>Déploiement &amp; Configuration</td><td style="text-align:right;font-weight:600;">100 €</td></tr>
+      <tr><td>Hébergement 1 an (inclus)</td><td style="text-align:right;font-weight:600;">100 €</td></tr>
+      <tr><td>Maintenance 6 mois (inclus)</td><td style="text-align:right;font-weight:600;">100 €</td></tr>
+      <tr class="new-line-recap"><td>Professionnels recommandés <span class="new-badge">NOUVEAU</span></td><td style="text-align:right;font-weight:700;color:#e87c2b;">200 €</td></tr>
+      <tr style="background:#1a1a1a;color:#fff;">
+        <td style="padding:9px 10px;font-weight:700;letter-spacing:0.06em;font-size:9pt;">TOTAL GÉNÉRAL HT</td>
+        <td style="padding:9px 10px;text-align:right;font-weight:700;font-size:11pt;">1 550 €</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="tva-note">TVA non applicable, art. 293 B du CGI</p>
+
+  <div class="section-title">Conditions</div>
+
+  <div class="conditions-grid">
+    <div class="cond-box">
+      <h4>Conditions de paiement</h4>
+      <div class="paiement-row">
+        <span class="pct-badge">60%</span>
+        <span class="desc">à la signature de l'avenant (acompte)</span>
+        <span class="montant">930 €</span>
+      </div>
+      <div class="paiement-row">
+        <span class="pct-badge">40%</span>
+        <span class="desc">à la livraison finale du module</span>
+        <span class="montant">620 €</span>
+      </div>
+      <p class="vire-note">Mode de règlement : Virement bancaire<br/>TVA non applicable, art. 293 B du CGI</p>
+    </div>
+    <div>
+      <div class="cond-box" style="margin-bottom:14px;">
+        <h4>Maintenance incluse — 6 mois</h4>
+        <p style="font-size:8pt;color:#444;line-height:1.6;">Corrections de bugs · mises à jour de sécurité<br/>assistance technique · surveillance du site</p>
+        <div class="incl-badge">INCLUSE dans ce devis</div>
+      </div>
+      <div class="cond-box">
+        <h4>Garantie incluse</h4>
+        <p style="font-size:8pt;color:#444;line-height:1.6;">30 jours après la livraison finale pour correction des anomalies liées aux fonctionnalités développées dans ce devis.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Bon pour accord — Avenant n°1</div>
+
+  <div class="sign-grid">
+    <div class="sign-box">
+      <h4>Signature Prestataire</h4>
+      <p>Guillaume Bidallier — NovaTeck Studio</p>
+    </div>
+    <div class="sign-box">
+      <h4>Signature Client</h4>
+      <p>Nom &amp; Qualité du signataire :</p>
+    </div>
+  </div>
+
+  <div class="sign-grid" style="margin-top:10px;">
+    <div class="date-line">A _________________, le ___/___/______</div>
+    <div class="date-line">A _________________, le ___/___/______</div>
+  </div>
+
+  <div class="footer">
+    <span>Avenant n°1 au Devis MSD-2026-002 · NovaTeck Studio || MYLOSTACK DEVELOPMENT</span>
+    <span>Page 2</span>
+  </div>
+</div>
+
+</body>
+</html>

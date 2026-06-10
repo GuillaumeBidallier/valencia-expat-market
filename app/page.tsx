@@ -7,6 +7,7 @@ import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
 import HeroSection from '@/components/home/HeroSection'
 import PromoBanner from '@/components/home/PromoBanner'
+import ProsBanner from '@/components/home/ProsBanner'
 import { prisma } from '@/lib/prisma'
 
 const categoryItems = [
@@ -29,14 +30,22 @@ const trustItems = [
 export default async function HomePage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let featured: any[] = []
+  let featuredPros: Awaited<ReturnType<typeof prisma.professional.findMany>> = []
 
   try {
-    const rows = await prisma.listing.findMany({
-      where: { status: 'ACTIVE' },
-      include: { images: { take: 1, orderBy: { order: 'asc' } } },
-      orderBy: [{ featuredAt: 'desc' }, { publishedAt: 'desc' }],
-      take: 8,
-    })
+    const [rows, prosRows] = await Promise.all([
+      prisma.listing.findMany({
+        where: { status: 'ACTIVE' },
+        include: { images: { take: 1, orderBy: { order: 'asc' } } },
+        orderBy: [{ featuredAt: 'desc' }, { publishedAt: 'desc' }],
+        take: 8,
+      }),
+      prisma.professional.findMany({
+        where: { tier: 'PREMIUM_PLUS' },
+        orderBy: [{ featured: 'desc' }, { name: 'asc' }],
+        take: 6,
+      }),
+    ])
     featured = rows.map(l => ({
       ...l,
       boostExpiresAt: l.boostExpiresAt?.toISOString() ?? null,
@@ -44,6 +53,7 @@ export default async function HomePage() {
       publishedAt: l.publishedAt.toISOString(),
       updatedAt: l.updatedAt.toISOString(),
     }))
+    featuredPros = prosRows
   } catch (e) {
     console.error('[HomePage] DB error:', e)
   }
@@ -81,6 +91,9 @@ export default async function HomePage() {
 
       {/* ===== PROMO BANNER ===== */}
       <PromoBanner />
+
+      {/* ===== PROFESSIONNELS RECOMMANDÉS ===== */}
+      <ProsBanner pros={featuredPros} />
 
       {/* ===== DERNIÈRES ANNONCES ===== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">

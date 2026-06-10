@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Devis MSD-2026-003 — Valencia Expat Market</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 10pt;
+    color: #1a1a1a;
+    background: #fff;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 18mm 18mm 20mm 18mm;
+    position: relative;
+    background: #fff;
+    page-break-after: always;
+  }
+
+  .page:last-child { page-break-after: auto; }
+
+  .badge-n {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    background: #1a1a2e;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 9pt;
+    color: #666;
+    margin-bottom: 22px;
+  }
+
+  /* Parties */
+  .parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 22px;
+  }
+
+  .party { padding: 14px 16px; }
+  .party:first-child { border-right: 1px solid #e0e0e0; }
+
+  .party-label {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .party-row {
+    display: grid;
+    grid-template-columns: 82px 1fr;
+    gap: 2px 8px;
+    font-size: 8.5pt;
+    margin-bottom: 2px;
+  }
+  .party-row .lbl { color: #888; }
+  .party-row .val { font-weight: 600; }
+
+  /* Objet */
+  .objet {
+    border-left: 3px solid #1a1a2e;
+    padding: 8px 12px;
+    margin-bottom: 24px;
+    font-size: 9pt;
+  }
+  .objet strong { font-size: 8pt; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #555; margin-right: 6px; }
+
+  /* Stack technique */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid #e0e0e0;
+    margin-bottom: 24px;
+  }
+
+  .stack-col { padding: 12px 14px; border-right: 1px solid #e0e0e0; }
+  .stack-col:last-child { border-right: none; }
+
+  .stack-tag {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 7.5pt;
+    font-weight: 600;
+    padding: 2px 8px;
+    margin-bottom: 8px;
+  }
+
+  .stack-col p { font-size: 8pt; color: #444; line-height: 1.8; }
+
+  /* Section title */
+  .section-title {
+    font-weight: 700;
+    font-size: 11pt;
+    margin: 18px 0 10px 0;
+  }
+
+  /* Main table */
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+
+  thead tr { background: #1a1a1a; color: #fff; }
+  thead th {
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 8pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  thead th.right { text-align: right; }
+  thead th.center { text-align: center; }
+
+  tbody tr { border-bottom: 1px solid #f0f0f0; }
+  tbody tr:nth-child(even) { background: #fafafa; }
+
+  tbody td { padding: 9px 10px; vertical-align: top; }
+
+  .td-num { width: 24px; color: #888; font-size: 8pt; }
+  .td-dur { width: 70px; text-align: center; color: #555; font-size: 8.5pt; }
+  .td-prix { width: 80px; text-align: right; font-weight: 700; white-space: nowrap; }
+
+  .td-desc strong { font-weight: 600; display: block; margin-bottom: 3px; }
+  .td-desc p { color: #555; font-size: 8pt; line-height: 1.5; }
+
+  .total-row { background: #1a1a1a !important; color: #fff; border: none !important; }
+  .total-row td { padding: 10px 10px; font-weight: 700; }
+  .total-row .lbl-total { text-align: right; letter-spacing: 0.06em; font-size: 8.5pt; }
+  .total-row .val-total { text-align: right; font-size: 11pt; }
+
+  .tva-note { font-size: 7.5pt; color: #888; margin-top: 5px; text-align: right; }
+
+  /* Footer */
+  .page-footer {
+    position: absolute;
+    bottom: 8mm;
+    left: 18mm;
+    right: 18mm;
+    font-size: 7.5pt;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #eee;
+    padding-top: 4px;
+  }
+
+  /* Planning & Récap */
+  .planning-table { margin-bottom: 18px; }
+  .planning-table td:last-child { text-align: right; font-weight: 600; }
+
+  /* Conditions */
+  .conditions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .cond-box {
+    border: 1px solid #e0e0e0;
+    padding: 12px 14px;
+    font-size: 8.5pt;
+  }
+
+  .cond-box h4 { font-size: 8.5pt; font-weight: 700; margin-bottom: 10px; }
+
+  .pay-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 8.5pt;
+  }
+  .pct { background: #1a1a1a; color: #fff; font-weight: 700; padding: 4px 7px; min-width: 36px; text-align: center; font-size: 9pt; }
+  .pay-row .desc { flex: 1; color: #444; }
+  .pay-row .mnt { font-weight: 700; }
+  .vire { font-size: 7.5pt; color: #888; margin-top: 6px; }
+
+  .incl-badge {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 4px 10px;
+    margin-top: 8px;
+  }
+
+  .cond-stack { display: flex; flex-direction: column; gap: 14px; }
+
+  /* Signatures */
+  .sign-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .sign-box {
+    border: 1px solid #e0e0e0;
+    padding: 12px 14px;
+    min-height: 80px;
+  }
+  .sign-box h4 {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  .sign-box p { font-size: 8.5pt; color: #444; }
+
+  .date-line { font-size: 8.5pt; color: #888; margin-top: 12px; }
+
+  /* CGV */
+  .cgv h3 { font-size: 11pt; font-weight: 700; margin-bottom: 16px; }
+  .cgv-item { margin-bottom: 12px; }
+  .cgv-item h4 { font-size: 8.5pt; font-weight: 700; margin-bottom: 4px; }
+  .cgv-item p { font-size: 8pt; color: #444; line-height: 1.6; text-align: justify; }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; }
+    @page { margin: 0; size: A4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ PAGE 1 ═══════════════════════════════ -->
+<div class="page">
+  <div class="badge-n">N</div>
+
+  <h1>Devis MSD-2026-003</h1>
+  <p class="subtitle">09 juin 2026 · Valide 30 jours</p>
+
+  <div class="parties">
+    <div class="party">
+      <div class="party-label">Émetteur</div>
+      <div class="party-row"><span class="lbl">Société :</span><span class="val">NovaTeck Studio || MYLOSTACK DEVELOPMENT</span></div>
+      <div class="party-row"><span class="lbl">Contact :</span><span class="val">Guillaume Bidallier</span></div>
+      <div class="party-row"><span class="lbl">Adresse :</span><span class="val">14 chemin de la prée, 17380 Saint Loup</span></div>
+      <div class="party-row"><span class="lbl">Pays :</span><span class="val">France</span></div>
+      <div class="party-row"><span class="lbl">N° entreprise :</span><span class="val">92421320000018</span></div>
+      <div class="party-row"><span class="lbl">Téléphone :</span><span class="val">06 23 49 09 53</span></div>
+      <div class="party-row"><span class="lbl">Email :</span><span class="val">bidallierguillaume@gmail.com</span></div>
+      <div class="party-row"><span class="lbl">Site :</span><span class="val">novateckstudio.com</span></div>
+    </div>
+    <div class="party">
+      <div class="party-label">Destinataire</div>
+      <div class="party-row"><span class="lbl">Société :</span><span class="val">—</span></div>
+      <div class="party-row"><span class="lbl">Contact :</span><span class="val">Dufour Christina</span></div>
+      <div class="party-row"><span class="lbl">Adresse :</span><span class="val">—</span></div>
+      <div class="party-row"><span class="lbl">Pays :</span><span class="val">Belgique</span></div>
+      <div class="party-row"><span class="lbl">Téléphone :</span><span class="val">+32 471 49 08 03</span></div>
+      <div class="party-row"><span class="lbl">Email :</span><span class="val">Agence1991@gmail.com</span></div>
+      <div class="party-row"><span class="lbl">N° TVA :</span><span class="val">—</span></div>
+    </div>
+  </div>
+
+  <div class="objet">
+    <strong>Objet :</strong> Développement site Valencia Expat Market — Petites annonces entre expatriés à Valencia + Annuaire Professionnels recommandés
+  </div>
+
+  <div class="section-title">Stack technique</div>
+
+  <div class="stack-grid">
+    <div class="stack-col">
+      <div class="stack-tag">Frontend</div>
+      <p>Next.js 16<br/>TypeScript<br/>Tailwind CSS v4</p>
+    </div>
+    <div class="stack-col">
+      <div class="stack-tag">Déploiement</div>
+      <p>GitHub<br/>Vercel<br/>CI/CD automatique</p>
+    </div>
+    <div class="stack-col">
+      <div class="stack-tag">Hébergement</div>
+      <p>Vercel (1 an inclus)<br/>SSL certificat<br/>CDN mondial</p>
+    </div>
+    <div class="stack-col">
+      <div class="stack-tag">Sécurité</div>
+      <p>Auth sécurisée<br/>HTTPS/SSL<br/>Conformité RGPD</p>
+    </div>
+  </div>
+
+  <div class="section-title">Prestations détaillées</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Phase &amp; Description</th>
+        <th class="center">Durée</th>
+        <th class="right">Montant HT</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-num">1</td>
+        <td class="td-desc">
+          <strong>Analyse &amp; Conception</strong>
+          <p>Analyse du cahier des charges · architecture technique · modélisation base de données · parcours utilisateurs · wireframes</p>
+        </td>
+        <td class="td-dur">3 jours</td>
+        <td class="td-prix">150 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">2</td>
+        <td class="td-desc">
+          <strong>Design UI / UX</strong>
+          <p>Conception des écrans · charte graphique (orange + bleu Valencia) · design responsive · composants UI · design system</p>
+        </td>
+        <td class="td-dur">1 sem.</td>
+        <td class="td-prix">250 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">3</td>
+        <td class="td-desc">
+          <strong>Développement Frontend</strong>
+          <p>Homepage · liste des annonces · détail annonce · inscription · connexion · mon compte · déposer une annonce · composants réutilisables · optimisation SEO de base</p>
+        </td>
+        <td class="td-dur">2 sem.</td>
+        <td class="td-prix">400 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">4</td>
+        <td class="td-desc">
+          <strong>Fonctionnalités métier</strong>
+          <p>Authentification utilisateurs · gestion des annonces (création, modification, suppression) · recherche et filtres avancés · localisation (carte + géolocalisation) · messagerie temps réel · notifications email · favoris · 11 catégories · contact WhatsApp · tableau de bord</p>
+        </td>
+        <td class="td-dur">2 sem.</td>
+        <td class="td-prix">400 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">5</td>
+        <td class="td-desc">
+          <strong>Professionnels recommandés</strong>
+          <p>Annuaire des professionnels francophones en Espagne · page /professionnels avec filtres (catégorie, ville) · fiches détaillées · bloc ⭐ sur la homepage · 3 tiers : Gratuit / Premium 50 €/an (logo, description, WhatsApp, site, photos) / Premium+ 100 €/an (tête de catégorie, badge ⭐ Recommandé, mise en avant homepage) · 10 catégories : Immobilier · Juridique · Comptabilité · Déménagement · Assurance · Santé · Automobile · Services · Éducation · Autres · panel admin</p>
+        </td>
+        <td class="td-dur">1 sem.</td>
+        <td class="td-prix">200 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">6</td>
+        <td class="td-desc">
+          <strong>Déploiement &amp; Configuration</strong>
+          <p>Déploiement Vercel · configuration nom de domaine · certificat SSL · variables d'environnement · tests de mise en production</p>
+        </td>
+        <td class="td-dur">2 jours</td>
+        <td class="td-prix">100 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">7</td>
+        <td class="td-desc">
+          <strong>Hébergement 1 an — inclus</strong>
+          <p>Hébergement Vercel 1 an · bande passante illimitée · déploiements automatiques à chaque mise à jour · SSL inclus · CDN mondial · uptime 99.9%</p>
+        </td>
+        <td class="td-dur">inclus</td>
+        <td class="td-prix">100 €</td>
+      </tr>
+      <tr>
+        <td class="td-num">8</td>
+        <td class="td-desc">
+          <strong>Maintenance 6 mois — inclus</strong>
+          <p>Corrections de bugs · mises à jour de sécurité · assistance technique par email · surveillance du site · interventions mineures (max. 2h/mois)</p>
+        </td>
+        <td class="td-dur">inclus</td>
+        <td class="td-prix">100 €</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="3" class="lbl-total">TOTAL GÉNÉRAL HT</td>
+        <td class="val-total">1 550 €</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="tva-note">TVA non applicable, art. 293 B du CGI</p>
+
+  <div class="page-footer">
+    <span>Devis MSD-2026-003 · NovaTeck Studio || MYLOSTACK DEVELOPMENT</span>
+    <span></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 2 ═══════════════════════════════ -->
+<div class="page">
+  <div class="badge-n">N</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Phase &amp; Description</th>
+        <th class="center">Durée</th>
+        <th class="right">Montant HT</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="total-row">
+        <td colspan="3" class="lbl-total">TOTAL GÉNÉRAL HT</td>
+        <td class="val-total">1 550 €</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="tva-note">TVA non applicable, art. 293 B du CGI</p>
+
+  <div class="section-title" style="margin-top:24px;">Planning prévisionnel</div>
+
+  <table class="planning-table">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th class="right">Durée estimée</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Analyse &amp; Conception</td><td style="text-align:right;font-weight:600;">3 jours</td></tr>
+      <tr><td>Design UI / UX</td><td style="text-align:right;font-weight:600;">1 semaine</td></tr>
+      <tr><td>Développement Frontend</td><td style="text-align:right;font-weight:600;">2 semaines</td></tr>
+      <tr><td>Fonctionnalités métier</td><td style="text-align:right;font-weight:600;">2 semaines</td></tr>
+      <tr><td>Professionnels recommandés</td><td style="text-align:right;font-weight:600;">1 semaine</td></tr>
+      <tr><td>Tests &amp; Corrections</td><td style="text-align:right;font-weight:600;">3 jours</td></tr>
+      <tr><td>Déploiement &amp; Mise en production</td><td style="text-align:right;font-weight:600;">2 jours</td></tr>
+      <tr style="background:#1a1a1a;color:#fff;">
+        <td style="padding:9px 10px;font-weight:700;">Durée totale estimée</td>
+        <td style="padding:9px 10px;text-align:right;font-weight:700;">~6–7 semaines</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Récapitulatif budgétaire</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Prestation</th>
+        <th class="right">Montant HT</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Analyse &amp; Conception</td><td style="text-align:right;font-weight:600;">150 €</td></tr>
+      <tr><td>Design UI / UX</td><td style="text-align:right;font-weight:600;">250 €</td></tr>
+      <tr><td>Développement Frontend</td><td style="text-align:right;font-weight:600;">400 €</td></tr>
+      <tr><td>Fonctionnalités métier</td><td style="text-align:right;font-weight:600;">400 €</td></tr>
+      <tr><td>Professionnels recommandés</td><td style="text-align:right;font-weight:600;">200 €</td></tr>
+      <tr><td>Déploiement &amp; Configuration</td><td style="text-align:right;font-weight:600;">100 €</td></tr>
+      <tr><td>Hébergement 1 an (inclus)</td><td style="text-align:right;font-weight:600;">100 €</td></tr>
+      <tr><td>Maintenance 6 mois (inclus)</td><td style="text-align:right;font-weight:600;">100 €</td></tr>
+      <tr style="background:#1a1a1a;color:#fff;">
+        <td style="padding:9px 10px;font-weight:700;letter-spacing:0.06em;font-size:9pt;">TOTAL GÉNÉRAL HT</td>
+        <td style="padding:9px 10px;text-align:right;font-weight:700;font-size:11pt;">1 550 €</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="tva-note">TVA non applicable, art. 293 B du CGI</p>
+
+  <div class="section-title">Conditions</div>
+
+  <div class="conditions-grid">
+    <div class="cond-box">
+      <h4>Conditions de paiement</h4>
+      <div class="pay-row">
+        <span class="pct">60%</span>
+        <span class="desc">à la signature du devis (acompte)</span>
+        <span class="mnt">930 €</span>
+      </div>
+      <div class="pay-row">
+        <span class="pct">40%</span>
+        <span class="desc">à la livraison finale</span>
+        <span class="mnt">620 €</span>
+      </div>
+      <p class="vire">Mode de règlement : Virement bancaire<br/>TVA non applicable, art. 293 B du CGI</p>
+    </div>
+    <div class="cond-stack">
+      <div class="cond-box">
+        <h4>Maintenance incluse — 6 mois</h4>
+        <p style="font-size:8pt;color:#444;line-height:1.6;">Corrections de bugs · mises à jour de sécurité<br/>assistance technique · surveillance du site</p>
+        <div class="incl-badge">INCLUSE dans ce devis</div>
+      </div>
+      <div class="cond-box">
+        <h4>Garantie incluse</h4>
+        <p style="font-size:8pt;color:#444;line-height:1.6;">30 jours après la livraison finale pour correction des anomalies liées aux fonctionnalités développées dans ce devis.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Bon pour accord</div>
+
+  <div class="sign-grid">
+    <div class="sign-box">
+      <h4>Signature Prestataire</h4>
+      <p>Guillaume Bidallier — NovaTeck Studio</p>
+    </div>
+    <div class="sign-box">
+      <h4>Signature Client</h4>
+      <p>Nom &amp; Qualité du signataire :</p>
+    </div>
+  </div>
+
+  <div class="sign-grid" style="margin-top:10px;">
+    <div class="date-line">A _________________, le ___/___/______</div>
+    <div class="date-line">A _________________, le ___/___/______</div>
+  </div>
+
+  <div class="page-footer">
+    <span>Devis MSD-2026-003 · NovaTeck Studio || MYLOSTACK DEVELOPMENT</span>
+    <span></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 3 — CGV ═══════════════════════════════ -->
+<div class="page">
+  <div class="badge-n">N</div>
+
+  <div class="cgv">
+    <h3>Conditions Générales de Vente</h3>
+
+    <div class="cgv-item">
+      <h4>1. OBJET</h4>
+      <p>Les présentes CGV définissent les termes dans lesquels MYLOSTACK DEVELOPMENT fournit des prestations de développement web au Client, conformément aux spécifications et au devis accepté.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>2. ACCEPTATION</h4>
+      <p>Toute commande implique l'acceptation sans réserve des présentes CGV, qui priment sur tout autre document du Client, sauf conditions particulières acceptées par le Prestataire.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>3. DEVIS ET COMMANDES</h4>
+      <p>Le devis est valide 30 jours. La commande est ferme dès signature et versement de l'acompte. Toute modification fera l'objet d'un avenant avec ajustement possible du délai et du prix.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>4. PRIX ET PAIEMENT</h4>
+      <p>Tarifs en euros HT. Acompte de 60 % à la signature, solde de 40 % à la livraison finale. En cas de retard de paiement, pénalités au taux légal ; le Prestataire peut suspendre les prestations.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>5. DÉLAIS ET RÉALISATION</h4>
+      <p>Les délais sont indicatifs et peuvent varier selon contraintes techniques ou disponibilité du Client. Le Client s'engage à fournir en temps utile toutes informations, accès et éléments nécessaires.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>6. PROPRIÉTÉ INTELLECTUELLE</h4>
+      <p>Les développements sont cédés au Client au paiement intégral. Les frameworks, bibliothèques et savoir-faire du Prestataire restent sa propriété exclusive.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>7. RGPD ET DONNÉES PERSONNELLES</h4>
+      <p>Le Prestataire s'engage à respecter le RGPD. Les fonctionnalités intégreront les principes de privacy by design et privacy by default, notamment la gestion des données des utilisateurs expatriés.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>8. GARANTIE ET MAINTENANCE</h4>
+      <p>Garantie correctrice de 30 jours après livraison finale incluse. Maintenance de 6 mois incluse dans ce devis (corrections de bugs, mises à jour de sécurité, surveillance). Toute intervention ultérieure fera l'objet d'un devis complémentaire.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>9. HÉBERGEMENT</h4>
+      <p>L'hébergement Vercel est inclus pour une durée de 1 an à compter de la mise en production. Le renouvellement annuel est à la charge du Client au tarif en vigueur, ou selon un nouveau devis de maintenance.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>10. LIMITATION DE RESPONSABILITÉ</h4>
+      <p>Responsabilité limitée aux dommages directs prouvés. Le Prestataire n'est pas responsable des dommages indirects, pertes de données ou pertes de bénéfices.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>11. CONFIDENTIALITÉ</h4>
+      <p>Confidentialité mutuelle de toutes informations échangées, persistant après fin du contrat.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>12. RÉSILIATION</h4>
+      <p>Résiliation possible après mise en demeure sans effet pendant 15 jours en cas de manquement grave. Les travaux réalisés sont facturés au prorata de leur avancement.</p>
+    </div>
+    <div class="cgv-item">
+      <h4>13. LOI APPLICABLE</h4>
+      <p>Droit français applicable. Solution amiable privilégiée. À défaut, tribunaux compétents du ressort du siège social du Prestataire.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Devis MSD-2026-003 · NovaTeck Studio || MYLOSTACK DEVELOPMENT</span>
+    <span></span>
+  </div>
+</div>
+
+</body>
+</html>

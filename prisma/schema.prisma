@@ -76,6 +76,31 @@ model Favorite {
   @@unique([userId, listingId])
 }
 
+model Professional {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  category    String
+  city        String
+  description String?
+  phone       String?
+  whatsapp    String?
+  website     String?
+  logo        String?
+  photos      String[]
+  tier        ProTier   @default(FREE)
+  verified    Boolean   @default(false)
+  featured    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum ProTier {
+  FREE
+  PREMIUM
+  PREMIUM_PLUS
+}
+
 model Message {
   id         String    @id @default(cuid())
   listingId  String
