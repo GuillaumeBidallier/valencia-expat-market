@@ -9,6 +9,7 @@ import HeroSection from '@/components/home/HeroSection'
 import PromoBanner from '@/components/home/PromoBanner'
 import ProsBanner from '@/components/home/ProsBanner'
 import { prisma } from '@/lib/prisma'
+import { auth } from '@/auth'
 
 const categoryItems = [
   { icon: Home, label: 'Immobilier', slug: 'meubles' },
@@ -28,12 +29,14 @@ const trustItems = [
 ]
 
 export default async function HomePage() {
+  const session = await auth()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let featured: any[] = []
   let featuredPros: Awaited<ReturnType<typeof prisma.professional.findMany>> = []
+  let homeFavIds = new Set<string>()
 
   try {
-    const [rows, prosRows] = await Promise.all([
+    const [rows, prosRows, favRows] = await Promise.all([
       prisma.listing.findMany({
         where: { status: 'ACTIVE' },
         include: { images: { take: 1, orderBy: { order: 'asc' } } },
@@ -45,6 +48,9 @@ export default async function HomePage() {
         orderBy: [{ featured: 'desc' }, { name: 'asc' }],
         take: 6,
       }),
+      session?.user?.id
+        ? prisma.favorite.findMany({ where: { userId: session.user.id }, select: { listingId: true } })
+        : Promise.resolve([]),
     ])
     featured = rows.map(l => ({
       ...l,
@@ -54,6 +60,7 @@ export default async function HomePage() {
       updatedAt: l.updatedAt.toISOString(),
     }))
     featuredPros = prosRows
+    homeFavIds = new Set(favRows.map(f => f.listingId))
   } catch (e) {
     console.error('[HomePage] DB error:', e)
   }
@@ -110,7 +117,7 @@ export default async function HomePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {featured.map((listing, i) => (
             <>
-              <ListingCard key={listing.id} listing={listing} badge={i < 2 ? 'une' : i < 4 ? 'nouveau' : undefined} />
+              <ListingCard key={listing.id} listing={listing} badge={i < 2 ? 'une' : i < 4 ? 'nouveau' : undefined} isFavorited={homeFavIds.has(listing.id)} />
               {i === 3 && (
                 <div key="ad-inline" className="sm:col-span-2 lg:col-span-4">
                   <AdUnit size="inline" seed={2} />

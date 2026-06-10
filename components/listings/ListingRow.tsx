@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin, Clock, Navigation } from 'lucide-react'
 import { Listing } from '@/types'
+import FavoriteButton from './FavoriteButton'
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -13,12 +14,18 @@ function timeAgo(dateStr: string): string {
   return `Il y a ${days}j`
 }
 
-export default function ListingRow({ listing, distanceKm }: { listing: Listing; distanceKm?: number }) {
+export default function ListingRow({ listing, distanceKm, isFavorited }: { listing: Listing; distanceKm?: number; isFavorited?: boolean }) {
   return (
     <Link
       href={`/annonces/${listing.id}`}
-      className="flex gap-4 bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-valencia hover:shadow-md transition-all"
+      className="relative flex gap-4 bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-valencia hover:shadow-md transition-all"
     >
+      <FavoriteButton
+        listingId={listing.id}
+        initialFavorited={isFavorited}
+        iconSize={14}
+        className="absolute top-3 right-3 w-7 h-7 bg-white border border-gray-100 rounded-full shadow-sm hover:scale-110 z-10"
+      />
       {/* Image */}
       <div className="relative w-28 h-24 sm:w-44 sm:h-36 md:w-56 md:h-40 shrink-0 rounded-lg overflow-hidden bg-gray-100">
         <Image

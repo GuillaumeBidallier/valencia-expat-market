@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
+import { auth } from '@/auth'
 import { Listing } from '@/types'
 import SearchBar from '@/components/listings/SearchBar'
 import type { GeoState } from '@/components/listings/GeoModal'
@@ -53,6 +54,7 @@ async function AnnoncesContent({ searchParams }: Props) {
   const radius   = params.radius ? Number(params.radius) : 10
   const geoLabel = params.geoLabel ?? 'Ma position'
 
+  const session = await auth()
   const hasLocation = userLat !== undefined && userLng !== undefined
   const defaultGeo: GeoState | null = hasLocation
     ? { city: geoLabel, lat: userLat!, lng: userLng!, radius }
@@ -91,7 +93,7 @@ async function AnnoncesContent({ searchParams }: Props) {
   // When sorting by distance, fetch all from bounding box without skip/take
   const fetchAll = hasLocation && sort === 'distance'
 
-  const [rawListings, total] = await Promise.all([
+  const [rawListings, total, favRows] = await Promise.all([
     prisma.listing.findMany({
       where,
       include: { images: { orderBy: { order: 'asc' }, take: 1 } },
@@ -100,7 +102,11 @@ async function AnnoncesContent({ searchParams }: Props) {
       take: fetchAll ? undefined : PER_PAGE,
     }),
     prisma.listing.count({ where }),
+    session?.user?.id
+      ? prisma.favorite.findMany({ where: { userId: session.user.id }, select: { listingId: true } })
+      : Promise.resolve([]),
   ])
+  const favoritedIds = new Set(favRows.map(f => f.listingId))
 
   let listings: ListingWithDist[]
 
@@ -193,7 +199,7 @@ async function AnnoncesContent({ searchParams }: Props) {
                 <div className="flex flex-col gap-2">
                   {listings.map((listing, i) => (
                     <div key={listing.id}>
-                      <ListingRow listing={listing} distanceKm={listing.distanceKm} />
+                      <ListingRow listing={listing} distanceKm={listing.distanceKm} isFavorited={favoritedIds.has(listing.id)} />
                       {(i + 1) % 6 === 0 && <AdUnit size="banner" seed={i} />}
                     </div>
                   ))}
