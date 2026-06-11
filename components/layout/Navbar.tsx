@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
 import { useUnreadCount } from '@/hooks/useUnreadCount'
 import { useTranslations } from 'next-intl'
+import { useLocale, type SupportedLocale } from '@/components/providers/LocaleProvider'
 
 const LANGUAGES = [
   { code: 'fr', label: 'Français',  flag: '🇫🇷' },
@@ -18,13 +19,8 @@ const LANGUAGES = [
 
 function LanguagePicker({ transparent }: { transparent: boolean }) {
   const [open, setOpen] = useState(false)
-  const [lang, setLang] = useState('fr')
   const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const stored = localStorage.getItem('vem_lang')
-    if (stored) setLang(stored)
-  }, [])
+  const { locale, setLocale } = useLocale()
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -34,14 +30,11 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  const current = LANGUAGES.find(l => l.code === lang) ?? LANGUAGES[0]
+  const current = LANGUAGES.find(l => l.code === locale) ?? LANGUAGES[0]
 
   const select = (code: string) => {
-    document.cookie = `vem_lang=${code}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
-    localStorage.setItem('vem_lang', code)
-    setLang(code)
+    setLocale(code as SupportedLocale)
     setOpen(false)
-    window.location.reload()
   }
 
   return (
@@ -66,12 +59,12 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
               key={l.code}
               onClick={() => select(l.code)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
-                l.code === lang ? 'text-orange-primary font-semibold' : 'text-navy'
+                l.code === locale ? 'text-orange-primary font-semibold' : 'text-navy'
               }`}
             >
               <span className="text-base">{l.flag}</span>
               <span>{l.label}</span>
-              {l.code === lang && <span className="ml-auto text-orange-primary text-xs">✓</span>}
+              {l.code === locale && <span className="ml-auto text-orange-primary text-xs">✓</span>}
             </button>
           ))}
         </div>
@@ -85,6 +78,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+  const { setLocale: switchLocale } = useLocale()
   const isHome = pathname === '/'
   const unreadCount = useUnreadCount(isAuthenticated)
   const t = useTranslations('Nav')
@@ -262,10 +256,8 @@ export default function Navbar() {
               <button
                 key={l.code}
                 onClick={() => {
-                  document.cookie = `vem_lang=${l.code}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
-                  localStorage.setItem('vem_lang', l.code)
+                  switchLocale(l.code as SupportedLocale)
                   setMenuOpen(false)
-                  window.location.reload()
                 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:border-orange-primary hover:text-orange-primary transition-colors"
               >

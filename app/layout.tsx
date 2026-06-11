@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import type { Metadata } from 'next'
 import { Inter, Nunito } from 'next/font/google'
 import Script from 'next/script'
@@ -7,7 +9,7 @@ import { AuthProvider } from '@/context/AuthContext'
 import { ListingsProvider } from '@/context/ListingsContext'
 import Navbar from '@/components/layout/Navbar'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
-import { NextIntlClientProvider } from 'next-intl'
+import { LocaleProvider, type SupportedLocale } from '@/components/providers/LocaleProvider'
 import { getLocale } from 'next-intl/server'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -36,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             strategy="afterInteractive"
           />
         )}
-        <NextIntlClientProvider>
+        <LocaleProvider initialLocale={locale as SupportedLocale}>
           <SessionProvider>
             <AuthProvider>
               <ListingsProvider>
@@ -46,7 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </ListingsProvider>
             </AuthProvider>
           </SessionProvider>
-        </NextIntlClientProvider>
+        </LocaleProvider>
       </body>
     </html>
   )
