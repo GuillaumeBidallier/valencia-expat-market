@@ -1,7 +1,11 @@
+'use client'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import VendoLogo from '@/components/layout/VendoLogo'
 
 export default function Footer() {
+  const t = useTranslations('Footer')
+
   return (
     <footer className="bg-navy text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -11,7 +15,7 @@ export default function Footer() {
             <div className="mb-3">
               <VendoLogo size="md" theme="light" />
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mt-2">Le site gratuit des petites annonces entre expatriés en Espagne.</p>
+            <p className="text-gray-400 text-sm leading-relaxed mt-2">{t('tagline')}</p>
             <div className="flex items-center gap-3 mt-4">
               {/* Facebook */}
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -31,9 +35,16 @@ export default function Footer() {
 
           {/* Col 2 - Navigation */}
           <div>
-            <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-gray-300">Navigation</h4>
+            <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-gray-300">{t('nav_title')}</h4>
             <ul className="space-y-2">
-              {['Accueil', 'Catégories', 'Comment ça marche ?', 'Publicité', 'Blog', 'Contact'].map(item => (
+              {[
+                t('nav_home'),
+                t('nav_categories'),
+                t('nav_how'),
+                t('nav_ads'),
+                t('nav_blog'),
+                t('nav_contact'),
+              ].map(item => (
                 <li key={item}><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">{item}</a></li>
               ))}
             </ul>
@@ -41,14 +52,14 @@ export default function Footer() {
 
           {/* Col 3 - Mon compte */}
           <div>
-            <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-gray-300">Mon compte</h4>
+            <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-gray-300">{t('account_title')}</h4>
             <ul className="space-y-2">
               {[
-                { label: 'Se connecter', href: '/connexion' },
-                { label: "S'inscrire", href: '/inscription' },
-                { label: 'Mes annonces', href: '/mon-compte' },
-                { label: 'Mes favoris', href: '/mon-compte' },
-                { label: 'Mon abonnement', href: '/mon-compte' },
+                { label: t('account_login'), href: '/connexion' },
+                { label: t('account_register'), href: '/inscription' },
+                { label: t('account_listings'), href: '/mon-compte' },
+                { label: t('account_favorites'), href: '/mon-compte' },
+                { label: t('account_subscription'), href: '/mon-compte' },
               ].map(item => (
                 <li key={item.label}><Link href={item.href} className="text-gray-400 hover:text-white text-sm transition-colors">{item.label}</Link></li>
               ))}
@@ -57,9 +68,14 @@ export default function Footer() {
 
           {/* Col 4 - Légal */}
           <div>
-            <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-gray-300">Légal</h4>
+            <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-gray-300">{t('legal_title')}</h4>
             <ul className="space-y-2">
-              {['Membres légaux', 'CGU', 'Politique de confidentialité', 'Cookies'].map(item => (
+              {[
+                t('legal_members'),
+                t('legal_terms'),
+                t('legal_privacy'),
+                t('legal_cookies'),
+              ].map(item => (
                 <li key={item}><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">{item}</a></li>
               ))}
             </ul>
@@ -67,7 +83,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500 text-xs">
-          © 2026 Vendo — Tous droits réservés. Réalisé avec ❤️ pour les expatriés en Espagne.
+          {t('copyright')}
         </div>
       </div>
     </footer>

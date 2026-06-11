@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { MapPin, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export interface GeoState {
   city: string
@@ -23,6 +24,7 @@ interface GeoModalProps {
 }
 
 export default function GeoModal({ isOpen, onClose, onValidate, currentGeo }: GeoModalProps) {
+  const t = useTranslations('Search')
   const [cityInput, setCityInput] = useState(currentGeo?.city ?? '')
   const [radius, setRadius] = useState(currentGeo?.radius ?? 50)
   const [coords, setCoords] = useState<{ lat: number; lng: number; name: string } | null>(
@@ -103,7 +105,7 @@ export default function GeoModal({ isOpen, onClose, onValidate, currentGeo }: Ge
       <div className="relative bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-navy">Où cherchez-vous ?</h2>
+          <h2 className="text-lg font-bold text-navy">{t('geo_title')}</h2>
           <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-full transition-colors">
             <X size={20} className="text-gray-500" />
           </button>
@@ -118,7 +120,7 @@ export default function GeoModal({ isOpen, onClose, onValidate, currentGeo }: Ge
                 type="text"
                 value={cityInput}
                 onChange={e => handleCityInput(e.target.value)}
-                placeholder="Saisissez une ville et un rayon"
+                placeholder={t('geo_placeholder')}
                 className="flex-1 text-sm text-navy placeholder-gray-400 focus:outline-none bg-transparent"
                 autoFocus
               />
@@ -145,7 +147,7 @@ export default function GeoModal({ isOpen, onClose, onValidate, currentGeo }: Ge
           {/* Radius slider */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-bold text-navy">Dans un rayon de</span>
+              <span className="text-sm font-bold text-navy">{t('radius_label')}</span>
               <span className="text-sm font-bold text-blue-valencia">{radius} km</span>
             </div>
             <input
@@ -178,7 +180,7 @@ export default function GeoModal({ isOpen, onClose, onValidate, currentGeo }: Ge
             </div>
           ) : (
             <div className="rounded-xl bg-gray-100 h-32 flex items-center justify-center">
-              <p className="text-sm text-gray-400">Saisissez une ville pour voir la carte</p>
+              <p className="text-sm text-gray-400">{t('map_empty')}</p>
             </div>
           )}
         </div>
@@ -189,13 +191,13 @@ export default function GeoModal({ isOpen, onClose, onValidate, currentGeo }: Ge
             onClick={handleEffacer}
             className="flex-1 py-3 rounded-xl border-2 border-navy text-navy font-bold text-sm hover:bg-navy/5 transition-colors"
           >
-            Effacer
+            {t('clear')}
           </button>
           <button
             onClick={handleValidate}
             className="flex-[2] py-3 rounded-xl bg-orange-primary text-white font-bold text-sm hover:bg-orange-dark transition-colors truncate px-3"
           >
-            {coords ? `Valider — ${coords.name}, ${radius} km` : "Tout l'Espagne"}
+            {coords ? t('validate_city', { city: coords.name, radius }) : t('all_spain')}
           </button>
         </div>
       </div>

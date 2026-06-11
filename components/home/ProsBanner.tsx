@@ -1,23 +1,26 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin, Phone, MessageCircle, Globe } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import type { Professional } from '@prisma/client'
 import { proCategories } from '@/lib/proCategories'
 
 type ProWithReco = Professional & { recommended?: boolean }
 
 export default function ProsBanner({ pros }: { pros: ProWithReco[] }) {
+  const t = useTranslations('ProsBanner')
   if (pros.length === 0) return null
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="text-xl font-black text-navy">⭐ Professionnels francophones recommandés</h2>
-          <p className="text-sm text-gray-400 mt-0.5">Avocats, comptables, agences immobilières, déménageurs… partout en Espagne</p>
+          <h2 className="text-xl font-black text-navy">{t('title')}</h2>
+          <p className="text-sm text-gray-400 mt-0.5">{t('subtitle')}</p>
         </div>
         <Link href="/professionnels" className="text-orange-primary text-sm font-bold hover:underline shrink-0 ml-4">
-          Voir tous →
+          {t('see_all')}
         </Link>
       </div>
 
@@ -50,15 +53,15 @@ export default function ProsBanner({ pros }: { pros: ProWithReco[] }) {
                 {/* Badge */}
                 {isReco ? (
                   <span className="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
-                    ✓ Recommandé
+                    {t('recommended')}
                   </span>
                 ) : isPlus ? (
                   <span className="absolute top-2 right-2 bg-orange-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    ⭐ Premium+
+                    {t('premium_plus')}
                   </span>
                 ) : (
                   <span className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    ⭐ Premium
+                    {t('premium')}
                   </span>
                 )}
               </div>

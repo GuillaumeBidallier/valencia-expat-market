@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Send, ChevronLeft } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 type Message = {
   id: string
@@ -28,6 +29,7 @@ type Props = {
 }
 
 export default function ConversationClient({ conversationId, listing, initialMessages, currentUserId }: Props) {
+  const t = useTranslations('Messages')
   const [messages, setMessages] = useState(initialMessages)
   const [body, setBody] = useState('')
   const [sending, setSending] = useState(false)
@@ -62,7 +64,7 @@ export default function ConversationClient({ conversationId, listing, initialMes
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
       <Link href="/messages" className="flex items-center gap-1 text-sm text-gray-400 hover:text-navy mb-4 shrink-0">
-        <ChevronLeft size={16} /> Retour aux messages
+        <ChevronLeft size={16} /> {t('back')}
       </Link>
 
       {/* Listing card at top */}

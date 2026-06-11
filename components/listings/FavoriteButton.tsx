@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Heart } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/context/AuthContext'
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 }
 
 export default function FavoriteButton({ listingId, initialFavorited = false, showLabel = false, className = '', iconSize = 14 }: Props) {
+  const t = useTranslations('Listings')
   const { isAuthenticated } = useAuth()
   const router = useRouter()
   const [favorited, setFavorited] = useState(initialFavorited)
@@ -36,7 +38,7 @@ export default function FavoriteButton({ listingId, initialFavorited = false, sh
     <button
       onClick={toggle}
       disabled={loading}
-      title={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+      title={favorited ? t('remove_fav') : t('add_fav')}
       className={`transition-all disabled:opacity-60 ${className}`}
     >
       <Heart
@@ -47,7 +49,7 @@ export default function FavoriteButton({ listingId, initialFavorited = false, sh
       />
       {showLabel && (
         <span className={`text-sm select-none ${favorited ? 'text-red-500' : 'text-gray-500'}`}>
-          {favorited ? 'Annonce sauvegardée' : "Sauvegarder l'annonce"}
+          {favorited ? t('saved_listing') : t('save_listing')}
         </span>
       )}
     </button>

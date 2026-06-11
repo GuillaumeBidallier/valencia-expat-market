@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { X, SlidersHorizontal, LocateFixed, Loader2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { categories, neighborhoods } from '@/lib/categories'
 
 interface Props {
@@ -16,6 +17,7 @@ const RADII = [
 ]
 
 export default function AnnoncesFilters({ totalCount }: Props) {
+  const t = useTranslations('Filters')
   const router = useRouter()
   const searchParams = useSearchParams()
   const [showMobile, setShowMobile] = useState(false)
@@ -59,7 +61,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
   }
 
   const useMyLocation = () => {
-    if (!navigator.geolocation) { setGeoError('Géolocalisation non supportée'); return }
+    if (!navigator.geolocation) { setGeoError(t('geo_not_supported')); return }
     setGeoLoading(true)
     setGeoError('')
     navigator.geolocation.getCurrentPosition(
@@ -68,13 +70,13 @@ export default function AnnoncesFilters({ totalCount }: Props) {
         params.set('lat', pos.coords.latitude.toFixed(5))
         params.set('lng', pos.coords.longitude.toFixed(5))
         params.set('radius', radius || '10')
-        params.set('geoLabel', 'Ma position')
+        params.set('geoLabel', t('my_position'))
         params.delete('page')
         router.push(`/annonces?${params.toString()}`)
         setGeoLoading(false)
       },
       () => {
-        setGeoError('Accès à la position refusé')
+        setGeoError(t('geo_denied'))
         setGeoLoading(false)
       }
     )
@@ -89,38 +91,38 @@ export default function AnnoncesFilters({ totalCount }: Props) {
     <div className="space-y-5">
       {/* Category */}
       <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Catégorie</label>
+        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('category')}</label>
         <select
           value={cat}
           onChange={e => update('cat', e.target.value)}
           className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
         >
-          <option value="">Toutes les catégories</option>
+          <option value="">{t('all_categories')}</option>
           {categories.map(c => <option key={c.slug} value={c.slug}>{c.icon} {c.label}</option>)}
         </select>
       </div>
 
       {/* Neighborhood */}
       <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Quartier</label>
+        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('neighborhood')}</label>
         <select
           value={ville}
           onChange={e => update('ville', e.target.value)}
           className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
         >
-          <option value="">Tous les quartiers</option>
+          <option value="">{t('all_neighborhoods')}</option>
           {neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
         </select>
       </div>
 
       {/* Localisation */}
       <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Ma position</label>
+        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('my_position')}</label>
         {hasLocation ? (
           <div className="space-y-2">
             <div className="flex items-center gap-2 bg-orange-soft px-3 py-2 rounded-lg">
               <LocateFixed size={13} className="text-orange-primary shrink-0" />
-              <span className="text-xs text-orange-primary font-semibold flex-1">Position activée</span>
+              <span className="text-xs text-orange-primary font-semibold flex-1">{t('position_active')}</span>
               <button onClick={clearLocation} className="text-gray-400 hover:text-red-500 transition-colors">
                 <X size={13} />
               </button>
@@ -130,7 +132,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
               onChange={e => update('radius', e.target.value)}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
             >
-              {RADII.map(r => <option key={r.value} value={r.value}>Dans un rayon de {r.label}</option>)}
+              {RADII.map(r => <option key={r.value} value={r.value}>{t('radius_in', { label: r.label })}</option>)}
             </select>
           </div>
         ) : (
@@ -141,8 +143,8 @@ export default function AnnoncesFilters({ totalCount }: Props) {
               className="w-full flex items-center justify-center gap-2 border border-orange-primary/40 text-orange-primary text-xs font-semibold py-2.5 rounded-lg hover:bg-orange-soft transition-colors disabled:opacity-50"
             >
               {geoLoading
-                ? <><Loader2 size={13} className="animate-spin" /> Localisation…</>
-                : <><LocateFixed size={13} /> Utiliser ma position</>
+                ? <><Loader2 size={13} className="animate-spin" /> {t('locating')}</>
+                : <><LocateFixed size={13} /> {t('locate_btn')}</>
               }
             </button>
             {geoError && <p className="text-[11px] text-red-500">{geoError}</p>}
@@ -152,7 +154,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
 
       {/* Price range */}
       <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Prix (€)</label>
+        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('price')}</label>
         <div className="flex gap-2 items-center">
           <input
             type="number"
@@ -176,16 +178,16 @@ export default function AnnoncesFilters({ totalCount }: Props) {
 
       {/* Sort */}
       <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Trier par</label>
+        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('sort_by')}</label>
         <select
           value={sort}
           onChange={e => update('sort', e.target.value)}
           className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
         >
-          <option value="">Plus récentes</option>
-          {hasLocation && <option value="distance">Plus proches</option>}
-          <option value="price_asc">Prix croissant</option>
-          <option value="price_desc">Prix décroissant</option>
+          <option value="">{t('sort_recent')}</option>
+          {hasLocation && <option value="distance">{t('sort_nearest')}</option>}
+          <option value="price_asc">{t('sort_price_asc')}</option>
+          <option value="price_desc">{t('sort_price_desc')}</option>
         </select>
       </div>
 
@@ -194,7 +196,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
           onClick={clearAll}
           className="w-full flex items-center justify-center gap-1.5 text-xs text-red-500 font-semibold py-2 rounded-lg border border-red-200 hover:bg-red-50 transition-colors"
         >
-          <X size={12} /> Effacer les filtres ({activeCount})
+          <X size={12} /> {t('clear_filters', { count: activeCount })}
         </button>
       )}
     </div>
@@ -205,7 +207,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
       {/* Desktop sidebar */}
       <aside className="hidden lg:block w-56 shrink-0">
         <div className="bg-white border border-gray-100 rounded-xl p-4 sticky top-32 shadow-sm">
-          <h3 className="font-bold text-navy text-sm mb-4">Filtres</h3>
+          <h3 className="font-bold text-navy text-sm mb-4">{t('title')}</h3>
           {filtersContent}
         </div>
       </aside>
@@ -214,14 +216,14 @@ export default function AnnoncesFilters({ totalCount }: Props) {
       <div className="lg:hidden w-full">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm text-gray-600 font-medium">
-            <strong className="text-navy">{totalCount}</strong> annonce{totalCount !== 1 ? 's' : ''}
+            <strong className="text-navy">{totalCount !== 1 ? t('listing_count_plural', { count: totalCount }) : t('listing_count', { count: totalCount })}</strong>
           </span>
           <button
             onClick={() => setShowMobile(v => !v)}
             className="flex items-center gap-1.5 text-sm font-semibold text-orange-primary border border-orange-primary/30 bg-orange-soft px-3 py-1.5 rounded-lg"
           >
             <SlidersHorizontal size={13} />
-            Filtres
+            {t('title')}
             {activeCount > 0 && (
               <span className="w-4 h-4 bg-orange-primary text-white rounded-full text-[10px] flex items-center justify-center">{activeCount}</span>
             )}
@@ -231,7 +233,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
         {showMobile && (
           <div className="bg-white border border-gray-100 rounded-xl p-4 mb-4 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <span className="font-bold text-navy text-sm">Filtres</span>
+              <span className="font-bold text-navy text-sm">{t('title')}</span>
               <button onClick={() => setShowMobile(false)}><X size={15} className="text-gray-400" /></button>
             </div>
             {filtersContent}

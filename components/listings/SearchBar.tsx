@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Search, MapPin, ChevronDown } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { categories } from '@/lib/categories'
 import GeoModal, { GeoState } from './GeoModal'
 
@@ -12,13 +13,14 @@ interface Props {
 }
 
 export default function SearchBar({ defaultQuery = '', defaultCategory = '', defaultGeo = null }: Props) {
+  const t = useTranslations('Search')
   const router = useRouter()
   const [query, setQuery] = useState(defaultQuery)
   const [category, setCategory] = useState(defaultCategory)
   const [geoModalOpen, setGeoModalOpen] = useState(false)
   const [geo, setGeo] = useState<GeoState | null>(defaultGeo)
 
-  const locationLabel = geo ? `${geo.city}, ${geo.radius} km` : "Tout l'Espagne"
+  const locationLabel = geo ? `${geo.city}, ${geo.radius} km` : t('all_spain')
 
   const handleSearch = () => {
     const params = new URLSearchParams()
@@ -45,7 +47,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
-              placeholder="Que recherchez-vous ?"
+              placeholder={t('placeholder')}
               className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none"
             />
           </div>
@@ -63,7 +65,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
               onChange={e => setCategory(e.target.value)}
               className="flex-1 px-3 py-2.5 text-xs text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white cursor-pointer min-w-0"
             >
-              <option value="">Toutes les catégories</option>
+              <option value="">{t('all_categories')}</option>
               {categories.map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}
             </select>
           </div>
@@ -71,7 +73,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
             onClick={handleSearch}
             className="flex items-center justify-center gap-2 bg-orange-primary text-white py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors"
           >
-            <Search size={16} /> Rechercher
+            <Search size={16} /> {t('search_btn')}
           </button>
         </div>
 
@@ -84,7 +86,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
-              placeholder="Que recherchez-vous ?"
+              placeholder={t('placeholder')}
               className="flex-1 py-3 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none min-w-0"
             />
           </div>
@@ -105,14 +107,14 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
             onChange={e => setCategory(e.target.value)}
             className="px-4 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white cursor-pointer hover:border-indigo-primary transition-colors min-w-[170px]"
           >
-            <option value="">Toutes les catégories</option>
+            <option value="">{t('all_categories')}</option>
             {categories.map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}
           </select>
           <button
             onClick={handleSearch}
             className="flex items-center gap-2 bg-orange-primary text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap shrink-0"
           >
-            <Search size={16} /> Rechercher
+            <Search size={16} /> {t('search_btn')}
           </button>
         </div>
       </div>

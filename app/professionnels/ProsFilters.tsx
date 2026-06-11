@@ -2,8 +2,10 @@
 import { useRouter } from 'next/navigation'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 export default function ProsFilters({ currentCat, currentCity }: { currentCat: string; currentCity: string }) {
+  const t = useTranslations('Pros')
   const router = useRouter()
   const [city, setCity] = useState(currentCity)
 
@@ -22,7 +24,7 @@ export default function ProsFilters({ currentCat, currentCity }: { currentCat: s
         type="text"
         value={city}
         onChange={e => handleCity(e.target.value)}
-        placeholder="Filtrer par ville…"
+        placeholder={t('city_placeholder')}
         className="flex-1 text-sm text-navy placeholder-gray-400 focus:outline-none bg-transparent"
       />
     </div>

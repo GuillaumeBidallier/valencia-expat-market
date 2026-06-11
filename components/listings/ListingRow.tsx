@@ -1,20 +1,24 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin, Clock, Navigation } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Listing } from '@/types'
 import FavoriteButton from './FavoriteButton'
 
-function timeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime()
-  const hours = Math.floor(diff / 3600000)
-  if (hours < 1) return "À l'instant"
-  if (hours < 24) return `Il y a ${hours}h`
-  const days = Math.floor(hours / 24)
-  if (days === 1) return 'Hier'
-  return `Il y a ${days}j`
-}
-
 export default function ListingRow({ listing, distanceKm, isFavorited }: { listing: Listing; distanceKm?: number; isFavorited?: boolean }) {
+  const t = useTranslations('Listings')
+
+  function timeAgo(dateStr: string): string {
+    const diff = Date.now() - new Date(dateStr).getTime()
+    const hours = Math.floor(diff / 3600000)
+    if (hours < 1) return t('just_now')
+    if (hours < 24) return t('hours_ago', { h: hours })
+    const days = Math.floor(hours / 24)
+    if (days === 1) return t('yesterday')
+    return t('days_ago', { d: days })
+  }
+
   return (
     <Link
       href={`/annonces/${listing.id}`}
@@ -51,7 +55,7 @@ export default function ListingRow({ listing, distanceKm, isFavorited }: { listi
           <div className="font-bold text-navy text-base sm:text-xl shrink-0">
             {listing.price !== null
               ? `${listing.price} €`
-              : <span className="text-green-600 text-sm sm:text-lg">Gratuit</span>
+              : <span className="text-green-600 text-sm sm:text-lg">{t('free')}</span>
             }
           </div>
           <div className="flex flex-col items-end gap-0.5 text-right min-w-0">

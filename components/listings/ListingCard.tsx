@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Listing } from '@/types'
 import FavoriteButton from './FavoriteButton'
 
@@ -12,6 +13,7 @@ interface ListingCardProps {
 }
 
 export default function ListingCard({ listing, badge, isFavorited }: ListingCardProps) {
+  const t = useTranslations('Listings')
   return (
     <Link href={`/annonces/${listing.id}`} className="group bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg hover:border-indigo-primary/30 transition-all duration-200 flex flex-col">
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
@@ -24,7 +26,7 @@ export default function ListingCard({ listing, badge, isFavorited }: ListingCard
         />
         {badge && (
           <div className={`absolute top-2.5 left-2.5 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-wide ${badge === 'une' ? 'bg-orange-primary' : 'bg-indigo-primary'}`}>
-            {badge === 'une' ? 'À la une' : 'Nouveau'}
+            {badge === 'une' ? t('featured_badge') : t('new_badge')}
           </div>
         )}
         <FavoriteButton
@@ -42,7 +44,7 @@ export default function ListingCard({ listing, badge, isFavorited }: ListingCard
           <span>{listing.neighborhood}</span>
         </div>
         <div className="font-black text-navy text-base mt-1">
-          {listing.price !== null ? `${listing.price} €` : <span className="text-green-600 font-bold text-sm">Gratuit</span>}
+          {listing.price !== null ? `${listing.price} €` : <span className="text-green-600 font-bold text-sm">{t('free')}</span>}
         </div>
       </div>
     </Link>

@@ -1,44 +1,46 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-
-const SLIDES = [
-  {
-    bg: 'bg-gradient-to-r from-orange-primary to-orange-dark',
-    tag: '100% GRATUIT',
-    title: 'Déposez votre annonce',
-    subtitle: 'Vendez, louez, donnez en quelques clics',
-    cta: 'Déposer maintenant',
-    href: '/deposer-annonce',
-    emoji: '🏷️',
-  },
-  {
-    bg: 'bg-gradient-to-r from-blue-valencia to-blue-dark',
-    tag: 'COMMUNAUTÉ',
-    title: 'Des milliers d\'expatriés',
-    subtitle: 'Connectés partout en Espagne',
-    cta: 'Voir les annonces',
-    href: '/annonces',
-    emoji: '🌍',
-  },
-  {
-    bg: 'bg-gradient-to-r from-indigo-primary to-indigo-dark',
-    tag: 'NOUVEAU',
-    title: 'Toute l\'Espagne',
-    subtitle: 'Valencia, Madrid, Barcelone et plus',
-    cta: 'Explorer',
-    href: '/annonces',
-    emoji: '🗺️',
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export default function PromoBanner() {
+  const t = useTranslations('PromoBanner')
   const [current, setCurrent] = useState(0)
+
+  const SLIDES = [
+    {
+      bg: 'bg-gradient-to-r from-orange-primary to-orange-dark',
+      tag: t('s1_tag'),
+      title: t('s1_title'),
+      subtitle: t('s1_sub'),
+      cta: t('s1_cta'),
+      href: '/deposer-annonce',
+      emoji: '🏷️',
+    },
+    {
+      bg: 'bg-gradient-to-r from-blue-valencia to-blue-dark',
+      tag: t('s2_tag'),
+      title: t('s2_title'),
+      subtitle: t('s2_sub'),
+      cta: t('s2_cta'),
+      href: '/annonces',
+      emoji: '🌍',
+    },
+    {
+      bg: 'bg-gradient-to-r from-indigo-primary to-indigo-dark',
+      tag: t('s3_tag'),
+      title: t('s3_title'),
+      subtitle: t('s3_sub'),
+      cta: t('s3_cta'),
+      href: '/annonces',
+      emoji: '🗺️',
+    },
+  ]
 
   useEffect(() => {
     const id = setInterval(() => setCurrent(c => (c + 1) % SLIDES.length), 4000)
     return () => clearInterval(id)
-  }, [])
+  }, [SLIDES.length])
 
   const slide = SLIDES[current]
 
