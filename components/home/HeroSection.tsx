@@ -1,10 +1,11 @@
+'use client'
 import Image from 'next/image'
 import { ShieldCheck } from 'lucide-react'
 import SearchWidget from '@/components/listings/SearchWidget'
-import { getTranslations } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
 
-export default async function HeroSection() {
-  const t = await getTranslations('Hero')
+export default function HeroSection() {
+  const t = useTranslations('Hero')
 
   return (
     <>

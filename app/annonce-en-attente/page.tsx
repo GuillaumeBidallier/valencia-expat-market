@@ -1,9 +1,10 @@
+'use client'
 import Link from 'next/link'
 import { Clock } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
 
-export default async function AnnonceEnAttentePage() {
-  const t = await getTranslations('PendingReview')
+export default function AnnonceEnAttentePage() {
+  const t = useTranslations('PendingReview')
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
