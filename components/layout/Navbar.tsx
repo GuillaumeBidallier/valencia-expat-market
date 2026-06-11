@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
 import { useUnreadCount } from '@/hooks/useUnreadCount'
+import { useTranslations } from 'next-intl'
 
 const LANGUAGES = [
   { code: 'fr', label: 'Français',  flag: '🇫🇷' },
@@ -36,9 +37,11 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
   const current = LANGUAGES.find(l => l.code === lang) ?? LANGUAGES[0]
 
   const select = (code: string) => {
-    setLang(code)
+    document.cookie = `vem_lang=${code}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
     localStorage.setItem('vem_lang', code)
+    setLang(code)
     setOpen(false)
+    window.location.reload()
   }
 
   return (
@@ -84,6 +87,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const isHome = pathname === '/'
   const unreadCount = useUnreadCount(isAuthenticated)
+  const t = useTranslations('Nav')
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -111,9 +115,9 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-6">
             {[
-              { label: 'Accueil',         href: '/' },
-              { label: 'Annonces',         href: '/annonces' },
-              { label: '⭐ Professionnels', href: '/professionnels' },
+              { label: t('home'),          href: '/' },
+              { label: t('listings'),      href: '/annonces' },
+              { label: t('professionals'), href: '/professionnels' },
             ].map(({ label, href }) => (
               <Link
                 key={href}
@@ -136,14 +140,14 @@ export default function Navbar() {
                   className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
                   <Plus size={15} />
-                  Déposer une annonce
+                  {t('postAd')}
                 </Link>
                 <Link
                   href="/messages"
                   className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
                     transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
                   }`}
-                  title="Messages"
+                  title={t('messages')}
                 >
                   <MessageSquare size={18} />
                   {unreadCount > 0 && (
@@ -166,7 +170,7 @@ export default function Navbar() {
                 <Link
                   href="/mon-compte"
                   className="w-9 h-9 rounded-full bg-indigo-primary flex items-center justify-center text-white font-bold text-sm hover:bg-indigo-dark transition-colors shrink-0"
-                  title={user?.name ?? 'Mon compte'}
+                  title={user?.name ?? t('account')}
                 >
                   {(user?.name ?? 'M').charAt(0).toUpperCase()}
                 </Link>
@@ -181,14 +185,14 @@ export default function Navbar() {
                       : 'text-gray-600 hover:text-navy'
                   }`}
                 >
-                  Se connecter
+                  {t('login')}
                 </Link>
                 <Link
                   href="/inscription"
                   className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
                   <Plus size={15} />
-                  Déposer une annonce
+                  {t('postAd')}
                 </Link>
               </>
             )}
@@ -205,7 +209,7 @@ export default function Navbar() {
               className="flex items-center gap-1 bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
             >
               <Plus size={13} />
-              Déposer une annonce
+              {t('postAd')}
             </Link>
             <button
               className={`p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
@@ -220,34 +224,34 @@ export default function Navbar() {
       {/* Mobile menu — always solid */}
       {menuOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
-          <Link href="/" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>Accueil</Link>
-          <Link href="/annonces" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>Annonces</Link>
-          <Link href="/professionnels" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>⭐ Professionnels</Link>
+          <Link href="/" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('home')}</Link>
+          <Link href="/annonces" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('listings')}</Link>
+          <Link href="/professionnels" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>{t('professionals')}</Link>
           <hr />
           {isAuthenticated ? (
             <>
               <Link href="/messages" className="flex items-center gap-2 text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>
-                Messages
+                {t('messages')}
                 {unreadCount > 0 && (
                   <span className="min-w-[18px] h-[18px] rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center px-1">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
               </Link>
-              <Link href="/mon-compte" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>Mon compte</Link>
+              <Link href="/mon-compte" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('account')}</Link>
               {user?.role === 'ADMIN' && (
                 <Link href="/admin" className="flex items-center gap-2 text-sm font-semibold text-indigo-600" onClick={() => setMenuOpen(false)}>
-                  <ShieldCheck size={15} /> Admin
+                  <ShieldCheck size={15} /> {t('admin')}
                 </Link>
               )}
-              <Link href="/deposer-annonce" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center">Déposer une annonce</Link>
+              <Link href="/deposer-annonce" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center">{t('postAd')}</Link>
             </>
           ) : (
             <>
-              <Link href="/connexion" onClick={() => setMenuOpen(false)} className="border border-gray-300 text-navy px-4 py-2.5 rounded-lg font-semibold text-sm text-center">Se connecter</Link>
+              <Link href="/connexion" onClick={() => setMenuOpen(false)} className="border border-gray-300 text-navy px-4 py-2.5 rounded-lg font-semibold text-sm text-center">{t('login')}</Link>
               <Link href="/inscription" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center flex items-center justify-center gap-2">
                 <Plus size={15} />
-                Déposer une annonce
+                {t('postAd')}
               </Link>
             </>
           )}
@@ -258,8 +262,10 @@ export default function Navbar() {
               <button
                 key={l.code}
                 onClick={() => {
+                  document.cookie = `vem_lang=${l.code}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
                   localStorage.setItem('vem_lang', l.code)
                   setMenuOpen(false)
+                  window.location.reload()
                 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:border-orange-primary hover:text-orange-primary transition-colors"
               >

@@ -9,6 +9,7 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import CityAutocomplete, { type CitySelection } from '@/components/listings/CityAutocomplete'
 import { FREE_MAX_PHOTOS, UPGRADED_MAX_PHOTOS } from '@/lib/stripe'
+import { useTranslations } from 'next-intl'
 
 const ADMIN_MAX = 10
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -20,6 +21,7 @@ function DeposerAnnonceForm() {
   const { isAuthenticated, user } = useAuth()
   const { addListing } = useListings()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const t = useTranslations('PostAd')
 
   const isAdmin   = user?.role === 'ADMIN'
   const isPremium = user?.role === 'PREMIUM' || isAdmin
@@ -85,7 +87,7 @@ function DeposerAnnonceForm() {
     const incoming = Array.from(selected)
     const valid = incoming.filter(f => ALLOWED_TYPES.includes(f.type) && f.size <= MAX_SIZE)
     const rejected = incoming.length - valid.length
-    if (rejected > 0) setUploadError(`${rejected} fichier(s) ignoré(s) — JPG/PNG/WebP, max 5 Mo.`)
+    if (rejected > 0) setUploadError(t('files_rejected', { count: rejected }))
     else setUploadError('')
     const slots = MAX_IMAGES - files.length
     const toAdd = valid.slice(0, slots)
@@ -116,9 +118,9 @@ function DeposerAnnonceForm() {
 
   const validate = () => {
     const e: Record<string, string> = {}
-    if (!form.title.trim())    e.title        = 'Le titre est obligatoire'
-    if (!form.categorySlug)    e.categorySlug = 'Choisissez une catégorie'
-    if (!location)             e.neighborhood = 'Saisissez et sélectionnez un quartier ou une ville'
+    if (!form.title.trim())    e.title        = t('err_title')
+    if (!form.categorySlug)    e.categorySlug = t('err_category')
+    if (!location)             e.neighborhood = t('err_location')
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -168,56 +170,56 @@ function DeposerAnnonceForm() {
 
   const showUpgradeCTA = !isPremium && !hasUpgrade && files.length >= FREE_MAX_PHOTOS
   const photosLabel = isAdmin
-    ? `Jusqu'à ${ADMIN_MAX} photos · JPG, PNG ou WebP · max 5 Mo chacune.`
+    ? t('photos_admin', { max: ADMIN_MAX })
     : isPremium
-    ? `Jusqu'à ${UPGRADED_MAX_PHOTOS} photos incluses · JPG, PNG ou WebP · max 5 Mo chacune.`
+    ? t('photos_premium', { max: UPGRADED_MAX_PHOTOS })
     : hasUpgrade
-    ? `6 photos débloquées (3 incluses + 3 achetées) · JPG, PNG ou WebP · max 5 Mo chacune.`
-    : `3 photos incluses gratuitement · JPG, PNG ou WebP · max 5 Mo chacune.`
+    ? t('photos_upgraded')
+    : t('photos_free')
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-navy mb-2">Déposer une annonce</h1>
-      <p className="text-sm text-gray-400 mb-8">Remplissez les informations ci-dessous pour publier votre annonce.</p>
+      <h1 className="text-2xl font-bold text-navy mb-2">{t('title')}</h1>
+      <p className="text-sm text-gray-400 mb-8">{t('sub')}</p>
 
       {verifying && (
         <div className="mb-6 flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
           <Loader2 size={16} className="text-blue-500 animate-spin shrink-0" />
-          <p className="text-sm text-blue-700">Vérification du paiement…</p>
+          <p className="text-sm text-blue-700">{t('verifying')}</p>
         </div>
       )}
 
       {hasUpgrade && !verifying && (
         <div className="mb-6 flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">
           <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
-          <p className="text-sm font-semibold text-emerald-700">3 photos supplémentaires débloquées ✓ — vous pouvez ajouter jusqu&apos;à 6 photos.</p>
+          <p className="text-sm font-semibold text-emerald-700">{t('upgrade_ok')}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Infos */}
         <div className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
-          <h2 className="font-semibold text-navy">Informations de l&apos;annonce</h2>
-          <Input id="title" label="Titre *" placeholder="Ex : Canapé 3 places IKEA gris" value={form.title} onChange={set('title')} error={errors.title} />
+          <h2 className="font-semibold text-navy">{t('section_info')}</h2>
+          <Input id="title" label={t('f_title')} placeholder={t('p_title')} value={form.title} onChange={set('title')} error={errors.title} />
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-navy">Catégorie *</label>
+            <label className="text-sm font-medium text-navy">{t('f_category')}</label>
             <select value={form.categorySlug} onChange={set('categorySlug')} className={`border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition ${errors.categorySlug ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="">Choisir une catégorie</option>
+              <option value="">{t('p_category')}</option>
               {categories.map(c => <option key={c.slug} value={c.slug}>{c.icon} {c.label}</option>)}
             </select>
             {errors.categorySlug && <p className="text-xs text-red-500">{errors.categorySlug}</p>}
           </div>
 
-          <Input id="price" label="Prix en euros (laisser vide pour un don)" type="number" placeholder="Ex : 150" value={form.price} onChange={set('price')} />
+          <Input id="price" label={t('f_price')} type="number" placeholder={t('p_price')} value={form.price} onChange={set('price')} />
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-navy">Description</label>
+            <label className="text-sm font-medium text-navy">{t('f_description')}</label>
             <textarea
               value={form.description}
               onChange={set('description')}
               rows={5}
-              placeholder="Décrivez l'état, les dimensions, les raisons de la vente..."
+              placeholder={t('p_description')}
               className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition resize-none"
             />
           </div>
@@ -226,7 +228,7 @@ function DeposerAnnonceForm() {
         {/* Photos */}
         <div className="bg-white rounded-xl border border-gray-100 p-6">
           <div className="flex items-start justify-between mb-1">
-            <h2 className="font-semibold text-navy">Photos</h2>
+            <h2 className="font-semibold text-navy">{t('section_photos')}</h2>
             <span className="text-xs text-gray-400">{files.length}/{MAX_IMAGES}</span>
           </div>
           <p className="text-xs text-gray-400 mb-4">{photosLabel}</p>
@@ -263,7 +265,7 @@ function DeposerAnnonceForm() {
                 className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-1 hover:border-orange-primary transition-colors text-gray-400 hover:text-orange-primary"
               >
                 <ImagePlus size={20} />
-                <span className="text-xs">Ajouter</span>
+                <span className="text-xs">{t('add')}</span>
               </button>
             )}
           </div>
@@ -273,9 +275,9 @@ function DeposerAnnonceForm() {
             <div className="mt-4 flex items-start gap-3 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl px-4 py-4">
               <Lock size={16} className="text-indigo-500 shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="text-sm font-semibold text-indigo-700">Limite de 3 photos atteinte</p>
+                <p className="text-sm font-semibold text-indigo-700">{t('upgrade_title')}</p>
                 <p className="text-xs text-indigo-500 mt-0.5 mb-3">
-                  Ajoutez 3 photos supplémentaires pour cette annonce — paiement unique, sans abonnement.
+                  {t('upgrade_desc')}
                 </p>
                 <button
                   type="button"
@@ -288,7 +290,7 @@ function DeposerAnnonceForm() {
                   ) : (
                     <Sparkles size={14} />
                   )}
-                  3 photos supplémentaires — 7,99€
+                  {t('upgrade_btn')}
                 </button>
               </div>
             </div>
@@ -297,10 +299,10 @@ function DeposerAnnonceForm() {
 
         {/* Localisation + contact */}
         <div className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
-          <h2 className="font-semibold text-navy">Localisation &amp; contact</h2>
+          <h2 className="font-semibold text-navy">{t('section_location')}</h2>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-navy">Quartier / Ville *</label>
+            <label className="text-sm font-medium text-navy">{t('f_location')}</label>
             <CityAutocomplete
               value={location?.name ?? ''}
               onChange={sel => {
@@ -308,33 +310,31 @@ function DeposerAnnonceForm() {
                 if (sel) setErrors(e => ({ ...e, neighborhood: '' }))
               }}
               error={errors.neighborhood}
-              placeholder="Ex : Ruzafa, Benimaclet, Paterna…"
+              placeholder={t('p_location')}
             />
             {location && (
               <p className="text-xs text-green-600 flex items-center gap-1">
-                ✓ {location.name} — position enregistrée
+                {t('location_ok', { name: location.name })}
               </p>
             )}
           </div>
 
-          <Input id="phone" label="Numéro de téléphone / WhatsApp" type="tel" placeholder="+34 6XX XXX XXX" value={form.phone} onChange={set('phone')} />
+          <Input id="phone" label={t('f_phone')} type="tel" placeholder={t('p_phone')} value={form.phone} onChange={set('phone')} />
         </div>
 
         {firewallError && (
           <div className="bg-red-50 border border-red-200 rounded-2xl p-5 flex gap-3">
             <span className="text-2xl flex-shrink-0">🚫</span>
             <div>
-              <p className="font-bold text-red-700 text-sm mb-1">Annonce bloquée — {firewallError.category}</p>
+              <p className="font-bold text-red-700 text-sm mb-1">{t('blocked', { category: firewallError.category })}</p>
               <p className="text-sm text-red-600">{firewallError.message}</p>
-              <p className="text-xs text-red-400 mt-2">
-                Si vous pensez qu&apos;il s&apos;agit d&apos;une erreur, modifiez votre titre ou description et réessayez.
-              </p>
+              <p className="text-xs text-red-400 mt-2">{t('blocked_hint')}</p>
             </div>
           </div>
         )}
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
-          {loading ? 'Publication en cours...' : "Publier l'annonce"}
+          {loading ? t('submitting') : t('submit')}
         </Button>
       </form>
     </div>

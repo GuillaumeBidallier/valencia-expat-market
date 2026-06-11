@@ -1,8 +1,11 @@
 import Image from 'next/image'
 import { ShieldCheck } from 'lucide-react'
 import SearchWidget from '@/components/listings/SearchWidget'
+import { getTranslations } from 'next-intl/server'
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const t = await getTranslations('Hero')
+
   return (
     <>
       <section className="relative -mt-16 min-h-[560px] sm:min-h-[620px] overflow-hidden">
@@ -19,14 +22,14 @@ export default function HeroSection() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-24 pb-36 sm:pt-28 sm:pb-40">
           <div className="max-w-xl">
             <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight mb-5">
-              Le site gratuit des<br />
-              petites annonces entre<br />
-              <span className="text-orange-primary">expatriés.</span>
+              {t('line1')}<br />
+              {t('line2')}<br />
+              <span className="text-orange-primary">{t('highlight')}</span>
             </h1>
             <div className="flex items-start gap-3 bg-hero-dark/60 border border-indigo-primary/50 rounded-xl px-4 py-3 mb-5 max-w-lg">
               <ShieldCheck size={22} className="text-orange-primary shrink-0 mt-0.5" />
               <p className="text-white/90 text-sm leading-snug">
-                Le site met uniquement en relation acheteurs et vendeurs : paiement et remise des articles se font directement entre vous.
+                {t('trust')}
               </p>
             </div>
           </div>

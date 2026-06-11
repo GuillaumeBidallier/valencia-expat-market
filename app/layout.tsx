@@ -7,6 +7,8 @@ import { AuthProvider } from '@/context/AuthContext'
 import { ListingsProvider } from '@/context/ListingsContext'
 import Navbar from '@/components/layout/Navbar'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale } from 'next-intl/server'
 
 const inter = Inter({ subsets: ['latin'] })
 const nunito = Nunito({
@@ -20,9 +22,11 @@ export const metadata: Metadata = {
   description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+
   return (
-    <html lang="fr">
+    <html lang={locale}>
       <body className={`${inter.className} ${nunito.variable}`}>
         {process.env.NEXT_PUBLIC_ADSENSE_ID && (
           <Script
@@ -32,15 +36,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             strategy="afterInteractive"
           />
         )}
-        <SessionProvider>
-          <AuthProvider>
-            <ListingsProvider>
-              <Navbar />
-              <main className="pt-16">{children}</main>
-              <ConditionalFooter />
-            </ListingsProvider>
-          </AuthProvider>
-        </SessionProvider>
+        <NextIntlClientProvider>
+          <SessionProvider>
+            <AuthProvider>
+              <ListingsProvider>
+                <Navbar />
+                <main className="pt-16">{children}</main>
+                <ConditionalFooter />
+              </ListingsProvider>
+            </AuthProvider>
+          </SessionProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

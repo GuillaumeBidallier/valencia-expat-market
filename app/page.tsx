@@ -10,25 +10,28 @@ import PromoBanner from '@/components/home/PromoBanner'
 import ProsBanner from '@/components/home/ProsBanner'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
-
-const categoryItems = [
-  { icon: Home, label: 'Immobilier', slug: 'meubles' },
-  { icon: Briefcase, label: 'Emploi', slug: 'services' },
-  { icon: Car, label: 'Véhicules', slug: 'vehicules' },
-  { icon: Sofa, label: 'Maison', slug: 'meubles' },
-  { icon: Smartphone, label: 'Électronique', slug: 'electromenager' },
-  { icon: PawPrint, label: 'Animaux', slug: 'animaux' },
-  { icon: Wrench, label: 'Services', slug: 'services' },
-  { icon: Globe, label: 'Divers', slug: 'autres' },
-]
-
-const trustItems = [
-  { icon: Tag, title: '100% gratuit', desc: 'Déposez et consultez vos annonces gratuitement' },
-  { icon: Shield, title: 'Sécurisé', desc: 'Des échanges en toute confiance' },
-  { icon: Users, title: 'Communauté', desc: "Une communauté d'expatriés à travers toute l'Espagne" },
-]
+import { getTranslations } from 'next-intl/server'
 
 export default async function HomePage() {
+  const t = await getTranslations('Home')
+
+  const categoryItems = [
+    { icon: Home,        label: t('cat_real_estate'), slug: 'meubles' },
+    { icon: Briefcase,   label: t('cat_jobs'),        slug: 'services' },
+    { icon: Car,         label: t('cat_vehicles'),    slug: 'vehicules' },
+    { icon: Sofa,        label: t('cat_home'),        slug: 'meubles' },
+    { icon: Smartphone,  label: t('cat_electronics'), slug: 'electromenager' },
+    { icon: PawPrint,    label: t('cat_pets'),        slug: 'animaux' },
+    { icon: Wrench,      label: t('cat_services'),    slug: 'services' },
+    { icon: Globe,       label: t('cat_misc'),        slug: 'autres' },
+  ]
+
+  const trustItems = [
+    { icon: Tag,    title: t('trust_free_title'),      desc: t('trust_free_desc') },
+    { icon: Shield, title: t('trust_secure_title'),    desc: t('trust_secure_desc') },
+    { icon: Users,  title: t('trust_community_title'), desc: t('trust_community_desc') },
+  ]
+
   const session = await auth()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let featured: any[] = []
@@ -110,9 +113,9 @@ export default async function HomePage() {
       {/* ===== DERNIÈRES ANNONCES ===== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-black text-navy">Dernières annonces</h2>
+          <h2 className="text-xl font-black text-navy">{t('latest')}</h2>
           <Link href="/annonces" className="text-orange-primary text-sm font-bold hover:underline">
-            Voir toutes
+            {t('view_all')}
           </Link>
         </div>
 
@@ -137,7 +140,7 @@ export default async function HomePage() {
             href="/annonces"
             className="inline-flex items-center gap-2 bg-indigo-primary text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-indigo-dark transition-colors"
           >
-            Voir toutes les annonces
+            {t('view_all_btn')}
           </Link>
         </div>
       </section>
