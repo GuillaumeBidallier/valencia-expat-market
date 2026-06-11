@@ -40,9 +40,10 @@ function DeposerAnnonceForm() {
   const [location, setLocation] = useState<CitySelection | null>(null)
   const [files, setFiles]       = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
-  const [loading, setLoading]   = useState(false)
+  const [loading, setLoading]       = useState(false)
   const [uploadError, setUploadError] = useState('')
-  const [errors, setErrors]     = useState<Record<string, string>>({})
+  const [errors, setErrors]         = useState<Record<string, string>>({})
+  const [firewallError, setFirewallError] = useState<{ category: string; message: string } | null>(null)
 
   // Check for existing active upgrade on mount
   useEffect(() => {
@@ -126,6 +127,7 @@ function DeposerAnnonceForm() {
     e.preventDefault()
     if (!validate() || !location) return
     setLoading(true)
+    setFirewallError(null)
     try {
       const { id, pendingReview } = await addListing({
         title:        form.title,
@@ -152,7 +154,12 @@ function DeposerAnnonceForm() {
 
       router.push(pendingReview ? '/annonce-en-attente' : `/annonces/${id}`)
     } catch (err) {
-      console.error('Erreur lors de la publication', err)
+      const e = err as Error & { code?: string; category?: string }
+      if (e.code === 'FIREWALL_BLOCKED') {
+        setFirewallError({ category: e.category ?? 'Contenu interdit', message: e.message })
+      } else {
+        console.error('Erreur lors de la publication', err)
+      }
       setLoading(false)
     }
   }
@@ -312,6 +319,19 @@ function DeposerAnnonceForm() {
 
           <Input id="phone" label="Numéro de téléphone / WhatsApp" type="tel" placeholder="+34 6XX XXX XXX" value={form.phone} onChange={set('phone')} />
         </div>
+
+        {firewallError && (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-5 flex gap-3">
+            <span className="text-2xl flex-shrink-0">🚫</span>
+            <div>
+              <p className="font-bold text-red-700 text-sm mb-1">Annonce bloquée — {firewallError.category}</p>
+              <p className="text-sm text-red-600">{firewallError.message}</p>
+              <p className="text-xs text-red-400 mt-2">
+                Si vous pensez qu&apos;il s&apos;agit d&apos;une erreur, modifiez votre titre ou description et réessayez.
+              </p>
+            </div>
+          </div>
+        )}
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
           {loading ? 'Publication en cours...' : "Publier l'annonce"}

@@ -42,6 +42,13 @@ export function ListingsProvider({ children }: { children: ReactNode }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...data, city: data.neighborhood, phone: data.phone }),
     })
+    if (res.status === 422) {
+      const err = await res.json()
+      const e = new Error(err.message ?? 'Contenu interdit') as Error & { code: string; category: string }
+      e.code     = 'FIREWALL_BLOCKED'
+      e.category = err.category ?? 'Contenu interdit'
+      throw e
+    }
     if (!res.ok) throw new Error('Erreur lors de la création de l\'annonce')
     const listing = await res.json()
     await refreshListings()

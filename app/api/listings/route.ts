@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { z } from 'zod'
 import { neighborhoodCoords } from '@/lib/neighborhoods'
+import { checkFirewall } from '@/lib/content-firewall'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
@@ -58,6 +59,15 @@ export async function POST(req: NextRequest) {
   const parsed = createSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json({ error: 'Données invalides', details: parsed.error.flatten() }, { status: 400 })
+  }
+
+  // ── Firewall check (runs regardless of auto-publish setting) ──────────────────
+  const fw = checkFirewall(parsed.data.title, parsed.data.description)
+  if (fw.blocked) {
+    return NextResponse.json(
+      { error: 'FIREWALL_BLOCKED', category: fw.category, message: fw.reason },
+      { status: 422 },
+    )
   }
 
   const settings = await prisma.siteSettings.findUnique({ where: { id: 'default' } })

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { z } from 'zod'
 import { neighborhoodCoords } from '@/lib/neighborhoods'
+import { checkFirewall } from '@/lib/content-firewall'
 
 type Params = Promise<{ id: string }>
 
@@ -39,6 +40,19 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   const body = await req.json()
   const parsed = updateSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides' }, { status: 400 })
+
+  // Re-run firewall if title or description changed
+  if (parsed.data.title !== undefined || parsed.data.description !== undefined) {
+    const newTitle       = parsed.data.title       ?? listing.title
+    const newDescription = parsed.data.description ?? listing.description
+    const fw = checkFirewall(newTitle, newDescription)
+    if (fw.blocked) {
+      return NextResponse.json(
+        { error: 'FIREWALL_BLOCKED', category: fw.category, message: fw.reason },
+        { status: 422 },
+      )
+    }
+  }
 
   const coords = parsed.data.neighborhood
     ? neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']

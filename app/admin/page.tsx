@@ -3,7 +3,7 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import {
-  ClipboardList, Users, Star, BarChart3, Flag,
+  ClipboardList, Users, Star, BarChart3, Flag, Shield,
   AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight,
 } from 'lucide-react'
 
@@ -20,7 +20,7 @@ export default async function AdminPage() {
     pendingCount, activeCount, soldCount,
     usersCount, newUsersMonth, premiumUsers, blockedUsers,
     prosCount, premiumPros, plusPros,
-    reportsCount, reportedListingsCount,
+    reportsCount, reportedListingsCount, firewallBlockedCount,
   ] = await Promise.all([
     prisma.listing.count({ where: { status: 'PENDING' } }),
     prisma.listing.count({ where: { status: 'ACTIVE' } }),
@@ -34,10 +34,11 @@ export default async function AdminPage() {
     prisma.professional.count({ where: { tier: 'PREMIUM_PLUS' } }),
     prisma.report.count(),
     prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' } } }),
+    prisma.listing.count({ where: { blockedReason: { not: null } } }),
   ])
 
   const freePros  = prosCount - premiumPros - plusPros
-  const hasAlerts = pendingCount > 0 || reportedListingsCount > 0 || blockedUsers > 0
+  const hasAlerts = pendingCount > 0 || reportedListingsCount > 0 || blockedUsers > 0 || firewallBlockedCount > 0
 
   return (
     <div className="min-h-screen bg-[#F4F5F7]">
@@ -122,7 +123,7 @@ export default async function AdminPage() {
         {/* ── Navigation modules ─────────────────────────────── */}
         <div>
           <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Modules</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
             {[
               {
                 href: '/admin/annonces',
@@ -178,6 +179,20 @@ export default async function AdminPage() {
                   { label: 'Annonces signalées', value: reportedListingsCount, dot: reportedListingsCount > 0 ? 'bg-red-400' : 'bg-gray-200' },
                   { label: 'Total signalements', value: reportsCount, dot: 'bg-amber-400' },
                   { label: 'Haute priorité (≥3)', value: 0, dot: 'bg-gray-200' },
+                ],
+              },
+              {
+                href: '/admin/parefeu',
+                icon: <Shield size={22} />,
+                label: 'Pare-feu',
+                color: firewallBlockedCount > 0 ? 'text-amber-600' : 'text-gray-400',
+                bg: firewallBlockedCount > 0 ? 'bg-amber-50' : 'bg-gray-50',
+                badge: firewallBlockedCount > 0 ? firewallBlockedCount : null,
+                badgeColor: 'bg-amber-500',
+                items: [
+                  { label: 'Bloquées auto', value: firewallBlockedCount, dot: firewallBlockedCount > 0 ? 'bg-amber-400' : 'bg-gray-200' },
+                  { label: 'Armes & drogues', value: '', dot: 'bg-red-400' },
+                  { label: 'Faux docs & autres', value: '', dot: 'bg-purple-400' },
                 ],
               },
               {

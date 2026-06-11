@@ -52,6 +52,7 @@ model Listing {
   updatedAt      DateTime      @updatedAt
   lat            Float?
   lng            Float?
+  blockedReason  String?
 }
 
 enum ListingStatus {
