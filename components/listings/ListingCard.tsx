@@ -33,7 +33,7 @@ export default function ListingCard({ listing, badge, isFavorited }: ListingCard
           listingId={listing.id}
           initialFavorited={isFavorited}
           iconSize={13}
-          className="absolute top-2.5 right-2.5 w-7 h-7 bg-white/90 rounded-full shadow hover:scale-110"
+          className="absolute top-2.5 right-2.5 w-7 h-7 bg-white/90 rounded-full shadow hover:scale-110 flex items-center justify-center"
         />
       </div>
 
