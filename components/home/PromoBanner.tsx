@@ -1,11 +1,14 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 
 export default function PromoBanner() {
   const t = useTranslations('PromoBanner')
   const [current, setCurrent] = useState(0)
+  const prefersReducedMotion = useRef(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
 
   const SLIDES = [
     {
@@ -38,18 +41,25 @@ export default function PromoBanner() {
   ]
 
   useEffect(() => {
+    if (prefersReducedMotion.current) return
     const id = setInterval(() => setCurrent(c => (c + 1) % SLIDES.length), 4000)
     return () => clearInterval(id)
-  }, [SLIDES.length])
+  }, [SLIDES.length, prefersReducedMotion])
 
   const slide = SLIDES[current]
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-2 pb-6">
-      <div className={`relative rounded-2xl overflow-hidden ${slide.bg} transition-all duration-500`}>
+      <div
+        className={`relative rounded-2xl overflow-hidden ${slide.bg} transition-all duration-500`}
+        role="region"
+        aria-label="Offres en avant"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <div className="px-6 py-5 flex items-center gap-4">
           {/* Emoji */}
-          <div className="text-5xl shrink-0 select-none">{slide.emoji}</div>
+          <div className="text-5xl shrink-0 select-none" aria-hidden="true">{slide.emoji}</div>
           {/* Text */}
           <div className="flex-1 min-w-0">
             <span className="inline-block bg-white/20 text-white text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full mb-1.5">
@@ -79,11 +89,13 @@ export default function PromoBanner() {
       </div>
 
       {/* Dots */}
-      <div className="flex justify-center gap-1.5 mt-3">
-        {SLIDES.map((_, i) => (
+      <div role="group" aria-label="Naviguer entre les slides" className="flex justify-center gap-1.5 mt-3">
+        {SLIDES.map((s, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
+            aria-label={`Slide ${i + 1} : ${s.title}`}
+            aria-current={i === current ? 'true' : undefined}
             className={`h-1.5 rounded-full transition-all duration-300 ${
               i === current ? 'bg-navy w-5' : 'bg-gray-300 w-1.5'
             }`}

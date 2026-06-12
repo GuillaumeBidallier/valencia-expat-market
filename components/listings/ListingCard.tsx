@@ -15,7 +15,11 @@ interface ListingCardProps {
 export default function ListingCard({ listing, badge, isFavorited }: ListingCardProps) {
   const t = useTranslations('Listings')
   return (
-    <Link href={`/annonces/${listing.id}`} className="group bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg hover:border-indigo-primary/30 transition-all duration-200 flex flex-col">
+    <Link
+      href={`/annonces/${listing.id}`}
+      aria-label={`${listing.title} — ${listing.price !== null ? `${listing.price} €` : t('free')} — ${listing.neighborhood}`}
+      className="group bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg hover:border-indigo-primary/30 transition-all duration-200 flex flex-col"
+    >
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
         <Image
           src={listing.images[0]?.url ?? ''}

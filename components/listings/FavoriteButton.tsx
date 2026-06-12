@@ -38,11 +38,13 @@ export default function FavoriteButton({ listingId, initialFavorited = false, sh
     <button
       onClick={toggle}
       disabled={loading}
-      title={favorited ? t('remove_fav') : t('add_fav')}
+      aria-label={favorited ? t('remove_fav') : t('add_fav')}
+      aria-pressed={favorited}
       className={`transition-all disabled:opacity-60 ${className}`}
     >
       <Heart
         size={iconSize}
+        aria-hidden="true"
         className={`shrink-0 transition-colors duration-150 ${
           favorited ? 'fill-red-500 text-red-500' : 'text-gray-400'
         }`}

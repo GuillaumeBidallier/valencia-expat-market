@@ -58,11 +58,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
         )}
         <LocaleProvider initialLocale={locale as SupportedLocale}>
+          <a href="#main-content" className="skip-link">Aller au contenu principal</a>
           <SessionProvider>
             <AuthProvider>
               <ListingsProvider>
                 <Navbar />
-                <main className="pt-16">{children}</main>
+                <main id="main-content" className="pt-16">{children}</main>
                 <ConditionalFooter />
               </ListingsProvider>
             </AuthProvider>

@@ -41,33 +41,37 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(o => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Langue : ${current.label}`}
         className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
           transparent
             ? 'text-white/90 hover:bg-white/10'
             : 'text-gray-600 hover:bg-gray-100'
         }`}
       >
-        <span className="text-base leading-none">{current.flag}</span>
+        <span className="text-base leading-none" aria-hidden="true">{current.flag}</span>
         <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wide">{current.code}</span>
-        <ChevronDown size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1.5 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 min-w-[150px]">
+        <ul role="listbox" aria-label="Choisir une langue" className="absolute right-0 top-full mt-1.5 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 min-w-[150px]">
           {LANGUAGES.map(l => (
-            <button
-              key={l.code}
-              onClick={() => select(l.code)}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
-                l.code === locale ? 'text-orange-primary font-semibold' : 'text-navy'
-              }`}
-            >
-              <span className="text-base">{l.flag}</span>
-              <span>{l.label}</span>
-              {l.code === locale && <span className="ml-auto text-orange-primary text-xs">✓</span>}
-            </button>
+            <li key={l.code} role="option" aria-selected={l.code === locale}>
+              <button
+                onClick={() => select(l.code)}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
+                  l.code === locale ? 'text-orange-primary font-semibold' : 'text-navy'
+                }`}
+              >
+                <span className="text-base" aria-hidden="true">{l.flag}</span>
+                <span>{l.label}</span>
+                {l.code === locale && <span className="ml-auto text-orange-primary text-xs" aria-hidden="true">✓</span>}
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   )
@@ -78,7 +82,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
-  const { setLocale: switchLocale } = useLocale()
+  const { locale, setLocale: switchLocale } = useLocale()
   const isHome = pathname === '/'
   const unreadCount = useUnreadCount(isAuthenticated)
   const t = useTranslations('Nav')
@@ -93,7 +97,7 @@ export default function Navbar() {
   const transparent = isHome && !scrolled && !menuOpen
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <header role="banner" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       transparent
         ? 'bg-transparent border-transparent'
         : 'bg-white border-b border-gray-100 shadow-sm'
@@ -102,12 +106,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="shrink-0">
+          <Link href="/" className="shrink-0" aria-label="Vendo — Accueil">
             <VendoLogo size="md" theme={transparent ? 'light' : 'dark'} />
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
             {[
               { label: t('home'),          href: '/' },
               { label: t('listings'),      href: '/annonces' },
@@ -141,11 +145,11 @@ export default function Navbar() {
                   className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
                     transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
                   }`}
-                  title={t('messages')}
+                  aria-label={unreadCount > 0 ? `${t('messages')} — ${unreadCount} non lu${unreadCount > 1 ? 's' : ''}` : t('messages')}
                 >
-                  <MessageSquare size={18} />
+                  <MessageSquare size={18} aria-hidden="true" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center px-1 leading-none">
+                    <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center px-1 leading-none">
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
@@ -202,14 +206,17 @@ export default function Navbar() {
               href="/deposer-annonce"
               className="flex items-center gap-1 bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
             >
-              <Plus size={13} />
+              <Plus size={13} aria-hidden="true" />
               {t('postAd')}
             </Link>
             <button
               className={`p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
               onClick={() => setMenuOpen(o => !o)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
             >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              {menuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -217,7 +224,7 @@ export default function Navbar() {
 
       {/* Mobile menu — always solid */}
       {menuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
+        <nav id="mobile-menu" aria-label="Navigation mobile" className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
           <Link href="/" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('home')}</Link>
           <Link href="/annonces" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('listings')}</Link>
           <Link href="/professionnels" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>{t('professionals')}</Link>
@@ -251,7 +258,7 @@ export default function Navbar() {
           )}
           <hr />
           {/* Language selector mobile */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div role="group" aria-label="Choisir une langue" className="flex items-center gap-2 flex-wrap">
             {LANGUAGES.map(l => (
               <button
                 key={l.code}
@@ -259,14 +266,20 @@ export default function Navbar() {
                   switchLocale(l.code as SupportedLocale)
                   setMenuOpen(false)
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:border-orange-primary hover:text-orange-primary transition-colors"
+                aria-current={l.code === locale ? 'true' : undefined}
+                aria-label={`${l.label}${l.code === locale ? ' (sélectionné)' : ''}`}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-colors ${
+                  l.code === locale
+                    ? 'border-orange-primary text-orange-primary font-semibold'
+                    : 'border-gray-200 hover:border-orange-primary hover:text-orange-primary'
+                }`}
               >
-                <span>{l.flag}</span>
+                <span aria-hidden="true">{l.flag}</span>
                 <span className="font-medium">{l.label}</span>
               </button>
             ))}
           </div>
-        </div>
+        </nav>
       )}
     </header>
   )

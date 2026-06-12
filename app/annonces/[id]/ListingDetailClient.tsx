@@ -186,8 +186,8 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
               <p className="text-xs text-gray-600 leading-relaxed">{t('security_notice')}</p>
             </div>
 
-            <button onClick={() => setReportOpen(true)} className="mt-3 flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors">
-              <Flag size={12} /> {t('report')}
+            <button onClick={() => setReportOpen(true)} aria-haspopup="dialog" className="mt-3 flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors">
+              <Flag size={12} aria-hidden="true" /> {t('report')}
             </button>
           </div>
 
@@ -203,11 +203,11 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
       {/* Message modal */}
       {messageOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setMessageOpen(false)}>
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
+          <div role="dialog" aria-modal="true" aria-labelledby="msg-modal-title" className="bg-white rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-navy text-lg">{t('message_modal_title')}</h3>
-              <button onClick={() => setMessageOpen(false)} className="text-gray-400 hover:text-navy transition-colors">
-                <X size={20} />
+              <h3 id="msg-modal-title" className="font-bold text-navy text-lg">{t('message_modal_title')}</h3>
+              <button onClick={() => setMessageOpen(false)} aria-label="Fermer" className="text-gray-400 hover:text-navy transition-colors">
+                <X size={20} aria-hidden="true" />
               </button>
             </div>
 
@@ -227,7 +227,9 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
             </div>
 
             <form onSubmit={sendMessage}>
+              <label htmlFor="message-body" className="sr-only">{t('message_modal_title')}</label>
               <textarea
+                id="message-body"
                 value={messageBody}
                 onChange={e => setMessageBody(e.target.value)}
                 placeholder={t('message_placeholder')}
@@ -247,26 +249,28 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
       {/* Report modal */}
       {reportOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setReportOpen(false); setReportSent(false); setReportReason('') }}>
-          <div className="bg-white rounded-xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
+          <div role="dialog" aria-modal="true" aria-labelledby="report-modal-title" className="bg-white rounded-xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
             {reportSent ? (
-              <div className="text-center py-4">
-                <p className="text-3xl mb-3">✅</p>
-                <h3 className="font-bold text-navy mb-1">{t('report_sent_title')}</h3>
+              <div className="text-center py-4" role="status" aria-live="polite">
+                <p className="text-3xl mb-3" aria-hidden="true">✅</p>
+                <h3 id="report-modal-title" className="font-bold text-navy mb-1">{t('report_sent_title')}</h3>
                 <p className="text-sm text-gray-500 mb-4">{t('report_sent_desc')}</p>
                 <Button className="w-full text-sm" onClick={() => { setReportOpen(false); setReportSent(false); setReportReason('') }}>{t('close')}</Button>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-navy">{t('report_title')}</h3>
-                  <button onClick={() => setReportOpen(false)} className="text-gray-400 hover:text-navy"><X size={18} /></button>
+                  <h3 id="report-modal-title" className="font-bold text-navy">{t('report_title')}</h3>
+                  <button onClick={() => setReportOpen(false)} aria-label="Fermer" className="text-gray-400 hover:text-navy"><X size={18} aria-hidden="true" /></button>
                 </div>
-                <p className="text-sm text-gray-500 mb-4">{t('report_reason_prompt')}</p>
-                {reportReasons.map(r => (
-                  <label key={r} className="flex items-center gap-2 py-2 text-sm cursor-pointer hover:text-orange-primary">
-                    <input type="radio" name="reason" value={r} checked={reportReason === r} onChange={() => setReportReason(r)} className="accent-orange-primary" /> {r}
-                  </label>
-                ))}
+                <fieldset>
+                  <legend className="text-sm text-gray-500 mb-4">{t('report_reason_prompt')}</legend>
+                  {reportReasons.map(r => (
+                    <label key={r} className="flex items-center gap-2 py-2 text-sm cursor-pointer hover:text-orange-primary">
+                      <input type="radio" name="reason" value={r} checked={reportReason === r} onChange={() => setReportReason(r)} className="accent-orange-primary" /> {r}
+                    </label>
+                  ))}
+                </fieldset>
                 <div className="flex gap-2 mt-4">
                   <Button variant="outline" className="flex-1 text-sm" onClick={() => setReportOpen(false)}>{t('cancel')}</Button>
                   <Button
