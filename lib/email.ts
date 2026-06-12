@@ -100,6 +100,108 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
   })
 }
 
+// ── Listing approved/rejected emails ──────────────────────
+export async function sendListingApprovedEmail({
+  to, name, listingTitle, listingUrl,
+}: {
+  to: string; name: string; listingTitle: string; listingUrl: string
+}) {
+  if (!resend) return
+  const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const safeTitle = listingTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `✅ Votre annonce "${listingTitle}" est en ligne !`,
+    html: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+        <tr><td style="background:#16A34A;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">Vendo</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Petites annonces entre expatriés</p>
+        </td></tr>
+        <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
+          <p style="margin:0 0 8px;font-size:22px;font-weight:900;color:#1A1F36;">Bonne nouvelle, ${safeName} ! ✅</p>
+          <p style="margin:0 0 24px;font-size:15px;color:#6B7280;line-height:1.7;">
+            Votre annonce a été vérifiée et approuvée par notre équipe. Elle est maintenant visible par tous les membres de la communauté.
+          </p>
+          <div style="background:#F0FDF4;border-radius:12px;padding:16px 20px;margin-bottom:28px;border-left:3px solid #16A34A;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#1A1F36;">${safeTitle}</p>
+          </div>
+          <div style="text-align:center;">
+            <a href="${listingUrl}" style="display:inline-block;background:#E8571A;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:16px 40px;border-radius:12px;">
+              Voir mon annonce →
+            </a>
+          </div>
+          <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
+            Valencia Expat Market · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  })
+}
+
+export async function sendListingRejectedEmail({
+  to, name, listingTitle, reason,
+}: {
+  to: string; name: string; listingTitle: string; reason?: string
+}) {
+  if (!resend) return
+  const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const safeTitle = listingTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const safeReason = reason ? reason.replace(/</g, '&lt;').replace(/>/g, '&gt;') : ''
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Votre annonce "${listingTitle}" n'a pas été publiée`,
+    html: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+        <tr><td style="background:#1A1F36;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">Vendo</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces entre expatriés</p>
+        </td></tr>
+        <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
+          <p style="margin:0 0 8px;font-size:18px;font-weight:900;color:#1A1F36;">Bonjour ${safeName},</p>
+          <p style="margin:0 0 24px;font-size:15px;color:#6B7280;line-height:1.7;">
+            Après vérification, votre annonce n'a pas pu être publiée car elle ne respecte pas nos conditions d'utilisation.
+          </p>
+          <div style="background:#FFF3EE;border-radius:12px;padding:16px 20px;margin-bottom:${safeReason ? '16px' : '28px'};border-left:3px solid #E8571A;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#1A1F36;">${safeTitle}</p>
+          </div>
+          ${safeReason ? `<div style="background:#F9FAFB;border-radius:12px;padding:14px 18px;margin-bottom:28px;border:1px solid #F3F4F6;"><p style="margin:0;font-size:13px;color:#374151;line-height:1.6;"><strong>Motif :</strong> ${safeReason}</p></div>` : ''}
+          <p style="margin:0 0 28px;font-size:14px;color:#6B7280;line-height:1.7;">
+            Vous pouvez corriger votre annonce et la soumettre à nouveau depuis votre espace personnel.
+          </p>
+          <div style="text-align:center;">
+            <a href="${APP_URL}/deposer-annonce" style="display:inline-block;background:#E8571A;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:16px 40px;border-radius:12px;">
+              Déposer une nouvelle annonce →
+            </a>
+          </div>
+          <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
+            Valencia Expat Market · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  })
+}
+
 function emailHtml({
   toName, fromName, listingTitle, preview, conversationUrl,
 }: {

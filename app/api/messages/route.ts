@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { sendMessageNotification } from '@/lib/email'
+import { pusherServer } from '@/lib/pusher'
 
 export async function GET() {
   const session = await auth()
@@ -81,7 +82,10 @@ export async function POST(req: NextRequest) {
 
   const conversationId = `${listingId}_${session.user.id}`
 
-  // Always notify on first-ever message in this conversation
+  // Real-time notification via Pusher
+  pusherServer?.trigger(`private-user-${listing.userId}`, 'new-message', {}).catch(() => {})
+
+  // Email notification
   if (receiver) {
     sendMessageNotification({
       to: receiver.email,

@@ -21,8 +21,8 @@ export default function ListingCard({ listing, badge, isFavorited }: ListingCard
           src={listing.images[0]?.url ?? ''}
           alt={listing.title}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-300"
-          unoptimized
         />
         {badge && (
           <div className={`absolute top-2.5 left-2.5 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-wide ${badge === 'une' ? 'bg-orange-primary' : 'bg-indigo-primary'}`}>

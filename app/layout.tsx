@@ -19,9 +19,28 @@ const nunito = Nunito({
   variable: '--font-nunito',
 })
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app'
+
 export const metadata: Metadata = {
-  title: 'Vendo — Petites annonces entre expatriés en Espagne',
-  description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
+  metadataBase: new URL(APP_URL),
+  title: {
+    default: 'Vendo — Petites annonces entre expatriés en Espagne',
+    template: '%s — Vendo',
+  },
+  description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne. La marketplace des expatriés francophones.',
+  openGraph: {
+    type: 'website',
+    siteName: 'Vendo — Valencia Expat Market',
+    title: 'Vendo — Petites annonces entre expatriés en Espagne',
+    description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
+    locale: 'fr_FR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Vendo — Petites annonces entre expatriés en Espagne',
+    description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
+  },
+  robots: { index: true, follow: true },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
