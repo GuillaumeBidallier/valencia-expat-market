@@ -102,7 +102,47 @@ export default async function ProDetailPage({ params }: Props) {
     mention_vendo:  t('mention_vendo'),
   }
 
+  const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app').replace(/\/$/, '')
+
+  const SCHEMA_TYPE: Record<string, string> = {
+    immobilier:   'RealEstateAgent',
+    juridique:    'LegalService',
+    comptabilite: 'AccountingService',
+    demenagement: 'MovingCompany',
+    assurance:    'InsuranceAgency',
+    sante:        'MedicalBusiness',
+    automobiles:  'AutoDealer',
+    services:     'HomeAndConstructionBusiness',
+    education:    'EducationalOrganization',
+  }
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': SCHEMA_TYPE[pro.category] ?? 'LocalBusiness',
+    name: pro.name,
+    ...(pro.description && { description: pro.description }),
+    url: `${BASE}/professionnels/${pro.slug}`,
+    ...(pro.logo && { image: pro.logo }),
+    ...(pro.phone && { telephone: pro.phone }),
+    ...(pro.website && { sameAs: [pro.website] }),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: pro.city,
+      addressCountry: 'ES',
+    },
+    ...(geoCoords && {
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: geoCoords.lat,
+        longitude: geoCoords.lng,
+      },
+    }),
+    ...(pro.zones.length > 0 && { areaServed: pro.zones }),
+  }
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <div className="min-h-screen bg-[#f7f8fa]">
 
       {/* ════════════════════════════════════════
@@ -348,6 +388,7 @@ export default async function ProDetailPage({ params }: Props) {
       </div>
 
     </div>
+    </>
   )
 }
 
