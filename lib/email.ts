@@ -100,6 +100,58 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
   })
 }
 
+// ── Admin new listing notification ────────────────────────
+export async function sendAdminNewListingEmail({
+  listingTitle, listingId, userName, userEmail,
+}: {
+  listingTitle: string; listingId: string; userName: string; userEmail: string
+}) {
+  const adminEmail = process.env.ADMIN_EMAIL
+  if (!resend || !adminEmail) return
+
+  const adminUrl = `${APP_URL}/admin`
+  const safeTitle = listingTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const safeName  = userName.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const safeEmail = userEmail.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+  await resend.emails.send({
+    from: FROM,
+    to: adminEmail,
+    subject: `🆕 Nouvelle annonce en attente : "${listingTitle}"`,
+    html: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+        <tr><td style="background:#4F46E5;border-radius:16px 16px 0 0;padding:28px 32px;text-align:center;">
+          <p style="margin:0;font-size:22px;font-weight:900;color:#fff;">Vendo · Admin</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.7);">Nouvelle annonce à modérer</p>
+        </td></tr>
+        <tr><td style="background:#fff;padding:36px 32px;border-radius:0 0 16px 16px;">
+          <p style="margin:0 0 20px;font-size:15px;color:#6B7280;line-height:1.7;">Une nouvelle annonce vient d'être soumise et attend votre modération.</p>
+          <div style="background:#EEF2FF;border-radius:12px;padding:16px 20px;margin-bottom:20px;border-left:3px solid #4F46E5;">
+            <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#1A1F36;">${safeTitle}</p>
+            <p style="margin:0;font-size:13px;color:#6B7280;">Par <strong>${safeName}</strong> (${safeEmail})</p>
+          </div>
+          <div style="text-align:center;margin-bottom:24px;">
+            <a href="${adminUrl}" style="display:inline-block;background:#4F46E5;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 36px;border-radius:12px;">
+              Modérer l'annonce →
+            </a>
+          </div>
+          <p style="margin:0;font-size:12px;color:#9CA3AF;text-align:center;">
+            ID annonce : <code style="background:#F3F4F6;padding:2px 6px;border-radius:4px;">${listingId}</code>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  })
+}
+
 // ── Listing approved/rejected emails ──────────────────────
 export async function sendListingApprovedEmail({
   to, name, listingTitle, listingUrl,

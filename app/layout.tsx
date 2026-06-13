@@ -34,11 +34,13 @@ export const metadata: Metadata = {
     title: 'Vendo — Petites annonces entre expatriés en Espagne',
     description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
     locale: 'fr_FR',
+    images: [{ url: '/valencia-hero.jpg', width: 1200, height: 630, alt: 'Vendo — Valencia Expat Market' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Vendo — Petites annonces entre expatriés en Espagne',
     description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
+    images: ['/valencia-hero.jpg'],
   },
   robots: { index: true, follow: true },
 }

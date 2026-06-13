@@ -4,6 +4,7 @@ import { auth } from '@/auth'
 import { z } from 'zod'
 import { neighborhoodCoords } from '@/lib/neighborhoods'
 import { checkFirewall } from '@/lib/content-firewall'
+import { sendAdminNewListingEmail } from '@/lib/email'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
@@ -89,6 +90,17 @@ export async function POST(req: NextRequest) {
       status: autoPublish ? 'ACTIVE' : 'PENDING',
     },
   })
+
+  // Notify admin on every new listing (PENDING needs moderation, ACTIVE is FYI)
+  const submitter = await prisma.user.findUnique({ where: { id: session.user.id }, select: { name: true, email: true } })
+  if (submitter) {
+    sendAdminNewListingEmail({
+      listingTitle: listing.title,
+      listingId: listing.id,
+      userName: submitter.name,
+      userEmail: submitter.email,
+    }).catch(() => {})
+  }
 
   return NextResponse.json({ ...listing, pendingReview: !autoPublish }, { status: 201 })
 }
