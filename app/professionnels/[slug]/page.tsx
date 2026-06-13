@@ -109,7 +109,7 @@ export default async function ProDetailPage({ params }: Props) {
       {/* ── Identity band (white strip overlapping hero) ── */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="flex items-end gap-4 sm:gap-5 -mt-10 pb-4">
+          <div className="flex items-end gap-4 sm:gap-5 -mt-12 pb-5">
             {/* Avatar */}
             <div className={`shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-white shadow-lg overflow-hidden bg-gradient-to-br ${heroGradient} flex items-center justify-center`}>
               {pro.logo ? (
@@ -164,7 +164,7 @@ export default async function ProDetailPage({ params }: Props) {
       </div>
 
       {/* ── Main content ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 pb-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Left – content */}
