@@ -9,19 +9,30 @@ import { proCategories } from '@/lib/proCategories'
 import ProGallery from './ProGallery'
 import ProMapClient from './ProMapClient'
 
+const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  'valencia': { lat: 39.4699, lng: -0.3763 },
+  'madrid':   { lat: 40.4168, lng: -3.7038 },
+  'barcelona':{ lat: 41.3874, lng:  2.1686 },
+  'alicante': { lat: 38.3452, lng: -0.4815 },
+  'benidorm': { lat: 38.5400, lng: -0.1300 },
+  'torrevieja':{ lat: 37.9783, lng: -0.6826 },
+}
+
 async function geocodeCity(city: string): Promise<{ lat: number; lng: number } | null> {
+  const key = city.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  if (CITY_COORDS[key]) return CITY_COORDS[key]
   try {
     const q = encodeURIComponent(`${city}, Spain`)
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`,
       { headers: { 'User-Agent': 'VendoValencia/1.0 contact@vendo.es' }, next: { revalidate: 86400 } }
     )
-    if (!res.ok) return null
+    if (!res.ok) return CITY_COORDS['valencia']
     const data = await res.json()
-    if (!data[0]) return null
+    if (!data[0]) return CITY_COORDS['valencia']
     return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) }
   } catch {
-    return null
+    return CITY_COORDS['valencia']
   }
 }
 
