@@ -36,7 +36,7 @@ export default function CookieBanner() {
       role="dialog"
       aria-live="polite"
       aria-label="Consentement cookies"
-      className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6"
+      className="fixed bottom-0 left-0 right-0 z-[9999] p-4 sm:p-6"
     >
       <div className="max-w-3xl mx-auto bg-navy text-white rounded-2xl shadow-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         {/* Cookie emoji + text */}
