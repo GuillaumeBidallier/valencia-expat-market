@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import {
   ClipboardList, Users, Star, BarChart3, Flag, Shield,
-  AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight,
+  AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight, BookOpen,
 } from 'lucide-react'
 
 export default async function AdminPage() {
@@ -21,6 +21,7 @@ export default async function AdminPage() {
     usersCount, newUsersMonth, premiumUsers, blockedUsers,
     prosCount, premiumPros, plusPros,
     reportsCount, reportedListingsCount, firewallBlockedCount,
+    blogTotal, blogPublished,
   ] = await Promise.all([
     prisma.listing.count({ where: { status: 'PENDING' } }),
     prisma.listing.count({ where: { status: 'ACTIVE' } }),
@@ -35,6 +36,8 @@ export default async function AdminPage() {
     prisma.report.count(),
     prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' } } }),
     prisma.listing.count({ where: { blockedReason: { not: null } } }),
+    prisma.blogPost.count(),
+    prisma.blogPost.count({ where: { published: true } }),
   ])
 
   const freePros  = prosCount - premiumPros - plusPros
@@ -123,7 +126,7 @@ export default async function AdminPage() {
         {/* ── Navigation modules ─────────────────────────────── */}
         <div>
           <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Modules</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 href: '/admin/annonces',
@@ -207,6 +210,20 @@ export default async function AdminPage() {
                   { label: 'Nouveaux/mois', value: newUsersMonth, dot: 'bg-emerald-400' },
                   { label: 'Taux premium', value: `${usersCount > 0 ? Math.round((premiumUsers / usersCount) * 100) : 0}%`, dot: 'bg-blue-400' },
                   { label: 'Pros référencés', value: prosCount, dot: 'bg-indigo-400' },
+                ],
+              },
+              {
+                href: '/admin/blog',
+                icon: <BookOpen size={22} />,
+                label: 'Blog',
+                color: 'text-pink-600',
+                bg: 'bg-pink-50',
+                badge: null,
+                badgeColor: '',
+                items: [
+                  { label: 'Total articles', value: blogTotal, dot: 'bg-pink-400' },
+                  { label: 'Publiés', value: blogPublished, dot: 'bg-emerald-400' },
+                  { label: 'Brouillons', value: blogTotal - blogPublished, dot: 'bg-gray-300' },
                 ],
               },
             ].map(m => (

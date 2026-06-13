@@ -38,14 +38,14 @@ export default function Footer() {
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-gray-300">{t('nav_title')}</h4>
             <ul className="space-y-2">
               {[
-                t('nav_home'),
-                t('nav_categories'),
-                t('nav_how'),
-                t('nav_ads'),
-                t('nav_blog'),
-                t('nav_contact'),
-              ].map(item => (
-                <li key={item}><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">{item}</a></li>
+                { label: t('nav_home'),       href: '/' },
+                { label: t('nav_categories'), href: '/annonces' },
+                { label: t('nav_how'),        href: '/#comment-ca-marche' },
+                { label: t('nav_ads'),        href: '/annonces' },
+                { label: t('nav_blog'),       href: '/blog' },
+                { label: t('nav_contact'),    href: '/contact' },
+              ].map(({ label, href }) => (
+                <li key={label}><a href={href} className="text-gray-400 hover:text-white text-sm transition-colors">{label}</a></li>
               ))}
             </ul>
           </div>

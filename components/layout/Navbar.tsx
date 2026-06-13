@@ -116,6 +116,7 @@ export default function Navbar() {
               { label: t('home'),          href: '/' },
               { label: t('listings'),      href: '/annonces' },
               { label: t('professionals'), href: '/professionnels' },
+              { label: t('nav_blog'),      href: '/blog' },
             ].map(({ label, href }) => (
               <Link
                 key={href}
@@ -228,6 +229,7 @@ export default function Navbar() {
           <Link href="/" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('home')}</Link>
           <Link href="/annonces" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('listings')}</Link>
           <Link href="/professionnels" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>{t('professionals')}</Link>
+          <Link href="/blog" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('nav_blog')}</Link>
           <hr />
           {isAuthenticated ? (
             <>
