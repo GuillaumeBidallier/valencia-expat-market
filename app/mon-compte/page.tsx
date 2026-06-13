@@ -8,7 +8,7 @@ export default async function MonComptePage() {
   if (!session?.user?.id) redirect('/connexion')
   const userId = session.user.id
 
-  const [dbUser, listings, favorites] = await Promise.all([
+  const [dbUser, listings, favorites, pro] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, name: true, email: true, createdAt: true, role: true },
@@ -30,12 +30,14 @@ export default async function MonComptePage() {
       },
       orderBy: { createdAt: 'desc' },
     }),
+    prisma.professional.findUnique({ where: { userId }, select: { slug: true, name: true } }),
   ])
 
   if (!dbUser) redirect('/connexion')
 
   return (
     <AccountClient
+      proProfile={pro ? { slug: pro.slug, name: pro.name } : null}
       user={{
         id: dbUser.id,
         name: dbUser.name,

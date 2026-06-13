@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Phone, Globe, MessageCircle, ArrowLeft, CheckCircle, Star, Building2, ExternalLink } from 'lucide-react'
+import { MapPin, Phone, Globe, ArrowLeft, CheckCircle, Star, Building2, ExternalLink, Pencil } from 'lucide-react'
+import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { proCategories } from '@/lib/proCategories'
 import ProGallery from './ProGallery'
@@ -11,19 +12,23 @@ type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const pro = await prisma.professional.findUnique({ where: { slug }, select: { name: true, description: true, city: true, logo: true, category: true } })
+  const pro = await prisma.professional.findUnique({
+    where: { slug },
+    select: { name: true, description: true, city: true, logo: true, banner: true, category: true },
+  })
   if (!pro) return { title: 'Professionnel introuvable' }
   const catLabel = proCategories.find(c => c.slug === pro.category)?.label ?? pro.category
   const description = pro.description
     ? pro.description.slice(0, 155).replace(/\n/g, ' ')
     : `${pro.name} — ${catLabel} à ${pro.city}. Retrouvez ce professionnel sur Vendo Valencia.`
+  const image = pro.banner ?? pro.logo
   return {
     title: `${pro.name} — ${catLabel} à ${pro.city}`,
     description,
     openGraph: {
       title: `${pro.name} — ${catLabel} à ${pro.city}`,
       description,
-      ...(pro.logo && { images: [{ url: pro.logo, width: 1200, height: 630, alt: pro.name }] }),
+      ...(image && { images: [{ url: image, width: 1200, height: 630, alt: pro.name }] }),
     },
   }
 }
@@ -32,6 +37,9 @@ export default async function ProDetailPage({ params }: Props) {
   const { slug } = await params
   const pro = await prisma.professional.findUnique({ where: { slug } })
   if (!pro) notFound()
+
+  const session = await auth()
+  const isOwner = session?.user?.id && pro.userId === session.user.id
 
   const cat = proCategories.find(c => c.slug === pro.category)
   const catLabel = cat?.label ?? pro.category
@@ -49,53 +57,48 @@ export default async function ProDetailPage({ params }: Props) {
     ? `https://wa.me/${pro.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour ${pro.name}, j'ai trouvé votre profil sur Vendo Valencia et j'aimerais vous contacter.`)}`
     : null
 
+  const coverSrc = pro.banner ?? pro.logo
+
   return (
     <div className="min-h-screen bg-gray-50">
+
       {/* ── Hero banner ── */}
-      <div className={`relative w-full h-52 sm:h-72 bg-gradient-to-br ${heroGradient} overflow-hidden`}>
-        {pro.logo && (
+      <div className={`relative w-full h-44 sm:h-60 bg-gradient-to-br ${heroGradient} overflow-hidden`}>
+        {coverSrc && (
           <Image
-            src={pro.logo}
-            alt={pro.name}
+            src={coverSrc}
+            alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-30"
+            className="object-cover opacity-25"
             priority
           />
         )}
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
 
-        {/* Back link */}
+        {/* Back */}
         <div className="absolute top-4 left-4 sm:left-6">
           <Link
             href="/professionnels"
-            className="inline-flex items-center gap-1.5 text-white/90 hover:text-white text-sm bg-black/25 hover:bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full transition-colors"
+            className="inline-flex items-center gap-1.5 text-white/90 hover:text-white text-sm bg-black/30 hover:bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full transition-colors"
           >
-            <ArrowLeft size={14} /> Retour
+            <ArrowLeft size={13} /> Retour
           </Link>
         </div>
 
-        {/* Tier badge top-right */}
-        <div className="absolute top-4 right-4 sm:right-6 flex flex-col items-end gap-1.5">
-          {isPremiumPlus && (
-            <span className="flex items-center gap-1 bg-orange-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-              <Star size={11} fill="currentColor" /> Recommandé
-            </span>
-          )}
-          {isPremium && !isPremiumPlus && (
-            <span className="flex items-center gap-1 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-              <Star size={11} fill="currentColor" /> Premium
-            </span>
-          )}
-          {pro.verified && (
-            <span className="flex items-center gap-1 bg-white/90 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-full shadow">
-              <CheckCircle size={11} /> Vérifié
-            </span>
-          )}
-        </div>
+        {/* Edit button for owner */}
+        {isOwner && (
+          <div className="absolute top-4 right-4 sm:right-6">
+            <Link
+              href="/mon-compte/profil-pro"
+              className="inline-flex items-center gap-1.5 text-white text-sm bg-black/30 hover:bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full transition-colors"
+            >
+              <Pencil size={13} /> Modifier ma vitrine
+            </Link>
+          </div>
+        )}
 
-        {/* Category chip bottom-left */}
+        {/* Category */}
         <div className="absolute bottom-4 left-4 sm:left-6">
           <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
             <span aria-hidden="true">{catIcon}</span> {catLabel}
@@ -103,43 +106,70 @@ export default async function ProDetailPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
-        {/* ── Profile strip ── */}
-        <div className="flex items-end gap-4 -mt-12 mb-6 relative z-10">
-          {/* Logo avatar */}
-          <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-white shadow-lg shrink-0 overflow-hidden bg-gradient-to-br ${heroGradient} flex items-center justify-center`}>
-            {pro.logo ? (
-              <Image src={pro.logo} alt={pro.name} width={96} height={96} className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-3xl" aria-hidden="true">{catIcon}</span>
-            )}
-          </div>
+      {/* ── Identity band (white strip overlapping hero) ── */}
+      <div className="bg-white border-b border-gray-100 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex items-end gap-4 sm:gap-5 -mt-10 pb-4">
+            {/* Avatar */}
+            <div className={`shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-white shadow-lg overflow-hidden bg-gradient-to-br ${heroGradient} flex items-center justify-center`}>
+              {pro.logo ? (
+                <Image
+                  src={pro.logo}
+                  alt={pro.name}
+                  width={96}
+                  height={96}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-3xl" aria-hidden="true">{catIcon}</span>
+              )}
+            </div>
 
-          <div className="pb-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl font-black text-navy leading-tight line-clamp-2">{pro.name}</h1>
-            <div className="flex items-center gap-1.5 text-gray-500 text-sm mt-0.5">
-              <MapPin size={13} className="shrink-0" aria-hidden="true" />
-              <span>{pro.city}</span>
-              {pro.zones.length > 0 && (
-                <span className="text-gray-300">·</span>
-              )}
-              {pro.zones.slice(0, 2).map(z => (
-                <span key={z} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{z}</span>
-              ))}
-              {pro.zones.length > 2 && (
-                <span className="text-xs text-gray-400">+{pro.zones.length - 2}</span>
-              )}
+            {/* Name + meta */}
+            <div className="flex-1 min-w-0 pb-1">
+              <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                <h1 className="text-lg sm:text-2xl font-black text-navy leading-tight">{pro.name}</h1>
+                {isPremiumPlus && (
+                  <span className="inline-flex items-center gap-1 bg-orange-primary text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                    <Star size={10} fill="currentColor" /> Recommandé
+                  </span>
+                )}
+                {isPremium && !isPremiumPlus && (
+                  <span className="inline-flex items-center gap-1 bg-indigo-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                    <Star size={10} fill="currentColor" /> Premium
+                  </span>
+                )}
+                {pro.verified && (
+                  <span className="inline-flex items-center gap-1 text-blue-600 text-[11px] font-semibold border border-blue-200 bg-blue-50 px-2.5 py-0.5 rounded-full">
+                    <CheckCircle size={10} /> Vérifié
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 text-gray-500 text-sm">
+                <MapPin size={12} className="shrink-0 text-orange-primary" aria-hidden="true" />
+                <span>{pro.city}</span>
+                {pro.zones.length > 0 && <>
+                  <span className="text-gray-300 mx-0.5">·</span>
+                  {pro.zones.slice(0, 2).map(z => (
+                    <span key={z} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{z}</span>
+                  ))}
+                  {pro.zones.length > 2 && (
+                    <span className="text-xs text-gray-400">+{pro.zones.length - 2}</span>
+                  )}
+                </>}
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* ── Main 2-col grid ── */}
+      {/* ── Main content ── */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Left – content */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
+          <div className="lg:col-span-2 flex flex-col gap-5">
 
-            {/* About */}
             {pro.description && (
               <section className="bg-white rounded-2xl border border-gray-100 p-6">
                 <h2 className="text-base font-bold text-navy mb-3 flex items-center gap-2">
@@ -150,7 +180,6 @@ export default async function ProDetailPage({ params }: Props) {
               </section>
             )}
 
-            {/* Photo gallery */}
             {pro.photos.length > 0 && (
               <section className="bg-white rounded-2xl border border-gray-100 p-6">
                 <h2 className="text-base font-bold text-navy mb-4">Photos</h2>
@@ -158,7 +187,6 @@ export default async function ProDetailPage({ params }: Props) {
               </section>
             )}
 
-            {/* Zones d'intervention */}
             {pro.zones.length > 0 && (
               <section className="bg-white rounded-2xl border border-gray-100 p-6">
                 <h2 className="text-base font-bold text-navy mb-3 flex items-center gap-2">
@@ -167,7 +195,7 @@ export default async function ProDetailPage({ params }: Props) {
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {pro.zones.map(z => (
-                    <span key={z} className="flex items-center gap-1 text-sm text-gray-600 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-full">
+                    <span key={z} className="flex items-center gap-1.5 text-sm text-gray-600 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-full">
                       <MapPin size={11} className="text-orange-primary" aria-hidden="true" /> {z}
                     </span>
                   ))}
@@ -175,23 +203,15 @@ export default async function ProDetailPage({ params }: Props) {
               </section>
             )}
 
-            {/* Mobile CTA (shown below content on small screens) */}
+            {/* Mobile contact (small screens) */}
             <div className="lg:hidden">
-              <ContactCard
-                pro={pro}
-                isPremium={isPremium}
-                waLink={waLink}
-              />
+              <ContactCard pro={pro} isPremium={isPremium} waLink={waLink} />
             </div>
           </div>
 
-          {/* Right – sticky contact sidebar */}
+          {/* Right – sticky sidebar */}
           <aside className="hidden lg:block self-start sticky top-20">
-            <ContactCard
-              pro={pro}
-              isPremium={isPremium}
-              waLink={waLink}
-            />
+            <ContactCard pro={pro} isPremium={isPremium} waLink={waLink} />
           </aside>
         </div>
       </div>
@@ -199,7 +219,7 @@ export default async function ProDetailPage({ params }: Props) {
   )
 }
 
-/* ── Contact card (reused in sidebar + mobile) ── */
+/* ── Contact sidebar card ── */
 type ContactCardProps = {
   pro: {
     name: string
@@ -207,8 +227,6 @@ type ContactCardProps = {
     whatsapp: string | null
     website: string | null
     verified: boolean
-    tier: string
-    recommended: boolean
   }
   isPremium: boolean
   waLink: string | null
@@ -217,7 +235,7 @@ type ContactCardProps = {
 function ContactCard({ pro, isPremium, waLink }: ContactCardProps) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-3 shadow-sm">
-      <h2 className="font-bold text-navy text-base">Contacter {pro.name}</h2>
+      <h2 className="font-bold text-navy text-base">Contacter</h2>
 
       {pro.phone && (
         <a
@@ -249,7 +267,8 @@ function ContactCard({ pro, isPremium, waLink }: ContactCardProps) {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2.5 border-2 border-indigo-200 text-indigo-700 px-5 py-3 rounded-xl font-bold text-sm hover:bg-indigo-50 transition-colors"
         >
-          <Globe size={16} aria-hidden="true" /> Voir le site web
+          <Globe size={16} aria-hidden="true" />
+          Voir le site web
           <ExternalLink size={13} className="ml-auto opacity-50" aria-hidden="true" />
         </a>
       )}

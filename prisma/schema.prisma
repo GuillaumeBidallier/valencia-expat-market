@@ -10,17 +10,18 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(cuid())
+  id               String        @id @default(cuid())
   name             String
-  email            String     @unique
+  email            String        @unique
   passwordHash     String
-  role             Role       @default(USER)
-  blocked          Boolean    @default(false)
-  createdAt        DateTime   @default(now())
+  role             Role          @default(USER)
+  blocked          Boolean       @default(false)
+  createdAt        DateTime      @default(now())
   listings         Listing[]
   favorites        Favorite[]
-  sentMessages     Message[]  @relation("Sender")
-  receivedMessages Message[]  @relation("Receiver")
+  sentMessages     Message[]     @relation("Sender")
+  receivedMessages Message[]     @relation("Receiver")
+  professional     Professional?
 }
 
 enum Role {
@@ -99,12 +100,15 @@ model Professional {
   whatsapp    String?
   website     String?
   logo        String?
+  banner      String?
   photos      String[]
   tier        ProTier  @default(FREE)
   verified    Boolean  @default(false)
   featured    Boolean  @default(false)
   recommended Boolean  @default(false)
   zones       String[]
+  userId      String?  @unique
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

@@ -22,7 +22,8 @@ type FavoriteItem = {
 }
 type UserInfo = { id: string; name: string; email: string; createdAt: string; role: string }
 type Tab = 'listings' | 'favorites' | 'profile'
-type Props = { user: UserInfo; initialListings: ListingItem[]; initialFavorites: FavoriteItem[] }
+type ProProfile = { slug: string; name: string } | null
+type Props = { user: UserInfo; initialListings: ListingItem[]; initialFavorites: FavoriteItem[]; proProfile?: ProProfile }
 
 /* ── Constants ──────────────────────────────────────────── */
 const STATUS_META: Record<string, { label: string; badge: string }> = {
@@ -48,7 +49,7 @@ function EmptyState({ icon, title, sub, cta, href }: { icon: string; title: stri
 /* ══════════════════════════════════════════════════════════
    MAIN COMPONENT
 ══════════════════════════════════════════════════════════ */
-export default function AccountClient({ user, initialListings, initialFavorites }: Props) {
+export default function AccountClient({ user, initialListings, initialFavorites, proProfile }: Props) {
   const router = useRouter()
   const { logout } = useAuth()
 
@@ -301,6 +302,31 @@ export default function AccountClient({ user, initialListings, initialFavorites 
         <div>
           <h2 className="text-base font-bold text-navy mb-4">Mon profil</h2>
           <div className="space-y-4 max-w-lg">
+
+            {/* Pro vitrine shortcut */}
+            {proProfile && (
+              <div className="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-bold text-navy">Ma vitrine professionnelle</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{proProfile.name}</p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <Link
+                    href={`/professionnels/${proProfile.slug}`}
+                    target="_blank"
+                    className="inline-flex items-center gap-1 text-xs text-orange-primary border border-orange-primary/30 px-3 py-1.5 rounded-lg hover:bg-orange-primary hover:text-white transition-colors"
+                  >
+                    Voir <ExternalLink size={11} />
+                  </Link>
+                  <Link
+                    href="/mon-compte/profil-pro"
+                    className="inline-flex items-center gap-1 text-xs bg-orange-primary text-white px-3 py-1.5 rounded-lg hover:bg-orange-dark transition-colors"
+                  >
+                    Gérer <Pencil size={11} />
+                  </Link>
+                </div>
+              </div>
+            )}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Nom affiché</label>
