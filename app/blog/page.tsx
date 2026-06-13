@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { Clock, ArrowRight } from 'lucide-react'
 
@@ -25,12 +25,17 @@ type PageProps = { searchParams: Promise<{ cat?: string }> }
 
 export default async function BlogPage({ searchParams }: PageProps) {
   const { cat } = await searchParams
-  const t = await getTranslations('Blog')
+  const [t, locale] = await Promise.all([getTranslations('Blog'), getLocale()])
 
-  const posts = await prisma.blogPost.findMany({
-    where: { published: true, ...(cat ? { category: cat } : {}) },
-    orderBy: { publishedAt: 'desc' },
-  })
+  // Show posts in current language, fall back to French if none exist
+  const langFilter = { published: true, lang: locale, ...(cat ? { category: cat } : {}) }
+  let posts = await prisma.blogPost.findMany({ where: langFilter, orderBy: { publishedAt: 'desc' } })
+  if (posts.length === 0 && locale !== 'fr') {
+    posts = await prisma.blogPost.findMany({
+      where: { published: true, lang: 'fr', ...(cat ? { category: cat } : {}) },
+      orderBy: { publishedAt: 'desc' },
+    })
+  }
 
   const [featured, ...rest] = posts
 

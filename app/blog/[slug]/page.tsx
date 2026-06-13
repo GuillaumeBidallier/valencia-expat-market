@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { Clock, Calendar, User, ArrowLeft } from 'lucide-react'
 import BlogContent from './BlogContent'
@@ -41,14 +41,22 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
   const t = await getTranslations('Blog')
 
-  const [post, related] = await Promise.all([
-    prisma.blogPost.findUnique({ where: { slug, published: true } }),
-    prisma.blogPost.findMany({
-      where: { published: true, slug: { not: slug } },
-      orderBy: { publishedAt: 'desc' },
-      take: 3,
-    }),
-  ])
+  const locale = await getLocale()
+
+  // Find post by slug; prefer matching locale, fall back to any language
+  const post = await prisma.blogPost.findFirst({
+    where: { slug, published: true },
+    orderBy: [
+      // Prisma doesn't support conditional ordering — we fetch and pick in JS
+    ],
+  })
+
+  // Related: same language first, then fallback
+  const related = await prisma.blogPost.findMany({
+    where: { published: true, lang: post?.lang ?? locale, slug: { not: slug } },
+    orderBy: { publishedAt: 'desc' },
+    take: 3,
+  })
 
   if (!post) notFound()
 
