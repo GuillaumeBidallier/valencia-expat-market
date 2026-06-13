@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import { Inter, Nunito } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
 import { SessionProvider } from 'next-auth/react'
 import { AuthProvider } from '@/context/AuthContext'
@@ -10,6 +9,8 @@ import { ListingsProvider } from '@/context/ListingsContext'
 import Navbar from '@/components/layout/Navbar'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import { LocaleProvider, type SupportedLocale } from '@/components/providers/LocaleProvider'
+import CookieBanner from '@/components/CookieBanner'
+import ConsentScripts from '@/components/ConsentScripts'
 import { getLocale } from 'next-intl/server'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -51,14 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale}>
       <body className={`${inter.className} ${nunito.variable}`}>
-        {process.env.NEXT_PUBLIC_ADSENSE_ID && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        )}
+        <ConsentScripts />
         <LocaleProvider initialLocale={locale as SupportedLocale}>
           <a href="#main-content" className="skip-link">Aller au contenu principal</a>
           <SessionProvider>
@@ -70,6 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </ListingsProvider>
             </AuthProvider>
           </SessionProvider>
+          <CookieBanner />
         </LocaleProvider>
       </body>
     </html>

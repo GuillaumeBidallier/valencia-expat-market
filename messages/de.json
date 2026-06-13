@@ -259,5 +259,18 @@
     "report_reason_2": "Unangemessener Inhalt",
     "report_reason_3": "Duplikat",
     "report_reason_4": "Andere"
+  },
+  "Cookies": {
+    "banner_text": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und unsere Zielgruppen zu messen.",
+    "accept": "Alle akzeptieren",
+    "decline": "Ablehnen",
+    "learn_more": "Mehr erfahren"
+  },
+  "Share": {
+    "share_btn": "Teilen",
+    "copy_link": "Link kopieren",
+    "copied": "Link kopiert!",
+    "share_whatsapp": "WhatsApp",
+    "share_title": "Dieses Inserat teilen"
   }
 }
