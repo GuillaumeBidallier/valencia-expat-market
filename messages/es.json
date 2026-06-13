@@ -205,7 +205,20 @@
     "cta_title": "¿Eres profesional?",
     "cta_desc": "Registre su negocio y llegue a miles de expatriados francófonos en España.",
     "cta_btn": "Contáctanos →",
-    "city_placeholder": "Filtrar por ciudad…"
+    "city_placeholder": "Filtrar por ciudad…",
+    "tel": "Tel",
+    "site": "Sitio",
+    "recommended_badge": "Recomendado",
+    "cat_immobilier": "Inmobiliaria",
+    "cat_juridique": "Jurídico & Notaría",
+    "cat_comptabilite": "Contabilidad & Fiscal",
+    "cat_demenagement": "Mudanzas",
+    "cat_assurance": "Seguros",
+    "cat_sante": "Salud",
+    "cat_automobiles": "Automóviles",
+    "cat_services": "Servicios del hogar",
+    "cat_education": "Educación",
+    "cat_autres": "Otros"
   },
   "Messages": {
     "title": "Mensajes",
@@ -272,5 +285,25 @@
     "copied": "¡Enlace copiado!",
     "share_whatsapp": "WhatsApp",
     "share_title": "Compartir este anuncio"
+  },
+  "ProDetail": {
+    "back": "Volver",
+    "edit": "Editar",
+    "badge_recommended": "Recomendado",
+    "badge_premium_plus": "Recomendado",
+    "badge_premium": "Premium",
+    "badge_verified": "Verificado",
+    "section_about": "Acerca de",
+    "section_gallery": "Galería",
+    "section_location": "Ubicación",
+    "section_zones": "Zonas de actuación",
+    "cta_intro": "¿Quieres trabajar con",
+    "cta_call": "Llamar",
+    "contact_label": "Contactar",
+    "verified_badge": "Profesional verificado por Vendo",
+    "visit_website": "Visitar el sitio web",
+    "mention_vendo": "Mencione Vendo al contactar.",
+    "wa_message": "Hola {name}, encontré su perfil en Vendo Valencia y me gustaría contactarle.",
+    "not_found": "Profesional no encontrado"
   }
 }

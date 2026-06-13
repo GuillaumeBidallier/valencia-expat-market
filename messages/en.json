@@ -205,7 +205,20 @@
     "cta_title": "Are you a professional?",
     "cta_desc": "List your business and reach thousands of French-speaking expats in Spain.",
     "cta_btn": "Contact us →",
-    "city_placeholder": "Filter by city…"
+    "city_placeholder": "Filter by city…",
+    "tel": "Tel",
+    "site": "Website",
+    "recommended_badge": "Recommended",
+    "cat_immobilier": "Real Estate",
+    "cat_juridique": "Legal & Notary",
+    "cat_comptabilite": "Accounting & Tax",
+    "cat_demenagement": "Moving",
+    "cat_assurance": "Insurance",
+    "cat_sante": "Health",
+    "cat_automobiles": "Automotive",
+    "cat_services": "Home Services",
+    "cat_education": "Education",
+    "cat_autres": "Other"
   },
   "Messages": {
     "title": "Messages",
@@ -272,5 +285,25 @@
     "copied": "Link copied!",
     "share_whatsapp": "WhatsApp",
     "share_title": "Share this listing"
+  },
+  "ProDetail": {
+    "back": "Back",
+    "edit": "Edit",
+    "badge_recommended": "Recommended",
+    "badge_premium_plus": "Recommended",
+    "badge_premium": "Premium",
+    "badge_verified": "Verified",
+    "section_about": "About",
+    "section_gallery": "Gallery",
+    "section_location": "Location",
+    "section_zones": "Service areas",
+    "cta_intro": "Want to work with",
+    "cta_call": "Call",
+    "contact_label": "Contact",
+    "verified_badge": "Vendo verified professional",
+    "visit_website": "Visit website",
+    "mention_vendo": "Mention Vendo when you contact them.",
+    "wa_message": "Hello {name}, I found your profile on Vendo Valencia and would like to contact you.",
+    "not_found": "Professional not found"
   }
 }

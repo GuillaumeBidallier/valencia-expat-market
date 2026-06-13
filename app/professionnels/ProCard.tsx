@@ -1,12 +1,16 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import { MapPin, Phone, Globe, MessageCircle, CheckCircle } from 'lucide-react'
 import { proCategories } from '@/lib/proCategories'
 import type { Professional } from '@prisma/client'
 
 export default function ProCard({ pro }: { pro: Professional }) {
+  const t = useTranslations('Pros')
+
   const catIcon  = proCategories.find(c => c.slug === pro.category)?.icon ?? '💼'
-  const catLabel = proCategories.find(c => c.slug === pro.category)?.label ?? pro.category
+  const catLabel = t(`cat_${pro.category}` as Parameters<typeof t>[0]) ?? pro.category
   const isPlus    = pro.tier === 'PREMIUM_PLUS'
   const isPremium = pro.tier === 'PREMIUM' || isPlus
   const isReco    = (pro as Professional & { recommended?: boolean }).recommended
@@ -34,7 +38,6 @@ export default function ProCard({ pro }: { pro: Professional }) {
           </div>
         )}
 
-        {/* Badge tier */}
         {isPlus && (
           <span className="absolute top-2 right-2 bg-orange-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
             ⭐ Premium+
@@ -45,11 +48,9 @@ export default function ProCard({ pro }: { pro: Professional }) {
             ⭐ Premium
           </span>
         )}
-
-        {/* Badge Recommandé (manuel par admin) */}
         {isReco && (
           <span className="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            ✓ Recommandé
+            ✓ {t('recommended_badge')}
           </span>
         )}
       </div>
@@ -71,22 +72,19 @@ export default function ProCard({ pro }: { pro: Professional }) {
 
         <p className="text-xs text-gray-400 mb-2">{catLabel}</p>
 
-        {/* Description — Premium seulement */}
         {isPremium && pro.description && (
           <p className="text-xs text-gray-500 line-clamp-2 mb-3 flex-1 leading-relaxed">{pro.description}</p>
         )}
 
-        {/* Ville */}
         <div className="flex items-center gap-1 text-xs text-gray-400 mt-auto mb-2">
           <MapPin size={10} className="shrink-0" />
           <span>{pro.city}</span>
         </div>
 
-        {/* Contacts — FREE = téléphone seul, Premium = tout */}
         <div className="flex gap-1.5 flex-wrap">
           {pro.phone && (
             <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-lg">
-              <Phone size={9} /> Tél
+              <Phone size={9} /> {t('tel')}
             </span>
           )}
           {isPremium && pro.whatsapp && (
@@ -96,7 +94,7 @@ export default function ProCard({ pro }: { pro: Professional }) {
           )}
           {isPremium && pro.website && (
             <span className="flex items-center gap-1 text-[11px] text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-lg">
-              <Globe size={9} /> Site
+              <Globe size={9} /> {t('site')}
             </span>
           )}
         </div>

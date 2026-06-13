@@ -205,7 +205,20 @@
     "cta_title": "Sind Sie Fachmann?",
     "cta_desc": "Registrieren Sie Ihr Unternehmen und erreichen Sie Tausende von französischsprachigen Expats in Spanien.",
     "cta_btn": "Kontaktieren Sie uns →",
-    "city_placeholder": "Nach Stadt filtern…"
+    "city_placeholder": "Nach Stadt filtern…",
+    "tel": "Tel",
+    "site": "Website",
+    "recommended_badge": "Empfohlen",
+    "cat_immobilier": "Immobilien",
+    "cat_juridique": "Recht & Notar",
+    "cat_comptabilite": "Buchhaltung & Steuer",
+    "cat_demenagement": "Umzug",
+    "cat_assurance": "Versicherung",
+    "cat_sante": "Gesundheit",
+    "cat_automobiles": "Automobile",
+    "cat_services": "Haushaltsdienstleistungen",
+    "cat_education": "Bildung",
+    "cat_autres": "Sonstiges"
   },
   "Messages": {
     "title": "Nachrichten",
@@ -272,5 +285,25 @@
     "copied": "Link kopiert!",
     "share_whatsapp": "WhatsApp",
     "share_title": "Dieses Inserat teilen"
+  },
+  "ProDetail": {
+    "back": "Zurück",
+    "edit": "Bearbeiten",
+    "badge_recommended": "Empfohlen",
+    "badge_premium_plus": "Empfohlen",
+    "badge_premium": "Premium",
+    "badge_verified": "Verifiziert",
+    "section_about": "Über uns",
+    "section_gallery": "Galerie",
+    "section_location": "Standort",
+    "section_zones": "Einsatzbereiche",
+    "cta_intro": "Möchten Sie mit … zusammenarbeiten:",
+    "cta_call": "Anrufen",
+    "contact_label": "Kontakt",
+    "verified_badge": "Von Vendo verifizierter Fachmann",
+    "visit_website": "Website besuchen",
+    "mention_vendo": "Erwähnen Sie Vendo bei Ihrer Kontaktaufnahme.",
+    "wa_message": "Hallo {name}, ich habe Ihr Profil auf Vendo Valencia gefunden und würde mich gerne bei Ihnen melden.",
+    "not_found": "Fachmann nicht gefunden"
   }
 }

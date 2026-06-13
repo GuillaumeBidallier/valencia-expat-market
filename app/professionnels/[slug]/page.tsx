@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { MapPin, Phone, Globe, ArrowLeft, CheckCircle, Star, ExternalLink, Pencil } from 'lucide-react'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -10,11 +11,11 @@ import ProGallery from './ProGallery'
 import ProMapClient from './ProMapClient'
 
 const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
-  'valencia': { lat: 39.4699, lng: -0.3763 },
-  'madrid':   { lat: 40.4168, lng: -3.7038 },
-  'barcelona':{ lat: 41.3874, lng:  2.1686 },
-  'alicante': { lat: 38.3452, lng: -0.4815 },
-  'benidorm': { lat: 38.5400, lng: -0.1300 },
+  'valencia':  { lat: 39.4699, lng: -0.3763 },
+  'madrid':    { lat: 40.4168, lng: -3.7038 },
+  'barcelona': { lat: 41.3874, lng:  2.1686 },
+  'alicante':  { lat: 38.3452, lng: -0.4815 },
+  'benidorm':  { lat: 38.5400, lng: -0.1300 },
   'torrevieja':{ lat: 37.9783, lng: -0.6826 },
 }
 
@@ -44,17 +45,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     where: { slug },
     select: { name: true, description: true, city: true, logo: true, banner: true, category: true },
   })
-  if (!pro) return { title: 'Professionnel introuvable' }
+  if (!pro) return { title: 'Professional not found' }
   const catLabel = proCategories.find(c => c.slug === pro.category)?.label ?? pro.category
   const description = pro.description
     ? pro.description.slice(0, 155).replace(/\n/g, ' ')
-    : `${pro.name} — ${catLabel} à ${pro.city}. Professionnel certifié sur Vendo Valencia.`
+    : `${pro.name} — ${catLabel} · ${pro.city}`
   const image = pro.banner ?? pro.logo
   return {
-    title: `${pro.name} — ${catLabel} à ${pro.city}`,
+    title: `${pro.name} — ${catLabel} · ${pro.city}`,
     description,
     openGraph: {
-      title: `${pro.name} — ${catLabel} à ${pro.city}`,
+      title: `${pro.name} — ${catLabel} · ${pro.city}`,
       description,
       ...(image && { images: [{ url: image, width: 1200, height: 630, alt: pro.name }] }),
     },
@@ -66,15 +67,17 @@ export default async function ProDetailPage({ params }: Props) {
   const pro = await prisma.professional.findUnique({ where: { slug } })
   if (!pro) notFound()
 
-  const [session, geoCoords] = await Promise.all([
+  const [session, geoCoords, t] = await Promise.all([
     auth(),
     pro.city ? geocodeCity(pro.city) : null,
+    getTranslations('ProDetail'),
   ])
+  const tPros = await getTranslations('Pros')
+
   const isOwner = !!(session?.user?.id && pro.userId === session.user.id)
 
-  const cat = proCategories.find(c => c.slug === pro.category)
-  const catLabel = cat?.label ?? pro.category
-  const catIcon = cat?.icon ?? '💼'
+  const catLabel = tPros(`cat_${pro.category}` as Parameters<typeof tPros>[0], { defaultValue: pro.category }) ?? pro.category
+  const catIcon  = proCategories.find(c => c.slug === pro.category)?.icon ?? '💼'
   const isPremiumPlus = pro.tier === 'PREMIUM_PLUS'
   const isPremium = pro.tier === 'PREMIUM' || isPremiumPlus
 
@@ -87,9 +90,17 @@ export default async function ProDetailPage({ params }: Props) {
 
   const coverSrc = pro.banner ?? pro.logo
 
+  const waMsg = t('wa_message', { name: pro.name })
   const waLink = pro.whatsapp
-    ? `https://wa.me/${pro.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour ${pro.name}, j'ai trouvé votre profil sur Vendo Valencia et j'aimerais vous contacter.`)}`
+    ? `https://wa.me/${pro.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(waMsg)}`
     : null
+
+  const ccStrings = {
+    contact_label:  t('contact_label'),
+    verified_badge: t('verified_badge'),
+    visit_website:  t('visit_website'),
+    mention_vendo:  t('mention_vendo'),
+  }
 
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
@@ -108,7 +119,6 @@ export default async function ProDetailPage({ params }: Props) {
             priority
           />
         )}
-        {/* Rich gradient overlay: strong at bottom for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20" />
 
         {/* Navigation */}
@@ -117,7 +127,7 @@ export default async function ProDetailPage({ params }: Props) {
             href="/professionnels"
             className="inline-flex items-center gap-1.5 text-white/90 hover:text-white text-sm bg-white/10 hover:bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20 transition-colors"
           >
-            <ArrowLeft size={13} /> Retour
+            <ArrowLeft size={13} /> {t('back')}
           </Link>
         </div>
 
@@ -127,7 +137,7 @@ export default async function ProDetailPage({ params }: Props) {
               href="/mon-compte/profil-pro"
               className="inline-flex items-center gap-1.5 text-white text-sm bg-white/10 hover:bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20 transition-colors"
             >
-              <Pencil size={13} /> Modifier
+              <Pencil size={13} /> {t('edit')}
             </Link>
           </div>
         )}
@@ -142,17 +152,17 @@ export default async function ProDetailPage({ params }: Props) {
               </span>
               {isPremiumPlus && (
                 <span className="inline-flex items-center gap-1 bg-orange-primary text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
-                  <Star size={10} fill="currentColor" /> Recommandé
+                  <Star size={10} fill="currentColor" /> {t('badge_premium_plus')}
                 </span>
               )}
               {isPremium && !isPremiumPlus && (
                 <span className="inline-flex items-center gap-1 bg-indigo-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
-                  <Star size={10} fill="currentColor" /> Premium
+                  <Star size={10} fill="currentColor" /> {t('badge_premium')}
                 </span>
               )}
               {pro.verified && (
                 <span className="inline-flex items-center gap-1 bg-white/90 text-blue-700 text-[11px] font-semibold px-2.5 py-1 rounded-full shadow">
-                  <CheckCircle size={10} /> Vérifié
+                  <CheckCircle size={10} /> {t('badge_verified')}
                 </span>
               )}
             </div>
@@ -221,7 +231,7 @@ export default async function ProDetailPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-gray-600 border border-gray-200 text-sm font-medium px-4 py-2.5 rounded-xl hover:border-indigo-300 hover:text-indigo-600 transition-colors"
                 >
-                  <Globe size={14} /> Site web <ExternalLink size={11} className="opacity-50" />
+                  <Globe size={14} /> {t('visit_website')} <ExternalLink size={11} className="opacity-50" />
                 </a>
               )}
             </div>
@@ -241,7 +251,7 @@ export default async function ProDetailPage({ params }: Props) {
             {/* About */}
             {pro.description && (
               <section>
-                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">À propos</p>
+                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">{t('section_about')}</p>
                 <p className="text-gray-700 text-base sm:text-lg leading-relaxed whitespace-pre-line">
                   {pro.description}
                 </p>
@@ -251,7 +261,7 @@ export default async function ProDetailPage({ params }: Props) {
             {/* Gallery */}
             {pro.photos.length > 0 && (
               <section>
-                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">Galerie</p>
+                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">{t('section_gallery')}</p>
                 <ProGallery photos={pro.photos} name={pro.name} featured />
               </section>
             )}
@@ -259,7 +269,7 @@ export default async function ProDetailPage({ params }: Props) {
             {/* Map */}
             {geoCoords && (
               <section>
-                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">Localisation</p>
+                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">{t('section_location')}</p>
                 <ProMapClient lat={geoCoords.lat} lng={geoCoords.lng} name={pro.name} city={pro.city} zones={pro.zones} />
               </section>
             )}
@@ -267,7 +277,7 @@ export default async function ProDetailPage({ params }: Props) {
             {/* Zones */}
             {pro.zones.length > 0 && (
               <section>
-                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">Zones d'intervention</p>
+                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">{t('section_zones')}</p>
                 <div className="flex flex-wrap gap-2">
                   {pro.zones.map(z => (
                     <span
@@ -283,13 +293,13 @@ export default async function ProDetailPage({ params }: Props) {
 
             {/* Mobile contact */}
             <div className="lg:hidden pb-10">
-              <ContactCard pro={pro} isPremium={isPremium} waLink={waLink} accentFrom={accentFrom} accentTo={accentTo} />
+              <ContactCard pro={pro} isPremium={isPremium} waLink={waLink} accentFrom={accentFrom} accentTo={accentTo} strings={ccStrings} />
             </div>
           </div>
 
           {/* ── Right: sticky contact ── */}
           <aside className="hidden lg:block self-start sticky top-24 pb-10">
-            <ContactCard pro={pro} isPremium={isPremium} waLink={waLink} accentFrom={accentFrom} accentTo={accentTo} />
+            <ContactCard pro={pro} isPremium={isPremium} waLink={waLink} accentFrom={accentFrom} accentTo={accentTo} strings={ccStrings} />
           </aside>
         </div>
       </div>
@@ -300,7 +310,7 @@ export default async function ProDetailPage({ params }: Props) {
       <div className="mt-16 bg-navy">
         <div className="max-w-6xl mx-auto px-4 sm:px-8 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <p className="text-white/50 text-sm mb-1">Vous souhaitez travailler avec</p>
+            <p className="text-white/50 text-sm mb-1">{t('cta_intro')}</p>
             <p className="text-white text-2xl font-black">{pro.name}</p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -309,7 +319,7 @@ export default async function ProDetailPage({ params }: Props) {
                 href={`tel:${pro.phone}`}
                 className="inline-flex items-center gap-2 bg-white text-navy font-bold text-sm px-5 py-3 rounded-xl hover:bg-gray-100 transition-colors"
               >
-                <Phone size={15} /> Appeler
+                <Phone size={15} /> {t('cta_call')}
               </a>
             )}
             {waLink && (
@@ -330,7 +340,7 @@ export default async function ProDetailPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-white/20 text-white font-bold text-sm px-5 py-3 rounded-xl hover:bg-white/10 transition-colors"
               >
-                <Globe size={15} /> Site web
+                <Globe size={15} /> {t('visit_website')}
               </a>
             )}
           </div>
@@ -344,15 +354,23 @@ export default async function ProDetailPage({ params }: Props) {
 /* ════════════════════════════════════════
    CONTACT CARD COMPONENT
 ════════════════════════════════════════ */
+type ContactCardStrings = {
+  contact_label: string
+  verified_badge: string
+  visit_website: string
+  mention_vendo: string
+}
+
 type ContactCardProps = {
   pro: { name: string; phone: string | null; whatsapp: string | null; website: string | null; verified: boolean }
   isPremium: boolean
   waLink: string | null
   accentFrom: string
   accentTo: string
+  strings: ContactCardStrings
 }
 
-function ContactCard({ pro, isPremium, waLink, accentFrom, accentTo }: ContactCardProps) {
+function ContactCard({ pro, isPremium, waLink, accentFrom, accentTo, strings }: ContactCardProps) {
   return (
     <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-200/60">
       {/* Card header */}
@@ -360,11 +378,11 @@ function ContactCard({ pro, isPremium, waLink, accentFrom, accentTo }: ContactCa
         className="px-5 py-5 text-white"
         style={{ background: `linear-gradient(135deg, ${accentFrom}, ${accentTo})` }}
       >
-        <p className="text-white/60 text-xs font-medium mb-1">Contacter</p>
+        <p className="text-white/60 text-xs font-medium mb-1">{strings.contact_label}</p>
         <p className="font-black text-lg leading-snug">{pro.name}</p>
         {pro.verified && (
           <p className="text-white/70 text-xs flex items-center gap-1 mt-2">
-            <CheckCircle size={11} /> Professionnel vérifié Vendo
+            <CheckCircle size={11} /> {strings.verified_badge}
           </p>
         )}
       </div>
@@ -397,13 +415,13 @@ function ContactCard({ pro, isPremium, waLink, accentFrom, accentTo }: ContactCa
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 border-2 border-gray-100 text-gray-600 font-semibold text-sm py-3 rounded-xl hover:border-indigo-200 hover:text-indigo-600 transition-colors"
           >
-            <Globe size={14} aria-hidden="true" /> Voir le site web
+            <Globe size={14} aria-hidden="true" /> {strings.visit_website}
             <ExternalLink size={12} className="ml-auto opacity-40" aria-hidden="true" />
           </a>
         )}
 
         <p className="text-[11px] text-gray-400 text-center pt-1">
-          Mentionnez Vendo lors de votre contact.
+          {strings.mention_vendo}
         </p>
       </div>
     </div>

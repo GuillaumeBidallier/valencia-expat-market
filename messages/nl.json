@@ -205,7 +205,20 @@
     "cta_title": "Bent u een professional?",
     "cta_desc": "Registreer uw bedrijf en bereik duizenden Franstalige expats in Spanje.",
     "cta_btn": "Neem contact op →",
-    "city_placeholder": "Filteren op stad…"
+    "city_placeholder": "Filteren op stad…",
+    "tel": "Tel",
+    "site": "Website",
+    "recommended_badge": "Aanbevolen",
+    "cat_immobilier": "Vastgoed",
+    "cat_juridique": "Juridisch & Notariaat",
+    "cat_comptabilite": "Boekhouding & Fiscaal",
+    "cat_demenagement": "Verhuizing",
+    "cat_assurance": "Verzekering",
+    "cat_sante": "Gezondheid",
+    "cat_automobiles": "Automobielen",
+    "cat_services": "Huishoudelijke diensten",
+    "cat_education": "Onderwijs",
+    "cat_autres": "Overige"
   },
   "Messages": {
     "title": "Berichten",
@@ -272,5 +285,25 @@
     "copied": "Link gekopieerd!",
     "share_whatsapp": "WhatsApp",
     "share_title": "Dit aanbod delen"
+  },
+  "ProDetail": {
+    "back": "Terug",
+    "edit": "Bewerken",
+    "badge_recommended": "Aanbevolen",
+    "badge_premium_plus": "Aanbevolen",
+    "badge_premium": "Premium",
+    "badge_verified": "Geverifieerd",
+    "section_about": "Over ons",
+    "section_gallery": "Galerij",
+    "section_location": "Locatie",
+    "section_zones": "Werkgebieden",
+    "cta_intro": "Wilt u samenwerken met",
+    "cta_call": "Bellen",
+    "contact_label": "Contact",
+    "verified_badge": "Door Vendo geverifieerde professional",
+    "visit_website": "Website bezoeken",
+    "mention_vendo": "Vermeld Vendo bij uw contact.",
+    "wa_message": "Hallo {name}, ik vond uw profiel op Vendo Valencia en wil graag contact opnemen.",
+    "not_found": "Professional niet gevonden"
   }
 }
