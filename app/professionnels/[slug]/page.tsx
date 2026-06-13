@@ -2,11 +2,30 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { MapPin, Phone, Globe, ArrowLeft, CheckCircle, Star, ExternalLink, Pencil } from 'lucide-react'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { proCategories } from '@/lib/proCategories'
 import ProGallery from './ProGallery'
+
+const ProMap = dynamic(() => import('@/components/pros/ProMap'), { ssr: false, loading: () => <div className="h-[280px] rounded-2xl bg-gray-100 animate-pulse" /> })
+
+async function geocodeCity(city: string): Promise<{ lat: number; lng: number } | null> {
+  try {
+    const q = encodeURIComponent(`${city}, Spain`)
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`,
+      { headers: { 'User-Agent': 'VendoValencia/1.0 contact@vendo.es' }, next: { revalidate: 86400 } }
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    if (!data[0]) return null
+    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) }
+  } catch {
+    return null
+  }
+}
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -38,7 +57,10 @@ export default async function ProDetailPage({ params }: Props) {
   const pro = await prisma.professional.findUnique({ where: { slug } })
   if (!pro) notFound()
 
-  const session = await auth()
+  const [session, geoCoords] = await Promise.all([
+    auth(),
+    pro.city ? geocodeCity(pro.city) : null,
+  ])
   const isOwner = !!(session?.user?.id && pro.userId === session.user.id)
 
   const cat = proCategories.find(c => c.slug === pro.category)
@@ -222,6 +244,14 @@ export default async function ProDetailPage({ params }: Props) {
               <section>
                 <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">Galerie</p>
                 <ProGallery photos={pro.photos} name={pro.name} featured />
+              </section>
+            )}
+
+            {/* Map */}
+            {geoCoords && (
+              <section>
+                <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">Localisation</p>
+                <ProMap lat={geoCoords.lat} lng={geoCoords.lng} name={pro.name} city={pro.city} zones={pro.zones} />
               </section>
             )}
 
