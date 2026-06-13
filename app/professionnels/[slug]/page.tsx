@@ -2,14 +2,12 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import { MapPin, Phone, Globe, ArrowLeft, CheckCircle, Star, ExternalLink, Pencil } from 'lucide-react'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { proCategories } from '@/lib/proCategories'
 import ProGallery from './ProGallery'
-
-const ProMap = dynamic(() => import('@/components/pros/ProMap'), { ssr: false, loading: () => <div className="h-[280px] rounded-2xl bg-gray-100 animate-pulse" /> })
+import ProMapClient from './ProMapClient'
 
 async function geocodeCity(city: string): Promise<{ lat: number; lng: number } | null> {
   try {
@@ -251,7 +249,7 @@ export default async function ProDetailPage({ params }: Props) {
             {geoCoords && (
               <section>
                 <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest mb-4">Localisation</p>
-                <ProMap lat={geoCoords.lat} lng={geoCoords.lng} name={pro.name} city={pro.city} zones={pro.zones} />
+                <ProMapClient lat={geoCoords.lat} lng={geoCoords.lng} name={pro.name} city={pro.city} zones={pro.zones} />
               </section>
             )}
 
