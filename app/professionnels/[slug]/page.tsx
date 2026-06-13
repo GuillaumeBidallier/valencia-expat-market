@@ -103,7 +103,7 @@ export default async function ProDetailPage({ params }: Props) {
 
         {/* Company identity — bottom of hero */}
         <div className="absolute bottom-0 left-0 right-0">
-          <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-6 sm:pb-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-16 sm:pb-20">
             {/* Trust badges */}
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white/80 text-[11px] font-medium px-2.5 py-1 rounded-full border border-white/15">
