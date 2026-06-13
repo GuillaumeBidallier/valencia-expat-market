@@ -106,12 +106,12 @@ export default async function ProDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* ── Identity band (white strip overlapping hero) ── */}
+      {/* ── Identity band (white strip, avatar overlaps hero) ── */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="flex items-end gap-4 sm:gap-5 -mt-12 pb-5">
-            {/* Avatar */}
-            <div className={`shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-white shadow-lg overflow-hidden bg-gradient-to-br ${heroGradient} flex items-center justify-center`}>
+          <div className="flex items-start gap-4 sm:gap-5 pb-4">
+            {/* Avatar — only the avatar gets the negative margin */}
+            <div className={`-mt-14 sm:-mt-16 shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br ${heroGradient} flex items-center justify-center z-10 relative`}>
               {pro.logo ? (
                 <Image
                   src={pro.logo}
@@ -125,9 +125,9 @@ export default async function ProDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* Name + meta */}
-            <div className="flex-1 min-w-0 pb-1">
-              <div className="flex flex-wrap items-center gap-2 mb-0.5">
+            {/* Name + meta — stays naturally in the white band */}
+            <div className="flex-1 min-w-0 pt-3">
+              <div className="flex flex-wrap items-center gap-2 mb-1">
                 <h1 className="text-lg sm:text-2xl font-black text-navy leading-tight">{pro.name}</h1>
                 {isPremiumPlus && (
                   <span className="inline-flex items-center gap-1 bg-orange-primary text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
