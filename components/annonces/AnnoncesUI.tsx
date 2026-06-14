@@ -21,7 +21,12 @@ interface Props {
   geoLabel: string
   activeCatIcon?: string
   activeCatLabel?: string
-  buildUrl: (p: number) => string
+  q: string
+  sort: string
+  priceMin?: number
+  priceMax?: number
+  lat?: number
+  lng?: number
 }
 
 export default function AnnoncesUI({
@@ -37,8 +42,27 @@ export default function AnnoncesUI({
   geoLabel,
   activeCatIcon,
   activeCatLabel,
-  buildUrl,
+  q,
+  sort,
+  priceMin,
+  priceMax,
+  lat,
+  lng,
 }: Props) {
+  const buildUrl = (p: number) => {
+    const sp = new URLSearchParams()
+    if (q)                   sp.set('q',        q)
+    if (cat)                 sp.set('cat',      cat)
+    if (ville)               sp.set('ville',    ville)
+    if (priceMin !== undefined) sp.set('priceMin', String(priceMin))
+    if (priceMax !== undefined) sp.set('priceMax', String(priceMax))
+    if (sort)                sp.set('sort',     sort)
+    if (lat !== undefined)   sp.set('lat',      String(lat))
+    if (lng !== undefined)   sp.set('lng',      String(lng))
+    if (hasLocation) { sp.set('radius', String(radius)); sp.set('geoLabel', geoLabel) }
+    if (p > 1)               sp.set('page',     String(p))
+    return `/annonces?${sp.toString()}`
+  }
   const t = useTranslations('Annonces')
   const favSet = new Set(favoritedIds)
 

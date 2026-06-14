@@ -133,21 +133,6 @@ async function AnnoncesContent({ searchParams }: Props) {
   const displayTotal = fetchAll ? listings.length : total
   const pages = Math.ceil((fetchAll ? listings.length : total) / PER_PAGE)
 
-  const buildUrl = (p: number) => {
-    const sp = new URLSearchParams()
-    if (q)     sp.set('q',     q)
-    if (cat)   sp.set('cat',   cat)
-    if (ville) sp.set('ville', ville)
-    if (priceMin !== undefined) sp.set('priceMin', String(priceMin))
-    if (priceMax !== undefined) sp.set('priceMax', String(priceMax))
-    if (sort)  sp.set('sort',  sort)
-    if (userLat !== undefined) sp.set('lat', String(userLat))
-    if (userLng !== undefined) sp.set('lng', String(userLng))
-    if (hasLocation) { sp.set('radius', String(radius)); sp.set('geoLabel', geoLabel) }
-    if (p > 1) sp.set('page', String(p))
-    return `/annonces?${sp.toString()}`
-  }
-
   const activeCat = categories.find(c => c.slug === cat)
 
   return (
@@ -178,7 +163,12 @@ async function AnnoncesContent({ searchParams }: Props) {
             geoLabel={geoLabel}
             activeCatIcon={activeCat?.icon}
             activeCatLabel={activeCat?.label}
-            buildUrl={buildUrl}
+            q={q}
+            sort={sort}
+            priceMin={priceMin}
+            priceMax={priceMax}
+            lat={userLat}
+            lng={userLng}
           />
 
           <div className="hidden xl:block shrink-0 sticky top-32">
