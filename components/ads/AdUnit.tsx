@@ -54,6 +54,18 @@ function AdSenseSlot({ slot, style }: { slot: string; style?: React.CSSPropertie
   )
 }
 
+/* ─── Destination d'un pro (partagé par tous les formats) ── */
+function proHref(pro: ProAd) {
+  return pro.website
+    ?? (pro.whatsapp ? `https://wa.me/${pro.whatsapp.replace(/\D/g, '')}` : `/professionnels/${pro.slug}`)
+}
+function proTarget(pro: ProAd) {
+  return pro.website || pro.whatsapp ? '_blank' : '_self'
+}
+function trackClick(id: string) {
+  fetch(`/api/ads/click?id=${id}`, { method: 'POST' }).catch(() => {})
+}
+
 /* ─── Carte pro réelle ───────────────────────────────────── */
 function ProCard({ pro, compact = false }: { pro: ProAd; compact?: boolean }) {
   const catIcon: Record<string, string> = {
@@ -61,14 +73,13 @@ function ProCard({ pro, compact = false }: { pro: ProAd; compact?: boolean }) {
     assurance: '🛡️', sante: '🏥', automobiles: '🚗', services: '🔧', education: '📚', autres: '💼',
   }
   const icon = catIcon[pro.category] ?? '💼'
-  const href = pro.website ?? (pro.whatsapp ? `https://wa.me/${pro.whatsapp.replace(/\D/g, '')}` : `/professionnels/${pro.slug}`)
 
   return (
     <a
-      href={href}
-      target={pro.website ? '_blank' : '_self'}
+      href={proHref(pro)}
+      target={proTarget(pro)}
       rel="noopener noreferrer"
-      onClick={() => fetch(`/api/ads/click?id=${pro.id}`, { method: 'POST' }).catch(() => {})}
+      onClick={() => trackClick(pro.id)}
       className="flex flex-col bg-white border border-orange-primary/20 rounded-xl overflow-hidden hover:shadow-md transition-all group"
     >
       {/* Visual */}
@@ -184,9 +195,10 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
           <AdSenseSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_BANNER ?? ''} />
         ) : pro ? (
           <a
-            href={pro.website ?? `/professionnels/${pro.slug}`}
-            target={pro.website ? '_blank' : '_self'}
+            href={proHref(pro)}
+            target={proTarget(pro)}
             rel="noopener noreferrer"
+            onClick={() => trackClick(pro.id)}
             className="flex items-center gap-4 px-4 py-2.5 hover:bg-orange-50 transition-colors"
           >
             <div className="w-8 h-8 rounded flex items-center justify-center shrink-0 text-lg bg-orange-50">
@@ -268,7 +280,8 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
           {(showPros ? pros.slice(0, 2) : [null, null]).map((pro, i) => {
             const mock = i === 0 ? mock0 : mock1
             return pro ? (
-              <a key={pro.id} href={pro.website ?? `/professionnels/${pro.slug}`} target={pro.website ? '_blank' : '_self'} rel="noopener noreferrer"
+              <a key={pro.id} href={proHref(pro)} target={proTarget(pro)} rel="noopener noreferrer"
+                onClick={() => trackClick(pro.id)}
                 className="flex items-center gap-3 p-3 hover:bg-orange-50 transition-colors">
                 <div className="w-8 h-8 rounded flex items-center justify-center shrink-0 bg-orange-50 text-lg overflow-hidden">
                   {pro.logo ? <img src={pro.logo} alt="" className="w-full h-full object-cover" /> : '💼'}
