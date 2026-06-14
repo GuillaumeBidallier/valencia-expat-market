@@ -42,11 +42,20 @@ export default async function BlogPage({ searchParams }: PageProps) {
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
       {/* Header */}
-      <div className="bg-navy text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-14 sm:py-20">
+      <div className="relative bg-navy text-white overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1600&q=80"
+          alt="Blog Vendo — expatriés en Espagne"
+          fill
+          sizes="100vw"
+          className="object-cover object-center opacity-25"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/70 to-navy/90" />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Vendo</p>
           <h1 className="text-3xl sm:text-5xl font-black leading-tight mb-4">{t('title')}</h1>
-          <p className="text-white/60 text-base sm:text-lg max-w-xl">{t('subtitle')}</p>
+          <p className="text-white/70 text-base sm:text-lg max-w-xl">{t('subtitle')}</p>
         </div>
       </div>
 
