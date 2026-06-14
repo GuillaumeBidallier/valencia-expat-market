@@ -108,6 +108,42 @@ export default function HomeContent({
         </div>
       </div>
 
+      {/* Comment ça marche */}
+      <section id="comment-ca-marche" className="bg-white border-t border-gray-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14">
+          <div className="text-center mb-10">
+            <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Vendo</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-navy mb-2">{t('how_title')}</h2>
+            <p className="text-gray-500 text-sm">{t('how_sub')}</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 relative">
+            {/* Connecting line (desktop) */}
+            <div className="hidden sm:block absolute top-8 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-orange-primary/30 via-orange-primary to-orange-primary/30 pointer-events-none" />
+            {[
+              { num: t('how_step1_num'), title: t('how_step1_title'), desc: t('how_step1_desc') },
+              { num: t('how_step2_num'), title: t('how_step2_title'), desc: t('how_step2_desc') },
+              { num: t('how_step3_num'), title: t('how_step3_title'), desc: t('how_step3_desc') },
+            ].map((step) => (
+              <div key={step.num} className="flex flex-col items-center text-center relative">
+                <div className="w-16 h-16 rounded-full bg-orange-primary flex items-center justify-center mb-4 shadow-lg shadow-orange-primary/30 z-10">
+                  <span className="text-2xl font-black text-white">{step.num}</span>
+                </div>
+                <p className="font-black text-navy text-base mb-2">{step.title}</p>
+                <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link
+              href="/deposer-annonce"
+              className="inline-flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white px-8 py-3.5 rounded-xl font-black text-sm transition-colors shadow-lg shadow-orange-primary/30"
+            >
+              {t('how_cta')} →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-hero-dark">
         <div className="max-w-4xl mx-auto px-6 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">

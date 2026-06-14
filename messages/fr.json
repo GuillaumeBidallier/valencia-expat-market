@@ -32,7 +32,19 @@
     "trust_community_desc": "Une communauté d'expatriés à travers toute l'Espagne",
     "latest": "Dernières annonces",
     "view_all": "Voir toutes",
-    "view_all_btn": "Voir toutes les annonces"
+    "view_all_btn": "Voir toutes les annonces",
+    "how_title": "Comment ça marche ?",
+    "how_sub": "Achetez et vendez entre expatriés en 3 étapes simples",
+    "how_step1_num": "1",
+    "how_step1_title": "Créez votre compte",
+    "how_step1_desc": "Inscrivez-vous gratuitement en moins de 2 minutes. Pas de carte bancaire requise.",
+    "how_step2_num": "2",
+    "how_step2_title": "Déposez votre annonce",
+    "how_step2_desc": "Publiez gratuitement : ajoutez des photos, un prix et une description. En ligne sous 24h.",
+    "how_step3_num": "3",
+    "how_step3_title": "Vendez ou achetez",
+    "how_step3_desc": "Échangez directement via la messagerie, rencontrez-vous et concluez la transaction.",
+    "how_cta": "Déposer une annonce"
   },
   "Auth": {
     "login_title": "Se connecter",

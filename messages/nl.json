@@ -32,7 +32,19 @@
     "trust_community_desc": "Een expat-community door heel Spanje",
     "latest": "Laatste advertenties",
     "view_all": "Alles bekijken",
-    "view_all_btn": "Alle advertenties bekijken"
+    "view_all_btn": "Alle advertenties bekijken",
+    "how_title": "Hoe werkt het?",
+    "how_sub": "Koop en verkoop tussen expats in 3 eenvoudige stappen",
+    "how_step1_num": "1",
+    "how_step1_title": "Maak een account aan",
+    "how_step1_desc": "Meld je gratis aan in minder dan 2 minuten. Geen creditcard vereist.",
+    "how_step2_num": "2",
+    "how_step2_title": "Plaats je advertentie",
+    "how_step2_desc": "Gratis plaatsen: voeg foto's, prijs en omschrijving toe. Binnen 24u online.",
+    "how_step3_num": "3",
+    "how_step3_title": "Verkoop of koop",
+    "how_step3_desc": "Chat via berichten, spreek af en sluit de deal.",
+    "how_cta": "Advertentie plaatsen"
   },
   "Auth": {
     "login_title": "Inloggen",

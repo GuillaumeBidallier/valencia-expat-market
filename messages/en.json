@@ -32,7 +32,19 @@
     "trust_community_desc": "An expat community across all of Spain",
     "latest": "Latest listings",
     "view_all": "View all",
-    "view_all_btn": "View all listings"
+    "view_all_btn": "View all listings",
+    "how_title": "How does it work?",
+    "how_sub": "Buy and sell between expats in 3 simple steps",
+    "how_step1_num": "1",
+    "how_step1_title": "Create your account",
+    "how_step1_desc": "Sign up for free in under 2 minutes. No credit card required.",
+    "how_step2_num": "2",
+    "how_step2_title": "Post your listing",
+    "how_step2_desc": "List for free: add photos, a price and a description. Online within 24h.",
+    "how_step3_num": "3",
+    "how_step3_title": "Sell or buy",
+    "how_step3_desc": "Chat directly via messaging, meet up and close the deal.",
+    "how_cta": "Post a listing"
   },
   "Auth": {
     "login_title": "Log in",

@@ -32,7 +32,19 @@
     "trust_community_desc": "Eine Expat-Community in ganz Spanien",
     "latest": "Neueste Anzeigen",
     "view_all": "Alle anzeigen",
-    "view_all_btn": "Alle Anzeigen anzeigen"
+    "view_all_btn": "Alle Anzeigen anzeigen",
+    "how_title": "Wie funktioniert es?",
+    "how_sub": "Kaufen und verkaufen zwischen Expats in 3 einfachen Schritten",
+    "how_step1_num": "1",
+    "how_step1_title": "Konto erstellen",
+    "how_step1_desc": "Kostenlos in weniger als 2 Minuten anmelden. Keine Kreditkarte erforderlich.",
+    "how_step2_num": "2",
+    "how_step2_title": "Anzeige aufgeben",
+    "how_step2_desc": "Kostenlos inserieren: Fotos, Preis und Beschreibung hinzufügen. Innerhalb von 24h online.",
+    "how_step3_num": "3",
+    "how_step3_title": "Verkaufen oder kaufen",
+    "how_step3_desc": "Per Nachricht kommunizieren, treffen und den Deal abschließen.",
+    "how_cta": "Anzeige aufgeben"
   },
   "Auth": {
     "login_title": "Anmelden",

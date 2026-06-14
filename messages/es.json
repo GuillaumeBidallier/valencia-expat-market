@@ -32,7 +32,19 @@
     "trust_community_desc": "Una comunidad de expatriados por toda España",
     "latest": "Últimos anuncios",
     "view_all": "Ver todos",
-    "view_all_btn": "Ver todos los anuncios"
+    "view_all_btn": "Ver todos los anuncios",
+    "how_title": "¿Cómo funciona?",
+    "how_sub": "Compra y vende entre expatriados en 3 sencillos pasos",
+    "how_step1_num": "1",
+    "how_step1_title": "Crea tu cuenta",
+    "how_step1_desc": "Regístrate gratis en menos de 2 minutos. Sin tarjeta bancaria requerida.",
+    "how_step2_num": "2",
+    "how_step2_title": "Publica tu anuncio",
+    "how_step2_desc": "Publica gratis: añade fotos, precio y descripción. Online en menos de 24h.",
+    "how_step3_num": "3",
+    "how_step3_title": "Vende o compra",
+    "how_step3_desc": "Chatea por mensajería, queda con el comprador y cierra el trato.",
+    "how_cta": "Publicar un anuncio"
   },
   "Auth": {
     "login_title": "Iniciar sesión",
