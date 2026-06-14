@@ -51,6 +51,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={locale}>
+      <head>
+        {/* Preload hero image for optimal LCP */}
+        <link rel="preload" as="image" href="/valencia-hero.jpg" fetchPriority="high" />
+      </head>
       <body className={`${inter.className} ${nunito.variable}`}>
         <ConsentScripts />
         <LocaleProvider initialLocale={locale as SupportedLocale}>

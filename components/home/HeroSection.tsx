@@ -14,6 +14,7 @@ export default function HeroSection() {
           src="/valencia-hero.jpg"
           alt="Valencia City of Arts and Sciences"
           fill
+          sizes="100vw"
           className="object-cover object-center"
           priority
         />
