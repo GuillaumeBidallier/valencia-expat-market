@@ -3,10 +3,133 @@ import { useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { Camera, Pencil, Plus, Trash2, ExternalLink, Check, Loader2, X } from 'lucide-react'
+import { Camera, Pencil, Plus, Trash2, ExternalLink, Check, Loader2, X, Star, Zap, CreditCard, AlertCircle } from 'lucide-react'
 import type { Professional } from '@prisma/client'
+import type { ProPlan } from '@/lib/stripe'
 
 type Props = { pro: Professional }
+
+const PLANS: { id: ProPlan; label: string; price: string; period: string; highlight?: boolean }[] = [
+  { id: 'premium_monthly',      label: 'Premium',  price: '49 €',  period: '/mois' },
+  { id: 'premium_annual',       label: 'Premium',  price: '490 €', period: '/an — 2 mois offerts' },
+  { id: 'premium_plus_monthly', label: 'Premium+', price: '99 €',  period: '/mois', highlight: true },
+  { id: 'premium_plus_annual',  label: 'Premium+', price: '990 €', period: '/an — 2 mois offerts', highlight: true },
+]
+
+function SubscriptionSection({ pro }: { pro: Professional }) {
+  const [loading, setLoading] = useState<ProPlan | 'portal' | null>(null)
+
+  const startCheckout = async (plan: ProPlan) => {
+    setLoading(plan)
+    const res = await fetch('/api/stripe/pro-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan }),
+    })
+    const { url, error } = await res.json()
+    if (url) window.location.href = url
+    else { alert(error ?? 'Erreur'); setLoading(null) }
+  }
+
+  const openPortal = async () => {
+    setLoading('portal')
+    const res = await fetch('/api/stripe/pro-subscription/portal', { method: 'POST' })
+    const { url, error } = await res.json()
+    if (url) window.location.href = url
+    else { alert(error ?? 'Erreur'); setLoading(null) }
+  }
+
+  const isActive = pro.tier !== 'FREE' && pro.subscriptionStatus === 'active'
+  const isPastDue = pro.subscriptionStatus === 'past_due'
+  const renewDate = pro.subscriptionCurrentPeriodEnd
+    ? new Date(pro.subscriptionCurrentPeriodEnd).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null
+
+  if (isActive) {
+    return (
+      <section className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-orange-soft flex items-center justify-center">
+            <Star size={18} className="text-orange-primary" />
+          </div>
+          <div>
+            <p className="font-black text-navy text-sm">
+              {pro.tier === 'PREMIUM_PLUS' ? 'Premium+' : 'Premium'} actif
+            </p>
+            <p className="text-xs text-gray-400">
+              {pro.subscriptionPeriod === 'annual' ? 'Formule annuelle' : 'Formule mensuelle'}
+              {renewDate ? ` · Renouvellement le ${renewDate}` : ''}
+            </p>
+          </div>
+          <span className="ml-auto text-xs font-bold bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full">Actif</span>
+        </div>
+        <button
+          onClick={openPortal}
+          disabled={loading === 'portal'}
+          className="w-full flex items-center justify-center gap-2 border border-gray-200 text-navy font-bold text-sm py-3 rounded-xl hover:border-orange-primary hover:text-orange-primary transition-colors disabled:opacity-50"
+        >
+          {loading === 'portal' ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
+          Gérer mon abonnement
+        </button>
+      </section>
+    )
+  }
+
+  if (isPastDue) {
+    return (
+      <section className="bg-white rounded-2xl border border-red-200 p-6">
+        <div className="flex items-start gap-3 mb-4">
+          <AlertCircle size={18} className="text-red-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-black text-navy text-sm">Paiement en échec</p>
+            <p className="text-xs text-gray-500">Votre abonnement est suspendu. Mettez à jour votre moyen de paiement.</p>
+          </div>
+        </div>
+        <button
+          onClick={openPortal}
+          disabled={loading === 'portal'}
+          className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold text-sm py-3 rounded-xl transition-colors disabled:opacity-50"
+        >
+          {loading === 'portal' ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
+          Mettre à jour le paiement
+        </button>
+      </section>
+    )
+  }
+
+  return (
+    <section className="bg-white rounded-2xl border border-gray-100 p-6">
+      <div className="flex items-center gap-2 mb-1">
+        <Zap size={16} className="text-orange-primary" />
+        <p className="font-black text-navy text-sm">Passer à Premium</p>
+      </div>
+      <p className="text-xs text-gray-400 mb-5">Apparaissez dans les encarts publicitaires et gagnez en visibilité.</p>
+      <div className="grid grid-cols-2 gap-3">
+        {PLANS.map(plan => (
+          <button
+            key={plan.id}
+            onClick={() => startCheckout(plan.id)}
+            disabled={loading !== null}
+            className={`relative flex flex-col items-start p-4 rounded-xl border-2 text-left transition-all disabled:opacity-50 ${
+              plan.highlight
+                ? 'border-indigo-primary bg-indigo-soft hover:bg-indigo-50'
+                : 'border-orange-primary bg-orange-soft hover:bg-orange-50'
+            }`}
+          >
+            {loading === plan.id && (
+              <Loader2 size={14} className="absolute top-3 right-3 animate-spin text-gray-400" />
+            )}
+            <span className={`text-xs font-black mb-1 ${plan.highlight ? 'text-indigo-primary' : 'text-orange-primary'}`}>
+              {plan.label}
+            </span>
+            <span className="text-lg font-black text-navy leading-none">{plan.price}</span>
+            <span className="text-[10px] text-gray-400 leading-tight mt-0.5">{plan.period}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 export default function ProDashboardClient({ pro: initial }: Props) {
   const t = useTranslations('ProDashboard')
@@ -88,6 +211,9 @@ export default function ProDashboardClient({ pro: initial }: Props) {
       </div>
 
       <div className="space-y-5">
+
+        {/* Subscription */}
+        <SubscriptionSection pro={pro} />
 
         {/* Banner */}
         <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden">

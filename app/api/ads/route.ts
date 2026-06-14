@@ -9,11 +9,16 @@ export async function GET(req: NextRequest) {
 
   const tiers = ['PREMIUM', 'PREMIUM_PLUS'] as ('PREMIUM' | 'PREMIUM_PLUS')[]
   const baseOrder = [{ tier: 'desc' as const }, { featured: 'desc' as const }, { name: 'asc' as const }]
+  const activeFilter = {
+    tier: { in: tiers },
+    subscriptionStatus: 'active',
+    subscriptionCurrentPeriodEnd: { gt: new Date() },
+  }
 
   // 1. Pros avec zone correspondant au quartier de l'annonce (Géo Pub)
   const geoMatched = neighborhood
     ? await prisma.professional.findMany({
-        where: { tier: { in: tiers }, zones: { has: neighborhood } },
+        where: { ...activeFilter, zones: { has: neighborhood } },
         orderBy: baseOrder,
         take: count,
       })
@@ -26,7 +31,7 @@ export async function GET(req: NextRequest) {
   // 2. Pros de la même catégorie (sans doublon)
   const catMatched = category
     ? await prisma.professional.findMany({
-        where: { category, tier: { in: tiers }, id: { notIn: exclude1 } },
+        where: { ...activeFilter, category, id: { notIn: exclude1 } },
         orderBy: baseOrder,
         take: count - geoMatched.length,
       })
@@ -38,7 +43,7 @@ export async function GET(req: NextRequest) {
   // 3. Compléter avec n'importe quel pro premium
   const exclude2 = combined.map(p => p.id)
   const extras = await prisma.professional.findMany({
-    where: { tier: { in: tiers }, id: { notIn: exclude2 } },
+    where: { ...activeFilter, id: { notIn: exclude2 } },
     orderBy: baseOrder,
     take: count - combined.length,
   })

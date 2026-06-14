@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   BarChart3, Target, Users, Globe, Monitor, Sidebar, AlignJustify, LayoutGrid,
-  CheckCircle, Star, Zap, Mail, ArrowRight, TrendingUp, MapPin, Languages
+  CheckCircle, Star, Zap, Mail, ArrowRight, TrendingUp, MapPin, Languages, CreditCard
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -11,7 +11,21 @@ export const metadata: Metadata = {
   description: 'Touchez la communauté des expatriés francophones en Espagne. Formats display, annonces sponsorisées, fiche professionnelle — solutions sur mesure pour les pros.',
 }
 
-const FORMATS = [
+type Format = {
+  id: string
+  name: string
+  icon: React.ReactNode
+  color: string
+  iconColor: string
+  positions: string
+  size: string
+  visibility: string
+  slots: number
+  desc: string
+  visual?: React.ReactNode
+}
+
+const FORMATS: Format[] = [
   {
     id: 'skyscraper',
     name: 'Colonne latérale',
@@ -46,7 +60,30 @@ const FORMATS = [
     size: '2 cartes côte à côte — full width',
     visibility: 'Haute — contexte de navigation active des acheteurs',
     slots: 2,
-    desc: 'Deux fiches pros intégrées naturellement dans la liste des annonces. Idéal pour capter l\'attention des acheteurs en pleine phase de recherche.',
+    desc: 'Deux fiches pros s\'insèrent naturellement entre les annonces des particuliers. Le visiteur les voit en pleine phase de recherche.',
+    visual: (
+      <div className="mt-3 mb-1 rounded-xl border border-gray-100 bg-gray-50 p-3 text-xs">
+        <p className="text-gray-400 mb-2 font-medium">Exemple — grille des annonces :</p>
+        <div className="grid grid-cols-2 gap-1.5 mb-1.5">
+          <div className="bg-white border border-gray-200 rounded-lg h-10 flex items-center justify-center text-gray-300 text-[10px]">Annonce</div>
+          <div className="bg-white border border-gray-200 rounded-lg h-10 flex items-center justify-center text-gray-300 text-[10px]">Annonce</div>
+          <div className="bg-white border border-gray-200 rounded-lg h-10 flex items-center justify-center text-gray-300 text-[10px]">Annonce</div>
+          <div className="bg-white border border-gray-200 rounded-lg h-10 flex items-center justify-center text-gray-300 text-[10px]">Annonce</div>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5 mb-1.5">
+          <div className="bg-orange-soft border-2 border-orange-primary rounded-lg h-12 flex items-center justify-center gap-1">
+            <span className="text-orange-primary text-[10px] font-black">⭐ VOTRE FICHE</span>
+          </div>
+          <div className="bg-orange-soft border-2 border-orange-primary rounded-lg h-12 flex items-center justify-center gap-1">
+            <span className="text-orange-primary text-[10px] font-black">⭐ VOTRE FICHE</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          <div className="bg-white border border-gray-200 rounded-lg h-10 flex items-center justify-center text-gray-300 text-[10px]">Annonce</div>
+          <div className="bg-white border border-gray-200 rounded-lg h-10 flex items-center justify-center text-gray-300 text-[10px]">Annonce</div>
+        </div>
+      </div>
+    ),
   },
   {
     id: 'rectangle',
@@ -64,30 +101,11 @@ const FORMATS = [
 
 const TIERS = [
   {
-    name: 'Standard',
-    price: 'Gratuit',
-    period: '',
-    color: 'border-gray-200',
-    badge: '',
-    badgeColor: '',
-    features: [
-      { ok: true,  label: 'Fiche professionnelle visible' },
-      { ok: true,  label: 'Page dédiée sur /professionnels' },
-      { ok: true,  label: 'Lien vers votre site web' },
-      { ok: false, label: 'Affichage dans les encarts pub' },
-      { ok: false, label: 'Badge "Sponsorisé"' },
-      { ok: false, label: 'Mise en avant prioritaire' },
-      { ok: false, label: 'Badge "Recommandé"' },
-      { ok: false, label: 'Statistiques de clics' },
-    ],
-    cta: 'Créer ma fiche gratuite',
-    ctaHref: '/inscription',
-    ctaStyle: 'bg-gray-100 hover:bg-gray-200 text-navy',
-  },
-  {
     name: 'Premium',
     price: '49 €',
     period: '/ mois',
+    annualPrice: '490 €',
+    annualNote: '2 mois offerts',
     color: 'border-orange-primary',
     badge: 'Populaire',
     badgeColor: 'bg-orange-primary text-white',
@@ -109,6 +127,8 @@ const TIERS = [
     name: 'Premium+',
     price: '99 €',
     period: '/ mois',
+    annualPrice: '990 €',
+    annualNote: '2 mois offerts',
     color: 'border-indigo-primary',
     badge: 'Meilleure visibilité',
     badgeColor: 'bg-indigo-primary text-white',
@@ -129,10 +149,10 @@ const TIERS = [
 ]
 
 const STATS = [
-  { value: '5 000+', label: 'Visiteurs/mois', icon: <Users size={20} />, color: 'text-orange-primary' },
-  { value: '5 pays', label: 'Langues couvertes', icon: <Languages size={20} />, color: 'text-indigo-primary' },
+  { value: 'Croissante', label: 'Audience qualifiée', icon: <Users size={20} />, color: 'text-orange-primary' },
+  { value: '7 langues', label: 'Langues couvertes', icon: <Languages size={20} />, color: 'text-indigo-primary' },
   { value: 'Valencia', label: 'Communauté locale', icon: <MapPin size={20} />, color: 'text-emerald-600' },
-  { value: '100%', label: 'Audience expat ciblée', icon: <Target size={20} />, color: 'text-purple-600' },
+  { value: 'Multi-origines', label: 'Communauté internationale', icon: <Target size={20} />, color: 'text-purple-600' },
 ]
 
 const CATEGORIES = [
@@ -151,7 +171,7 @@ const CATEGORIES = [
 const FAQ = [
   {
     q: 'Qui voit mes publicités ?',
-    a: 'Exclusivement la communauté Vendo : expatriés et francophones installés en Espagne, principalement en Comunitat Valenciana. Une audience qualifiée qui cherche activement des services locaux.'
+    a: 'La communauté Vendo : expatriés de toutes nationalités installés en Espagne, principalement en Comunitat Valenciana. Une audience qualifiée qui cherche activement des services locaux.'
   },
   {
     q: 'Comment fonctionne le système d\'affichage ?',
@@ -163,11 +183,15 @@ const FAQ = [
   },
   {
     q: 'Comment activer mon abonnement Premium ?',
-    a: 'Créez d\'abord votre fiche gratuite depuis /inscription, puis contactez-nous via le formulaire. Nous activons votre tier Premium manuellement après confirmation.'
+    a: 'Créez d\'abord votre fiche depuis /inscription, puis contactez-nous via le formulaire. Nous activons votre tier Premium manuellement après confirmation du paiement.'
+  },
+  {
+    q: 'Comment se passe le paiement ?',
+    a: 'Le paiement s\'effectue en ligne via Stripe, la référence mondiale du paiement sécurisé. Vous choisissez entre la formule mensuelle (sans engagement) ou annuelle (2 mois offerts). Votre abonnement est géré directement depuis votre espace, sans intermédiaire.'
   },
   {
     q: 'Y a-t-il un engagement de durée ?',
-    a: 'Non. Les abonnements Premium et Premium+ sont mensuels, sans engagement. Vous pouvez annuler à tout moment depuis votre espace ou en nous contactant.'
+    a: 'Non. Les abonnements Premium et Premium+ sont mensuels, sans engagement. L\'option annuelle offre 2 mois gratuits pour les pros qui s\'engagent sur 12 mois. Annulation possible à tout moment.'
   },
   {
     q: 'Quand serai-je visible après mon activation ?',
@@ -190,7 +214,7 @@ export default function PublicitePage() {
             Touchez les expatriés<br />là où ils cherchent
           </h1>
           <p className="text-white/70 text-base sm:text-lg max-w-xl mb-8">
-            Vendo est la plateforme de référence pour la communauté francophone en Espagne. Affichez votre activité devant une audience ultra-ciblée.
+            Vendo est la plateforme de référence pour la communauté internationale des expatriés en Espagne. Affichez votre activité devant une audience qualifiée et en pleine croissance.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link href="/contact" className="inline-flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white font-black px-6 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-primary/30">
@@ -234,12 +258,12 @@ export default function PublicitePage() {
               {
                 icon: <Target size={22} className="text-orange-primary" />,
                 title: 'Audience ultra-ciblée',
-                desc: '100 % expatriés en Espagne. Pas de trafic générique — uniquement des personnes qui vivent ou s\'installent en Espagne et ont besoin de services locaux.',
+                desc: 'Expatriés de toutes nationalités en Espagne — pas de trafic générique. Uniquement des personnes qui vivent ou s\'installent en Espagne et cherchent des services locaux.',
               },
               {
                 icon: <Globe size={22} className="text-indigo-primary" />,
                 title: 'Multilingue',
-                desc: 'Français, anglais, espagnol, allemand, néerlandais. Notre audience internationale cherche des pros capables de les servir dans leur langue.',
+                desc: 'Français, anglais, espagnol, allemand, néerlandais, russe, ukrainien. Notre audience internationale cherche des pros capables de les servir dans leur langue.',
               },
               {
                 icon: <TrendingUp size={22} className="text-emerald-600" />,
@@ -294,8 +318,9 @@ export default function PublicitePage() {
                     <p className="text-xs text-gray-400">{f.size}</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">{f.desc}</p>
-                <div className="space-y-2 text-xs">
+                <p className="text-sm text-gray-600 leading-relaxed mb-2">{f.desc}</p>
+                {f.visual}
+                <div className="space-y-2 text-xs mt-4">
                   <div className="flex gap-2 items-start">
                     <span className="text-gray-400 font-medium w-20 shrink-0">Position</span>
                     <span className="text-gray-600">{f.positions}</span>
@@ -324,10 +349,26 @@ export default function PublicitePage() {
           <div className="grid sm:grid-cols-4 gap-6 relative">
             <div className="hidden sm:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-orange-primary/20 via-orange-primary to-orange-primary/20" />
             {[
-              { n: '1', title: 'Créez votre compte', desc: 'Inscrivez-vous sur Vendo gratuitement — moins de 2 minutes.' },
-              { n: '2', title: 'Complétez votre fiche', desc: 'Logo, description, coordonnées, zones d\'intervention.' },
-              { n: '3', title: 'Choisissez votre offre', desc: 'Standard (gratuit), Premium ou Premium+. Contactez-nous.' },
-              { n: '4', title: 'Soyez visible', desc: 'Votre fiche apparaît dans les encarts dès activation — sans délai.' },
+              {
+                n: '1',
+                title: 'Créez votre compte',
+                desc: 'Inscrivez-vous sur Vendo gratuitement — nom, email, mot de passe. Moins de 2 minutes.'
+              },
+              {
+                n: '2',
+                title: 'Complétez votre fiche',
+                desc: 'Renseignez votre logo, description, coordonnées et zones d\'intervention directement depuis votre espace.'
+              },
+              {
+                n: '3',
+                title: 'Choisissez votre offre',
+                desc: 'Premium (49 €/mois) ou Premium+ (99 €/mois). Formule annuelle disponible avec 2 mois offerts. Contactez-nous pour activer.'
+              },
+              {
+                n: '4',
+                title: 'Soyez visible',
+                desc: 'Votre fiche apparaît dans les encarts dès activation — généralement sous 24h ouvrées.'
+              },
             ].map(step => (
               <div key={step.n} className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 rounded-full bg-orange-primary flex items-center justify-center mb-4 shadow-lg shadow-orange-primary/25 z-10">
@@ -345,9 +386,9 @@ export default function PublicitePage() {
           <div className="text-center mb-8">
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Tarifs</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Des offres simples et transparentes</h2>
-            <p className="text-gray-500 text-sm">Sans engagement. Annulez à tout moment.</p>
+            <p className="text-gray-500 text-sm">Sans engagement mensuel — ou 2 mois offerts en formule annuelle.</p>
           </div>
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {TIERS.map(tier => (
               <div key={tier.name} className={`bg-white rounded-2xl border-2 ${tier.color} p-6 flex flex-col relative`}>
                 {tier.badge && (
@@ -361,6 +402,9 @@ export default function PublicitePage() {
                     <span className="text-3xl font-black text-navy">{tier.price}</span>
                     <span className="text-sm text-gray-400 mb-1">{tier.period}</span>
                   </div>
+                  <p className="text-xs text-emerald-600 font-semibold mt-1">
+                    ou {tier.annualPrice}/an — {tier.annualNote}
+                  </p>
                 </div>
                 <ul className="space-y-2.5 flex-1 mb-6">
                   {tier.features.map(f => (
@@ -379,9 +423,12 @@ export default function PublicitePage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400 mt-4">
-            Les prix sont indicatifs. Contactez-nous pour un devis personnalisé ou un tarif annuel.
-          </p>
+          <div className="flex items-center justify-center gap-2 mt-5">
+            <CreditCard size={14} className="text-gray-400" />
+            <p className="text-center text-xs text-gray-400">
+              Paiement sécurisé par carte via Stripe. Contactez-nous pour un devis personnalisé.
+            </p>
+          </div>
         </section>
 
         {/* Avantages clés */}
@@ -391,7 +438,7 @@ export default function PublicitePage() {
               icon: <Zap size={20} className="text-orange-primary" />,
               bg: 'bg-orange-soft',
               title: 'Activation rapide',
-              desc: 'Votre fiche est créée en moins de 5 minutes. Après confirmation de votre abonnement, vous êtes visible dans les encarts sous 24h.',
+              desc: 'Votre fiche est créée avec vous en moins de 24h. Après confirmation de votre abonnement, vous êtes visible dans les encarts sans délai.',
             },
             {
               icon: <BarChart3 size={20} className="text-indigo-primary" />,
@@ -409,7 +456,7 @@ export default function PublicitePage() {
               icon: <Globe size={20} className="text-emerald-600" />,
               bg: 'bg-emerald-50',
               title: 'Portée internationale',
-              desc: 'Vendo est disponible en 5 langues. Votre fiche est visible par tous les expatriés, quelle que soit leur langue.',
+              desc: 'Vendo est disponible en 7 langues. Votre fiche est visible par tous les expatriés, quelle que soit leur nationalité.',
             },
           ].map(item => (
             <div key={item.title} className="bg-white border border-gray-100 rounded-2xl p-6 flex gap-4">
@@ -448,7 +495,7 @@ export default function PublicitePage() {
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Prêt ?</p>
           <h2 className="text-2xl sm:text-3xl font-black text-white mb-4">Devenez visible dès aujourd&apos;hui</h2>
           <p className="text-white/60 text-sm max-w-lg mx-auto mb-8">
-            Rejoignez les professionnels qui font confiance à Vendo pour toucher la communauté des expatriés en Espagne.
+            Rejoignez les professionnels qui font confiance à Vendo pour toucher la communauté internationale des expatriés en Espagne.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

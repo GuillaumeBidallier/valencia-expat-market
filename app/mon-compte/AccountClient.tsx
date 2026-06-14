@@ -22,7 +22,14 @@ type FavoriteItem = {
 }
 type UserInfo = { id: string; name: string; email: string; createdAt: string; role: string }
 type Tab = 'listings' | 'favorites' | 'profile'
-type ProProfile = { slug: string; name: string } | null
+type ProProfile = {
+  slug: string
+  name: string
+  tier: string
+  subscriptionStatus: string | null
+  subscriptionPeriod: string | null
+  subscriptionCurrentPeriodEnd: string | null
+} | null
 type Props = { user: UserInfo; initialListings: ListingItem[]; initialFavorites: FavoriteItem[]; proProfile?: ProProfile }
 
 /* ── Constants ──────────────────────────────────────────── */
@@ -398,7 +405,12 @@ export default function AccountClient({ user, initialListings, initialFavorites,
             {/* Account info */}
             <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
               {[
-                ['Statut', <span key="s" className="text-xs font-bold bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full">Gratuit</span>],
+                ['Statut', proProfile?.tier === 'PREMIUM_PLUS'
+                  ? <span key="s" className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full">Premium+</span>
+                  : proProfile?.tier === 'PREMIUM'
+                    ? <span key="s" className="text-xs font-bold bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full">Premium</span>
+                    : <span key="s" className="text-xs font-bold bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full">Gratuit</span>
+                ],
                 ['Membre depuis', <span key="m" className="text-sm font-semibold text-navy">{memberSince}</span>],
                 ['Rôle', <span key="r" className="text-sm font-semibold text-navy capitalize">{user.role.toLowerCase()}</span>],
               ].map(([label, val]) => (

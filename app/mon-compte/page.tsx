@@ -30,14 +30,28 @@ export default async function MonComptePage() {
       },
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.professional.findUnique({ where: { userId }, select: { slug: true, name: true } }),
+    prisma.professional.findUnique({
+      where: { userId },
+      select: {
+        slug: true, name: true, tier: true,
+        subscriptionStatus: true, subscriptionPeriod: true,
+        subscriptionCurrentPeriodEnd: true,
+      },
+    }),
   ])
 
   if (!dbUser) redirect('/connexion')
 
   return (
     <AccountClient
-      proProfile={pro ? { slug: pro.slug, name: pro.name } : null}
+      proProfile={pro ? {
+        slug: pro.slug,
+        name: pro.name,
+        tier: pro.tier,
+        subscriptionStatus: pro.subscriptionStatus,
+        subscriptionPeriod: pro.subscriptionPeriod,
+        subscriptionCurrentPeriodEnd: pro.subscriptionCurrentPeriodEnd?.toISOString() ?? null,
+      } : null}
       user={{
         id: dbUser.id,
         name: dbUser.name,
