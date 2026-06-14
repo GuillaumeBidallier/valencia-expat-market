@@ -1,5 +1,6 @@
 'use client'
 import { createContext, useContext, useState, type ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
 import { NextIntlClientProvider } from 'next-intl'
 import type { AbstractIntlMessages } from 'next-intl'
 
@@ -32,11 +33,14 @@ export function LocaleProvider({
   children: ReactNode
 }) {
   const [locale, setLocaleState] = useState<SupportedLocale>(initialLocale)
+  const router = useRouter()
 
   const setLocale = (next: SupportedLocale) => {
     setLocaleState(next)
     document.cookie = `vem_lang=${next}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
     localStorage.setItem('vem_lang', next)
+    // Refresh server components so data (blog articles, etc.) re-fetches with the new locale
+    router.refresh()
   }
 
   return (
