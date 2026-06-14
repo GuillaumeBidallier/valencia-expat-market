@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import { preload } from 'react-dom'
 import HomeContent from '@/components/home/HomeContent'
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 
 export default async function HomePage() {
+  preload('/valencia-hero.jpg', { as: 'image', fetchPriority: 'high' })
   const session = await auth()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let featured: any[] = []
