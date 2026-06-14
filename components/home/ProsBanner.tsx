@@ -41,7 +41,7 @@ export default function ProsBanner({ pros }: { pros: ProWithReco[] }) {
               {/* Visuel */}
               <div className="relative h-28 bg-gray-100 overflow-hidden rounded-t-xl">
                 {pro.logo ? (
-                  <Image src={pro.logo} alt={pro.name} fill className="object-cover" unoptimized />
+                  <Image src={pro.logo} alt={pro.name} fill className="object-cover" sizes="(max-width: 640px) 50vw, 25vw" />
                 ) : (
                   <div className={`w-full h-full flex items-center justify-center text-4xl ${
                     isPlus ? 'bg-gradient-to-br from-orange-50 to-orange-100' : 'bg-gradient-to-br from-indigo-50 to-indigo-100'

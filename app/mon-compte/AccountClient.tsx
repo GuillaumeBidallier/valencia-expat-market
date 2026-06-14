@@ -160,7 +160,7 @@ export default function AccountClient({ user, initialListings, initialFavorites,
           {/* Thumb */}
           <Link href={`/annonces/${listing.id}`} className="relative w-[72px] h-[72px] rounded-xl overflow-hidden bg-gray-100 shrink-0">
             {listing.image
-              ? <Image src={listing.image} alt={listing.title} fill className="object-cover" unoptimized />
+              ? <Image src={listing.image} alt={listing.title} fill className="object-cover" sizes="72px" />
               : <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-300 text-xl">📷</div>}
           </Link>
 
@@ -251,7 +251,7 @@ export default function AccountClient({ user, initialListings, initialFavorites,
       <div className="flex gap-4 p-4">
         <Link href={`/annonces/${fav.listing.id}`} className="relative w-[72px] h-[72px] rounded-xl overflow-hidden bg-gray-100 shrink-0">
           {fav.listing.image
-            ? <Image src={fav.listing.image} alt={fav.listing.title} fill className="object-cover" unoptimized />
+            ? <Image src={fav.listing.image} alt={fav.listing.title} fill className="object-cover" sizes="72px" />
             : <div className="w-full h-full bg-gray-200" />}
         </Link>
         <div className="flex-1 min-w-0">

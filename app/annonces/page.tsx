@@ -1,5 +1,12 @@
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { prisma } from '@/lib/prisma'
+
+export const metadata: Metadata = {
+  title: 'Annonces',
+  description: 'Parcourez les petites annonces entre expatriés francophones en Espagne : meubles, électronique, voitures, services et plus.',
+  alternates: { canonical: '/annonces' },
+}
 import { auth } from '@/auth'
 import { Listing } from '@/types'
 import SearchBar from '@/components/listings/SearchBar'

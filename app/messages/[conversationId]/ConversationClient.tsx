@@ -74,7 +74,7 @@ export default function ConversationClient({ conversationId, listing, initialMes
       >
         <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0">
           {coverImage ? (
-            <Image src={coverImage} alt={listing.title} fill className="object-cover" unoptimized />
+            <Image src={coverImage} alt={listing.title} fill className="object-cover" sizes="48px" />
           ) : (
             <div className="w-full h-full bg-gray-200" />
           )}

@@ -1,5 +1,12 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { proCategories } from '@/lib/proCategories'
+
+export const metadata: Metadata = {
+  title: 'Professionnels',
+  description: 'Trouvez des professionnels francophones en Espagne : immobilier, juridique, comptabilité, déménagement, santé et plus.',
+  alternates: { canonical: '/professionnels' },
+}
 import AdUnit from '@/components/ads/AdUnit'
 import ProfessionnelsUI from './ProfessionnelsUI'
 import ProfessionnelsHeader from './ProfessionnelsHeader'

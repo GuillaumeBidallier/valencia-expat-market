@@ -44,7 +44,7 @@ export default function MessagesListUI({ conversations }: Props) {
               >
                 <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-gray-100 shrink-0">
                   {conv.listing.images[0]
-                    ? <Image src={conv.listing.images[0].url} alt="" fill className="object-cover" unoptimized />
+                    ? <Image src={conv.listing.images[0].url} alt={conv.listing.title} fill className="object-cover" sizes="44px" />
                     : <div className="w-full h-full bg-gray-200" />}
                 </div>
                 <div className="flex-1 min-w-0">

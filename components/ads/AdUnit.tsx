@@ -85,7 +85,7 @@ function ProCard({ pro, compact = false }: { pro: ProAd; compact?: boolean }) {
       {/* Visual */}
       <div className="h-24 flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 relative overflow-hidden">
         {pro.logo
-          ? <img src={pro.logo} alt={pro.name} className="w-full h-full object-cover" />
+          ? <img src={pro.logo} alt={pro.name} className="w-full h-full object-cover" loading="lazy" />
           : <span className="text-4xl">{icon}</span>
         }
         <span className={`absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded ${
@@ -202,7 +202,7 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
             className="flex items-center gap-4 px-4 py-2.5 hover:bg-orange-50 transition-colors"
           >
             <div className="w-8 h-8 rounded flex items-center justify-center shrink-0 text-lg bg-orange-50">
-              {pro.logo ? <img src={pro.logo} alt="" className="w-full h-full object-cover rounded" /> : '💼'}
+              {pro.logo ? <img src={pro.logo} alt={pro.name} className="w-full h-full object-cover rounded" loading="lazy" /> : '💼'}
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-navy text-sm">{pro.name}</p>
@@ -284,7 +284,7 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
                 onClick={() => trackClick(pro.id)}
                 className="flex items-center gap-3 p-3 hover:bg-orange-50 transition-colors">
                 <div className="w-8 h-8 rounded flex items-center justify-center shrink-0 bg-orange-50 text-lg overflow-hidden">
-                  {pro.logo ? <img src={pro.logo} alt="" className="w-full h-full object-cover" /> : '💼'}
+                  {pro.logo ? <img src={pro.logo} alt={pro.name} className="w-full h-full object-cover" loading="lazy" /> : '💼'}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-navy text-xs leading-tight">{pro.name}</p>

@@ -27,7 +27,7 @@ export default function ProCard({ pro }: { pro: Professional }) {
       {/* Visuel */}
       <div className="relative h-32 bg-gray-100 overflow-hidden rounded-t-xl">
         {isPremium && pro.logo ? (
-          <Image src={pro.logo} alt={pro.name} fill className="object-cover" unoptimized />
+          <Image src={pro.logo} alt={pro.name} fill className="object-cover" sizes="(max-width: 640px) 100vw, 320px" />
         ) : (
           <div className={`w-full h-full flex items-center justify-center text-4xl ${
             isPlus ? 'bg-gradient-to-br from-orange-50 to-orange-100' :

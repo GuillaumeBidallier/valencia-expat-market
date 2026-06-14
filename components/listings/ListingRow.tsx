@@ -37,7 +37,7 @@ export default function ListingRow({ listing, distanceKm, isFavorited }: { listi
           alt={listing.title}
           fill
           className="object-cover"
-          unoptimized
+          sizes="(max-width: 640px) 112px, (max-width: 768px) 176px, 224px"
         />
       </div>
 

@@ -1,6 +1,13 @@
 export const dynamic = 'force-dynamic'
 
+import type { Metadata } from 'next'
 import HomeContent from '@/components/home/HomeContent'
+
+export const metadata: Metadata = {
+  title: 'Vendo — Petites annonces entre expatriés en Espagne',
+  description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne. La marketplace des expatriés francophones.',
+  alternates: { canonical: '/' },
+}
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 

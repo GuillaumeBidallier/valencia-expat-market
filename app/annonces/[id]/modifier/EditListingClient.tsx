@@ -201,7 +201,7 @@ export default function EditListingClient({ listing }: Props) {
               const removed = removedIds.has(img.id)
               return (
                 <div key={img.id} className={`relative aspect-square rounded-xl overflow-hidden bg-gray-100 transition-opacity ${removed ? 'opacity-30' : ''}`}>
-                  <Image src={img.url} alt="" fill className="object-cover" unoptimized />
+                  <Image src={img.url} alt="" fill className="object-cover" sizes="25vw" />
                   {!removed ? (
                     <button type="button" onClick={() => removeExisting(img.id)} className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center hover:bg-red-500 transition-colors">
                       <X size={10} className="text-white" />

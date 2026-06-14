@@ -173,7 +173,7 @@ export default function MessagesClient({ conversationId, conversations, listing,
               >
                 <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-gray-100 shrink-0">
                   {conv.listing.images[0]
-                    ? <Image src={conv.listing.images[0].url} alt="" fill className="object-cover" unoptimized />
+                    ? <Image src={conv.listing.images[0].url} alt={conv.listing.title} fill className="object-cover" sizes="44px" />
                     : <div className="w-full h-full bg-gray-200" />}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -208,7 +208,7 @@ export default function MessagesClient({ conversationId, conversations, listing,
           </Link>
           {cover && (
             <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-              <Image src={cover} alt="" fill className="object-cover" unoptimized />
+              <Image src={cover} alt={listing.title} fill className="object-cover" sizes="36px" />
             </div>
           )}
           <div className="flex-1 min-w-0">
@@ -321,7 +321,7 @@ export default function MessagesClient({ conversationId, conversations, listing,
         <div className="p-5">
           <Link href={`/annonces/${listing.id}`}>
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 mb-4">
-              {cover && <Image src={cover} alt={listing.title} fill className="object-cover" unoptimized />}
+              {cover && <Image src={cover} alt={listing.title} fill className="object-cover" sizes="288px" />}
             </div>
             <p className="font-semibold text-navy text-sm mb-1 leading-snug">{listing.title}</p>
             <p className="text-xl font-extrabold text-navy mb-4">{priceLabel}</p>
