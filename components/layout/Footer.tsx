@@ -41,7 +41,7 @@ export default function Footer() {
                 { label: t('nav_home'),       href: '/' },
                 { label: t('nav_categories'), href: '/annonces' },
                 { label: t('nav_how'),        href: '/#comment-ca-marche' },
-                { label: t('nav_ads'),        href: '/annonces' },
+                { label: t('nav_ads'),        href: '/publicite' },
                 { label: t('nav_blog'),       href: '/blog' },
                 { label: t('nav_contact'),    href: '/contact' },
               ].map(({ label, href }) => (
