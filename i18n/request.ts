@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server'
 import { cookies } from 'next/headers'
 
-const SUPPORTED = ['fr', 'en', 'es', 'de', 'nl']
+const SUPPORTED = ['fr', 'en', 'es', 'de', 'nl', 'uk', 'ru']
 const DEFAULT = 'fr'
 
 export default getRequestConfig(async () => {

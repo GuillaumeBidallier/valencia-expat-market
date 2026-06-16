@@ -9,8 +9,10 @@ import enMessages from '@/messages/en.json'
 import esMessages from '@/messages/es.json'
 import deMessages from '@/messages/de.json'
 import nlMessages from '@/messages/nl.json'
+import ukMessages from '@/messages/uk.json'
+import ruMessages from '@/messages/ru.json'
 
-export type SupportedLocale = 'fr' | 'en' | 'es' | 'de' | 'nl'
+export type SupportedLocale = 'fr' | 'en' | 'es' | 'de' | 'nl' | 'uk' | 'ru'
 
 const allMessages: Record<SupportedLocale, AbstractIntlMessages> = {
   fr: frMessages,
@@ -18,6 +20,8 @@ const allMessages: Record<SupportedLocale, AbstractIntlMessages> = {
   es: esMessages,
   de: deMessages,
   nl: nlMessages,
+  uk: ukMessages,
+  ru: ruMessages,
 }
 
 const LocaleContext = createContext<{

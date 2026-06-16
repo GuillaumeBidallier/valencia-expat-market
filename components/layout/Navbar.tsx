@@ -15,6 +15,8 @@ const LANGUAGES = [
   { code: 'es', label: 'Español',   flag: '🇪🇸' },
   { code: 'de', label: 'Deutsch',   flag: '🇩🇪' },
   { code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+  { code: 'uk', label: 'Українська', flag: '🇺🇦' },
+  { code: 'ru', label: 'Русский',    flag: '🇷🇺' },
 ]
 
 function LanguagePicker({ transparent }: { transparent: boolean }) {
