@@ -107,6 +107,7 @@ model Professional {
   featured    Boolean  @default(false)
   recommended Boolean  @default(false)
   zones       String[]
+  phoneHidden Boolean  @default(false)
   userId      String?  @unique
   user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   stripeCustomerId             String?

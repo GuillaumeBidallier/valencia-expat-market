@@ -332,6 +332,7 @@
     "f_description": "Beschrijving",
     "f_city": "Hoofdstad",
     "f_phone": "Telefoon",
+    "f_phone_hidden": "Telefoonnummer verbergen op mijn profiel",
     "f_whatsapp": "WhatsApp",
     "f_website": "Website",
     "f_zones": "Werkgebieden",

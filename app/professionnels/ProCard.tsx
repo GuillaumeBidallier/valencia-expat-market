@@ -82,7 +82,7 @@ export default function ProCard({ pro }: { pro: Professional }) {
         </div>
 
         <div className="flex gap-1.5 flex-wrap">
-          {pro.phone && (
+          {pro.phone && !pro.phoneHidden && (
             <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-lg">
               <Phone size={9} /> {t('tel')}
             </span>

@@ -20,7 +20,7 @@ export async function PATCH(req: NextRequest) {
   if (!pro) return NextResponse.json({ error: 'No professional profile linked' }, { status: 404 })
 
   const body = await req.json()
-  const allowed = ['name', 'description', 'phone', 'whatsapp', 'website', 'city', 'zones', 'logo', 'banner', 'photos'] as const
+  const allowed = ['name', 'description', 'phone', 'whatsapp', 'website', 'city', 'zones', 'logo', 'banner', 'photos', 'phoneHidden'] as const
   const data: Record<string, unknown> = {}
   for (const key of allowed) {
     if (key in body) data[key] = body[key]

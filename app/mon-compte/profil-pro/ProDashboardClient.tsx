@@ -145,6 +145,7 @@ export default function ProDashboardClient({ pro: initial }: Props) {
     city: initial.city,
     zones: initial.zones.join(', '),
   })
+  const [phoneHidden, setPhoneHidden] = useState(initial.phoneHidden)
   const [uploading, setUploading] = useState<'logo' | 'banner' | 'photo' | null>(null)
   const [removingPhoto, setRemovingPhoto] = useState<string | null>(null)
   const logoRef = useRef<HTMLInputElement>(null)
@@ -186,7 +187,7 @@ export default function ProDashboardClient({ pro: initial }: Props) {
     await fetch('/api/pro/profile', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, zones }),
+      body: JSON.stringify({ ...form, zones, phoneHidden }),
     })
     setSaving(false)
     setSaved(true)
@@ -308,6 +309,20 @@ export default function ProDashboardClient({ pro: initial }: Props) {
                   placeholder="+34 6xx xxx xxx"
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-primary"
                 />
+                <button
+                  type="button"
+                  onClick={() => setPhoneHidden(v => !v)}
+                  className="mt-2 flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700"
+                >
+                  <span
+                    className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${phoneHidden ? 'bg-navy' : 'bg-gray-200'}`}
+                    role="switch"
+                    aria-checked={phoneHidden}
+                  >
+                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${phoneHidden ? 'translate-x-4' : 'translate-x-1'}`} />
+                  </span>
+                  {t('f_phone_hidden')}
+                </button>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-1" htmlFor="pro-wa">{t('f_whatsapp')}</label>

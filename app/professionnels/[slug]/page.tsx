@@ -245,7 +245,7 @@ export default async function ProDetailPage({ params }: Props) {
 
             {/* Quick contact buttons — desktop only */}
             <div className="hidden sm:flex items-center gap-2 pb-4">
-              {pro.phone && (
+              {pro.phone && !pro.phoneHidden && (
                 <a
                   href={`tel:${pro.phone}`}
                   className="inline-flex items-center gap-2 bg-navy text-white text-sm font-bold px-4 py-2.5 rounded-xl hover:bg-navy/90 transition-colors"
@@ -354,7 +354,7 @@ export default async function ProDetailPage({ params }: Props) {
             <p className="text-white text-2xl font-black">{pro.name}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            {pro.phone && (
+            {pro.phone && !pro.phoneHidden && (
               <a
                 href={`tel:${pro.phone}`}
                 className="inline-flex items-center gap-2 bg-white text-navy font-bold text-sm px-5 py-3 rounded-xl hover:bg-gray-100 transition-colors"
@@ -403,7 +403,7 @@ type ContactCardStrings = {
 }
 
 type ContactCardProps = {
-  pro: { name: string; phone: string | null; whatsapp: string | null; website: string | null; verified: boolean }
+  pro: { name: string; phone: string | null; phoneHidden: boolean; whatsapp: string | null; website: string | null; verified: boolean }
   isPremium: boolean
   waLink: string | null
   accentFrom: string
@@ -430,7 +430,7 @@ function ContactCard({ pro, isPremium, waLink, accentFrom, accentTo, strings }: 
 
       {/* CTAs */}
       <div className="bg-white p-4 flex flex-col gap-2.5">
-        {pro.phone && (
+        {pro.phone && !pro.phoneHidden && (
           <a
             href={`tel:${pro.phone}`}
             className="flex items-center justify-center gap-2 bg-navy text-white font-bold text-sm py-3.5 rounded-xl hover:bg-navy/90 transition-colors"

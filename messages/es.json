@@ -332,6 +332,7 @@
     "f_description": "Descripción",
     "f_city": "Ciudad principal",
     "f_phone": "Teléfono",
+    "f_phone_hidden": "Ocultar el número en mi perfil",
     "f_whatsapp": "WhatsApp",
     "f_website": "Sitio web",
     "f_zones": "Zonas de actuación",

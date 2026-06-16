@@ -332,6 +332,7 @@
     "f_description": "Description",
     "f_city": "Ville principale",
     "f_phone": "Téléphone",
+    "f_phone_hidden": "Masquer le numéro sur ma vitrine",
     "f_whatsapp": "WhatsApp",
     "f_website": "Site web",
     "f_zones": "Zones d'intervention",

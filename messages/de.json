@@ -332,6 +332,7 @@
     "f_description": "Beschreibung",
     "f_city": "Hauptstadt",
     "f_phone": "Telefon",
+    "f_phone_hidden": "Telefonnummer im Profil verbergen",
     "f_whatsapp": "WhatsApp",
     "f_website": "Website",
     "f_zones": "Einsatzbereiche",
