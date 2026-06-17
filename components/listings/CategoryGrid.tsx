@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { categories } from '@/lib/categories'
+import { getCategoriesServer } from '@/lib/categories'
 
-export default function CategoryGrid() {
+export default async function CategoryGrid() {
+  const categories = await getCategoriesServer()
   const displayed = categories.slice(0, 7)
   return (
     <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">

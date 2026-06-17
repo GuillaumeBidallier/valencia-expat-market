@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Search, MapPin, ChevronDown } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { categories } from '@/lib/categories'
+import { useCategories } from '@/hooks/useCategories'
 import GeoModal, { GeoState } from './GeoModal'
 
 interface Suggestion { id: string; title: string }
@@ -17,6 +17,7 @@ interface Props {
 export default function SearchBar({ defaultQuery = '', defaultCategory = '', defaultGeo = null }: Props) {
   const t = useTranslations('Search')
   const router = useRouter()
+  const categories = useCategories()
   const [query, setQuery] = useState(defaultQuery)
   const [category, setCategory] = useState(defaultCategory)
   const [geoModalOpen, setGeoModalOpen] = useState(false)

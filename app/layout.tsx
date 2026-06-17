@@ -42,6 +42,9 @@ export const metadata: Metadata = {
     images: ['/valencia-hero.jpg'],
   },
   robots: { index: true, follow: true },
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
+    verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION },
+  }),
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

@@ -5,7 +5,7 @@ import {
   AlertTriangle, Eye, Calendar, ChevronDown, ChevronUp,
 } from 'lucide-react'
 import Link from 'next/link'
-import { categories } from '@/lib/categories'
+import { useCategories } from '@/hooks/useCategories'
 
 interface ListingRow {
   id: string
@@ -48,6 +48,7 @@ export default function AdminParefeuClient({
   blockedThisMonth: number
   byCategory: { category: string; count: number }[]
 }) {
+  const categories = useCategories()
   const [listings, setListings]     = useState<ListingRow[]>(initialListings)
   const [loadingId, setLoadingId]   = useState<string | null>(null)
   const [expanded, setExpanded]     = useState<string | null>(null)

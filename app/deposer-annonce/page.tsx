@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ImagePlus, X, Lock, Sparkles, CheckCircle2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useListings } from '@/context/ListingsContext'
-import { categories } from '@/lib/categories'
+import { useCategories } from '@/hooks/useCategories'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import CityAutocomplete, { type CitySelection } from '@/components/listings/CityAutocomplete'
@@ -22,6 +22,7 @@ function DeposerAnnonceForm() {
   const { addListing } = useListings()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const t = useTranslations('PostAd')
+  const categories = useCategories()
 
   const isAdmin   = user?.role === 'ADMIN'
   const isPremium = user?.role === 'PREMIUM' || isAdmin

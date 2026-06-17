@@ -5,7 +5,7 @@ import {
   ShieldOff, ShieldCheck, Trash2, AlertTriangle, Search,
 } from 'lucide-react'
 import Link from 'next/link'
-import { categories } from '@/lib/categories'
+import { useCategories } from '@/hooks/useCategories'
 
 interface ReportRow {
   reason: string
@@ -43,6 +43,7 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 export default function AdminSignalementsClient({ initialListings }: { initialListings: ListingRow[] }) {
+  const categories = useCategories()
   const [listings, setListings]   = useState<ListingRow[]>(initialListings)
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [q, setQ]                 = useState('')

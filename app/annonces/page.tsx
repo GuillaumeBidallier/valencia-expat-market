@@ -14,7 +14,7 @@ import type { GeoState } from '@/components/listings/GeoModal'
 import AnnoncesFilters from './AnnoncesFilters'
 import AdUnit from '@/components/ads/AdUnit'
 import AnnoncesUI from '@/components/annonces/AnnoncesUI'
-import { categories } from '@/lib/categories'
+import { getCategoriesServer } from '@/lib/categories'
 import { haversineKm, boundingBox } from '@/lib/neighborhoods'
 
 const PER_PAGE = 20
@@ -140,6 +140,7 @@ async function AnnoncesContent({ searchParams }: Props) {
   const displayTotal = fetchAll ? listings.length : total
   const pages = Math.ceil((fetchAll ? listings.length : total) / PER_PAGE)
 
+  const categories = await getCategoriesServer()
   const activeCat = categories.find(c => c.slug === cat)
 
   return (

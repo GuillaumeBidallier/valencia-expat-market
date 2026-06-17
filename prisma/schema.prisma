@@ -70,6 +70,14 @@ model SiteSettings {
   autoPublish Boolean @default(true)
 }
 
+model RateLimitHit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+}
+
 model ListingImage {
   id        String  @id @default(cuid())
   listingId String
@@ -123,6 +131,16 @@ enum ProTier {
   FREE
   PREMIUM
   PREMIUM_PLUS
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  label     String
+  icon      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Report {

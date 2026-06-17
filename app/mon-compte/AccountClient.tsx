@@ -72,6 +72,8 @@ export default function AccountClient({ user, initialListings, initialFavorites,
   const [pwdError, setPwdError]               = useState('')
   const [pwdSaved, setPwdSaved]               = useState(false)
   const [savingPwd, setSavingPwd]             = useState(false)
+  const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false)
+  const [deletingAccount, setDeletingAccount] = useState(false)
 
   const activeCount  = listings.filter(l => l.status === 'ACTIVE').length
   const soldCount    = listings.filter(l => l.status === 'SOLD').length
@@ -138,6 +140,13 @@ export default function AccountClient({ user, initialListings, initialFavorites,
   }
 
   const handleLogout = () => { logout(); router.push('/') }
+
+  const handleDeleteAccount = async () => {
+    setDeletingAccount(true)
+    const res = await fetch('/api/account', { method: 'DELETE' })
+    if (res.ok) { logout(); router.push('/') }
+    else setDeletingAccount(false)
+  }
 
   /* Nav definition */
   const navItems: { key: Tab; icon: React.ElementType; label: string; count?: number }[] = [
@@ -440,6 +449,39 @@ export default function AccountClient({ user, initialListings, initialFavorites,
               <LogOut size={14} />
               Se déconnecter
             </button>
+
+            {/* Danger zone — account deletion (RGPD right to erasure) */}
+            <div className="bg-red-50/50 border border-red-100 rounded-2xl p-5">
+              <p className="text-sm font-bold text-red-600 mb-1">Supprimer mon compte</p>
+              <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+                Cette action supprime définitivement vos annonces, favoris et messages, résilie tout abonnement actif, et anonymise vos données personnelles. Cette action est irréversible.
+              </p>
+              {confirmDeleteAccount ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={deletingAccount}
+                    className="flex-1 bg-red-500 text-white text-xs font-bold py-2.5 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50"
+                  >
+                    {deletingAccount ? 'Suppression…' : 'Confirmer la suppression'}
+                  </button>
+                  <button
+                    onClick={() => setConfirmDeleteAccount(false)}
+                    disabled={deletingAccount}
+                    className="flex-1 bg-white border border-gray-200 text-gray-600 text-xs font-bold py-2.5 rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmDeleteAccount(true)}
+                  className="w-full text-red-500 border border-red-200 text-xs font-bold py-2.5 rounded-xl hover:bg-red-50 transition-colors"
+                >
+                  Supprimer définitivement mon compte
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

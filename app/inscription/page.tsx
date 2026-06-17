@@ -14,6 +14,8 @@ export default function InscriptionPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [website, setWebsite] = useState('')
+  const [loadedAt] = useState(() => Date.now())
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,9 +25,10 @@ export default function InscriptionPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),
+        body: JSON.stringify({ name: form.name, email: form.email, password: form.password, website, loadedAt }),
       })
       if (res.status === 409) { setError(t('err_taken')); return }
+      if (res.status === 429) { setError('Trop de tentatives, réessayez dans quelques minutes.'); return }
       if (!res.ok) { setError(t('err_generic')); return }
       await login(form.email, form.password)
       router.push('/')
@@ -55,6 +58,17 @@ export default function InscriptionPage() {
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Honeypot — hidden from real users via CSS, bots tend to fill every field */}
+          <input
+            type="text"
+            name="website"
+            value={website}
+            onChange={e => setWebsite(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="absolute left-[-9999px] w-px h-px opacity-0"
+          />
           <Input id="name" label={t('name')} type="text" placeholder="Marie Dupont" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
           <Input id="email" label={t('email')} type="email" placeholder="marie@exemple.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
           <Input id="password" label={t('password')} type="password" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />

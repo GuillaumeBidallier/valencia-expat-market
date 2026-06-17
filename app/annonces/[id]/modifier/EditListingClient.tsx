@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ImagePlus, X, ArrowLeft, Loader2 } from 'lucide-react'
-import { categories, neighborhoods } from '@/lib/categories'
+import { neighborhoods } from '@/lib/categories'
+import { useCategories } from '@/hooks/useCategories'
 
 const MAX_IMAGES = 5
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
@@ -24,6 +25,7 @@ type Props = {
 export default function EditListingClient({ listing }: Props) {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
+  const categories = useCategories()
 
   const [form, setForm] = useState({
     title:        listing.title,

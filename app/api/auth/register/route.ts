@@ -3,11 +3,14 @@ import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { sendWelcomeEmail } from '@/lib/email'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 const schema = z.object({
   name: z.string().min(2).max(60),
   email: z.string().email(),
   password: z.string().min(8).max(100),
+  website: z.string().optional(),
+  loadedAt: z.number().optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -16,6 +19,18 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: 'Données invalides', details: parsed.error.flatten() }, { status: 400 })
   }
+
+  // Honeypot — hidden field bots tend to fill in, humans never see it
+  if (parsed.data.website) {
+    return NextResponse.json({ id: 'ok', name: parsed.data.name, email: parsed.data.email }, { status: 201 })
+  }
+  // Time-trap — a real human takes more than 2s to fill the form
+  if (typeof parsed.data.loadedAt === 'number' && Date.now() - parsed.data.loadedAt < 1000) {
+    return NextResponse.json({ id: 'ok', name: parsed.data.name, email: parsed.data.email }, { status: 201 })
+  }
+
+  const allowed = await checkRateLimit(`register:${getClientIp(req)}`, 5, 30 * 60 * 1000)
+  if (!allowed) return NextResponse.json({ error: 'Trop de tentatives, réessayez plus tard.' }, { status: 429 })
 
   const { name, email, password } = parsed.data
 

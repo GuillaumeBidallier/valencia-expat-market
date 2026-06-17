@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import {
   ClipboardList, Users, Star, BarChart3, Flag, Shield,
-  AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight, BookOpen,
+  AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight, BookOpen, Tags,
 } from 'lucide-react'
 
 export default async function AdminPage() {
@@ -21,7 +21,7 @@ export default async function AdminPage() {
     usersCount, newUsersMonth, premiumUsers, blockedUsers,
     prosCount, premiumPros, plusPros,
     reportsCount, reportedListingsCount, firewallBlockedCount,
-    blogTotal, blogPublished,
+    blogTotal, blogPublished, categoriesCount,
   ] = await Promise.all([
     prisma.listing.count({ where: { status: 'PENDING' } }),
     prisma.listing.count({ where: { status: 'ACTIVE' } }),
@@ -38,6 +38,7 @@ export default async function AdminPage() {
     prisma.listing.count({ where: { blockedReason: { not: null } } }),
     prisma.blogPost.count(),
     prisma.blogPost.count({ where: { published: true } }),
+    prisma.category.count(),
   ])
 
   const freePros  = prosCount - premiumPros - plusPros
@@ -224,6 +225,18 @@ export default async function AdminPage() {
                   { label: 'Total articles', value: blogTotal, dot: 'bg-pink-400' },
                   { label: 'Publiés', value: blogPublished, dot: 'bg-emerald-400' },
                   { label: 'Brouillons', value: blogTotal - blogPublished, dot: 'bg-gray-300' },
+                ],
+              },
+              {
+                href: '/admin/categories',
+                icon: <Tags size={22} />,
+                label: 'Catégories',
+                color: 'text-teal-600',
+                bg: 'bg-teal-50',
+                badge: null,
+                badgeColor: '',
+                items: [
+                  { label: 'Total', value: categoriesCount, dot: 'bg-teal-400' },
                 ],
               },
             ].map(m => (

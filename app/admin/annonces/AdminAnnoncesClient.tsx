@@ -5,7 +5,7 @@ import {
   Clock, Flag, ShieldOff, ShieldCheck, ArrowLeft,
 } from 'lucide-react'
 import Link from 'next/link'
-import { categories } from '@/lib/categories'
+import { useCategories } from '@/hooks/useCategories'
 
 interface ListingRow {
   id: string
@@ -47,6 +47,7 @@ export default function AdminAnnoncesClient({
   initialListings: ListingRow[]
   autoPublish: boolean
 }) {
+  const categories = useCategories()
   const [listings, setListings]             = useState<ListingRow[]>(initialListings)
   const [reportedListings, setReported]     = useState<ReportedListing[]>([])
   const [reportedLoaded, setReportedLoaded] = useState(false)

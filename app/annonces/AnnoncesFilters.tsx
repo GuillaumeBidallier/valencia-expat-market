@@ -3,7 +3,8 @@ import { useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { X, SlidersHorizontal, LocateFixed, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { categories, neighborhoods } from '@/lib/categories'
+import { neighborhoods } from '@/lib/categories'
+import { useCategories } from '@/hooks/useCategories'
 
 interface Props {
   totalCount: number
@@ -18,6 +19,7 @@ const RADII = [
 
 export default function AnnoncesFilters({ totalCount }: Props) {
   const t = useTranslations('Filters')
+  const categories = useCategories()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [showMobile, setShowMobile] = useState(false)
