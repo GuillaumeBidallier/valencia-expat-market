@@ -5,7 +5,7 @@ import { UserCheck, ClipboardList, CreditCard, MessageSquare, Clock, Ban, Rotate
 
 export const metadata: Metadata = {
   title: "Conditions générales d'utilisation — Vendo",
-  description: "CGU de Vendo — Valencia Expat Market. Règles d'utilisation de la plateforme de petites annonces pour expatriés francophones en Espagne.",
+  description: "CGU de Vendo. Règles d'utilisation de la plateforme de petites annonces pour expatriés francophones en Espagne.",
 }
 
 const SECTIONS = [

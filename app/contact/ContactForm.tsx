@@ -15,7 +15,6 @@ const SUBJECTS = [
 export default function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', subject: SUBJECTS[0], message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-  const [loadedAt] = useState(() => Date.now())
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -24,7 +23,7 @@ export default function ContactForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, website: (e.target as HTMLFormElement).website.value, loadedAt }),
+        body: JSON.stringify({ ...form, website: (e.target as HTMLFormElement).website.value }),
       })
       if (!res.ok) throw new Error()
       setStatus('sent')

@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 
 export const PHOTO_UPGRADE_PRICE_CENTS = 799
-export const PHOTO_UPGRADE_EXTRA = 3
+export const PHOTO_UPGRADE_EXTRA = 9
 export const FREE_MAX_PHOTOS = 3
 export const UPGRADED_MAX_PHOTOS = FREE_MAX_PHOTOS + PHOTO_UPGRADE_EXTRA
 

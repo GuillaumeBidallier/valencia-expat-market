@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: 'Vendo — Valencia Expat Market',
+      siteName: 'Vendo',
       type: 'website',
       locale: 'fr_FR',
       ...(image && { images: [{ url: image, width: 1200, height: 630, alt: listing.title }] }),

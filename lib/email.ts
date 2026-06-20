@@ -42,7 +42,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Valencia Expat Market · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -89,7 +89,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
             Si vous n'avez pas demandé cette réinitialisation, ignorez cet email. Votre mot de passe restera inchangé.
           </p>
           <p style="margin:32px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Valencia Expat Market · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -190,7 +190,7 @@ export async function sendListingApprovedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Valencia Expat Market · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -243,7 +243,7 @@ export async function sendListingRejectedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Valencia Expat Market · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -323,7 +323,7 @@ function emailHtml({
         <!-- Footer -->
         <tr><td style="background:#F9FAFB;border-radius:0 0 16px 16px;padding:20px 32px;text-align:center;border-top:1px solid #F3F4F6;">
           <p style="margin:0;font-size:11px;color:#9CA3AF;line-height:1.6;">
-            Valencia Expat Market · Vous recevez cet email car quelqu'un vous a contacté via la plateforme.<br>
+            Vendo · Vous recevez cet email car quelqu'un vous a contacté via la plateforme.<br>
             <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">Accéder à Vendo</a>
           </p>
         </td></tr>

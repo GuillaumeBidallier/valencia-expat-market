@@ -5,7 +5,7 @@ import { ShieldCheck, Database, Users, Clock, Globe, UserCog, Mail } from 'lucid
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité — Vendo',
-  description: 'Politique de confidentialité de Vendo — Valencia Expat Market. RGPD, données collectées, droits des utilisateurs.',
+  description: 'Politique de confidentialité de Vendo. RGPD, données collectées, droits des utilisateurs.',
 }
 
 const SECTIONS = [
@@ -75,7 +75,7 @@ export default function ConfidentialitePage() {
                 <h2 className="text-lg font-black text-navy">Responsable du traitement</h2>
               </div>
               <div className="bg-gray-50 rounded-xl p-4 space-y-1.5 text-sm">
-                <p><strong className="text-navy">Nom :</strong> Vendo — Valencia Expat Market</p>
+                <p><strong className="text-navy">Nom :</strong> Vendo</p>
                 <p><strong className="text-navy">Statut :</strong> Plateforme communautaire de petites annonces</p>
                 <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Espagne (Comunitat Valenciana)</p>
                 <p><strong className="text-navy">Contact DPO :</strong> <a href="mailto:privacy@vendo.es" className="text-orange-primary hover:underline">privacy@vendo.es</a></p>

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, ChevronDown, Plus, MessageSquare, ShieldCheck } from 'lucide-react'
+import { Menu, X, ChevronDown, Plus, MessageSquare, ShieldCheck, Search } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
@@ -133,6 +133,16 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-2">
+            <Link
+              href="/annonces"
+              aria-label={t('listings')}
+              title={t('listings')}
+              className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+                transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Search size={17} aria-hidden="true" />
+            </Link>
             {isAuthenticated ? (
               <>
                 <Link
@@ -202,8 +212,17 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile : Déposer + hamburger */}
+          {/* Mobile : Recherche + Déposer + hamburger */}
           <div className="md:hidden flex items-center gap-2">
+            <Link
+              href="/annonces"
+              aria-label={t('listings')}
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0 ${
+                transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'
+              }`}
+            >
+              <Search size={17} aria-hidden="true" />
+            </Link>
             <Link
               href="/deposer-annonce"
               className="flex items-center gap-1 bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"

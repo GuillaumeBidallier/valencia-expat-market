@@ -11,7 +11,7 @@ import CityAutocomplete, { type CitySelection } from '@/components/listings/City
 import { FREE_MAX_PHOTOS, UPGRADED_MAX_PHOTOS } from '@/lib/stripe'
 import { useTranslations } from 'next-intl'
 
-const ADMIN_MAX = 10
+const ADMIN_MAX = 15
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE = 5 * 1024 * 1024
 

@@ -10,7 +10,6 @@ const schema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(100),
   website: z.string().optional(),
-  loadedAt: z.number().optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -22,10 +21,6 @@ export async function POST(req: NextRequest) {
 
   // Honeypot — hidden field bots tend to fill in, humans never see it
   if (parsed.data.website) {
-    return NextResponse.json({ id: 'ok', name: parsed.data.name, email: parsed.data.email }, { status: 201 })
-  }
-  // Time-trap — a real human takes more than 2s to fill the form
-  if (typeof parsed.data.loadedAt === 'number' && Date.now() - parsed.data.loadedAt < 1000) {
     return NextResponse.json({ id: 'ok', name: parsed.data.name, email: parsed.data.email }, { status: 201 })
   }
 

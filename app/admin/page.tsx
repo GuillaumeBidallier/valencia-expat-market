@@ -54,7 +54,7 @@ export default async function AdminPage() {
             <div>
               <p className="text-xs text-white/40 uppercase tracking-widest font-semibold mb-1">Panneau d&apos;administration</p>
               <h1 className="text-2xl font-black tracking-tight">Bonjour, {adminName} 👋</h1>
-              <p className="text-sm text-white/40 mt-0.5">{monthLabel} · Vendo Valencia Expat Market</p>
+              <p className="text-sm text-white/40 mt-0.5">{monthLabel} · Vendo</p>
             </div>
             {hasAlerts && (
               <div className="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2 text-sm">

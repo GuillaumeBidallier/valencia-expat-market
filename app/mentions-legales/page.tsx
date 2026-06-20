@@ -5,7 +5,7 @@ import { Building2, Server, Scale, ShieldCheck, FileText, Mail } from 'lucide-re
 
 export const metadata: Metadata = {
   title: 'Mentions légales — Vendo',
-  description: 'Mentions légales de Vendo — Valencia Expat Market. Éditeur, hébergeur, propriété intellectuelle et responsabilité.',
+  description: 'Mentions légales de Vendo. Éditeur, hébergeur, propriété intellectuelle et responsabilité.',
 }
 
 const SECTIONS = [
@@ -69,7 +69,7 @@ export default function MentionsLegalesPage() {
               <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
                 <p>Le site <strong className="text-navy">Vendo</strong> (<span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">valencia-expat-market.vercel.app</span>) est édité par :</p>
                 <div className="bg-gray-50 rounded-xl p-4 space-y-1.5">
-                  <p><strong className="text-navy">Dénomination :</strong> Vendo — Valencia Expat Market</p>
+                  <p><strong className="text-navy">Dénomination :</strong> Vendo</p>
                   <p><strong className="text-navy">Nature :</strong> Plateforme communautaire de petites annonces entre expatriés francophones en Espagne</p>
                   <p><strong className="text-navy">Directeur de la publication :</strong> Équipe Vendo</p>
                   <p><strong className="text-navy">Email :</strong> <a href="mailto:contact@vendo.es" className="text-orange-primary hover:underline">contact@vendo.es</a></p>

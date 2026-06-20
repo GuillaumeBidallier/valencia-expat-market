@@ -1,6 +1,6 @@
 # Google AdSense — Guide d'intégration
 
-> **Plateforme :** Vendo — Valencia Expat Market  
+> **Plateforme :** Vendo  
 > **Stack :** Next.js 16 / Vercel / Neon PostgreSQL  
 > **Statut actuel :** Système hybride en place — pubs directes des Professionnels en priorité, AdSense en fallback automatique dès que les variables d'env sont définies.
 

@@ -1,6 +1,6 @@
 # Guide Administrateur — Vendo
 
-> **Plateforme :** Vendo — Valencia Expat Market  
+> **Plateforme :** Vendo  
 > **Accès réservé :** Compte avec rôle `ADMIN` uniquement
 
 ---

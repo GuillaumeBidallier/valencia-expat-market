@@ -15,7 +15,6 @@ export default function InscriptionPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [website, setWebsite] = useState('')
-  const [loadedAt] = useState(() => Date.now())
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,7 +24,7 @@ export default function InscriptionPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, email: form.email, password: form.password, website, loadedAt }),
+        body: JSON.stringify({ name: form.name, email: form.email, password: form.password, website }),
       })
       if (res.status === 409) { setError(t('err_taken')); return }
       if (res.status === 429) { setError('Trop de tentatives, réessayez dans quelques minutes.'); return }
@@ -47,8 +46,7 @@ export default function InscriptionPage() {
             <span className="text-white font-bold text-lg">V</span>
           </div>
           <div className="leading-tight">
-            <div className="text-orange-primary font-bold text-sm tracking-wider uppercase">Valencia</div>
-            <div className="text-navy font-bold text-sm tracking-wider uppercase">Expat Market</div>
+            <div className="text-navy font-bold text-lg tracking-wider uppercase">Vendo</div>
           </div>
         </div>
 

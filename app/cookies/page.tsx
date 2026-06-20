@@ -5,7 +5,7 @@ import { Cookie, ShieldCheck, BarChart3, Megaphone, Settings, Mail } from 'lucid
 
 export const metadata: Metadata = {
   title: "Politique cookies — Vendo",
-  description: "Politique d'utilisation des cookies de Vendo — Valencia Expat Market. Cookies essentiels, analytiques, publicitaires et gestion des préférences.",
+  description: "Politique d'utilisation des cookies de Vendo. Cookies essentiels, analytiques, publicitaires et gestion des préférences.",
 }
 
 const SECTIONS = [

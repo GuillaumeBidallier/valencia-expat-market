@@ -36,8 +36,7 @@ export default function ConnexionPage() {
             <span className="text-white font-bold text-lg">V</span>
           </div>
           <div className="leading-tight">
-            <div className="text-orange-primary font-bold text-sm tracking-wider uppercase">Valencia</div>
-            <div className="text-navy font-bold text-sm tracking-wider uppercase">Expat Market</div>
+            <div className="text-navy font-bold text-lg tracking-wider uppercase">Vendo</div>
           </div>
         </div>
 

@@ -7,14 +7,10 @@ const FROM = process.env.RESEND_FROM_EMAIL ?? 'Vendo <onboarding@resend.dev>'
 const CONTACT_EMAIL = process.env.ADMIN_EMAIL ?? 'contact@vendo.es'
 
 export async function POST(req: NextRequest) {
-  const { name, email, subject, message, website, loadedAt } = await req.json()
+  const { name, email, subject, message, website } = await req.json()
 
   // Honeypot — hidden field bots tend to fill in, humans never see it
   if (website) return NextResponse.json({ ok: true })
-  // Time-trap — a real human takes more than 2s to fill the form
-  if (typeof loadedAt === 'number' && Date.now() - loadedAt < 1000) {
-    return NextResponse.json({ ok: true })
-  }
 
   const allowed = await checkRateLimit(`contact:${getClientIp(req)}`, 5, 10 * 60 * 1000)
   if (!allowed) return NextResponse.json({ error: 'Trop de requêtes, réessayez plus tard.' }, { status: 429 })
@@ -113,7 +109,7 @@ export async function POST(req: NextRequest) {
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Vendo — Valencia Expat Market · contact@vendo.es
+            Vendo · contact@vendo.es
           </p>
         </td></tr>
       </table>

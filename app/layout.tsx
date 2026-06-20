@@ -29,11 +29,11 @@ export const metadata: Metadata = {
   description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne. La marketplace des expatriés francophones.',
   openGraph: {
     type: 'website',
-    siteName: 'Vendo — Valencia Expat Market',
+    siteName: 'Vendo',
     title: 'Vendo — Petites annonces entre expatriés en Espagne',
     description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
     locale: 'fr_FR',
-    images: [{ url: '/valencia-hero.jpg', width: 1200, height: 630, alt: 'Vendo — Valencia Expat Market' }],
+    images: [{ url: '/valencia-hero.jpg', width: 1200, height: 630, alt: 'Vendo' }],
   },
   twitter: {
     card: 'summary_large_image',
