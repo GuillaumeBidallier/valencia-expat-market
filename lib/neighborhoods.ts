@@ -1,3 +1,8 @@
+export const neighborhoods = [
+  'Valencia', 'Ruzafa', 'Benimaclet', 'Campanar',
+  'Paterna', 'Alboraya', 'El Carmen', 'Eixample', 'La Malva-rosa',
+]
+
 export const neighborhoodCoords: Record<string, { lat: number; lng: number }> = {
   'Valencia':      { lat: 39.4699, lng: -0.3763 },
   'Ruzafa':        { lat: 39.4622, lng: -0.3772 },

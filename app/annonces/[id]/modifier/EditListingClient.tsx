@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ImagePlus, X, ArrowLeft, Loader2 } from 'lucide-react'
-import { neighborhoods } from '@/lib/categories'
+import { neighborhoods } from '@/lib/neighborhoods'
 import { useCategories } from '@/hooks/useCategories'
 
 const MAX_IMAGES = 5

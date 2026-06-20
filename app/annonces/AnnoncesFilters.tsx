@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { X, SlidersHorizontal, LocateFixed, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { neighborhoods } from '@/lib/categories'
+import { neighborhoods } from '@/lib/neighborhoods'
 import { useCategories } from '@/hooks/useCategories'
 
 interface Props {

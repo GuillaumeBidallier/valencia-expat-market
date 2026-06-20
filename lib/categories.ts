@@ -25,12 +25,7 @@ const fetchCategories = unstable_cache(
   { revalidate: 60, tags: ['categories'] }
 )
 
-/** Server components / route handlers — DB-backed, admin-editable. */
+/** Server components / route handlers only — imports Prisma, never import this from a client component. */
 export async function getCategoriesServer(): Promise<Category[]> {
   return fetchCategories().catch(() => FALLBACK_CATEGORIES)
 }
-
-export const neighborhoods = [
-  'Valencia', 'Ruzafa', 'Benimaclet', 'Campanar',
-  'Paterna', 'Alboraya', 'El Carmen', 'Eixample', 'La Malva-rosa',
-]
