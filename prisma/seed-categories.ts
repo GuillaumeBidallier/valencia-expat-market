@@ -19,6 +19,7 @@ const CATEGORIES = [
   { slug: 'livres', label: 'Livres & Loisirs', icon: '📚', order: 7 },
   { slug: 'deco', label: 'Déco & Jardin', icon: '🌿', order: 8 },
   { slug: 'autres', label: 'Autres', icon: '📦', order: 9 },
+  { slug: 'animaux', label: 'Animaux', icon: '🐾', order: 10 },
 ]
 
 async function main() {
