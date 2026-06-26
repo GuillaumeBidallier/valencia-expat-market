@@ -1,6 +1,5 @@
 'use client'
 import { useState, useRef } from 'react'
-import Image from 'next/image'
 import { CheckCircle, ChevronLeft, ChevronRight, Loader2, Star, Zap, Upload, X } from 'lucide-react'
 import { proCategories } from '@/lib/proCategories'
 import type { ProPlan } from '@/lib/stripe'
@@ -260,7 +259,7 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
         <button type="button" onClick={() => logoRef.current?.click()}
           className="w-full border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center gap-2 hover:border-orange-primary transition-colors group">
           {data.logoPreview
-            ? <Image src={data.logoPreview} alt="Logo" width={80} height={80} className="rounded-xl object-cover" />
+            ? <img src={data.logoPreview} alt="Logo" width={80} height={80} className="rounded-xl object-cover" />
             : <><Upload size={24} className="text-gray-300 group-hover:text-orange-primary transition-colors" /><span className="text-sm text-gray-400 group-hover:text-orange-primary transition-colors">Cliquez pour ajouter un logo</span></>
           }
         </button>
@@ -273,7 +272,7 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
         <button type="button" onClick={() => bannerRef.current?.click()}
           className="w-full border-2 border-dashed border-gray-200 rounded-2xl overflow-hidden hover:border-orange-primary transition-colors group">
           {data.bannerPreview
-            ? <div className="relative h-28"><Image src={data.bannerPreview} alt="Bannière" fill className="object-cover" /></div>
+            ? <div className="relative h-28"><img src={data.bannerPreview} alt="Bannière" className="w-full h-full object-cover" /></div>
             : <div className="h-28 flex flex-col items-center justify-center gap-2"><Upload size={24} className="text-gray-300 group-hover:text-orange-primary transition-colors" /><span className="text-sm text-gray-400 group-hover:text-orange-primary transition-colors">Cliquez pour ajouter une bannière</span></div>
           }
         </button>
@@ -286,7 +285,7 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
         <div className="grid grid-cols-3 gap-2">
           {data.photoPreviews.map((src, i) => (
             <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
-              <Image src={src} alt="" fill className="object-cover" />
+              <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover" />
               <button type="button" onClick={() => removePhoto(i)} className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <X size={12} className="text-white" />
               </button>
