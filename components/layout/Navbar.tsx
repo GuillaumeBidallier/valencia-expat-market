@@ -115,7 +115,6 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
             {[
-              { label: t('home'),          href: '/' },
               { label: t('listings'),      href: '/annonces' },
               { label: t('professionals'), href: '/professionnels' },
             ].map(({ label, href }) => (
@@ -262,7 +261,6 @@ export default function Navbar() {
       {/* Mobile menu — always solid */}
       {menuOpen && (
         <nav id="mobile-menu" aria-label="Navigation mobile" className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
-          <Link href="/" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('home')}</Link>
           <Link href="/annonces" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('listings')}</Link>
           <Link href="/professionnels" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>{t('professionals')}</Link>
           <hr />
