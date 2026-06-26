@@ -6,14 +6,13 @@ import { useTranslations } from 'next-intl'
 import { Camera, Pencil, Plus, Trash2, ExternalLink, Check, Loader2, X, Star, Zap, CreditCard, AlertCircle } from 'lucide-react'
 import type { Professional } from '@prisma/client'
 import type { ProPlan } from '@/lib/stripe'
+import ProStatsClient from './ProStatsClient'
 
 type Props = { pro: Professional }
 
 const PLANS: { id: ProPlan; label: string; price: string; period: string; highlight?: boolean }[] = [
-  { id: 'premium_monthly',      label: 'Premium',  price: '49 €',  period: '/mois' },
-  { id: 'premium_annual',       label: 'Premium',  price: '490 €', period: '/an — 2 mois offerts' },
-  { id: 'premium_plus_monthly', label: 'Premium+', price: '99 €',  period: '/mois', highlight: true },
-  { id: 'premium_plus_annual',  label: 'Premium+', price: '990 €', period: '/an — 2 mois offerts', highlight: true },
+  { id: 'premium_annual',      label: 'Premium',  price: '49,99 €', period: '/an' },
+  { id: 'premium_plus_annual', label: 'Premium+', price: '99,99 €', period: '/an', highlight: true },
 ]
 
 function SubscriptionSection({ pro }: { pro: Professional }) {
@@ -215,6 +214,9 @@ export default function ProDashboardClient({ pro: initial }: Props) {
 
         {/* Subscription */}
         <SubscriptionSection pro={pro} />
+
+        {/* Stats — Premium+ only */}
+        {pro.tier === 'PREMIUM_PLUS' && <ProStatsClient />}
 
         {/* Banner */}
         <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
