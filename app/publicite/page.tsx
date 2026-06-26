@@ -362,12 +362,12 @@ export default function PublicitePage() {
               {
                 n: '3',
                 title: 'Choisissez votre offre',
-                desc: 'Premium (49 €/mois) ou Premium+ (99 €/mois). Formule annuelle disponible avec 2 mois offerts. Contactez-nous pour activer.'
+                desc: 'Premium (49 €/mois) ou Premium+ (99 €/mois). Formule annuelle disponible avec 2 mois offerts. Paiement direct en ligne via Stripe.'
               },
               {
                 n: '4',
-                title: 'Soyez visible',
-                desc: 'Votre fiche apparaît dans les encarts dès activation — généralement sous 24h ouvrées.'
+                title: 'Soyez visible immédiatement',
+                desc: 'Votre fiche apparaît dans les encarts dès confirmation du paiement — sans attendre.'
               },
             ].map(step => (
               <div key={step.n} className="flex flex-col items-center text-center">
@@ -423,11 +423,19 @@ export default function PublicitePage() {
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-center gap-2 mt-5">
-            <CreditCard size={14} className="text-gray-400" />
-            <p className="text-center text-xs text-gray-400">
-              Paiement sécurisé par carte via Stripe. Contactez-nous pour un devis personnalisé.
-            </p>
+          <div className="flex flex-col items-center gap-3 mt-6">
+            <Link
+              href="/mon-compte/profil-pro/create"
+              className="inline-flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white font-black px-8 py-3 rounded-xl text-sm transition-colors shadow-md shadow-orange-primary/20"
+            >
+              Créer ma fiche pro →
+            </Link>
+            <div className="flex items-center gap-2 text-xs text-gray-400">
+              <CreditCard size={12} />
+              <span>Paiement sécurisé via Stripe · Sans engagement ·{' '}
+                <Link href="/contact" className="underline hover:text-gray-600 transition-colors">Demander un devis</Link>
+              </span>
+            </div>
           </div>
         </section>
 

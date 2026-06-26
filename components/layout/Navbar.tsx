@@ -196,6 +196,14 @@ export default function Navbar() {
             ) : (
               <>
                 <Link
+                  href="/mon-compte/profil-pro/create"
+                  className={`text-sm font-semibold transition-colors ${
+                    transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
+                  }`}
+                >
+                  Devenir Pro
+                </Link>
+                <Link
                   href="/connexion"
                   className={`text-sm font-semibold transition-colors ${
                     transparent
@@ -279,6 +287,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
+              <Link href="/mon-compte/profil-pro/create" onClick={() => setMenuOpen(false)} className="text-sm font-semibold text-orange-primary">Devenir Pro</Link>
               <Link href="/connexion" onClick={() => setMenuOpen(false)} className="border border-gray-300 text-navy px-4 py-2.5 rounded-lg font-semibold text-sm text-center">{t('login')}</Link>
               <Link href="/inscription" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center flex items-center justify-center gap-2">
                 <Plus size={15} />
