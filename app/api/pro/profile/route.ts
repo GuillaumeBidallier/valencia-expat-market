@@ -63,11 +63,23 @@ export async function POST(req: NextRequest) {
     success_url: `${baseUrl}/mon-compte?subscription=success`,
     cancel_url:  `${baseUrl}/publicite`,
     locale:      'fr',
-    customer_email: (await prisma.user.findUnique({ where: { id: session.user.id } }))?.email ?? undefined,
+    customer_email: session.user.email ?? undefined,
     metadata: { professionalId: pro.id, plan },
   }
 
-  const checkout = await getStripe().checkout.sessions.create(checkoutParams)
+  let checkout
+  try {
+    checkout = await getStripe().checkout.sessions.create(checkoutParams)
+  } catch {
+    await prisma.professional.delete({ where: { id: pro.id } })
+    return NextResponse.json({ error: 'Erreur Stripe, veuillez réessayer.' }, { status: 502 })
+  }
+
+  if (!checkout.url) {
+    await prisma.professional.delete({ where: { id: pro.id } })
+    return NextResponse.json({ error: 'URL de paiement introuvable.' }, { status: 502 })
+  }
+
   return NextResponse.json({ checkoutUrl: checkout.url })
 }
 
