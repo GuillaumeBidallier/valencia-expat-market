@@ -125,12 +125,23 @@ model Professional {
   subscriptionCurrentPeriodEnd DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  clicks      ProClick[]
 }
 
 enum ProTier {
   FREE
   PREMIUM
   PREMIUM_PLUS
+}
+
+model ProClick {
+  id             String       @id @default(cuid())
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  type           String       // 'ad_click' | 'phone' | 'whatsapp' | 'website' | 'profile_view'
+  createdAt      DateTime     @default(now())
+
+  @@index([professionalId, createdAt])
 }
 
 model Category {
