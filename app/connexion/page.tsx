@@ -1,16 +1,17 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import { useTranslations } from 'next-intl'
 
 export default function ConnexionPage() {
-  const router = useRouter()
   const { login } = useAuth()
   const t = useTranslations('Auth')
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') ?? '/'
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,7 +22,7 @@ export default function ConnexionPage() {
     setError('')
     const result = await login(form.email, form.password)
     if (result === true) {
-      window.location.href = '/'
+      window.location.href = redirectTo
     } else {
       setError(typeof result === 'string' ? result : t('err_credentials'))
     }

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function CreateProPage() {
   const session = await auth()
-  if (!session?.user?.id) redirect('/connexion')
+  if (!session?.user?.id) redirect('/connexion?redirect=/mon-compte/profil-pro/create')
 
   const existing = await prisma.professional.findUnique({
     where: { userId: session.user.id },
