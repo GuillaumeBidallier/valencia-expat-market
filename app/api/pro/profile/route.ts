@@ -50,6 +50,14 @@ export async function POST(req: NextRequest) {
   const { plan, ...fields } = parsed.data
   if (!PRO_PLANS[plan as ProPlan]) return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
 
+  // Validate env var BEFORE any DB write — getPriceId throws if the env var is missing
+  let priceId: string
+  try {
+    priceId = getPriceId(plan as ProPlan)
+  } catch {
+    return NextResponse.json({ error: 'Configuration Stripe manquante.' }, { status: 500 })
+  }
+
   const slug = await uniqueSlug(slugify(fields.name))
   const pro = await prisma.professional.create({
     data: { ...fields, slug, userId: session.user.id, tier: 'FREE' },
@@ -59,9 +67,9 @@ export async function POST(req: NextRequest) {
   type CheckoutParams = Parameters<ReturnType<typeof getStripe>['checkout']['sessions']['create']>[0]
   const checkoutParams: CheckoutParams = {
     mode: 'subscription',
-    line_items: [{ price: getPriceId(plan as ProPlan), quantity: 1 }],
+    line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${baseUrl}/mon-compte?subscription=success`,
-    cancel_url:  `${baseUrl}/publicite`,
+    cancel_url:  `${baseUrl}/mon-compte/profil-pro`,
     locale:      'fr',
     customer_email: session.user.email ?? undefined,
     metadata: { professionalId: pro.id, plan },
