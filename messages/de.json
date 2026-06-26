@@ -182,7 +182,7 @@
     "legal_terms": "Nutzungsbedingungen",
     "legal_privacy": "Datenschutzrichtlinie",
     "legal_cookies": "Cookies",
-    "copyright": "© 2026 Vendo — Alle Rechte vorbehalten. Mit ❤️ für Expats in Spanien gemacht."
+    "copyright": "© 2026 1000Click — Alle Rechte vorbehalten. Mit ❤️ für Expats in Spanien gemacht."
   },
   "ProsBanner": {
     "title": "⭐ Empfohlene französischsprachige Fachleute",
@@ -265,7 +265,7 @@
     "send_message": "Nachricht senden",
     "whatsapp": "Via WhatsApp kontaktieren",
     "show_phone": "Telefonnummer anzeigen",
-    "security_notice": "Käufe und Zahlungen erfolgen ausschließlich persönlich. Vendo greift nicht in die Transaktion ein.",
+    "security_notice": "Käufe und Zahlungen erfolgen ausschließlich persönlich. 1000Click greift nicht in die Transaktion ein.",
     "report": "Anzeige melden",
     "message_modal_title": "Nachricht senden",
     "message_placeholder": "Hallo, ich interessiere mich für Ihre Anzeige...",
@@ -312,10 +312,10 @@
     "cta_intro": "Möchten Sie mit … zusammenarbeiten:",
     "cta_call": "Anrufen",
     "contact_label": "Kontakt",
-    "verified_badge": "Von Vendo verifizierter Fachmann",
+    "verified_badge": "Von 1000Click verifizierter Fachmann",
     "visit_website": "Website besuchen",
-    "mention_vendo": "Erwähnen Sie Vendo bei Ihrer Kontaktaufnahme.",
-    "wa_message": "Hallo {name}, ich habe Ihr Profil auf Vendo gefunden und würde mich gerne bei Ihnen melden.",
+    "mention_vendo": "Erwähnen Sie 1000Click bei Ihrer Kontaktaufnahme.",
+    "wa_message": "Hallo {name}, ich habe Ihr Profil auf 1000Click gefunden und würde mich gerne bei Ihnen melden.",
     "not_found": "Fachmann nicht gefunden"
   },
   "ProDashboard": {
@@ -349,7 +349,7 @@
     "remove_photo": "Dieses Foto löschen",
     "photos_count": "{count}/8 Fotos · Max. 5 MB pro Foto",
     "not_linked_title": "Kein Profil verknüpft",
-    "not_linked_body": "Ihr Konto ist noch nicht mit einem Profil verknüpft. Kontaktieren Sie uns, um Ihr Profil auf Vendo zu erstellen.",
+    "not_linked_body": "Ihr Konto ist noch nicht mit einem Profil verknüpft. Kontaktieren Sie uns, um Ihr Profil auf 1000Click zu erstellen.",
     "contact_us": "Kontakt aufnehmen"
   },
   "Blog": {

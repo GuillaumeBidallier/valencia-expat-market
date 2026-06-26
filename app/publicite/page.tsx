@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Publicité & visibilité professionnelle — Vendo',
+  title: 'Publicité & visibilité professionnelle — 1000Click',
   description: 'Touchez la communauté des expatriés francophones en Espagne. Formats display, annonces sponsorisées, fiche professionnelle — solutions sur mesure pour les pros.',
 }
 
@@ -171,11 +171,11 @@ const CATEGORIES = [
 const FAQ = [
   {
     q: 'Qui voit mes publicités ?',
-    a: 'La communauté Vendo : expatriés de toutes nationalités installés en Espagne, principalement en Comunitat Valenciana. Une audience qualifiée qui cherche activement des services locaux.'
+    a: 'La communauté 1000Click : expatriés de toutes nationalités installés en Espagne, principalement en Comunitat Valenciana. Une audience qualifiée qui cherche activement des services locaux.'
   },
   {
     q: 'Comment fonctionne le système d\'affichage ?',
-    a: 'L\'API ads de Vendo sélectionne aléatoirement les professionnels Premium et Premium+ pour remplir les encarts. Tous les pros éligibles ont une chance équitable d\'apparaître à chaque chargement de page.'
+    a: 'L\'API ads de 1000Click sélectionne aléatoirement les professionnels Premium et Premium+ pour remplir les encarts. Tous les pros éligibles ont une chance équitable d\'apparaître à chaque chargement de page.'
   },
   {
     q: 'Puis-je cibler une catégorie ou une zone ?',
@@ -205,7 +205,7 @@ export default function PublicitePage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[300px] sm:min-h-[380px]">
-        <Image src="/valencia-hero.jpg" alt="Publicité Vendo" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/valencia-hero.jpg" alt="Publicité 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/92 via-hero-dark/65 to-hero-dark/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/40 via-transparent to-hero-dark/60" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-24 flex flex-col justify-center min-h-[300px] sm:min-h-[380px]">
@@ -214,7 +214,7 @@ export default function PublicitePage() {
             Touchez les expatriés<br />là où ils cherchent
           </h1>
           <p className="text-white/70 text-base sm:text-lg max-w-xl mb-8">
-            Vendo est la plateforme de référence pour la communauté internationale des expatriés en Espagne. Affichez votre activité devant une audience qualifiée et en pleine croissance.
+            1000Click est la plateforme de référence pour la communauté internationale des expatriés en Espagne. Affichez votre activité devant une audience qualifiée et en pleine croissance.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link href="/mon-compte/profil-pro/create" className="inline-flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white font-black px-6 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-primary/30">
@@ -250,7 +250,7 @@ export default function PublicitePage() {
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">L&apos;audience</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Une communauté unique et qualifiée</h2>
             <p className="text-gray-500 text-sm max-w-xl mx-auto">
-              Les visiteurs Vendo sont des expatriés actifs avec un fort pouvoir d&apos;achat, qui ont besoin de services locaux de confiance.
+              Les visiteurs 1000Click sont des expatriés actifs avec un fort pouvoir d&apos;achat, qui ont besoin de services locaux de confiance.
             </p>
           </div>
           <div className="grid sm:grid-cols-3 gap-5">
@@ -268,7 +268,7 @@ export default function PublicitePage() {
               {
                 icon: <TrendingUp size={22} className="text-emerald-600" />,
                 title: 'En pleine croissance',
-                desc: 'La communauté des expatriés en Espagne est l\'une des plus dynamiques d\'Europe. Vendo grandit avec elle, mois après mois.',
+                desc: 'La communauté des expatriés en Espagne est l\'une des plus dynamiques d\'Europe. 1000Click grandit avec elle, mois après mois.',
               },
             ].map(item => (
               <div key={item.title} className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -284,7 +284,7 @@ export default function PublicitePage() {
         <section>
           <div className="text-center mb-8">
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Secteurs</p>
-            <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Qui peut annoncer sur Vendo ?</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Qui peut annoncer sur 1000Click ?</h2>
             <p className="text-gray-500 text-sm">Toute activité professionnelle utile à la vie des expatriés.</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -344,7 +344,7 @@ export default function PublicitePage() {
           <div className="text-center mb-10">
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Process</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Comment ça marche ?</h2>
-            <p className="text-gray-500 text-sm">Être visible sur Vendo en 4 étapes.</p>
+            <p className="text-gray-500 text-sm">Être visible sur 1000Click en 4 étapes.</p>
           </div>
           <div className="grid sm:grid-cols-4 gap-6 relative">
             <div className="hidden sm:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-orange-primary/20 via-orange-primary to-orange-primary/20" />
@@ -352,7 +352,7 @@ export default function PublicitePage() {
               {
                 n: '1',
                 title: 'Créez votre compte',
-                desc: 'Inscrivez-vous sur Vendo gratuitement — nom, email, mot de passe. Moins de 2 minutes.'
+                desc: 'Inscrivez-vous sur 1000Click gratuitement — nom, email, mot de passe. Moins de 2 minutes.'
               },
               {
                 n: '2',
@@ -452,7 +452,7 @@ export default function PublicitePage() {
               icon: <BarChart3 size={20} className="text-indigo-primary" />,
               bg: 'bg-indigo-soft',
               title: 'Trafic qualifié',
-              desc: 'Contrairement aux plateformes généralistes, chaque visiteur Vendo est un expatrié en Espagne — exactement votre cible.',
+              desc: 'Contrairement aux plateformes généralistes, chaque visiteur 1000Click est un expatrié en Espagne — exactement votre cible.',
             },
             {
               icon: <Star size={20} className="text-amber-500" />,
@@ -464,7 +464,7 @@ export default function PublicitePage() {
               icon: <Globe size={20} className="text-emerald-600" />,
               bg: 'bg-emerald-50',
               title: 'Portée internationale',
-              desc: 'Vendo est disponible en 7 langues. Votre fiche est visible par tous les expatriés, quelle que soit leur nationalité.',
+              desc: '1000Click est disponible en 7 langues. Votre fiche est visible par tous les expatriés, quelle que soit leur nationalité.',
             },
           ].map(item => (
             <div key={item.title} className="bg-white border border-gray-100 rounded-2xl p-6 flex gap-4">
@@ -503,7 +503,7 @@ export default function PublicitePage() {
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Prêt ?</p>
           <h2 className="text-2xl sm:text-3xl font-black text-white mb-4">Devenez visible dès aujourd&apos;hui</h2>
           <p className="text-white/60 text-sm max-w-lg mx-auto mb-8">
-            Rejoignez les professionnels qui font confiance à Vendo pour toucher la communauté internationale des expatriés en Espagne.
+            Rejoignez les professionnels qui font confiance à 1000Click pour toucher la communauté internationale des expatriés en Espagne.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'Vendo <onboarding@resend.dev>'
+const FROM = process.env.RESEND_FROM_EMAIL ?? '1000Click <onboarding@resend.dev>'
 const CONTACT_EMAIL = process.env.ADMIN_EMAIL ?? 'contact@vendo.es'
 
 export async function POST(req: NextRequest) {
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       from: FROM,
       to: CONTACT_EMAIL,
       replyTo: email,
-      subject: `[Contact Vendo] ${subject}`,
+      subject: `[Contact 1000Click] ${subject}`,
       html: `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"></head>
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#E8571A;border-radius:16px 16px 0 0;padding:28px 32px;text-align:center;">
-          <p style="margin:0;font-size:22px;font-weight:900;color:#fff;">Vendo · Contact</p>
+          <p style="margin:0;font-size:22px;font-weight:900;color:#fff;">1000Click · Contact</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.7);">Nouveau message reçu via le formulaire</p>
         </td></tr>
         <tr><td style="background:#fff;padding:36px 32px;border-radius:0 0 16px 16px;">
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: FROM,
       to: email,
-      subject: 'Nous avons bien reçu votre message — Vendo',
+      subject: 'Nous avons bien reçu votre message — 1000Click',
       html: `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"></head>
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#1A1F36;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
-          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">Vendo</p>
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces entre expatriés</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
@@ -105,11 +105,11 @@ export async function POST(req: NextRequest) {
           </p>
           <div style="text-align:center;">
             <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app'}" style="display:inline-block;background:#E8571A;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 36px;border-radius:12px;">
-              Retour sur Vendo →
+              Retour sur 1000Click →
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Vendo · contact@vendo.es
+            1000Click · contact@vendo.es
           </p>
         </td></tr>
       </table>

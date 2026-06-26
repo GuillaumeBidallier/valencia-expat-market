@@ -26,7 +26,7 @@ Le NIE est votre identifiant fiscal en Espagne. **C'est la première démarche �
 - Apportez : passeport + photocopie, formulaire EX-15 rempli, justificatif de motif (contrat de travail, preuve d'achat immobilier, etc.)
 - Payez la taxe (tasa 790 código 012) dans une banque
 
-> **Conseil Vendo :** Les rendez-vous partent très vite. Connectez-vous tôt le matin pour en trouver un.
+> **Conseil 1000Click :** Les rendez-vous partent très vite. Connectez-vous tôt le matin pour en trouver un.
 
 ## 2. L'empadronamiento (inscription en mairie)
 
@@ -63,10 +63,10 @@ Si vous êtes citoyen européen et que vous restez plus de 3 mois, vous devez ob
 
 Ces démarches peuvent sembler intimidantes, mais une fois le NIE en poche, tout s'enchaîne assez naturellement. N'hésitez pas à faire appel à un **gestorio** (cabinet administratif espagnol) si vous vous sentez dépassé — leur coût est généralement raisonnable.
 
-*Vous avez des questions sur ces démarches ? Notre communauté Vendo est là pour vous aider !*
+*Vous avez des questions sur ces démarches ? Notre communauté 1000Click est là pour vous aider !*
 `,
     category: 'guide',
-    author: 'Équipe Vendo',
+    author: 'Équipe 1000Click',
     readTime: 7,
     lang: 'fr',
     published: true,
@@ -125,10 +125,10 @@ Chaque quartier a son ambiance :
 
 ---
 
-N'hésitez pas à publier votre recherche de logement sur **Vendo** — notre communauté peut vous aider à trouver la perle rare avant même qu'elle soit sur les grandes plateformes !
+N'hésitez pas à publier votre recherche de logement sur **1000Click** — notre communauté peut vous aider à trouver la perle rare avant même qu'elle soit sur les grandes plateformes !
 `,
     category: 'vie-pratique',
-    author: 'Équipe Vendo',
+    author: 'Équipe 1000Click',
     readTime: 6,
     lang: 'fr',
     published: true,
@@ -182,10 +182,10 @@ Une lettre expliquant votre intention de résider (pour acheter ou louer un bien
 
 ---
 
-Pour toute question sur vos démarches administratives en Espagne, la communauté Vendo est là pour vous. Postez votre question dans notre forum !
+Pour toute question sur vos démarches administratives en Espagne, la communauté 1000Click est là pour vous. Postez votre question dans notre forum !
 `,
     category: 'guide',
-    author: 'Équipe Vendo',
+    author: 'Équipe 1000Click',
     readTime: 8,
     lang: 'fr',
     published: true,
@@ -245,7 +245,7 @@ De plus en plus populaires, ces écoles publiques ou privées proposent un ensei
 
 ---
 
-La communauté Vendo compte de nombreuses familles qui sont passées par là. N'hésitez pas à les contacter via notre plateforme !
+La communauté 1000Click compte de nombreuses familles qui sont passées par là. N'hésitez pas à les contacter via notre plateforme !
 `,
     category: 'conseils',
     author: 'Sophie L.',
@@ -287,7 +287,7 @@ Le marché de l'occasion est actif. Vérifiez :
 - Qu'il n'y a pas de charges sur le véhicule (vérifiez sur sede.dgt.gob.es)
 - L'historique ITV (contrôle technique)
 
-Sur **Vendo**, vous trouverez de nombreuses voitures proposées par des francophones.
+Sur **1000Click**, vous trouverez de nombreuses voitures proposées par des francophones.
 
 ## Échanger votre permis de conduire français
 
@@ -310,7 +310,7 @@ Le RC (Responsabilidad Civil) est obligatoire. En Espagne, de nombreuses compagn
 
 ---
 
-Des questions sur votre véhicule en Espagne ? Posez-les sur Vendo — notre communauté regorge de conseils pratiques !
+Des questions sur votre véhicule en Espagne ? Posez-les sur 1000Click — notre communauté regorge de conseils pratiques !
 `,
     category: 'vie-pratique',
     author: 'Marc D.',

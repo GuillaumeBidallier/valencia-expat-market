@@ -78,7 +78,7 @@ export default function ProfessionnelsUI({ pros, cat, city, activeCatLabel }: Pr
         <h2 className="text-xl font-black mb-2">{t('cta_title')}</h2>
         <p className="text-white/70 text-sm mb-5">{t('cta_desc')}</p>
         <a
-          href="mailto:bidallierguillaume@gmail.com?subject=Référencement professionnel Vendo"
+          href="mailto:bidallierguillaume@gmail.com?subject=Référencement professionnel 1000Click"
           className="inline-block bg-orange-primary text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors"
         >
           {t('cta_btn')}

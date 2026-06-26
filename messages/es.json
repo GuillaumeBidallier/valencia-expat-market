@@ -182,7 +182,7 @@
     "legal_terms": "Términos de uso",
     "legal_privacy": "Política de privacidad",
     "legal_cookies": "Cookies",
-    "copyright": "© 2026 Vendo — Todos los derechos reservados. Hecho con ❤️ para los expatriados en España."
+    "copyright": "© 2026 1000Click — Todos los derechos reservados. Hecho con ❤️ para los expatriados en España."
   },
   "ProsBanner": {
     "title": "⭐ Profesionales francófonos recomendados",
@@ -265,7 +265,7 @@
     "send_message": "Enviar un mensaje",
     "whatsapp": "Contactar por WhatsApp",
     "show_phone": "Ver número de teléfono",
-    "security_notice": "Los intercambios y pagos se realizan únicamente en persona. Vendo no interviene en la transacción.",
+    "security_notice": "Los intercambios y pagos se realizan únicamente en persona. 1000Click no interviene en la transacción.",
     "report": "Denunciar este anuncio",
     "message_modal_title": "Enviar un mensaje",
     "message_placeholder": "Hola, estoy interesado/a en tu anuncio...",
@@ -312,10 +312,10 @@
     "cta_intro": "¿Quieres trabajar con",
     "cta_call": "Llamar",
     "contact_label": "Contactar",
-    "verified_badge": "Profesional verificado por Vendo",
+    "verified_badge": "Profesional verificado por 1000Click",
     "visit_website": "Visitar el sitio web",
-    "mention_vendo": "Mencione Vendo al contactar.",
-    "wa_message": "Hola {name}, encontré su perfil en Vendo y me gustaría contactarle.",
+    "mention_vendo": "Mencione 1000Click al contactar.",
+    "wa_message": "Hola {name}, encontré su perfil en 1000Click y me gustaría contactarle.",
     "not_found": "Profesional no encontrado"
   },
   "ProDashboard": {
@@ -349,7 +349,7 @@
     "remove_photo": "Eliminar esta foto",
     "photos_count": "{count}/8 fotos · Máx. 5 MB por foto",
     "not_linked_title": "Sin perfil vinculado",
-    "not_linked_body": "Tu cuenta no está vinculada a un perfil profesional. Contáctanos para crear tu perfil en Vendo.",
+    "not_linked_body": "Tu cuenta no está vinculada a un perfil profesional. Contáctanos para crear tu perfil en 1000Click.",
     "contact_us": "Contáctanos"
   },
   "Blog": {

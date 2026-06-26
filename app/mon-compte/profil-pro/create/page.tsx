@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import OnboardingWizard from './OnboardingWizard'
 
 export const metadata: Metadata = {
-  title: 'Créer ma fiche professionnelle — Vendo',
+  title: 'Créer ma fiche professionnelle — 1000Click',
   description: 'Créez votre fiche professionnelle et choisissez votre abonnement Premium pour apparaître devant la communauté des expatriés en Espagne.',
 }
 

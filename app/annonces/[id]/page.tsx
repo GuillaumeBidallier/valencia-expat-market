@@ -14,13 +14,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     where: { id, status: { not: 'DELETED' } },
     include: { images: { take: 1, orderBy: { order: 'asc' } } },
   })
-  if (!listing) return { title: 'Annonce introuvable — Vendo' }
+  if (!listing) return { title: 'Annonce introuvable — 1000Click' }
 
-  const title = `${listing.title} — Vendo`
+  const title = `${listing.title} — 1000Click`
   const rawDesc = listing.description?.trim() ?? ''
   const description = rawDesc.length > 0
     ? rawDesc.slice(0, 155) + (rawDesc.length > 155 ? '…' : '')
-    : `${listing.title} disponible sur Vendo, petites annonces entre expatriés en Espagne.`
+    : `${listing.title} disponible sur 1000Click, petites annonces entre expatriés en Espagne.`
   const image = listing.images[0]?.url
   const url = `${BASE}/annonces/${id}`
 
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: 'Vendo',
+      siteName: '1000Click',
       type: 'website',
       locale: 'fr_FR',
       ...(image && { images: [{ url: image, width: 1200, height: 630, alt: listing.title }] }),

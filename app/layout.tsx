@@ -23,21 +23,21 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-marke
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: 'Vendo — Petites annonces entre expatriés en Espagne',
-    template: '%s — Vendo',
+    default: '1000Click — Petites annonces entre expatriés en Espagne',
+    template: '%s — 1000Click',
   },
   description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne. La marketplace des expatriés francophones.',
   openGraph: {
     type: 'website',
-    siteName: 'Vendo',
-    title: 'Vendo — Petites annonces entre expatriés en Espagne',
+    siteName: '1000Click',
+    title: '1000Click — Petites annonces entre expatriés en Espagne',
     description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
     locale: 'fr_FR',
-    images: [{ url: '/valencia-hero.jpg', width: 1200, height: 630, alt: 'Vendo' }],
+    images: [{ url: '/valencia-hero.jpg', width: 1200, height: 630, alt: '1000Click' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vendo — Petites annonces entre expatriés en Espagne',
+    title: '1000Click — Petites annonces entre expatriés en Espagne',
     description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne.',
     images: ['/valencia-hero.jpg'],
   },

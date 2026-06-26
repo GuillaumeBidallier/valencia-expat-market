@@ -35,7 +35,7 @@ export default function CityAutocomplete({ value, onChange, error, placeholder =
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q + ', España')}&format=json&limit=5&accept-language=fr`,
-        { headers: { 'User-Agent': 'VendoExpat/1.0' } }
+        { headers: { 'User-Agent': '1000ClickExpat/1.0' } }
       )
       setResults(await res.json())
       setOpen(true)

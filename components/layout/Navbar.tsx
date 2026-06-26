@@ -108,7 +108,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="shrink-0" aria-label="Vendo — Accueil">
+          <Link href="/" className="shrink-0" aria-label="1000Click — Accueil">
             <VendoLogo size="md" theme={transparent ? 'light' : 'dark'} />
           </Link>
 

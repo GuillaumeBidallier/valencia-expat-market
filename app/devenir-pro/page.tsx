@@ -6,8 +6,8 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Devenir Pro sur Vendo — Touchez les expatriés en Espagne',
-  description: 'Créez votre fiche professionnelle sur Vendo et devenez visible auprès de milliers d\'expatriés francophones installés en Espagne. Premium dès 49 €/mois.',
+  title: 'Devenir Pro sur 1000Click — Touchez les expatriés en Espagne',
+  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers d\'expatriés francophones installés en Espagne. Premium dès 49 €/mois.',
 }
 
 /* ─── Animation keyframes ─────────────────────────────────────────────────── */
@@ -247,7 +247,7 @@ export default function DevenirProPage() {
 
           {/* Subtext */}
           <p className="au d3 text-white/60 text-lg max-w-xl mb-10 leading-relaxed">
-            Vendo connecte les professionnels avec une communauté de milliers d&apos;expatriés francophones installés en Espagne — une audience qualifiée qui cherche activement vos services.
+            1000Click connecte les professionnels avec une communauté de milliers d&apos;expatriés francophones installés en Espagne — une audience qualifiée qui cherche activement vos services.
           </p>
 
           {/* CTAs */}
@@ -287,7 +287,7 @@ export default function DevenirProPage() {
       ══════════════════════════════════════════ */}
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-8 py-10">
-          <p className="text-center text-xs font-black uppercase tracking-widest text-gray-400 mb-8">Pourquoi Vendo</p>
+          <p className="text-center text-xs font-black uppercase tracking-widest text-gray-400 mb-8">Pourquoi 1000Click</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
             {[
               { icon: <Users size={20} className="text-orange-primary" />, val: 'Croissante', label: 'Audience qualifiée' },
@@ -369,7 +369,7 @@ export default function DevenirProPage() {
               Visible là où sont<br />vos clients
             </h2>
             <p className="au d2 text-gray-500 text-base max-w-lg mx-auto">
-              Définissez vos zones d&apos;intervention. Vendo affiche votre fiche uniquement aux utilisateurs qui cherchent dans votre secteur — et dans votre catégorie.
+              Définissez vos zones d&apos;intervention. 1000Click affiche votre fiche uniquement aux utilisateurs qui cherchent dans votre secteur — et dans votre catégorie.
             </p>
           </div>
 
@@ -454,14 +454,14 @@ export default function DevenirProPage() {
                   icon: <TrendingUp size={20} />,
                   color: 'bg-indigo-soft text-indigo-primary',
                   title: 'Ciblage par annonce consultée',
-                  desc: 'Quand un utilisateur consulte une annonce à Valencia, Vendo affiche en priorité les pros qui couvrent Valencia. Le déclencheur est la ville de l\'annonce vue — priorité numéro 1.',
+                  desc: 'Quand un utilisateur consulte une annonce à Valencia, 1000Click affiche en priorité les pros qui couvrent Valencia. Le déclencheur est la ville de l\'annonce vue — priorité numéro 1.',
                   delay: 'd3',
                 },
                 {
                   icon: <Zap size={20} />,
                   color: 'bg-orange-soft text-orange-primary',
                   title: 'Géolocalisation automatique de l\'utilisateur',
-                  desc: 'Même sans consulter d\'annonce, Vendo détecte automatiquement la ville de l\'utilisateur via son IP et affiche en priorité les pros de sa région — sans aucune action de sa part.',
+                  desc: 'Même sans consulter d\'annonce, 1000Click détecte automatiquement la ville de l\'utilisateur via son IP et affiche en priorité les pros de sa région — sans aucune action de sa part.',
                   delay: 'd4',
                 },
                 {
@@ -608,7 +608,7 @@ export default function DevenirProPage() {
             Lancez-vous en<br /><span className="gradient-text">4 minutes</span>
           </h2>
           <p className="au d2 text-white/50 text-base mb-10 max-w-lg mx-auto">
-            Rejoignez les professionnels qui font confiance à Vendo pour toucher la communauté internationale des expatriés en Espagne.
+            Rejoignez les professionnels qui font confiance à 1000Click pour toucher la communauté internationale des expatriés en Espagne.
           </p>
           <div className="au d3">
             <Link

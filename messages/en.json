@@ -182,7 +182,7 @@
     "legal_terms": "Terms of use",
     "legal_privacy": "Privacy policy",
     "legal_cookies": "Cookies",
-    "copyright": "© 2026 Vendo — All rights reserved. Made with ❤️ for expats in Spain."
+    "copyright": "© 2026 1000Click — All rights reserved. Made with ❤️ for expats in Spain."
   },
   "ProsBanner": {
     "title": "⭐ Recommended French-speaking professionals",
@@ -265,7 +265,7 @@
     "send_message": "Send a message",
     "whatsapp": "Contact via WhatsApp",
     "show_phone": "Show phone number",
-    "security_notice": "Exchanges and payments are made in person only. Vendo does not intervene in the transaction.",
+    "security_notice": "Exchanges and payments are made in person only. 1000Click does not intervene in the transaction.",
     "report": "Report this listing",
     "message_modal_title": "Send a message",
     "message_placeholder": "Hello, I am interested in your listing...",
@@ -312,10 +312,10 @@
     "cta_intro": "Want to work with",
     "cta_call": "Call",
     "contact_label": "Contact",
-    "verified_badge": "Vendo verified professional",
+    "verified_badge": "1000Click verified professional",
     "visit_website": "Visit website",
-    "mention_vendo": "Mention Vendo when you contact them.",
-    "wa_message": "Hello {name}, I found your profile on Vendo and would like to contact you.",
+    "mention_vendo": "Mention 1000Click when you contact them.",
+    "wa_message": "Hello {name}, I found your profile on 1000Click and would like to contact you.",
     "not_found": "Professional not found"
   },
   "ProDashboard": {
@@ -349,7 +349,7 @@
     "remove_photo": "Delete this photo",
     "photos_count": "{count}/8 photos · Max 5 MB per photo",
     "not_linked_title": "No profile linked",
-    "not_linked_body": "Your account is not yet linked to a professional profile. Contact us to create your profile on Vendo.",
+    "not_linked_body": "Your account is not yet linked to a professional profile. Contact us to create your profile on 1000Click.",
     "contact_us": "Contact us"
   },
   "Blog": {

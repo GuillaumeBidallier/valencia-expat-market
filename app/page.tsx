@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma'
 import HomeContent from '@/components/home/HomeContent'
 
 export const metadata: Metadata = {
-  title: 'Vendo — Petites annonces entre expatriés en Espagne',
+  title: '1000Click — Petites annonces entre expatriés en Espagne',
   description: 'Achetez, vendez et donnez une seconde vie à vos affaires entre expatriés en Espagne. La marketplace des expatriés francophones.',
   alternates: { canonical: '/' },
 }

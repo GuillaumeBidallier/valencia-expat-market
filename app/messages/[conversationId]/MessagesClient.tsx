@@ -335,7 +335,7 @@ export default function MessagesClient({ conversationId, conversations, listing,
               </div>
               <div>
                 <p className="text-sm font-semibold text-navy">{listing.user?.name ?? 'Vendeur'}</p>
-                <p className="text-xs text-gray-400">Membre Vendo</p>
+                <p className="text-xs text-gray-400">Membre 1000Click</p>
               </div>
             </div>
           </div>

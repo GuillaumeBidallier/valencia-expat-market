@@ -27,7 +27,7 @@ async function geocodeCity(city: string): Promise<{ lat: number; lng: number } |
     const q = encodeURIComponent(`${city}, Spain`)
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`,
-      { headers: { 'User-Agent': 'VendoValencia/1.0 contact@vendo.es' }, next: { revalidate: 86400 } }
+      { headers: { 'User-Agent': '1000ClickValencia/1.0 contact@vendo.es' }, next: { revalidate: 86400 } }
     )
     if (!res.ok) return CITY_COORDS['valencia']
     const data = await res.json()

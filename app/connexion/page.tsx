@@ -37,7 +37,7 @@ export default function ConnexionPage() {
             <span className="text-white font-bold text-lg">V</span>
           </div>
           <div className="leading-tight">
-            <div className="text-navy font-bold text-lg tracking-wider uppercase">Vendo</div>
+            <div className="text-navy font-bold text-lg tracking-wider uppercase">1000Click</div>
           </div>
         </div>
 

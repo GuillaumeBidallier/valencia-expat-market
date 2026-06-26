@@ -182,7 +182,7 @@
     "legal_terms": "Gebruiksvoorwaarden",
     "legal_privacy": "Privacybeleid",
     "legal_cookies": "Cookies",
-    "copyright": "© 2026 Vendo — Alle rechten voorbehouden. Gemaakt met ❤️ voor expats in Spanje."
+    "copyright": "© 2026 1000Click — Alle rechten voorbehouden. Gemaakt met ❤️ voor expats in Spanje."
   },
   "ProsBanner": {
     "title": "⭐ Aanbevolen Franstalige professionals",
@@ -265,7 +265,7 @@
     "send_message": "Bericht sturen",
     "whatsapp": "Contact via WhatsApp",
     "show_phone": "Telefoonnummer tonen",
-    "security_notice": "Uitwisselingen en betalingen vinden uitsluitend persoonlijk plaats. Vendo treedt niet op in de transactie.",
+    "security_notice": "Uitwisselingen en betalingen vinden uitsluitend persoonlijk plaats. 1000Click treedt niet op in de transactie.",
     "report": "Advertentie melden",
     "message_modal_title": "Bericht sturen",
     "message_placeholder": "Hallo, ik ben geïnteresseerd in uw advertentie...",
@@ -312,10 +312,10 @@
     "cta_intro": "Wilt u samenwerken met",
     "cta_call": "Bellen",
     "contact_label": "Contact",
-    "verified_badge": "Door Vendo geverifieerde professional",
+    "verified_badge": "Door 1000Click geverifieerde professional",
     "visit_website": "Website bezoeken",
-    "mention_vendo": "Vermeld Vendo bij uw contact.",
-    "wa_message": "Hallo {name}, ik vond uw profiel op Vendo en wil graag contact opnemen.",
+    "mention_vendo": "Vermeld 1000Click bij uw contact.",
+    "wa_message": "Hallo {name}, ik vond uw profiel op 1000Click en wil graag contact opnemen.",
     "not_found": "Professional niet gevonden"
   },
   "ProDashboard": {
@@ -349,7 +349,7 @@
     "remove_photo": "Deze foto verwijderen",
     "photos_count": "{count}/8 foto's · Max. 5 MB per foto",
     "not_linked_title": "Geen profiel gekoppeld",
-    "not_linked_body": "Uw account is nog niet gekoppeld aan een professioneel profiel. Neem contact op om uw profiel op Vendo aan te maken.",
+    "not_linked_body": "Uw account is nog niet gekoppeld aan een professioneel profiel. Neem contact op om uw profiel op 1000Click aan te maken.",
     "contact_us": "Neem contact op"
   },
   "Blog": {

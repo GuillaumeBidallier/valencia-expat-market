@@ -2,7 +2,7 @@ import { Resend } from 'resend'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'Vendo <onboarding@resend.dev>'
+const FROM = process.env.RESEND_FROM_EMAIL ?? '1000Click <onboarding@resend.dev>'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app'
 
 // ── Welcome email ──────────────────────────────────────────
@@ -12,7 +12,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: 'Bienvenue sur Vendo ! 🎉',
+    subject: 'Bienvenue sur 1000Click ! 🎉',
     html: `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -21,13 +21,13 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#E8571A;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
-          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">Vendo</p>
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Petites annonces entre expatriés</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
           <p style="margin:0 0 16px;font-size:22px;font-weight:900;color:#1A1F36;">Bienvenue, ${safeName} ! 🎉</p>
           <p style="margin:0 0 20px;font-size:15px;color:#6B7280;line-height:1.7;">
-            Votre compte Vendo a bien été créé. Vous faites maintenant partie de la communauté des expatriés francophones en Espagne.
+            Votre compte 1000Click a bien été créé. Vous faites maintenant partie de la communauté des expatriés francophones en Espagne.
           </p>
           <p style="margin:0 0 12px;font-size:14px;font-weight:700;color:#1A1F36;">Ce que vous pouvez faire :</p>
           <ul style="margin:0 0 32px;padding-left:20px;color:#6B7280;font-size:14px;line-height:2;">
@@ -42,7 +42,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -60,7 +60,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
   await resend.emails.send({
     from: FROM,
     to,
-    subject: 'Réinitialisation de votre mot de passe Vendo',
+    subject: 'Réinitialisation de votre mot de passe 1000Click',
     html: `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -69,7 +69,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#1A1F36;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
-          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">Vendo</p>
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Réinitialisation du mot de passe</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
@@ -89,7 +89,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
             Si vous n'avez pas demandé cette réinitialisation, ignorez cet email. Votre mot de passe restera inchangé.
           </p>
           <p style="margin:32px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -126,7 +126,7 @@ export async function sendAdminNewListingEmail({
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#4F46E5;border-radius:16px 16px 0 0;padding:28px 32px;text-align:center;">
-          <p style="margin:0;font-size:22px;font-weight:900;color:#fff;">Vendo · Admin</p>
+          <p style="margin:0;font-size:22px;font-weight:900;color:#fff;">1000Click · Admin</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.7);">Nouvelle annonce à modérer</p>
         </td></tr>
         <tr><td style="background:#fff;padding:36px 32px;border-radius:0 0 16px 16px;">
@@ -173,7 +173,7 @@ export async function sendListingApprovedEmail({
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#16A34A;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
-          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">Vendo</p>
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Petites annonces entre expatriés</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
@@ -190,7 +190,7 @@ export async function sendListingApprovedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -222,7 +222,7 @@ export async function sendListingRejectedEmail({
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#1A1F36;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
-          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">Vendo</p>
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces entre expatriés</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
@@ -243,7 +243,7 @@ export async function sendListingRejectedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            Vendo · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
           </p>
         </td></tr>
       </table>
@@ -276,7 +276,7 @@ function emailHtml({
 
         <!-- Header -->
         <tr><td style="background:#E8571A;border-radius:16px 16px 0 0;padding:28px 32px;text-align:center;">
-          <p style="margin:0;font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.5px;">Vendo</p>
+          <p style="margin:0;font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.5px;">1000Click</p>
           <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.7);">Petites annonces entre expatriés</p>
         </td></tr>
 
@@ -323,8 +323,8 @@ function emailHtml({
         <!-- Footer -->
         <tr><td style="background:#F9FAFB;border-radius:0 0 16px 16px;padding:20px 32px;text-align:center;border-top:1px solid #F3F4F6;">
           <p style="margin:0;font-size:11px;color:#9CA3AF;line-height:1.6;">
-            Vendo · Vous recevez cet email car quelqu'un vous a contacté via la plateforme.<br>
-            <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">Accéder à Vendo</a>
+            1000Click · Vous recevez cet email car quelqu'un vous a contacté via la plateforme.<br>
+            <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">Accéder à 1000Click</a>
           </p>
         </td></tr>
 
@@ -349,7 +349,7 @@ export async function sendMessageNotification({
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `${fromName} vous a envoyé un message sur Vendo`,
+    subject: `${fromName} vous a envoyé un message sur 1000Click`,
     html: emailHtml({ toName, fromName, listingTitle, preview, conversationUrl }),
   })
 }

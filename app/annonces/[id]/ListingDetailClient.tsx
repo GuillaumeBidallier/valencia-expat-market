@@ -88,7 +88,7 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
     setMessageSending(false)
   }
 
-  const waLink = `https://wa.me/${(listing.phone ?? '').replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour, je suis intéressé(e) par votre annonce "${listing.title}" sur Vendo.`)}`
+  const waLink = `https://wa.me/${(listing.phone ?? '').replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour, je suis intéressé(e) par votre annonce "${listing.title}" sur 1000Click.`)}`
   const publishDate = new Date(listing.publishedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
   const reportReasons = [0, 1, 2, 3, 4].map(i => t(`report_reason_${i}` as Parameters<typeof t>[0]))
 

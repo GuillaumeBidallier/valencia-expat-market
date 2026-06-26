@@ -65,10 +65,10 @@ If you're an EU citizen staying more than 3 months, you need the **Certificado d
 
 ---
 
-**Vendo tip:** The expat community on Vendo is full of people who have been through all of this. Don't hesitate to reach out — someone near you will have the answer.
+**1000Click tip:** The expat community on 1000Click is full of people who have been through all of this. Don't hesitate to reach out — someone near you will have the answer.
 `,
     category: 'guide',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 8,
     lang: 'en',
     published: true,
@@ -133,10 +133,10 @@ Clarify what's included before signing:
 
 ---
 
-Found a flat but need furniture? Browse Vendo — hundreds of expats sell quality second-hand items daily.
+Found a flat but need furniture? Browse 1000Click — hundreds of expats sell quality second-hand items daily.
 `,
     category: 'vie-pratique',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 6,
     lang: 'en',
     published: true,
@@ -201,7 +201,7 @@ Dial **112** for all emergencies. Hospitals with emergency departments are calle
 
 ---
 
-The Vendo community has expats from all walks of life in Spain. Ask questions, share experiences and help each other navigate life here.
+The 1000Click community has expats from all walks of life in Spain. Ask questions, share experiences and help each other navigate life here.
 `,
     category: 'vie-pratique',
     author: 'Emma R.',
@@ -213,7 +213,7 @@ The Vendo community has expats from all walks of life in Spain. Ask questions, s
   {
     slug: 'selling-buying-second-hand-spain',
     title: 'Buying & Selling Second-Hand in Spain: The Expat Guide',
-    excerpt: 'Moving in or moving out? Spain has a thriving second-hand market. Here\'s how to buy and sell safely as an expat, and why Vendo is the best platform for French-speaking communities.',
+    excerpt: 'Moving in or moving out? Spain has a thriving second-hand market. Here\'s how to buy and sell safely as an expat, and why 1000Click is the best platform for French-speaking communities.',
     content: `# Buying & Selling Second-Hand in Spain: The Expat Guide
 
 Whether you're arriving and need to furnish a flat on a budget, or leaving and want to sell everything before your flight home, Spain's second-hand market is your best friend.
@@ -227,8 +227,8 @@ Whether you're arriving and need to furnish a flat on a budget, or leaving and w
 
 ## Where to Buy and Sell
 
-### Vendo — The Expat Marketplace
-Vendo is the dedicated platform for the French-speaking expat community in Spain. Unlike generic platforms, everyone here understands the expat experience. You'll find:
+### 1000Click — The Expat Marketplace
+1000Click is the dedicated platform for the French-speaking expat community in Spain. Unlike generic platforms, everyone here understands the expat experience. You'll find:
 - Quality items from people relocating back to France, Belgium or Switzerland
 - Fair prices without the lowball culture of other platforms
 - A safe, verified community
@@ -255,14 +255,14 @@ Vendo is the dedicated platform for the French-speaking expat community in Spain
 
 ## The Expat Cycle
 
-One of the beautiful things about expat communities is the "passing it on" culture. An expat who arrived 3 years ago and furnished their flat with second-hand goods will sell everything to the next arrival. Vendo facilitates exactly this cycle.
+One of the beautiful things about expat communities is the "passing it on" culture. An expat who arrived 3 years ago and furnished their flat with second-hand goods will sell everything to the next arrival. 1000Click facilitates exactly this cycle.
 
 ---
 
-Post your first listing on Vendo today — it's completely free and your item could be in someone's home by tomorrow.
+Post your first listing on 1000Click today — it's completely free and your item could be in someone's home by tomorrow.
 `,
     category: 'conseils',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 5,
     lang: 'en',
     published: true,
@@ -322,10 +322,10 @@ Spanish people, especially outside tourist areas, genuinely appreciate when fore
 
 ---
 
-Vendo's community speaks French, English, Spanish and more. Share your language tips and ask for help — we're all learning together.
+1000Click's community speaks French, English, Spanish and more. Share your language tips and ask for help — we're all learning together.
 `,
     category: 'conseils',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 6,
     lang: 'en',
     published: true,
@@ -381,10 +381,10 @@ Remote workers earning Northern European salaries while living in Spain have one
 
 ---
 
-Reduce your moving costs by buying second-hand on Vendo — from sofas to smartphones, the expat community has everything you need.
+Reduce your moving costs by buying second-hand on 1000Click — from sofas to smartphones, the expat community has everything you need.
 `,
     category: 'guide',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 5,
     lang: 'en',
     published: true,
@@ -443,10 +443,10 @@ Si eres ciudadano de la UE y llevas más de 3 meses en España, debes solicitar 
 
 ---
 
-La comunidad Vendo está llena de expatriados que han pasado por todo esto. ¡No dudes en preguntar!
+La comunidad 1000Click está llena de expatriados que han pasado por todo esto. ¡No dudes en preguntar!
 `,
     category: 'guide',
-    author: 'Equipo Vendo',
+    author: 'Equipo 1000Click',
     readTime: 7,
     lang: 'es',
     published: true,
@@ -509,10 +509,10 @@ Aclara antes de firmar:
 
 ---
 
-¿Buscas muebles para tu nuevo piso? En Vendo encontrarás cientos de artículos de segunda mano a precios razonables, ofrecidos por otros expatriados.
+¿Buscas muebles para tu nuevo piso? En 1000Click encontrarás cientos de artículos de segunda mano a precios razonables, ofrecidos por otros expatriados.
 `,
     category: 'vie-pratique',
-    author: 'Equipo Vendo',
+    author: 'Equipo 1000Click',
     readTime: 6,
     lang: 'es',
     published: true,
@@ -572,7 +572,7 @@ Marca el **112** para cualquier emergencia. Los hospitales con urgencias atiende
 
 ---
 
-¿Tienes dudas sobre la sanidad española? La comunidad Vendo puede ayudarte con experiencias de primera mano.
+¿Tienes dudas sobre la sanidad española? La comunidad 1000Click puede ayudarte con experiencias de primera mano.
 `,
     category: 'vie-pratique',
     author: 'Carmen L.',
@@ -630,10 +630,10 @@ Los sueldos en Valencia son inferiores a los de Madrid o Barcelona, pero el cost
 
 ---
 
-Ahorra en tu mudanza comprando de segunda mano en Vendo. ¡Encuentra todo lo que necesitas a precios justos!
+Ahorra en tu mudanza comprando de segunda mano en 1000Click. ¡Encuentra todo lo que necesitas a precios justos!
 `,
     category: 'guide',
-    author: 'Equipo Vendo',
+    author: 'Equipo 1000Click',
     readTime: 5,
     lang: 'es',
     published: true,
@@ -699,10 +699,10 @@ Ofrecen el Bachillerato Internacional (IB) u otros programas. Precios elevados (
 
 ---
 
-¿Tienes hijos que van al colegio y buscas material escolar de segunda mano? ¡Busca en Vendo!
+¿Tienes hijos que van al colegio y buscas material escolar de segunda mano? ¡Busca en 1000Click!
 `,
     category: 'conseils',
-    author: 'Equipo Vendo',
+    author: 'Equipo 1000Click',
     readTime: 6,
     lang: 'es',
     published: true,
@@ -762,10 +762,10 @@ Als EU-Bürger, der länger als 3 Monate bleibt, müssen Sie das **Certificado d
 
 ---
 
-Die Vendo-Community hat viele Deutsche Mitglieder, die schon durch all das gegangen sind. Fragen Sie einfach — Sie sind nicht allein!
+Die 1000Click-Community hat viele Deutsche Mitglieder, die schon durch all das gegangen sind. Fragen Sie einfach — Sie sind nicht allein!
 `,
     category: 'guide',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 7,
     lang: 'de',
     published: true,
@@ -827,10 +827,10 @@ Klären Sie vor der Unterschrift:
 
 ---
 
-Brauchen Sie Möbel für Ihre neue Wohnung? Auf Vendo finden Sie hochwertige Gebrauchtartikel von anderen Expats zu fairen Preisen.
+Brauchen Sie Möbel für Ihre neue Wohnung? Auf 1000Click finden Sie hochwertige Gebrauchtartikel von anderen Expats zu fairen Preisen.
 `,
     category: 'vie-pratique',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 6,
     lang: 'de',
     published: true,
@@ -895,10 +895,10 @@ Wählen Sie **112** für alle Notfälle. Krankenhäuser mit Notaufnahme (Urgenci
 
 ---
 
-Haben Sie Erfahrungen mit dem spanischen Gesundheitssystem? Teilen Sie Ihre Tipps in der Vendo-Community!
+Haben Sie Erfahrungen mit dem spanischen Gesundheitssystem? Teilen Sie Ihre Tipps in der 1000Click-Community!
 `,
     category: 'vie-pratique',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 6,
     lang: 'de',
     published: true,
@@ -952,10 +952,10 @@ Die spanischen Gehälter liegen unter deutschem Niveau, aber auch die Lebenshalt
 
 ---
 
-Sparen Sie beim Einzug mit Gebrauchtwaren von Vendo — von der Couch bis zum Laptop findet sich alles in der Expat-Community!
+Sparen Sie beim Einzug mit Gebrauchtwaren von 1000Click — von der Couch bis zum Laptop findet sich alles in der Expat-Community!
 `,
     category: 'guide',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 5,
     lang: 'de',
     published: true,
@@ -1011,10 +1011,10 @@ Spanier freuen sich aufrichtig, wenn Ausländer versuchen, Spanisch zu sprechen 
 
 ---
 
-Die Vendo-Community ist mehrsprachig. Stellen Sie Ihre Fragen auf Deutsch — jemand wird antworten!
+Die 1000Click-Community ist mehrsprachig. Stellen Sie Ihre Fragen auf Deutsch — jemand wird antworten!
 `,
     category: 'conseils',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 6,
     lang: 'de',
     published: true,
@@ -1071,10 +1071,10 @@ Als EU-burger die langer dan 3 maanden blijft, moet je het **Certificado de Regi
 
 ---
 
-In de Vendo-community vind je tientallen Nederlanders en Belgen die je kunnen helpen met al deze stappen. Stel gerust je vraag!
+In de 1000Click-community vind je tientallen Nederlanders en Belgen die je kunnen helpen met al deze stappen. Stel gerust je vraag!
 `,
     category: 'guide',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 7,
     lang: 'nl',
     published: true,
@@ -1136,10 +1136,10 @@ Controleer voor ondertekening:
 
 ---
 
-Op zoek naar meubels voor je nieuwe woning? Op Vendo vind je kwalitatieve tweedehands spullen van andere expats voor eerlijke prijzen!
+Op zoek naar meubels voor je nieuwe woning? Op 1000Click vind je kwalitatieve tweedehands spullen van andere expats voor eerlijke prijzen!
 `,
     category: 'vie-pratique',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 6,
     lang: 'nl',
     published: true,
@@ -1204,10 +1204,10 @@ Bel **112** voor alle noodgevallen. Ziekenhuizen met een spoedeisende hulp (Urge
 
 ---
 
-Heb je vragen over de Spaanse gezondheidszorg? Stel ze in de Vendo-community — iemand heeft vast al dezelfde situatie meegemaakt!
+Heb je vragen over de Spaanse gezondheidszorg? Stel ze in de 1000Click-community — iemand heeft vast al dezelfde situatie meegemaakt!
 `,
     category: 'vie-pratique',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 6,
     lang: 'nl',
     published: true,
@@ -1261,10 +1261,10 @@ Spaanse salarissen liggen lager dan in Nederland, maar de kosten ook:
 
 ---
 
-Bespaar op je verhuizing met tweedehands spullen van Vendo — van bankstel tot smartphone, de expat-community heeft alles!
+Bespaar op je verhuizing met tweedehands spullen van 1000Click — van bankstel tot smartphone, de expat-community heeft alles!
 `,
     category: 'guide',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 5,
     lang: 'nl',
     published: true,
@@ -1273,7 +1273,7 @@ Bespaar op je verhuizing met tweedehands spullen van Vendo — van bankstel tot 
   {
     slug: 'tweedehands-kopen-verkopen-spanje',
     title: 'Tweedehands kopen en verkopen in Spanje: de gids voor expats',
-    excerpt: 'Verhuizen naar of uit Spanje? De tweedehandsmarkt is je beste vriend. Hoe je veilig koopt en verkoopt als expat, en waarom Vendo de beste keuze is voor onze gemeenschap.',
+    excerpt: 'Verhuizen naar of uit Spanje? De tweedehandsmarkt is je beste vriend. Hoe je veilig koopt en verkoopt als expat, en waarom 1000Click de beste keuze is voor onze gemeenschap.',
     content: `# Tweedehands kopen en verkopen in Spanje
 
 Of je nu aankomt en goedkoop wil inrichten, of vertrekt en alles wil verkopen — de tweedehandsmarkt in Spanje is levendig en biedt fantastische deals.
@@ -1287,8 +1287,8 @@ Of je nu aankomt en goedkoop wil inrichten, of vertrekt en alles wil verkopen �
 
 ## Waar kopen en verkopen?
 
-### Vendo — De expat-marktplaats
-Vendo is dé marktplaats voor de Franstalige expat-gemeenschap in Spanje, maar steeds meer ook gebruikt door Nederlanders en Belgen. Voordelen:
+### 1000Click — De expat-marktplaats
+1000Click is dé marktplaats voor de Franstalige expat-gemeenschap in Spanje, maar steeds meer ook gebruikt door Nederlanders en Belgen. Voordelen:
 - Kwaliteitsartikelen van mensen die terugkeren naar huis
 - Eerlijke prijzen zonder overdreven afpingen
 - Veilige, geverifieerde gemeenschap
@@ -1315,14 +1315,14 @@ Vendo is dé marktplaats voor de Franstalige expat-gemeenschap in Spanje, maar s
 
 ## De expat-cirkel
 
-Een van de mooie dingen van expat-gemeenschappen is de "doorgeven"-cultuur. Iemand die 3 jaar geleden aankwam en alles tweedehands kocht, verkoopt het nu aan de volgende nieuwkomer. Vendo maakt precies die cirkel mogelijk.
+Een van de mooie dingen van expat-gemeenschappen is de "doorgeven"-cultuur. Iemand die 3 jaar geleden aankwam en alles tweedehands kocht, verkoopt het nu aan de volgende nieuwkomer. 1000Click maakt precies die cirkel mogelijk.
 
 ---
 
-Plaats vandaag nog je eerste advertentie op Vendo — het is volledig gratis en jouw spullen kunnen morgen al een nieuw thuis hebben!
+Plaats vandaag nog je eerste advertentie op 1000Click — het is volledig gratis en jouw spullen kunnen morgen al een nieuw thuis hebben!
 `,
     category: 'conseils',
-    author: 'Vendo Team',
+    author: '1000Click Team',
     readTime: 5,
     lang: 'nl',
     published: true,

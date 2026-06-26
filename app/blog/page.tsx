@@ -8,7 +8,7 @@ import { Clock, ArrowRight } from 'lucide-react'
 const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app').replace(/\/$/, '')
 
 export const metadata: Metadata = {
-  title: 'Blog — Vendo',
+  title: 'Blog — 1000Click',
   description: 'Guides pratiques, conseils et actualités pour les expatriés francophones en Espagne.',
   alternates: { canonical: `${BASE}/blog` },
 }
@@ -45,7 +45,7 @@ export default async function BlogPage({ searchParams }: PageProps) {
       <div className="relative overflow-hidden min-h-[300px] sm:min-h-[360px]">
         <Image
           src="/valencia-hero.jpg"
-          alt="Blog Vendo — expatriés en Espagne"
+          alt="Blog 1000Click — expatriés en Espagne"
           fill
           sizes="100vw"
           className="object-cover object-center"
@@ -54,7 +54,7 @@ export default async function BlogPage({ searchParams }: PageProps) {
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/92 via-hero-dark/65 to-hero-dark/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/40 via-transparent to-hero-dark/60" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-24 flex flex-col justify-center min-h-[300px] sm:min-h-[360px]">
-          <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Vendo</p>
+          <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">1000Click</p>
           <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight mb-4">{t('title')}</h1>
           <p className="text-white/70 text-base sm:text-lg max-w-xl">{t('subtitle')}</p>
         </div>

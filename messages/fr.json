@@ -182,7 +182,7 @@
     "legal_terms": "CGU",
     "legal_privacy": "Politique de confidentialité",
     "legal_cookies": "Cookies",
-    "copyright": "© 2026 Vendo — Tous droits réservés. Réalisé avec ❤️ pour les expatriés en Espagne."
+    "copyright": "© 2026 1000Click — Tous droits réservés. Réalisé avec ❤️ pour les expatriés en Espagne."
   },
   "ProsBanner": {
     "title": "⭐ Professionnels francophones recommandés",
@@ -265,7 +265,7 @@
     "send_message": "Envoyer un message",
     "whatsapp": "Contacter via WhatsApp",
     "show_phone": "Voir le numéro de téléphone",
-    "security_notice": "Les échanges et paiements se font uniquement en main propre. Vendo n'intervient pas dans la transaction.",
+    "security_notice": "Les échanges et paiements se font uniquement en main propre. 1000Click n'intervient pas dans la transaction.",
     "report": "Signaler cette annonce",
     "message_modal_title": "Envoyer un message",
     "message_placeholder": "Bonjour, je suis intéressé(e) par votre annonce...",
@@ -312,10 +312,10 @@
     "cta_intro": "Vous souhaitez travailler avec",
     "cta_call": "Appeler",
     "contact_label": "Contacter",
-    "verified_badge": "Professionnel vérifié Vendo",
+    "verified_badge": "Professionnel vérifié 1000Click",
     "visit_website": "Voir le site web",
-    "mention_vendo": "Mentionnez Vendo lors de votre contact.",
-    "wa_message": "Bonjour {name}, j'ai trouvé votre profil sur Vendo et j'aimerais vous contacter.",
+    "mention_vendo": "Mentionnez 1000Click lors de votre contact.",
+    "wa_message": "Bonjour {name}, j'ai trouvé votre profil sur 1000Click et j'aimerais vous contacter.",
     "not_found": "Professionnel introuvable"
   },
   "ProDashboard": {
@@ -349,7 +349,7 @@
     "remove_photo": "Supprimer cette photo",
     "photos_count": "{count}/8 photos · Max 5 Mo par photo",
     "not_linked_title": "Aucune vitrine liée",
-    "not_linked_body": "Votre compte n'est pas encore lié à un profil professionnel. Contactez-nous pour créer votre vitrine sur Vendo.",
+    "not_linked_body": "Votre compte n'est pas encore lié à un profil professionnel. Contactez-nous pour créer votre vitrine sur 1000Click.",
     "contact_us": "Nous contacter"
   },
   "Blog": {

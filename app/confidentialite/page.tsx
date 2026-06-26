@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { ShieldCheck, Database, Users, Clock, Globe, UserCog, Mail } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Politique de confidentialité — Vendo',
-  description: 'Politique de confidentialité de Vendo. RGPD, données collectées, droits des utilisateurs.',
+  title: 'Politique de confidentialité — 1000Click',
+  description: 'Politique de confidentialité de 1000Click. RGPD, données collectées, droits des utilisateurs.',
 }
 
 const SECTIONS = [
@@ -24,7 +24,7 @@ export default function ConfidentialitePage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="Politique de confidentialité Vendo" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/valencia-hero.jpg" alt="Politique de confidentialité 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal · RGPD</p>
@@ -65,7 +65,7 @@ export default function ConfidentialitePage() {
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex gap-3 items-start">
               <ShieldCheck size={18} className="text-emerald-600 shrink-0 mt-0.5" />
               <p className="text-sm text-gray-700 leading-relaxed">
-                Vendo s&apos;engage à ne jamais vendre vos données personnelles et à ne les utiliser que dans le cadre strictement nécessaire au fonctionnement de la plateforme.
+                1000Click s&apos;engage à ne jamais vendre vos données personnelles et à ne les utiliser que dans le cadre strictement nécessaire au fonctionnement de la plateforme.
               </p>
             </div>
 
@@ -75,7 +75,7 @@ export default function ConfidentialitePage() {
                 <h2 className="text-lg font-black text-navy">Responsable du traitement</h2>
               </div>
               <div className="bg-gray-50 rounded-xl p-4 space-y-1.5 text-sm">
-                <p><strong className="text-navy">Nom :</strong> Vendo</p>
+                <p><strong className="text-navy">Nom :</strong> 1000Click</p>
                 <p><strong className="text-navy">Statut :</strong> Plateforme communautaire de petites annonces</p>
                 <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Espagne (Comunitat Valenciana)</p>
                 <p><strong className="text-navy">Contact DPO :</strong> <a href="mailto:privacy@vendo.es" className="text-orange-primary hover:underline">privacy@vendo.es</a></p>
@@ -185,7 +185,7 @@ export default function ConfidentialitePage() {
               <p className="text-sm text-gray-600 mb-4">Conformément au RGPD et à la LOPDGDD espagnole, vous disposez des droits suivants :</p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  { right: 'Droit d\'accès', desc: 'Obtenir une copie de toutes vos données personnelles détenues par Vendo.', art: 'Art. 15' },
+                  { right: 'Droit d\'accès', desc: 'Obtenir une copie de toutes vos données personnelles détenues par 1000Click.', art: 'Art. 15' },
                   { right: 'Droit de rectification', desc: 'Corriger des données inexactes ou incomplètes vous concernant.', art: 'Art. 16' },
                   { right: 'Droit à l\'effacement', desc: 'Supprimer votre compte et vos données (« droit à l\'oubli »).', art: 'Art. 17' },
                   { right: 'Droit à la portabilité', desc: 'Recevoir vos données dans un format structuré et lisible par machine.', art: 'Art. 20' },

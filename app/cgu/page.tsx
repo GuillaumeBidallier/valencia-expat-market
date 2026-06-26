@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { UserCheck, ClipboardList, CreditCard, MessageSquare, Clock, Ban, RotateCcw, Settings, Gavel } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: "Conditions générales d'utilisation — Vendo",
-  description: "CGU de Vendo. Règles d'utilisation de la plateforme de petites annonces pour expatriés francophones en Espagne.",
+  title: "Conditions générales d'utilisation — 1000Click",
+  description: "CGU de 1000Click. Règles d'utilisation de la plateforme de petites annonces pour expatriés francophones en Espagne.",
 }
 
 const SECTIONS = [
@@ -27,7 +27,7 @@ export default function CguPage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="CGU Vendo" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/valencia-hero.jpg" alt="CGU 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal</p>
@@ -58,7 +58,7 @@ export default function CguPage() {
           <div className="lg:col-span-3 space-y-5">
 
             <div className="bg-orange-soft border border-orange-primary/20 rounded-2xl p-4 text-sm text-gray-700 leading-relaxed">
-              <strong className="text-navy">Important :</strong> En utilisant Vendo, vous acceptez les présentes Conditions Générales d&apos;Utilisation dans leur intégralité. Si vous n&apos;acceptez pas ces conditions, veuillez ne pas utiliser la plateforme.
+              <strong className="text-navy">Important :</strong> En utilisant 1000Click, vous acceptez les présentes Conditions Générales d&apos;Utilisation dans leur intégralité. Si vous n&apos;acceptez pas ces conditions, veuillez ne pas utiliser la plateforme.
             </div>
 
             <section id="objet" className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8">
@@ -67,9 +67,9 @@ export default function CguPage() {
                 Objet
               </h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme <strong className="text-navy">Vendo</strong>, service de petites annonces entre particuliers expatriés en Espagne, accessible à l&apos;adresse <span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">valencia-expat-market.vercel.app</span>.</p>
-                <p>Vendo est une plateforme de mise en relation entre particuliers permettant de publier, consulter et répondre à des annonces de vente, location ou échange de biens et services. Elle est destinée principalement à la communauté des expatriés francophones résidant en Espagne.</p>
-                <p>L&apos;utilisation de Vendo implique l&apos;acceptation pleine et entière des présentes CGU. Vendo se réserve le droit de les modifier à tout moment.</p>
+                <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme <strong className="text-navy">1000Click</strong>, service de petites annonces entre particuliers expatriés en Espagne, accessible à l&apos;adresse <span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">valencia-expat-market.vercel.app</span>.</p>
+                <p>1000Click est une plateforme de mise en relation entre particuliers permettant de publier, consulter et répondre à des annonces de vente, location ou échange de biens et services. Elle est destinée principalement à la communauté des expatriés francophones résidant en Espagne.</p>
+                <p>L&apos;utilisation de 1000Click implique l&apos;acceptation pleine et entière des présentes CGU. 1000Click se réserve le droit de les modifier à tout moment.</p>
               </div>
             </section>
 
@@ -79,7 +79,7 @@ export default function CguPage() {
                 Inscription et compte utilisateur
               </h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-4">
-                <p>L&apos;inscription sur Vendo est <strong className="text-navy">gratuite</strong>. Pour déposer une annonce ou contacter un vendeur, vous devez créer un compte avec une adresse email valide et un mot de passe sécurisé.</p>
+                <p>L&apos;inscription sur 1000Click est <strong className="text-navy">gratuite</strong>. Pour déposer une annonce ou contacter un vendeur, vous devez créer un compte avec une adresse email valide et un mot de passe sécurisé.</p>
                 <div className="bg-gray-50 rounded-xl p-4">
                   <p className="font-bold text-navy text-sm mb-2">En créant un compte, vous vous engagez à :</p>
                   <ul className="space-y-1.5">
@@ -98,7 +98,7 @@ export default function CguPage() {
                     ))}
                   </ul>
                 </div>
-                <p>Vendo se réserve le droit de suspendre ou supprimer tout compte dont les informations s&apos;avèrent fausses ou dont l&apos;utilisation est contraire aux présentes CGU.</p>
+                <p>1000Click se réserve le droit de suspendre ou supprimer tout compte dont les informations s&apos;avèrent fausses ou dont l&apos;utilisation est contraire aux présentes CGU.</p>
               </div>
             </section>
 
@@ -133,7 +133,7 @@ export default function CguPage() {
                     </ul>
                   </div>
                 </div>
-                <p>Vendo se réserve le droit de modérer, modifier ou supprimer toute annonce ne respectant pas ces règles, sans préavis et sans droit à indemnisation.</p>
+                <p>1000Click se réserve le droit de modérer, modifier ou supprimer toute annonce ne respectant pas ces règles, sans préavis et sans droit à indemnisation.</p>
               </div>
             </section>
 
@@ -143,7 +143,7 @@ export default function CguPage() {
                 Transactions
               </h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>Vendo est exclusivement une plateforme de mise en relation. Les transactions se réalisent directement entre vendeur et acheteur, en dehors de la plateforme. Vendo :</p>
+                <p>1000Click est exclusivement une plateforme de mise en relation. Les transactions se réalisent directement entre vendeur et acheteur, en dehors de la plateforme. 1000Click :</p>
                 <ul className="space-y-2 pl-4">
                   {[
                     "Ne perçoit aucune commission sur les transactions entre particuliers",
@@ -170,7 +170,7 @@ export default function CguPage() {
                 Messagerie
               </h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>La messagerie interne Vendo est réservée aux échanges liés aux annonces publiées sur la plateforme.</p>
+                <p>La messagerie interne 1000Click est réservée aux échanges liés aux annonces publiées sur la plateforme.</p>
                 <p><strong className="text-navy">Sont strictement interdits</strong> via la messagerie :</p>
                 <ul className="space-y-1.5 pl-4">
                   {[
@@ -245,7 +245,7 @@ export default function CguPage() {
               </h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
                 <p><strong className="text-navy">Par l&apos;utilisateur :</strong> Vous pouvez supprimer votre compte à tout moment depuis votre espace « Mon compte ». La suppression entraîne la désactivation immédiate de vos annonces actives et la suppression de vos données personnelles conformément à notre politique de confidentialité (délai légal : 1 an pour les obligations comptables et fiscales).</p>
-                <p><strong className="text-navy">Par Vendo :</strong> Vendo se réserve le droit de suspendre ou de résilier tout compte, sans préavis et sans indemnisation, en cas de :</p>
+                <p><strong className="text-navy">Par 1000Click :</strong> 1000Click se réserve le droit de suspendre ou de résilier tout compte, sans préavis et sans indemnisation, en cas de :</p>
                 <ul className="space-y-1.5 pl-4">
                   {[
                     "Non-respect des présentes CGU",
@@ -268,7 +268,7 @@ export default function CguPage() {
                 Modification des CGU
               </h2>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Vendo peut modifier les présentes CGU à tout moment. Les utilisateurs sont informés par email et/ou notification sur la plateforme au moins 15 jours avant l&apos;entrée en vigueur des modifications. La poursuite de l&apos;utilisation du service après cette date vaut acceptation des nouvelles CGU.
+                1000Click peut modifier les présentes CGU à tout moment. Les utilisateurs sont informés par email et/ou notification sur la plateforme au moins 15 jours avant l&apos;entrée en vigueur des modifications. La poursuite de l&apos;utilisation du service après cette date vaut acceptation des nouvelles CGU.
               </p>
             </section>
 

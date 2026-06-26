@@ -41,7 +41,7 @@ export default function BlogEditor({ initial, isNew }: Props) {
     content: '',
     coverImage: '',
     category: 'guide',
-    author: 'Équipe Vendo',
+    author: 'Équipe 1000Click',
     readTime: 5,
     lang: 'fr',
     published: false,

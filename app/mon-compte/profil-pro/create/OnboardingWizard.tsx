@@ -455,7 +455,7 @@ export default function OnboardingWizard() {
             <div className="w-8 h-8 bg-orange-primary rounded-full flex items-center justify-center">
               <span className="text-white font-black text-base">V</span>
             </div>
-            <span className="text-navy font-black text-base tracking-wider uppercase">Vendo Pro</span>
+            <span className="text-navy font-black text-base tracking-wider uppercase">1000Click Pro</span>
           </div>
 
           <ProgressBar step={step} />

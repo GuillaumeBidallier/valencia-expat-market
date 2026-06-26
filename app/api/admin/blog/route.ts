@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       title, slug, excerpt, content,
       coverImage: coverImage || null,
       category: category || 'guide',
-      author: author || 'Équipe Vendo',
+      author: author || 'Équipe 1000Click',
       readTime: readTime ? Number(readTime) : 5,
       lang: lang || 'fr',
       published: !!published,

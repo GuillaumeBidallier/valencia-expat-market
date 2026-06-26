@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { Cookie, ShieldCheck, BarChart3, Megaphone, Settings, Mail } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: "Politique cookies — Vendo",
-  description: "Politique d'utilisation des cookies de Vendo. Cookies essentiels, analytiques, publicitaires et gestion des préférences.",
+  title: "Politique cookies — 1000Click",
+  description: "Politique d'utilisation des cookies de 1000Click. Cookies essentiels, analytiques, publicitaires et gestion des préférences.",
 }
 
 const SECTIONS = [
@@ -23,7 +23,7 @@ export default function CookiesPage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="Politique cookies Vendo" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/valencia-hero.jpg" alt="Politique cookies 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal · Cookies</p>
@@ -128,7 +128,7 @@ export default function CookiesPage() {
               <p className="text-sm text-gray-500 mb-4">Ces cookies nous permettent de comprendre comment les visiteurs utilisent la plateforme, afin d&apos;améliorer l&apos;expérience utilisateur. Ils ne collectent aucune donnée personnelle identifiable.</p>
               <div className="bg-blue-50 rounded-xl p-4">
                 <p className="font-bold text-navy text-sm mb-1">Actuellement : aucun cookie analytique tiers</p>
-                <p className="text-xs text-gray-600">Vendo n&apos;utilise pas encore de service d&apos;analyse tiers (Google Analytics, Plausible, etc.). Si cela venait à changer, cette politique serait mise à jour et votre consentement serait demandé.</p>
+                <p className="text-xs text-gray-600">1000Click n&apos;utilise pas encore de service d&apos;analyse tiers (Google Analytics, Plausible, etc.). Si cela venait à changer, cette politique serait mise à jour et votre consentement serait demandé.</p>
               </div>
             </section>
 
@@ -176,7 +176,7 @@ export default function CookiesPage() {
                 <div className="space-y-3">
                   {[
                     {
-                      title: 'Via Vendo',
+                      title: 'Via 1000Click',
                       desc: 'Notre bandeau de consentement apparaît à votre première visite. Vous pouvez modifier vos choix à tout moment en effaçant le cookie <code class="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono">vem_cookie_consent</code> depuis les outils développeur de votre navigateur.',
                     },
                     {

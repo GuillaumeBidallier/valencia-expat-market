@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Page introuvable — Vendo' },
+  title: { absolute: 'Page introuvable — 1000Click' },
 }
 
 export default function NotFound() {
@@ -10,7 +10,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
       <div className="text-center max-w-md">
         {/* Logo / brand */}
-        <p className="text-5xl font-black text-orange-primary mb-2 tracking-tight">Vendo</p>
+        <p className="text-5xl font-black text-orange-primary mb-2 tracking-tight">1000Click</p>
 
         {/* 404 number */}
         <p className="text-[120px] font-black text-navy leading-none select-none">404</p>

@@ -112,7 +112,7 @@ export default function HomeContent({
       <section id="comment-ca-marche" className="bg-white border-t border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14">
           <div className="text-center mb-10">
-            <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Vendo</p>
+            <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">1000Click</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-2">{t('how_title')}</h2>
             <p className="text-gray-500 text-sm">{t('how_sub')}</p>
           </div>

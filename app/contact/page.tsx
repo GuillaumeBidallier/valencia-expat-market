@@ -7,8 +7,8 @@ import ContactForm from './ContactForm'
 const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app').replace(/\/$/, '')
 
 export const metadata: Metadata = {
-  title: 'Contact — Vendo',
-  description: 'Contactez l\'équipe Vendo. Nous sommes là pour vous aider avec vos questions sur la plateforme, vos annonces ou votre vie d\'expatrié en Espagne.',
+  title: 'Contact — 1000Click',
+  description: 'Contactez l\'équipe 1000Click. Nous sommes là pour vous aider avec vos questions sur la plateforme, vos annonces ou votre vie d\'expatrié en Espagne.',
   alternates: { canonical: `${BASE}/contact` },
 }
 
@@ -34,7 +34,7 @@ const FAQ = [
     a: "Rendez-vous dans « Mon compte » > « Profil professionnel » pour créer votre fiche. Nos offres Premium et Premium+ offrent une visibilité maximale auprès des expatriés."
   },
   {
-    q: "Comment fonctionne la messagerie Vendo ?",
+    q: "Comment fonctionne la messagerie 1000Click ?",
     a: "La messagerie est disponible sur chaque annonce. Une fois connecté, cliquez sur « Contacter le vendeur ». Les échanges restent sur la plateforme pour votre sécurité."
   },
 ]
@@ -47,7 +47,7 @@ export default function ContactPage() {
       <div className="relative overflow-hidden min-h-[280px] sm:min-h-[320px]">
         <Image
           src="/valencia-hero.jpg"
-          alt="Contact Vendo"
+          alt="Contact 1000Click"
           fill
           sizes="100vw"
           className="object-cover object-center"
@@ -56,7 +56,7 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/92 via-hero-dark/65 to-hero-dark/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/40 via-transparent to-hero-dark/60" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-14 sm:py-20 flex flex-col justify-center min-h-[280px] sm:min-h-[320px]">
-          <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Vendo</p>
+          <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">1000Click</p>
           <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight mb-4">Contactez-nous</h1>
           <p className="text-white/70 text-base sm:text-lg max-w-xl">Notre équipe répond à toutes vos questions sur la plateforme et la vie d&apos;expatrié en Espagne.</p>
         </div>

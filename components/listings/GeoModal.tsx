@@ -48,7 +48,7 @@ export default function GeoModal({ isOpen, onClose, onValidate, currentGeo }: Ge
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&countrycodes=es&accept-language=fr`,
-        { headers: { 'User-Agent': 'VendoExpat/1.0' } }
+        { headers: { 'User-Agent': '1000ClickExpat/1.0' } }
       )
       const data: NominatimResult[] = await res.json()
       setSuggestions(data)

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return { title: 'Article introuvable' }
   const url = `${BASE}/blog/${slug}`
   return {
-    title: `${post.title} — Vendo Blog`,
+    title: `${post.title} — 1000Click Blog`,
     description: post.excerpt,
     alternates: { canonical: url },
     openGraph: {
@@ -71,7 +71,7 @@ export default async function BlogPostPage({ params }: Props) {
     url: `${BASE}/blog/${slug}`,
     publisher: {
       '@type': 'Organization',
-      name: 'Vendo',
+      name: '1000Click',
       url: BASE,
     },
     ...(post.coverImage && { image: post.coverImage }),

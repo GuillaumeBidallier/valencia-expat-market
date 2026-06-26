@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { Building2, Server, Scale, ShieldCheck, FileText, Mail } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Mentions légales — Vendo',
-  description: 'Mentions légales de Vendo. Éditeur, hébergeur, propriété intellectuelle et responsabilité.',
+  title: 'Mentions légales — 1000Click',
+  description: 'Mentions légales de 1000Click. Éditeur, hébergeur, propriété intellectuelle et responsabilité.',
 }
 
 const SECTIONS = [
@@ -23,7 +23,7 @@ export default function MentionsLegalesPage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="Mentions légales Vendo" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/valencia-hero.jpg" alt="Mentions légales 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal</p>
@@ -67,11 +67,11 @@ export default function MentionsLegalesPage() {
                 <h2 className="text-lg font-black text-navy">Éditeur du site</h2>
               </div>
               <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
-                <p>Le site <strong className="text-navy">Vendo</strong> (<span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">valencia-expat-market.vercel.app</span>) est édité par :</p>
+                <p>Le site <strong className="text-navy">1000Click</strong> (<span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">valencia-expat-market.vercel.app</span>) est édité par :</p>
                 <div className="bg-gray-50 rounded-xl p-4 space-y-1.5">
-                  <p><strong className="text-navy">Dénomination :</strong> Vendo</p>
+                  <p><strong className="text-navy">Dénomination :</strong> 1000Click</p>
                   <p><strong className="text-navy">Nature :</strong> Plateforme communautaire de petites annonces entre expatriés francophones en Espagne</p>
-                  <p><strong className="text-navy">Directeur de la publication :</strong> Équipe Vendo</p>
+                  <p><strong className="text-navy">Directeur de la publication :</strong> Équipe 1000Click</p>
                   <p><strong className="text-navy">Email :</strong> <a href="mailto:contact@vendo.es" className="text-orange-primary hover:underline">contact@vendo.es</a></p>
                   <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Espagne (Comunitat Valenciana)</p>
                 </div>
@@ -110,11 +110,11 @@ export default function MentionsLegalesPage() {
                 <h2 className="text-lg font-black text-navy">Propriété intellectuelle</h2>
               </div>
               <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
-                <p>L&apos;ensemble des éléments constituant le site Vendo — notamment les textes, le logo, l&apos;interface graphique, les icônes, l&apos;architecture et le code source — sont protégés par le droit d&apos;auteur et, le cas échéant, par le droit des marques.</p>
+                <p>L&apos;ensemble des éléments constituant le site 1000Click — notamment les textes, le logo, l&apos;interface graphique, les icônes, l&apos;architecture et le code source — sont protégés par le droit d&apos;auteur et, le cas échéant, par le droit des marques.</p>
                 <p>Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie du site, quel que soit le moyen ou le procédé utilisé, est interdite sans autorisation écrite préalable de l&apos;éditeur.</p>
                 <div className="bg-orange-soft rounded-xl p-4 border-l-4 border-orange-primary">
                   <p className="text-sm font-medium text-navy mb-1">Contenu des utilisateurs</p>
-                  <p className="text-xs text-gray-600">Les annonces publiées par les utilisateurs restent leur propriété exclusive. En les publiant sur Vendo, l&apos;utilisateur accorde à Vendo une licence non-exclusive, mondiale et gratuite d&apos;affichage, de reproduction et de diffusion sur la plateforme aux fins du service.</p>
+                  <p className="text-xs text-gray-600">Les annonces publiées par les utilisateurs restent leur propriété exclusive. En les publiant sur 1000Click, l&apos;utilisateur accorde à 1000Click une licence non-exclusive, mondiale et gratuite d&apos;affichage, de reproduction et de diffusion sur la plateforme aux fins du service.</p>
                 </div>
               </div>
             </section>
@@ -125,12 +125,12 @@ export default function MentionsLegalesPage() {
                 <h2 className="text-lg font-black text-navy">Responsabilité</h2>
               </div>
               <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
-                <p>Vendo est une plateforme de mise en relation entre particuliers. À ce titre :</p>
+                <p>1000Click est une plateforme de mise en relation entre particuliers. À ce titre :</p>
                 <ul className="space-y-2 pl-4">
                   {[
-                    "Vendo n'est pas partie aux transactions réalisées entre utilisateurs et n'intervient ni dans la vente ni dans le paiement.",
-                    "Vendo ne peut garantir la véracité, la légalité ou la qualité des annonces publiées par les utilisateurs.",
-                    "La responsabilité de Vendo ne pourra être engagée en cas de litige entre un acheteur et un vendeur.",
+                    "1000Click n'est pas partie aux transactions réalisées entre utilisateurs et n'intervient ni dans la vente ni dans le paiement.",
+                    "1000Click ne peut garantir la véracité, la légalité ou la qualité des annonces publiées par les utilisateurs.",
+                    "La responsabilité de 1000Click ne pourra être engagée en cas de litige entre un acheteur et un vendeur.",
                     "Chaque utilisateur est seul responsable du contenu qu'il publie sur la plateforme.",
                     "Tout contenu illicite, frauduleux ou contraire aux CGU sera supprimé. Son auteur pourra être exclu et faire l'objet d'un signalement aux autorités compétentes.",
                   ].map((item, i) => (
@@ -140,7 +140,7 @@ export default function MentionsLegalesPage() {
                     </li>
                   ))}
                 </ul>
-                <p>Vendo s&apos;efforce d&apos;assurer la disponibilité permanente du service mais ne peut garantir une disponibilité ininterrompue. Des interruptions pour maintenance ou pour des raisons techniques peuvent survenir.</p>
+                <p>1000Click s&apos;efforce d&apos;assurer la disponibilité permanente du service mais ne peut garantir une disponibilité ininterrompue. Des interruptions pour maintenance ou pour des raisons techniques peuvent survenir.</p>
               </div>
             </section>
 
@@ -150,7 +150,7 @@ export default function MentionsLegalesPage() {
                 <h2 className="text-lg font-black text-navy">Données personnelles & cookies</h2>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                Le traitement des données personnelles collectées via Vendo est effectué dans le respect du Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et de la Loi Organique Espagnole 3/2018 de Protection des Données (LOPDGDD).
+                Le traitement des données personnelles collectées via 1000Click est effectué dans le respect du Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et de la Loi Organique Espagnole 3/2018 de Protection des Données (LOPDGDD).
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/confidentialite" className="flex-1 bg-orange-soft hover:bg-orange-100 text-orange-primary font-bold text-sm text-center px-4 py-3 rounded-xl transition-colors">
