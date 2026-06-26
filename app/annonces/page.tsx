@@ -9,8 +9,6 @@ export const metadata: Metadata = {
 }
 import { auth } from '@/auth'
 import { Listing } from '@/types'
-import SearchBar from '@/components/listings/SearchBar'
-import type { GeoState } from '@/components/listings/GeoModal'
 import AnnoncesFilters from './AnnoncesFilters'
 import AdUnit from '@/components/ads/AdUnit'
 import AnnoncesUI from '@/components/annonces/AnnoncesUI'
@@ -61,9 +59,6 @@ async function AnnoncesContent({ searchParams }: Props) {
 
   const session = await auth()
   const hasLocation = userLat !== undefined && userLng !== undefined
-  const defaultGeo: GeoState | null = hasLocation
-    ? { city: geoLabel, lat: userLat!, lng: userLng!, radius }
-    : null
 
   // Build bounding-box pre-filter when searching by position
   const bbox = hasLocation ? boundingBox(userLat!, userLng!, radius) : null
@@ -145,12 +140,6 @@ async function AnnoncesContent({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <SearchBar defaultQuery={q} defaultCategory={cat} defaultGeo={defaultGeo} />
-        </div>
-      </div>
-
       <div className="max-w-screen-2xl mx-auto px-3 lg:px-6 py-5">
         <div className="flex flex-col lg:flex-row gap-4 items-start">
 
