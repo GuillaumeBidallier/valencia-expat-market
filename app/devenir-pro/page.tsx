@@ -428,9 +428,12 @@ export default function DevenirProPage() {
                 {/* User card */}
                 <div className="card-float-2 absolute bg-white rounded-xl shadow-xl border border-gray-100 px-3 py-2.5 text-[11px]"
                   style={{ bottom: '8%', right: '-12%', minWidth: 130 }}>
-                  <p className="text-[9px] text-gray-400 mb-1">Utilisateur cherche :</p>
-                  <p className="font-black text-navy text-[10px]">Immobilier à Valencia</p>
-                  <div className="mt-1.5 flex items-center gap-1 text-emerald-600 text-[9px] font-semibold">
+                  <p className="text-[9px] text-gray-400 mb-1">Utilisateur à Valencia :</p>
+                  <div className="flex items-center gap-1 text-indigo-primary text-[9px] font-semibold mb-1">
+                    <MapPin size={8} />
+                    <span>Détecté par IP</span>
+                  </div>
+                  <div className="mt-0.5 flex items-center gap-1 text-emerald-600 text-[9px] font-semibold">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Votre fiche s&apos;affiche ✓
                   </div>
@@ -452,21 +455,21 @@ export default function DevenirProPage() {
                   icon: <TrendingUp size={20} />,
                   color: 'bg-indigo-soft text-indigo-primary',
                   title: 'Ciblage par annonce consultée',
-                  desc: 'Quand un utilisateur consulte une annonce à Valencia, Vendo affiche en priorité les pros qui couvrent Valencia. Le déclencheur est la ville de l\'annonce vue — pas encore le GPS de l\'utilisateur.',
+                  desc: 'Quand un utilisateur consulte une annonce à Valencia, Vendo affiche en priorité les pros qui couvrent Valencia. Le déclencheur est la ville de l\'annonce vue — priorité numéro 1.',
                   delay: 'd3',
                 },
                 {
-                  icon: <Globe size={20} />,
+                  icon: <Zap size={20} />,
                   color: 'bg-orange-soft text-orange-primary',
-                  title: 'Ciblage par catégorie',
-                  desc: 'Les encarts sur une annonce de déménagement montrent en priorité les pros "Déménagement". Zone + catégorie = les bonnes personnes voient votre fiche au bon moment.',
+                  title: 'Géolocalisation automatique de l\'utilisateur',
+                  desc: 'Même sans consulter d\'annonce, Vendo détecte automatiquement la ville de l\'utilisateur via son IP et affiche en priorité les pros de sa région — sans aucune action de sa part.',
                   delay: 'd4',
                 },
                 {
-                  icon: <Zap size={20} />,
+                  icon: <Globe size={20} />,
                   color: 'bg-indigo-soft text-indigo-primary',
-                  title: 'Sans zone = toute l\'Espagne',
-                  desc: 'Si vous ne renseignez aucune zone, votre fiche est éligible à tous les encarts sur l\'ensemble du site — idéal pour les activités 100 % en ligne ou à portée nationale.',
+                  title: 'Ciblage par catégorie',
+                  desc: 'Les encarts sur une annonce de déménagement montrent en priorité les pros "Déménagement". Zone + catégorie = les bonnes personnes voient votre fiche au bon moment.',
                   delay: 'd5',
                 },
               ].map(item => (
