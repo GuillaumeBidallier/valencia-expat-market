@@ -73,8 +73,8 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
   )
 }
 
-/** Compact search form for mobile menu */
-function MobileSearchForm() {
+/** Compact search form for mobile navbar and menu */
+function MobileSearchForm({ transparent = false }: { transparent?: boolean }) {
   const router = useRouter()
   const t = useTranslations('Search')
   return (
@@ -84,7 +84,11 @@ function MobileSearchForm() {
         const q = (new FormData(e.currentTarget).get('q') as string ?? '').trim()
         router.push(q ? `/annonces?q=${encodeURIComponent(q)}` : '/annonces')
       }}
-      className="flex items-center gap-2 h-10 rounded-xl border border-gray-300 bg-white px-3 focus-within:border-orange-primary transition-colors overflow-hidden"
+      className={`flex-1 flex items-center gap-2 h-9 rounded-xl border px-3 overflow-hidden transition-colors focus-within:border-orange-primary ${
+        transparent
+          ? 'bg-white/20 border-white/40 backdrop-blur-sm'
+          : 'bg-white border-gray-300'
+      }`}
     >
       <label htmlFor="mobile-search-q" className="sr-only">{t('placeholder')}</label>
       <input
@@ -93,10 +97,12 @@ function MobileSearchForm() {
         type="search"
         placeholder={t('placeholder')}
         autoComplete="off"
-        className="flex-1 min-w-0 text-sm text-navy placeholder-gray-400 bg-transparent focus:outline-none"
+        className={`flex-1 min-w-0 text-sm bg-transparent focus:outline-none ${
+          transparent ? 'text-white placeholder-white/70' : 'text-navy placeholder-gray-400'
+        }`}
       />
-      <button type="submit" className="text-orange-primary shrink-0">
-        <Search size={16} aria-hidden="true" />
+      <button type="submit" className={`shrink-0 ${transparent ? 'text-white' : 'text-orange-primary'}`}>
+        <Search size={15} aria-hidden="true" />
       </button>
     </form>
   )
@@ -120,7 +126,6 @@ export default function Navbar() {
   }, [])
 
   const transparent = isHome && !scrolled && !menuOpen
-  const showSearchBar = !transparent
 
   return (
     <header role="banner" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -134,47 +139,26 @@ export default function Navbar() {
             <VendoLogo size="md" theme={transparent ? 'light' : 'dark'} />
           </Link>
 
-          {/* ── Desktop center : search bar OR nav links ── */}
-          {showSearchBar ? (
-            /* LBC-style: search bar takes all available center space */
-            <div className="hidden md:block flex-1 min-w-0">
-              <Suspense fallback={
-                <div className="h-11 rounded-xl bg-gray-100 animate-pulse w-full" />
-              }>
-                <NavSearchBar />
-              </Suspense>
-            </div>
-          ) : (
-            /* Transparent home: show classic nav links */
-            <nav aria-label="Navigation principale" className="hidden md:flex flex-1 items-center gap-6">
-              {[
-                { label: t('home'),          href: '/' },
-                { label: t('listings'),      href: '/annonces' },
-                { label: t('professionals'), href: '/professionnels' },
-              ].map(({ label, href }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="text-sm font-medium text-white/90 hover:text-white transition-colors"
-                >
-                  {label}
-                </Link>
-              ))}
-            </nav>
-          )}
+          {/* ── Desktop center : search bar ALWAYS (like LeBonCoin) ── */}
+          <div className="hidden md:block flex-1 min-w-0 mx-2">
+            <Suspense fallback={
+              <div className="h-11 rounded-xl bg-white/80 animate-pulse w-full" />
+            }>
+              <NavSearchBar />
+            </Suspense>
+          </div>
 
           {/* ── Desktop right actions ── */}
           <div className="hidden md:flex items-center gap-2 shrink-0">
 
-            {/* Professionnels (compact link, only beside search bar) */}
-            {showSearchBar && (
-              <Link
-                href="/professionnels"
-                className="text-sm font-medium text-gray-600 hover:text-navy whitespace-nowrap transition-colors hidden lg:block"
-              >
-                {t('professionals')}
-              </Link>
-            )}
+            <Link
+              href="/professionnels"
+              className={`text-sm font-medium whitespace-nowrap transition-colors hidden lg:block ${
+                transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
+              }`}
+            >
+              {t('professionals')}
+            </Link>
 
             {isAuthenticated ? (
               <>
@@ -247,18 +231,8 @@ export default function Navbar() {
 
           {/* ── Mobile ── */}
           <div className="md:hidden flex items-center gap-2 flex-1 min-w-0">
-            {/* Mobile search bar (functional input) */}
-            {showSearchBar ? (
-              <MobileSearchForm />
-            ) : (
-              <Link
-                href="/annonces"
-                className="flex-1 flex items-center gap-2 h-9 rounded-lg bg-white/20 hover:bg-white/30 px-3 text-white/90 text-sm transition-colors"
-              >
-                <Search size={14} className="shrink-0" aria-hidden="true" />
-                <span className="text-xs truncate">{t('listings')}…</span>
-              </Link>
-            )}
+            {/* Mobile search — always visible */}
+            <MobileSearchForm transparent={transparent} />
 
             <Link
               href="/deposer-annonce"
