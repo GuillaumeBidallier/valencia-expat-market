@@ -12,6 +12,11 @@ export async function POST(req: NextRequest) {
     })
     if (!pro) return NextResponse.json({ ok: false }, { status: 404 })
 
+    // Persist click — fire and don't block the response
+    prisma.proClick.create({
+      data: { professionalId: pro.id, type: 'ad_click' },
+    }).catch(() => {})
+
     const destination = pro.website
       ?? (pro.whatsapp ? `https://wa.me/${pro.whatsapp.replace(/\D/g, '')}` : `/professionnels/${pro.slug}`)
 
