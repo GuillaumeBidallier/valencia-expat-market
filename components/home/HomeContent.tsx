@@ -5,7 +5,7 @@ import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
 import PromoBanner from '@/components/home/PromoBanner'
 import ProsBanner from '@/components/home/ProsBanner'
-import HeroSection from '@/components/home/HeroSection'
+import HeroSection, { type HeroSlide } from '@/components/home/HeroSection'
 import { useTranslations } from 'next-intl'
 import type { Listing } from '@/types'
 import type { Professional } from '@prisma/client'
@@ -14,11 +14,13 @@ export default function HomeContent({
   featured,
   featuredPros,
   homeFavIds,
+  heroSlides,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   featured: any[]
   featuredPros: (Professional & { recommended?: boolean })[]
   homeFavIds: string[]
+  heroSlides?: HeroSlide[]
 }) {
   const t = useTranslations('Home')
 
@@ -43,7 +45,7 @@ export default function HomeContent({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeroSection />
+      <HeroSection slides={heroSlides} />
 
       <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 flex gap-4 items-start">
         <div className="hidden xl:block shrink-0 sticky top-20 pt-10">

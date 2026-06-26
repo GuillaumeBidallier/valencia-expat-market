@@ -5,22 +5,38 @@ import { ShieldCheck } from 'lucide-react'
 import SearchWidget from '@/components/listings/SearchWidget'
 import { useTranslations } from 'next-intl'
 
-const SLIDES = [
+export interface HeroSlide {
+  src: string
+  alt: string
+}
+
+const DEFAULT_SLIDES: HeroSlide[] = [
   { src: '/valencia-hero.jpg', alt: 'Valencia — Cité des Arts et des Sciences' },
   { src: 'https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=1920&q=80', alt: 'Madrid — skyline du centre-ville' },
   { src: 'https://images.unsplash.com/photo-1578095172812-dcc191c5aed8?w=1920&q=80', alt: 'Barcelone — Sagrada Família' },
   { src: 'https://images.unsplash.com/photo-1559386081-325882507af7?w=1920&q=80', alt: 'Séville — Plaza de España' },
 ]
+
 const SLIDE_DURATION = 6000
 
-export default function HeroSection() {
+interface Props {
+  slides?: HeroSlide[]
+}
+
+export default function HeroSection({ slides }: Props) {
   const t = useTranslations('Hero')
   const [active, setActive] = useState(0)
+
+  const SLIDES = slides && slides.length > 0 ? slides : DEFAULT_SLIDES
+
+  useEffect(() => {
+    setActive(0)
+  }, [SLIDES.length])
 
   useEffect(() => {
     const id = setInterval(() => setActive(i => (i + 1) % SLIDES.length), SLIDE_DURATION)
     return () => clearInterval(id)
-  }, [])
+  }, [SLIDES.length])
 
   return (
     <>

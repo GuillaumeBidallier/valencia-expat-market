@@ -54,19 +54,26 @@ export default async function HomePage() {
 
   const session = await auth()
 
-  const [featured, featuredPros, favRows] = await Promise.all([
+  const [featured, featuredPros, favRows, siteSettings] = await Promise.all([
     getFeaturedListings().catch(() => []),
     getFeaturedPros().catch(() => []),
     session?.user?.id
       ? prisma.favorite.findMany({ where: { userId: session.user.id }, select: { listingId: true } })
       : Promise.resolve([]),
+    prisma.siteSettings.findUnique({ where: { id: 'default' } }).catch(() => null),
   ])
+
+  const heroSlides =
+    Array.isArray(siteSettings?.heroImages) && (siteSettings.heroImages as unknown[]).length > 0
+      ? (siteSettings.heroImages as Array<{ src: string; alt: string }>)
+      : undefined
 
   return (
     <HomeContent
       featured={featured}
       featuredPros={featuredPros}
       homeFavIds={favRows.map(f => f.listingId)}
+      heroSlides={heroSlides}
     />
   )
 }

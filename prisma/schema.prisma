@@ -66,8 +66,13 @@ enum ListingStatus {
 }
 
 model SiteSettings {
-  id          String  @id @default("default")
-  autoPublish Boolean @default(true)
+  id                  String  @id @default("default")
+  autoPublish         Boolean @default(true)
+  heroImages          Json    @default("[]")
+  announcementText    String?
+  announcementEnabled Boolean @default(false)
+  contactEmail        String?
+  maintenanceMode     Boolean @default(false)
 }
 
 model RateLimitHit {

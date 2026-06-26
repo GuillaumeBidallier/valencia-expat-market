@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import {
   ClipboardList, Users, Star, BarChart3, Flag, Shield,
-  AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight, BookOpen, Tags,
+  AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight, BookOpen, Tags, Settings2,
 } from 'lucide-react'
 
 export default async function AdminPage() {
@@ -237,6 +237,20 @@ export default async function AdminPage() {
                 badgeColor: '',
                 items: [
                   { label: 'Total', value: categoriesCount, dot: 'bg-teal-400' },
+                ],
+              },
+              {
+                href: '/admin/parametres',
+                icon: <Settings2 size={22} />,
+                label: 'Paramètres',
+                color: 'text-slate-600',
+                bg: 'bg-slate-50',
+                badge: null,
+                badgeColor: '',
+                items: [
+                  { label: 'Images hero', value: '', dot: 'bg-indigo-400' },
+                  { label: 'Publication auto', value: '', dot: 'bg-emerald-400' },
+                  { label: 'Bannière & maintenance', value: '', dot: 'bg-amber-400' },
                 ],
               },
             ].map(m => (
