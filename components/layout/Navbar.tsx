@@ -109,7 +109,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="shrink-0" aria-label="1000Click — Accueil">
-            <VendoLogo size="md" theme={transparent ? 'light' : 'dark'} />
+            <VendoLogo size="lg" theme={transparent ? 'light' : 'dark'} />
           </Link>
 
           {/* Desktop Nav */}
