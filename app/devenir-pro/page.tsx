@@ -358,6 +358,135 @@ export default function DevenirProPage() {
       </section>
 
       {/* ══════════════════════════════════════════
+          GÉOLOCALISATION
+      ══════════════════════════════════════════ */}
+      <section className="bg-white py-20 px-4 border-t border-gray-100">
+        <div className="max-w-5xl mx-auto">
+
+          {/* Header */}
+          <div className="text-center mb-14">
+            <p className="au text-indigo-primary text-xs font-black uppercase tracking-widest mb-3">Ciblage géographique</p>
+            <h2 className="au d1 text-3xl sm:text-4xl font-black text-navy mb-4">
+              Visible là où sont<br />vos clients
+            </h2>
+            <p className="au d2 text-gray-500 text-base max-w-lg mx-auto">
+              Définissez vos zones d&apos;intervention. Vendo affiche votre fiche uniquement aux utilisateurs qui cherchent dans votre secteur — et dans votre catégorie.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+            {/* Left — CSS map visual */}
+            <div className="as d2 relative flex items-center justify-center" style={{ minHeight: 340 }}>
+
+              {/* Background map shape — Communitat Valenciana abstraction */}
+              <div className="relative w-72 h-80">
+
+                {/* Region blobs */}
+                <div className="absolute inset-0 rounded-3xl border-2 border-dashed border-indigo-primary/20 bg-indigo-soft/40" />
+
+                {/* City dots + labels */}
+                {[
+                  { name: 'Valencia',   top: '30%', left: '52%', size: 14, primary: true  },
+                  { name: 'Alicante',   top: '68%', left: '62%', size: 10, primary: false },
+                  { name: 'Castellón',  top: '10%', left: '58%', size: 9,  primary: false },
+                  { name: 'Benidorm',   top: '58%', left: '68%', size: 8,  primary: false },
+                  { name: 'Gandia',     top: '48%', left: '60%', size: 8,  primary: false },
+                  { name: 'Torrevieja', top: '82%', left: '66%', size: 7,  primary: false },
+                ].map(city => (
+                  <div key={city.name} className="absolute" style={{ top: city.top, left: city.left, transform: 'translate(-50%,-50%)' }}>
+                    <div
+                      className={`rounded-full ${city.primary ? 'bg-orange-primary step-num' : 'bg-indigo-primary/70'} flex items-center justify-center`}
+                      style={{ width: city.size * 2, height: city.size * 2 }}
+                    />
+                    <span className={`absolute left-full ml-1.5 top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-bold ${city.primary ? 'text-orange-primary' : 'text-indigo-primary/80'}`}>
+                      {city.name}
+                    </span>
+                  </div>
+                ))}
+
+                {/* Zone coverage ring around Valencia */}
+                <div className="absolute rounded-full border-2 border-orange-primary/30 bg-orange-primary/5"
+                  style={{ width: 140, height: 140, top: '30%', left: '52%', transform: 'translate(-50%,-50%)', animation: 'pulseRing 3s ease-out infinite' }} />
+                <div className="absolute rounded-full border border-orange-primary/15 bg-orange-primary/5"
+                  style={{ width: 200, height: 200, top: '30%', left: '52%', transform: 'translate(-50%,-50%)' }} />
+
+                {/* Pro card floating over Valencia */}
+                <div className="card-float absolute bg-white rounded-xl shadow-xl border border-gray-100 px-3 py-2.5 text-[11px]"
+                  style={{ top: '5%', left: '-10%', minWidth: 130 }}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <div className="w-5 h-5 rounded-lg bg-orange-soft flex items-center justify-center text-orange-primary text-[10px]">🏠</div>
+                    <span className="font-black text-navy text-[11px]">Dupont Immo</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-orange-primary">
+                    <MapPin size={8} />
+                    <span className="text-[9px] font-semibold">Valencia · Alicante</span>
+                  </div>
+                  <div className="mt-1 inline-block bg-orange-soft text-orange-primary text-[8px] font-black px-1.5 py-0.5 rounded-full">Sponsorisé</div>
+                </div>
+
+                {/* User card */}
+                <div className="card-float-2 absolute bg-white rounded-xl shadow-xl border border-gray-100 px-3 py-2.5 text-[11px]"
+                  style={{ bottom: '8%', right: '-12%', minWidth: 130 }}>
+                  <p className="text-[9px] text-gray-400 mb-1">Utilisateur cherche :</p>
+                  <p className="font-black text-navy text-[10px]">Immobilier à Valencia</p>
+                  <div className="mt-1.5 flex items-center gap-1 text-emerald-600 text-[9px] font-semibold">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Votre fiche s&apos;affiche ✓
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right — Feature list */}
+            <div className="space-y-5">
+              {[
+                {
+                  icon: <MapPin size={20} />,
+                  color: 'bg-orange-soft text-orange-primary',
+                  title: 'Zones d\'intervention libres',
+                  desc: 'Lors de la création de votre fiche, vous listez les villes et régions que vous couvrez — Valencia, Alicante, toute la Comunitat, ou même toute l\'Espagne. Vous pouvez les modifier à tout moment depuis votre tableau de bord.',
+                  delay: 'd2',
+                },
+                {
+                  icon: <TrendingUp size={20} />,
+                  color: 'bg-indigo-soft text-indigo-primary',
+                  title: 'Ciblage par catégorie',
+                  desc: 'Les encarts sur une annonce de déménagement affichent en priorité les pros de la catégorie "Déménagement". Un utilisateur qui cherche de l\'immobilier verra les agents immobiliers. Vos impressions touchent les bonnes personnes.',
+                  delay: 'd3',
+                },
+                {
+                  icon: <Globe size={20} />,
+                  color: 'bg-orange-soft text-orange-primary',
+                  title: 'Affichage sans zone = toute l\'Espagne',
+                  desc: 'Si vous ne renseignez aucune zone, votre fiche est éligible à tous les encarts sur l\'ensemble du site — idéal pour les activités 100 % en ligne ou à portée nationale.',
+                  delay: 'd4',
+                },
+                {
+                  icon: <Zap size={20} />,
+                  color: 'bg-indigo-soft text-indigo-primary',
+                  title: 'Rotation équitable entre les pros',
+                  desc: 'L\'algorithme Vendo sélectionne aléatoirement les professionnels éligibles à chaque chargement de page. Tous les pros Premium d\'une même zone et catégorie ont une chance égale d\'apparaître.',
+                  delay: 'd5',
+                },
+              ].map(item => (
+                <div key={item.title} className={`au ${item.delay} flex gap-4 bg-[#f7f8fa] rounded-2xl p-5 border border-gray-100 step-card`}>
+                  <div className={`w-11 h-11 rounded-xl ${item.color} flex items-center justify-center shrink-0`}>
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="font-black text-navy text-sm mb-1">{item.title}</p>
+                    <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           PRICING
       ══════════════════════════════════════════ */}
       <section className="bg-white py-20 px-4">
