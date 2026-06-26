@@ -146,6 +146,14 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <Link
+                  href="/mon-compte/profil-pro/create"
+                  className={`text-sm font-semibold transition-colors ${
+                    transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
+                  }`}
+                >
+                  Devenir Pro
+                </Link>
+                <Link
                   href="/deposer-annonce"
                   className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
@@ -261,6 +269,7 @@ export default function Navbar() {
                 )}
               </Link>
               <Link href="/mon-compte" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('account')}</Link>
+              <Link href="/mon-compte/profil-pro/create" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>Devenir Pro</Link>
               {user?.role === 'ADMIN' && (
                 <Link href="/admin" className="flex items-center gap-2 text-sm font-semibold text-indigo-600" onClick={() => setMenuOpen(false)}>
                   <ShieldCheck size={15} /> {t('admin')}

@@ -320,7 +320,7 @@ export default function AccountClient({ user, initialListings, initialFavorites,
           <div className="space-y-4 max-w-lg">
 
             {/* Pro vitrine shortcut */}
-            {proProfile && (
+            {proProfile ? (
               <div className="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-bold text-navy">Ma vitrine professionnelle</p>
@@ -342,6 +342,17 @@ export default function AccountClient({ user, initialListings, initialFavorites,
                   </Link>
                 </div>
               </div>
+            ) : (
+              <Link
+                href="/mon-compte/profil-pro/create"
+                className="flex items-center justify-between gap-3 bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-4 hover:border-orange-primary transition-colors group"
+              >
+                <div>
+                  <p className="text-sm font-bold text-navy">Créer ma fiche professionnelle</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Devenez visible auprès des expatriés en Espagne</p>
+                </div>
+                <ChevronRight size={18} className="text-orange-primary shrink-0 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
             )}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
               <div>
