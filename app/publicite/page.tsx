@@ -119,8 +119,8 @@ const TIERS = [
       { ok: false, label: 'Badge "Recommandé"' },
       { ok: false, label: 'Statistiques de clics' },
     ],
-    cta: 'Passer à Premium',
-    ctaHref: '/contact',
+    cta: 'Créer ma fiche Premium',
+    ctaHref: '/pro/onboarding',
     ctaStyle: 'bg-orange-primary hover:bg-orange-dark text-white',
   },
   {
@@ -142,8 +142,8 @@ const TIERS = [
       { ok: true,  label: 'Badge "Recommandé"' },
       { ok: true,  label: 'Statistiques de clics (bientôt)' },
     ],
-    cta: 'Passer à Premium+',
-    ctaHref: '/contact',
+    cta: 'Créer ma fiche Premium+',
+    ctaHref: '/pro/onboarding',
     ctaStyle: 'bg-indigo-primary hover:bg-indigo-dark text-white',
   },
 ]
@@ -183,7 +183,7 @@ const FAQ = [
   },
   {
     q: 'Comment activer mon abonnement Premium ?',
-    a: 'Créez d\'abord votre fiche depuis /inscription, puis contactez-nous via le formulaire. Nous activons votre tier Premium manuellement après confirmation du paiement.'
+    a: 'Rendez-vous sur /pro/onboarding pour créer votre fiche en quelques minutes. Choisissez votre offre et réglez directement en ligne via Stripe. Votre fiche est activée automatiquement après confirmation du paiement.'
   },
   {
     q: 'Comment se passe le paiement ?',
@@ -195,7 +195,7 @@ const FAQ = [
   },
   {
     q: 'Quand serai-je visible après mon activation ?',
-    a: 'Immédiatement après activation par notre équipe (généralement dans les 24h ouvrées). Votre fiche apparaîtra dans les encarts dès le prochain chargement de page des visiteurs.'
+    a: 'Immédiatement après confirmation du paiement Stripe. Votre fiche apparaîtra dans les encarts dès le prochain chargement de page des visiteurs — sans attendre.'
   },
 ]
 
@@ -217,11 +217,11 @@ export default function PublicitePage() {
             Vendo est la plateforme de référence pour la communauté internationale des expatriés en Espagne. Affichez votre activité devant une audience qualifiée et en pleine croissance.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/contact" className="inline-flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white font-black px-6 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-primary/30">
-              Demander un devis <ArrowRight size={16} />
+            <Link href="/pro/onboarding" className="inline-flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white font-black px-6 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-primary/30">
+              Créer ma fiche pro <ArrowRight size={16} />
             </Link>
-            <Link href="/inscription" className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition-colors border border-white/20">
-              Créer une fiche gratuite
+            <Link href="/contact" className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition-colors border border-white/20">
+              Contacter l&apos;équipe
             </Link>
           </div>
         </div>
@@ -356,18 +356,18 @@ export default function PublicitePage() {
               },
               {
                 n: '2',
-                title: 'Complétez votre fiche',
-                desc: 'Renseignez votre logo, description, coordonnées et zones d\'intervention directement depuis votre espace.'
+                title: 'Créez votre fiche',
+                desc: 'Renseignez le nom de votre activité, votre catégorie, vos coordonnées et zones d\'intervention en quelques minutes.'
               },
               {
                 n: '3',
                 title: 'Choisissez votre offre',
-                desc: 'Premium (49 €/mois) ou Premium+ (99 €/mois). Formule annuelle disponible avec 2 mois offerts. Contactez-nous pour activer.'
+                desc: 'Premium (49 €/mois) ou Premium+ (99 €/mois). Formule annuelle disponible avec 2 mois offerts. Paiement direct via Stripe.'
               },
               {
                 n: '4',
-                title: 'Soyez visible',
-                desc: 'Votre fiche apparaît dans les encarts dès activation — généralement sous 24h ouvrées.'
+                title: 'Soyez visible immédiatement',
+                desc: 'Après confirmation du paiement, votre fiche apparaît dans les encarts dès le prochain chargement de page.'
               },
             ].map(step => (
               <div key={step.n} className="flex flex-col items-center text-center">
@@ -499,16 +499,16 @@ export default function PublicitePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/contact"
+              href="/pro/onboarding"
               className="inline-flex items-center gap-2 justify-center bg-orange-primary hover:bg-orange-dark text-white font-black px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-primary/30"
             >
-              <Mail size={16} /> Contactez-nous
+              Créer ma fiche pro →
             </Link>
             <Link
-              href="/inscription"
+              href="/contact"
               className="inline-flex items-center gap-2 justify-center bg-white/10 hover:bg-white/20 text-white font-bold px-8 py-3.5 rounded-xl text-sm transition-colors border border-white/20"
             >
-              Créer ma fiche gratuite →
+              <Mail size={16} /> Contacter l&apos;équipe
             </Link>
           </div>
         </section>

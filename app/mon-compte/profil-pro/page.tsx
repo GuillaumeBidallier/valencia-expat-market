@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -19,12 +20,12 @@ export default async function ProDashboardPage() {
         <p className="text-5xl mb-4">🏢</p>
         <h1 className="text-2xl font-black text-navy mb-3">{t('not_linked_title')}</h1>
         <p className="text-gray-500 text-sm">{t('not_linked_body')}</p>
-        <a
-          href="mailto:contact@vendo.es?subject=Créer ma vitrine pro"
+        <Link
+          href="/pro/onboarding"
           className="mt-6 inline-flex items-center gap-2 bg-orange-primary text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-orange-dark transition-colors"
         >
-          {t('contact_us')}
-        </a>
+          Créer ma fiche professionnelle →
+        </Link>
       </div>
     )
   }
