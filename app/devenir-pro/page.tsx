@@ -182,7 +182,7 @@ const PREMIUM_PLUS_FEATURES = [
   'Badge "Recommandé" exclusif',
   'Visibilité maximale garantie',
   'Priorité sur les pros Premium',
-  'Statistiques de clics (bientôt)',
+  'Statistiques de clics',
   'Support prioritaire',
 ]
 

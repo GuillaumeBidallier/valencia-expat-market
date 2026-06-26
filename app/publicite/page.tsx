@@ -140,7 +140,7 @@ const TIERS = [
       { ok: true,  label: 'Badge "Sponsorisé"' },
       { ok: true,  label: 'Mise en avant prioritaire' },
       { ok: true,  label: 'Badge "Recommandé"' },
-      { ok: true,  label: 'Statistiques de clics (bientôt)' },
+      { ok: true,  label: 'Statistiques de clics' },
     ],
     cta: 'Créer ma fiche Premium+',
     ctaHref: '/mon-compte/profil-pro/create',

@@ -62,7 +62,7 @@ const PLANS: { id: ProPlan; name: string; price: string; annual: string; color: 
     annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'indigo',
     badge: 'Meilleure visibilité',
-    features: ['Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Affichage dans les encarts pub', 'Badge "Sponsorisé"', 'Mise en avant prioritaire', 'Badge "Recommandé"', 'Statistiques de clics (bientôt)'],
+    features: ['Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Affichage dans les encarts pub', 'Badge "Sponsorisé"', 'Mise en avant prioritaire', 'Badge "Recommandé"', 'Statistiques de clics'],
   },
 ]
 
