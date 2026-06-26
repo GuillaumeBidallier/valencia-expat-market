@@ -145,7 +145,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <Link
-                  href="/mon-compte/profil-pro/create"
+                  href="/devenir-pro"
                   className={`text-sm font-semibold transition-colors ${
                     transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
                   }`}
@@ -195,7 +195,7 @@ export default function Navbar() {
             ) : (
               <>
                 <Link
-                  href="/mon-compte/profil-pro/create"
+                  href="/devenir-pro"
                   className={`text-sm font-semibold transition-colors ${
                     transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
                   }`}
@@ -275,7 +275,7 @@ export default function Navbar() {
                 )}
               </Link>
               <Link href="/mon-compte" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('account')}</Link>
-              <Link href="/mon-compte/profil-pro/create" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>Devenir Pro</Link>
+              <Link href="/devenir-pro" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>Devenir Pro</Link>
               {user?.role === 'ADMIN' && (
                 <Link href="/admin" className="flex items-center gap-2 text-sm font-semibold text-indigo-600" onClick={() => setMenuOpen(false)}>
                   <ShieldCheck size={15} /> {t('admin')}
@@ -285,7 +285,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/mon-compte/profil-pro/create" onClick={() => setMenuOpen(false)} className="text-sm font-semibold text-orange-primary">Devenir Pro</Link>
+              <Link href="/devenir-pro" onClick={() => setMenuOpen(false)} className="text-sm font-semibold text-orange-primary">Devenir Pro</Link>
               <Link href="/connexion" onClick={() => setMenuOpen(false)} className="border border-gray-300 text-navy px-4 py-2.5 rounded-lg font-semibold text-sm text-center">{t('login')}</Link>
               <Link href="/inscription" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center flex items-center justify-center gap-2">
                 <Plus size={15} />
