@@ -1,6 +1,6 @@
 'use client'
 import { useState, useRef } from 'react'
-import { CheckCircle, ChevronLeft, ChevronRight, Loader2, Star, Zap, Upload, X } from 'lucide-react'
+import { CheckCircle, ChevronLeft, ChevronRight, Loader2, Zap, Upload, X } from 'lucide-react'
 import { proCategories } from '@/lib/proCategories'
 import type { ProPlan } from '@/lib/stripe'
 
@@ -259,6 +259,7 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
         <button type="button" onClick={() => logoRef.current?.click()}
           className="w-full border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center gap-2 hover:border-orange-primary transition-colors group">
           {data.logoPreview
+            // eslint-disable-next-line @next/next/no-img-element
             ? <img src={data.logoPreview} alt="Logo" width={80} height={80} className="rounded-xl object-cover" />
             : <><Upload size={24} className="text-gray-300 group-hover:text-orange-primary transition-colors" /><span className="text-sm text-gray-400 group-hover:text-orange-primary transition-colors">Cliquez pour ajouter un logo</span></>
           }
@@ -272,6 +273,7 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
         <button type="button" onClick={() => bannerRef.current?.click()}
           className="w-full border-2 border-dashed border-gray-200 rounded-2xl overflow-hidden hover:border-orange-primary transition-colors group">
           {data.bannerPreview
+            // eslint-disable-next-line @next/next/no-img-element
             ? <div className="relative h-28"><img src={data.bannerPreview} alt="Bannière" className="w-full h-full object-cover" /></div>
             : <div className="h-28 flex flex-col items-center justify-center gap-2"><Upload size={24} className="text-gray-300 group-hover:text-orange-primary transition-colors" /><span className="text-sm text-gray-400 group-hover:text-orange-primary transition-colors">Cliquez pour ajouter une bannière</span></div>
           }
@@ -285,6 +287,7 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
         <div className="grid grid-cols-3 gap-2">
           {data.photoPreviews.map((src, i) => (
             <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover" />
               <button type="button" onClick={() => removePhoto(i)} className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <X size={12} className="text-white" />
@@ -309,7 +312,6 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
       <p className="text-sm text-gray-500 text-center mb-6">Votre fiche sera visible immédiatement après paiement.</p>
       {PLANS.map(plan => {
         const isOrange = plan.color === 'orange'
-        const selected = data.plan === plan.id || (data.plan === `${plan.id.replace('_monthly', '_annual')}` )
         const isSelected = data.plan === plan.id
         return (
           <button
@@ -409,15 +411,22 @@ export default function OnboardingWizard() {
       const { checkoutUrl } = json
 
       // 2. Upload images now that the pro record exists
-      const uploadFile = async (file: File, type: 'logo' | 'banner' | 'photo') => {
+      const uploadFile = async (file: File, type: 'logo' | 'banner' | 'photo'): Promise<boolean> => {
         const fd = new FormData()
         fd.append('file', file)
         fd.append('type', type)
-        await fetch('/api/pro/upload', { method: 'POST', body: fd })
+        const res = await fetch('/api/pro/upload', { method: 'POST', body: fd })
+        return res.ok
       }
-      if (data.logoFile)   await uploadFile(data.logoFile, 'logo')
-      if (data.bannerFile) await uploadFile(data.bannerFile, 'banner')
-      for (const f of data.photoFiles) await uploadFile(f, 'photo')
+      const uploadResults: boolean[] = []
+      if (data.logoFile)   uploadResults.push(await uploadFile(data.logoFile, 'logo'))
+      if (data.bannerFile) uploadResults.push(await uploadFile(data.bannerFile, 'banner'))
+      for (const f of data.photoFiles) uploadResults.push(await uploadFile(f, 'photo'))
+
+      if (uploadResults.some(ok => !ok)) {
+        setError('Certaines images n\'ont pas pu être uploadées. Vous pourrez les ajouter depuis votre espace pro.')
+        // Still redirect — images are optional
+      }
 
       // 3. Redirect to Stripe
       window.location.href = checkoutUrl
