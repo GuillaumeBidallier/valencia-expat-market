@@ -208,7 +208,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
     <>
       {/* Desktop sidebar */}
       <aside className="hidden lg:block w-56 shrink-0">
-        <div className="bg-white border border-gray-100 rounded-xl p-4 sticky top-20 shadow-sm">
+        <div className="bg-white border border-gray-100 rounded-xl p-4 sticky top-32 shadow-sm">
           <h3 className="font-bold text-navy text-sm mb-4">{t('title')}</h3>
           {filtersContent}
         </div>

@@ -1,11 +1,10 @@
 'use client'
 import Link from 'next/link'
-import { Suspense, useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Menu, X, ChevronDown, Plus, MessageSquare, ShieldCheck, Search } from 'lucide-react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
-import NavSearchBar from '@/components/layout/NavSearchBar'
 import { useUnreadCount } from '@/hooks/useUnreadCount'
 import { useTranslations } from 'next-intl'
 import { useLocale, type SupportedLocale } from '@/components/providers/LocaleProvider'
@@ -35,6 +34,11 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
 
   const current = LANGUAGES.find(l => l.code === locale) ?? LANGUAGES[0]
 
+  const select = (code: string) => {
+    setLocale(code as SupportedLocale)
+    setOpen(false)
+  }
+
   return (
     <div ref={ref} className="relative">
       <button
@@ -43,7 +47,9 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
         aria-expanded={open}
         aria-label={`Langue : ${current.label}`}
         className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-          transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
+          transparent
+            ? 'text-white/90 hover:bg-white/10'
+            : 'text-gray-600 hover:bg-gray-100'
         }`}
       >
         <span className="text-base leading-none" aria-hidden="true">{current.flag}</span>
@@ -56,7 +62,7 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
           {LANGUAGES.map(l => (
             <li key={l.code} role="option" aria-selected={l.code === locale}>
               <button
-                onClick={() => { setLocale(l.code as SupportedLocale); setOpen(false) }}
+                onClick={() => select(l.code)}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
                   l.code === locale ? 'text-orange-primary font-semibold' : 'text-navy'
                 }`}
@@ -73,43 +79,8 @@ function LanguagePicker({ transparent }: { transparent: boolean }) {
   )
 }
 
-/** Compact search form for mobile navbar and menu */
-function MobileSearchForm({ transparent = false }: { transparent?: boolean }) {
-  const router = useRouter()
-  const t = useTranslations('Search')
-  return (
-    <form
-      onSubmit={e => {
-        e.preventDefault()
-        const q = (new FormData(e.currentTarget).get('q') as string ?? '').trim()
-        router.push(q ? `/annonces?q=${encodeURIComponent(q)}` : '/annonces')
-      }}
-      className={`flex-1 flex items-center gap-2 h-9 rounded-xl border px-3 overflow-hidden transition-colors focus-within:border-orange-primary ${
-        transparent
-          ? 'bg-white/20 border-white/40 backdrop-blur-sm'
-          : 'bg-white border-gray-300'
-      }`}
-    >
-      <label htmlFor="mobile-search-q" className="sr-only">{t('placeholder')}</label>
-      <input
-        id="mobile-search-q"
-        name="q"
-        type="search"
-        placeholder={t('placeholder')}
-        autoComplete="off"
-        className={`flex-1 min-w-0 text-sm bg-transparent focus:outline-none ${
-          transparent ? 'text-white placeholder-white/70' : 'text-navy placeholder-gray-400'
-        }`}
-      />
-      <button type="submit" className={`shrink-0 ${transparent ? 'text-white' : 'text-orange-primary'}`}>
-        <Search size={15} aria-hidden="true" />
-      </button>
-    </form>
-  )
-}
-
 export default function Navbar() {
-  const { isAuthenticated, user } = useAuth()
+  const { isAuthenticated, user, logout } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
@@ -129,42 +100,54 @@ export default function Navbar() {
 
   return (
     <header role="banner" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      transparent ? 'bg-transparent border-transparent' : 'bg-white border-b border-gray-100 shadow-sm'
+      transparent
+        ? 'bg-transparent border-transparent'
+        : 'bg-white border-b border-gray-100 shadow-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 h-16">
+        <div className="flex items-center justify-between h-16">
 
-          {/* ── Logo ── */}
+          {/* Logo */}
           <Link href="/" className="shrink-0" aria-label="Vendo — Accueil">
             <VendoLogo size="md" theme={transparent ? 'light' : 'dark'} />
           </Link>
 
-          {/* ── Desktop center : search bar ALWAYS (like LeBonCoin) ── */}
-          <div className="hidden md:block flex-1 min-w-0 mx-2">
-            <Suspense fallback={
-              <div className="h-11 rounded-xl bg-white/80 animate-pulse w-full" />
-            }>
-              <NavSearchBar />
-            </Suspense>
-          </div>
+          {/* Desktop Nav */}
+          <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
+            {[
+              { label: t('home'),          href: '/' },
+              { label: t('listings'),      href: '/annonces' },
+              { label: t('professionals'), href: '/professionnels' },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`text-sm font-medium transition-colors ${
+                  transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
 
-          {/* ── Desktop right actions ── */}
-          <div className="hidden md:flex items-center gap-2 shrink-0">
-
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-2">
             <Link
-              href="/professionnels"
-              className={`text-sm font-medium whitespace-nowrap transition-colors hidden lg:block ${
-                transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
+              href="/annonces"
+              aria-label={t('listings')}
+              title={t('listings')}
+              className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+                transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
-              {t('professionals')}
+              <Search size={17} aria-hidden="true" />
             </Link>
-
             {isAuthenticated ? (
               <>
                 <Link
                   href="/deposer-annonce"
-                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap"
+                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
                   <Plus size={15} />
                   {t('postAd')}
@@ -215,34 +198,40 @@ export default function Navbar() {
                   {t('login')}
                 </Link>
                 <Link
-                  href="/deposer-annonce"
-                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors whitespace-nowrap"
+                  href="/inscription"
+                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
                   <Plus size={15} />
                   {t('postAd')}
                 </Link>
               </>
             )}
-
-            <div className="ml-1 border-l pl-3 border-gray-200">
+            {/* Language picker */}
+            <div className="ml-1 border-l pl-3 border-white/20">
               <LanguagePicker transparent={transparent} />
             </div>
           </div>
 
-          {/* ── Mobile ── */}
-          <div className="md:hidden flex items-center gap-2 flex-1 min-w-0">
-            {/* Mobile search — always visible */}
-            <MobileSearchForm transparent={transparent} />
-
+          {/* Mobile : Recherche + Déposer + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <Link
+              href="/annonces"
+              aria-label={t('listings')}
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0 ${
+                transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'
+              }`}
+            >
+              <Search size={17} aria-hidden="true" />
+            </Link>
             <Link
               href="/deposer-annonce"
-              className="flex items-center gap-1 bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap shrink-0"
+              className="flex items-center gap-1 bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
             >
               <Plus size={13} aria-hidden="true" />
               {t('postAd')}
             </Link>
             <button
-              className={`p-2 rounded-lg transition-colors shrink-0 ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
+              className={`p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
               onClick={() => setMenuOpen(o => !o)}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
@@ -254,16 +243,13 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── Mobile menu ── */}
+      {/* Mobile menu — always solid */}
       {menuOpen && (
         <nav id="mobile-menu" aria-label="Navigation mobile" className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
-          <MobileSearchForm />
-
           <Link href="/" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('home')}</Link>
           <Link href="/annonces" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('listings')}</Link>
           <Link href="/professionnels" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>{t('professionals')}</Link>
           <hr />
-
           {isAuthenticated ? (
             <>
               <Link href="/messages" className="flex items-center gap-2 text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>
@@ -291,13 +277,16 @@ export default function Navbar() {
               </Link>
             </>
           )}
-
           <hr />
+          {/* Language selector mobile */}
           <div role="group" aria-label="Choisir une langue" className="flex items-center gap-2 flex-wrap">
             {LANGUAGES.map(l => (
               <button
                 key={l.code}
-                onClick={() => { switchLocale(l.code as SupportedLocale); setMenuOpen(false) }}
+                onClick={() => {
+                  switchLocale(l.code as SupportedLocale)
+                  setMenuOpen(false)
+                }}
                 aria-current={l.code === locale ? 'true' : undefined}
                 aria-label={`${l.label}${l.code === locale ? ' (sélectionné)' : ''}`}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-colors ${
