@@ -242,8 +242,7 @@ export default function DevenirProPage() {
           {/* Headline */}
           <h1 className="au d2 font-black text-white leading-[1.05] mb-6" style={{ fontSize: 'clamp(2.4rem, 6vw, 4.5rem)', maxWidth: '720px' }}>
             Devenez la référence<br />
-            <span className="gradient-text">des expatriés</span><br />
-            en Espagne
+            <span className="gradient-text">sur 1000Click</span>
           </h1>
 
           {/* Subtext */}
