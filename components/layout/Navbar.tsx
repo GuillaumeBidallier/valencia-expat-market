@@ -107,28 +107,29 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
-          {/* Logo */}
-          <Link href="/" className="shrink-0" aria-label="1000Click — Accueil">
-            <VendoLogo size="lg" theme={transparent ? 'light' : 'dark'} />
-          </Link>
+          {/* Logo + nav links — collés ensemble à gauche */}
+          <div className="flex items-center gap-6">
+            <Link href="/" className="shrink-0" aria-label="1000Click — Accueil">
+              <VendoLogo size="lg" theme={transparent ? 'light' : 'dark'} />
+            </Link>
 
-          {/* Desktop Nav */}
-          <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
-            {[
-              { label: t('listings'),      href: '/annonces' },
-              { label: t('professionals'), href: '/professionnels' },
-            ].map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`text-sm font-medium transition-colors ${
-                  transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
+            <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
+              {[
+                { label: t('listings'),      href: '/annonces' },
+                { label: t('professionals'), href: '/professionnels' },
+              ].map(({ label, href }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`text-sm font-medium transition-colors ${
+                    transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-2">
@@ -203,21 +204,19 @@ export default function Navbar() {
                   Devenir Pro
                 </Link>
                 <Link
-                  href="/connexion"
-                  className={`text-sm font-semibold transition-colors ${
-                    transparent
-                      ? 'text-white border border-white/60 px-4 py-2 rounded-lg hover:bg-white/10'
-                      : 'text-gray-600 hover:text-navy'
-                  }`}
-                >
-                  {t('login')}
-                </Link>
-                <Link
                   href="/inscription"
                   className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
                 >
                   <Plus size={15} />
                   {t('postAd')}
+                </Link>
+                <Link
+                  href="/connexion"
+                  className={`text-sm font-normal transition-colors px-2.5 py-1.5 ${
+                    transparent ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-navy'
+                  }`}
+                >
+                  {t('login')}
                 </Link>
               </>
             )}
