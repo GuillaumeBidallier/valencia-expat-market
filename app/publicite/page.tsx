@@ -102,10 +102,10 @@ const FORMATS: Format[] = [
 const TIERS = [
   {
     name: 'Premium',
-    price: '49 €',
-    period: '/ mois',
-    annualPrice: '490 €',
-    annualNote: '2 mois offerts',
+    price: '49,99 €',
+    period: '/ an',
+    annualPrice: '',
+    annualNote: 'Facturation annuelle · résiliable à tout moment',
     color: 'border-orange-primary',
     badge: 'Populaire',
     badgeColor: 'bg-orange-primary text-white',
@@ -125,10 +125,10 @@ const TIERS = [
   },
   {
     name: 'Premium+',
-    price: '99 €',
-    period: '/ mois',
-    annualPrice: '990 €',
-    annualNote: '2 mois offerts',
+    price: '99,99 €',
+    period: '/ an',
+    annualPrice: '',
+    annualNote: 'Facturation annuelle · résiliable à tout moment',
     color: 'border-indigo-primary',
     badge: 'Meilleure visibilité',
     badgeColor: 'bg-indigo-primary text-white',
@@ -187,11 +187,11 @@ const FAQ = [
   },
   {
     q: 'Comment se passe le paiement ?',
-    a: 'Le paiement s\'effectue en ligne via Stripe, la référence mondiale du paiement sécurisé. Vous choisissez entre la formule mensuelle (sans engagement) ou annuelle (2 mois offerts). Votre abonnement est géré directement depuis votre espace, sans intermédiaire.'
+    a: 'Le paiement s\'effectue en ligne via Stripe, la référence mondiale du paiement sécurisé. L\'abonnement est annuel et résiliable à tout moment. Votre compte est géré directement depuis votre espace, sans intermédiaire.'
   },
   {
     q: 'Y a-t-il un engagement de durée ?',
-    a: 'Non. Les abonnements Premium et Premium+ sont mensuels, sans engagement. L\'option annuelle offre 2 mois gratuits pour les pros qui s\'engagent sur 12 mois. Annulation possible à tout moment.'
+    a: 'Non. Les abonnements Premium et Premium+ sont annuels, résiliables à tout moment depuis votre espace personnel.'
   },
   {
     q: 'Quand serai-je visible après mon activation ?',
@@ -362,7 +362,7 @@ export default function PublicitePage() {
               {
                 n: '3',
                 title: 'Choisissez votre offre',
-                desc: 'Premium (49 €/mois) ou Premium+ (99 €/mois). Formule annuelle disponible avec 2 mois offerts. Paiement direct en ligne via Stripe.'
+                desc: 'Premium (49,99 €/an) ou Premium+ (99,99 €/an). Facturation annuelle, résiliable à tout moment. Paiement direct en ligne via Stripe.'
               },
               {
                 n: '4',
@@ -386,7 +386,7 @@ export default function PublicitePage() {
           <div className="text-center mb-8">
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Tarifs</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Des offres simples et transparentes</h2>
-            <p className="text-gray-500 text-sm">Sans engagement mensuel — ou 2 mois offerts en formule annuelle.</p>
+            <p className="text-gray-500 text-sm">Facturation annuelle — résiliable à tout moment.</p>
           </div>
           <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {TIERS.map(tier => (
@@ -403,7 +403,7 @@ export default function PublicitePage() {
                     <span className="text-sm text-gray-400 mb-1">{tier.period}</span>
                   </div>
                   <p className="text-xs text-emerald-600 font-semibold mt-1">
-                    ou {tier.annualPrice}/an — {tier.annualNote}
+                    {tier.annualNote}
                   </p>
                 </div>
                 <ul className="space-y-2.5 flex-1 mb-6">

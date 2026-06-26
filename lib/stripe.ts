@@ -14,10 +14,10 @@ export const PRO_PLANS: Record<ProPlan, {
   label: string
   amount: number
 }> = {
-  premium_monthly:      { priceEnvKey: 'STRIPE_PRICE_PREMIUM_MONTHLY',     tier: 'PREMIUM',      period: 'monthly', label: 'Premium Mensuel',  amount: 4900  },
-  premium_annual:       { priceEnvKey: 'STRIPE_PRICE_PREMIUM_ANNUAL',       tier: 'PREMIUM',      period: 'annual',  label: 'Premium Annuel',   amount: 49000 },
-  premium_plus_monthly: { priceEnvKey: 'STRIPE_PRICE_PREMIUM_PLUS_MONTHLY', tier: 'PREMIUM_PLUS', period: 'monthly', label: 'Premium+ Mensuel', amount: 9900  },
-  premium_plus_annual:  { priceEnvKey: 'STRIPE_PRICE_PREMIUM_PLUS_ANNUAL',  tier: 'PREMIUM_PLUS', period: 'annual',  label: 'Premium+ Annuel',  amount: 99000 },
+  premium_monthly:      { priceEnvKey: 'STRIPE_PRICE_PREMIUM_MONTHLY',     tier: 'PREMIUM',      period: 'monthly', label: 'Premium Mensuel',  amount: 4999  },
+  premium_annual:       { priceEnvKey: 'STRIPE_PRICE_PREMIUM_ANNUAL',       tier: 'PREMIUM',      period: 'annual',  label: 'Premium Annuel',   amount: 4999  },
+  premium_plus_monthly: { priceEnvKey: 'STRIPE_PRICE_PREMIUM_PLUS_MONTHLY', tier: 'PREMIUM_PLUS', period: 'monthly', label: 'Premium+ Mensuel', amount: 9999  },
+  premium_plus_annual:  { priceEnvKey: 'STRIPE_PRICE_PREMIUM_PLUS_ANNUAL',  tier: 'PREMIUM_PLUS', period: 'annual',  label: 'Premium+ Annuel',  amount: 9999  },
 }
 
 export function getPriceId(plan: ProPlan): string {

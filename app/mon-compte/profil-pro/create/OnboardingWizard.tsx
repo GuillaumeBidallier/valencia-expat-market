@@ -47,19 +47,19 @@ const STEPS = [
 
 const PLANS: { id: ProPlan; name: string; price: string; annual: string; color: string; badge: string; features: string[] }[] = [
   {
-    id: 'premium_monthly',
+    id: 'premium_annual',
     name: 'Premium',
-    price: '49,99 €/mois',
-    annual: 'ou 490 €/an — 2 mois offerts',
+    price: '49,99 €/an',
+    annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'orange',
     badge: 'Populaire',
     features: ['Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Affichage dans les encarts pub', 'Badge "Sponsorisé"', 'Mise en avant prioritaire'],
   },
   {
-    id: 'premium_plus_monthly',
+    id: 'premium_plus_annual',
     name: 'Premium+',
-    price: '99,99 €/mois',
-    annual: 'ou 990 €/an — 2 mois offerts',
+    price: '99,99 €/an',
+    annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'indigo',
     badge: 'Meilleure visibilité',
     features: ['Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Affichage dans les encarts pub', 'Badge "Sponsorisé"', 'Mise en avant prioritaire', 'Badge "Recommandé"', 'Statistiques de clics (bientôt)'],
