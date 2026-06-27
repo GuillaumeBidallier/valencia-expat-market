@@ -95,6 +95,11 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
 
   /* ── No card yet — pricing ──────────────────────────────── */
   if (!card?.active) {
+    const previewName     = pro.name ?? 'Votre Nom'
+    const previewInitial  = previewName.charAt(0).toUpperCase()
+    const previewCity     = pro.city ?? 'Valencia'
+    const previewCategory = pro.category ?? 'Votre activité'
+
     return (
       <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
@@ -103,48 +108,143 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
           </div>
           <div>
             <p className="font-black text-navy text-sm">Carte de visite numérique</p>
-            <p className="text-xs text-gray-400 mt-0.5">Partagez votre carte via un QR code — accessibles à vie ou en abonnement</p>
+            <p className="text-xs text-gray-400 mt-0.5">Partagez votre profil via un QR code — résiliable à tout moment</p>
           </div>
         </div>
 
-        <div className="p-6">
-          {/* What you get */}
-          <ul className="space-y-2 mb-6">
-            {[
-              'Page carte de visite personnalisée avec vos coordonnées',
-              'QR code téléchargeable en haute résolution',
-              'Lien court partageable (WhatsApp, email, réseaux sociaux)',
-              'CTA de contact intégré pour convertir vos visiteurs',
-              'Votre logo et couleurs de marque',
-            ].map(item => (
-              <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
-                <Check size={15} className="text-emerald-500 shrink-0 mt-0.5" />
-                {item}
-              </li>
-            ))}
-          </ul>
+        <div className="p-6 lg:p-8">
+          <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
 
-          {/* Plan unique */}
-          <div className="border border-indigo-primary bg-indigo-soft rounded-2xl p-6 flex flex-col gap-4">
-            <div className="flex items-end gap-2">
-              <p className="font-black text-navy text-3xl">3,99 €</p>
-              <p className="text-sm text-gray-500 mb-1">/mois — résiliable à tout moment</p>
+            {/* ── Left: pricing ── */}
+            <div className="flex-1 w-full lg:max-w-sm">
+              <ul className="space-y-2.5 mb-7">
+                {[
+                  { text: 'Page carte de visite personnalisée', sub: 'Votre nom, accroche, coordonnées' },
+                  { text: 'QR code téléchargeable en HD', sub: 'Imprimez-le sur vos supports physiques' },
+                  { text: 'Lien court partageable', sub: 'WhatsApp, email, réseaux sociaux' },
+                  { text: 'Bouton de contact intégré', sub: 'Appel, WhatsApp, email en 1 tap' },
+                  { text: 'Couleurs et identité de marque', sub: 'Personnalisez à vos couleurs' },
+                ].map(item => (
+                  <li key={item.text} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                      <Check size={11} className="text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-navy leading-snug">{item.text}</p>
+                      <p className="text-xs text-gray-400">{item.sub}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="rounded-2xl border-2 border-indigo-primary bg-gradient-to-br from-indigo-soft to-white p-5 flex flex-col gap-4">
+                <div>
+                  <div className="flex items-baseline gap-1.5">
+                    <p className="font-black text-navy text-4xl">3,99 €</p>
+                    <p className="text-sm text-gray-500">/mois</p>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">Sans engagement — résiliable en 1 clic</p>
+                </div>
+                <button
+                  onClick={() => startCheckout('monthly')}
+                  disabled={loadingPlan !== null}
+                  className="flex items-center justify-center gap-2 bg-indigo-primary text-white py-3.5 rounded-xl font-black text-sm hover:bg-indigo-dark transition-all shadow-lg shadow-indigo-primary/25 disabled:opacity-50"
+                >
+                  {loadingPlan ? <Loader2 size={15} className="animate-spin" /> : <Zap size={15} />}
+                  Activer ma carte de visite
+                </button>
+                <p className="text-[11px] text-gray-400 text-center flex items-center justify-center gap-1.5">
+                  <Star size={10} className="text-amber-400" />
+                  Paiement sécurisé par Stripe
+                </p>
+              </div>
             </div>
-            <ul className="space-y-1.5 text-sm text-gray-600">
-              <li className="flex items-center gap-2"><Check size={14} className="text-emerald-500" /> Carte de visite numérique personnalisée</li>
-              <li className="flex items-center gap-2"><Check size={14} className="text-emerald-500" /> QR code haute résolution téléchargeable</li>
-              <li className="flex items-center gap-2"><Check size={14} className="text-emerald-500" /> CTA de contact intégré</li>
-              <li className="flex items-center gap-2"><Check size={14} className="text-emerald-500" /> Vos couleurs, logo et coordonnées</li>
-            </ul>
-            <button
-              onClick={() => startCheckout('monthly')}
-              disabled={loadingPlan !== null}
-              className="flex items-center justify-center gap-2 bg-indigo-primary text-white py-3.5 rounded-xl font-black text-sm hover:bg-indigo-dark transition-colors disabled:opacity-50"
-            >
-              {loadingPlan ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
-              Activer ma carte de visite
-            </button>
-            <p className="text-[11px] text-gray-400 text-center">Paiement sécurisé par Stripe · Résiliation en 1 clic</p>
+
+            {/* ── Right: card preview ── */}
+            <div className="w-full lg:flex-1 flex items-center justify-center lg:justify-end">
+              {/* Outer frame — perspective tilt */}
+              <div className="relative w-full max-w-[280px]" style={{ perspective: '1000px' }}>
+                {/* Glow behind */}
+                <div className="absolute inset-0 blur-3xl opacity-30 rounded-3xl" style={{ background: 'linear-gradient(135deg, #4F46E5, #E8571A)' }} />
+
+                {/* The card */}
+                <div
+                  className="relative rounded-3xl overflow-hidden shadow-2xl"
+                  style={{ transform: 'rotateY(-6deg) rotateX(4deg)', boxShadow: '0 32px 80px -12px rgba(79,70,229,0.35), 0 8px 24px -4px rgba(0,0,0,0.2)' }}
+                >
+                  {/* Header gradient */}
+                  <div className="relative px-5 pt-7 pb-10" style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 60%, #1A1F36 100%)' }}>
+                    {/* Top decoration dots */}
+                    <div className="absolute top-3 right-4 flex gap-1.5 opacity-30">
+                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                    </div>
+
+                    {/* 1000Click watermark */}
+                    <div className="absolute top-3 left-5 flex items-center gap-1 opacity-50">
+                      <div className="w-3 h-3 rounded-full border border-white/60 flex items-center justify-center">
+                        <div className="w-1 h-1 rounded-full bg-white" />
+                      </div>
+                      <span className="text-[9px] text-white font-bold tracking-wide">1000Click</span>
+                    </div>
+
+                    {/* Avatar */}
+                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur border-2 border-white/30 flex items-center justify-center text-white font-black text-xl mb-3 shadow-lg">
+                      {previewInitial}
+                    </div>
+
+                    {/* Name + title */}
+                    <h3 className="text-white font-black text-base leading-tight">{previewName}</h3>
+                    <p className="text-white/70 text-xs mt-0.5 font-medium">{previewCategory}</p>
+                    <p className="text-white/50 text-[10px] mt-1 flex items-center gap-1">
+                      <span className="inline-block w-1 h-1 rounded-full bg-white/40" />
+                      {previewCity}, Espagne
+                    </p>
+                  </div>
+
+                  {/* White body */}
+                  <div className="bg-white px-5 py-4 -mt-5 rounded-t-2xl relative z-10">
+                    {/* Contact rows */}
+                    <div className="space-y-2 mb-4">
+                      {[
+                        { icon: <Phone size={11} className="text-gray-400" />, label: '+34 6XX XXX XXX', color: 'text-navy' },
+                        { icon: <MessageCircle size={11} className="text-green-500" />, label: 'WhatsApp', color: 'text-green-600' },
+                        { icon: <Globe size={11} className="text-indigo-primary" />, label: 'www.monsite.es', color: 'text-indigo-primary' },
+                      ].map((row, i) => (
+                        <div key={i} className="flex items-center gap-2.5 bg-gray-50 rounded-xl px-3 py-2">
+                          {row.icon}
+                          <span className={`text-[11px] font-semibold ${row.color}`}>{row.label}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* QR + CTA */}
+                    <div className="flex items-center gap-3">
+                      {/* Mini QR placeholder */}
+                      <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
+                        <QrCode size={22} className="text-gray-300" />
+                      </div>
+                      {/* CTA button */}
+                      <div className="flex-1 bg-indigo-primary text-white rounded-xl py-2.5 flex items-center justify-center gap-1.5 text-[11px] font-black shadow-sm shadow-indigo-primary/30">
+                        <Phone size={11} />
+                        Appeler
+                      </div>
+                    </div>
+
+                    {/* Watermark bottom */}
+                    <p className="text-center text-[9px] text-gray-300 mt-3 font-medium">
+                      Carte propulsée par 1000Click.es
+                    </p>
+                  </div>
+                </div>
+
+                {/* "Aperçu" badge */}
+                <div className="absolute -top-3 -right-3 bg-orange-primary text-white text-[10px] font-black px-2.5 py-1.5 rounded-full shadow-lg shadow-orange-primary/30 rotate-6">
+                  Aperçu
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
