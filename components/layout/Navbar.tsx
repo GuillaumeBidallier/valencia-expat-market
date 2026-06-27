@@ -117,6 +117,7 @@ export default function Navbar() {
               {[
                 { label: t('listings'),      href: '/annonces' },
                 { label: t('professionals'), href: '/professionnels' },
+                { label: 'Devenir Pro',      href: '/devenir-pro' },
               ].map(({ label, href }) => (
                 <Link
                   key={href}
@@ -145,14 +146,6 @@ export default function Navbar() {
             </Link>
             {isAuthenticated ? (
               <>
-                <Link
-                  href="/devenir-pro"
-                  className={`text-sm font-semibold transition-colors ${
-                    transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
-                  }`}
-                >
-                  Devenir Pro
-                </Link>
                 <Link
                   href="/deposer-annonce"
                   className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
@@ -195,14 +188,6 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link
-                  href="/devenir-pro"
-                  className={`text-sm font-semibold transition-colors ${
-                    transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
-                  }`}
-                >
-                  Devenir Pro
-                </Link>
                 <Link
                   href="/inscription"
                   className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
