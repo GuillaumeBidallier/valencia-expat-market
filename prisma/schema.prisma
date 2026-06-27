@@ -133,7 +133,8 @@ model Professional {
   subscriptionCurrentPeriodEnd DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  clicks      ProClick[]
+  clicks        ProClick[]
+  businessCard  BusinessCard?
 }
 
 enum ProTier {
@@ -150,6 +151,31 @@ model ProClick {
   createdAt      DateTime     @default(now())
 
   @@index([professionalId, createdAt])
+}
+
+model BusinessCard {
+  id                           String       @id @default(cuid())
+  professionalId               String       @unique
+  professional                 Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  // Customization
+  headline                     String?
+  tagline                      String?
+  primaryColor                 String       @default("#4F46E5")
+  showEmail                    Boolean      @default(false)
+  showPhone                    Boolean      @default(true)
+  showWhatsapp                 Boolean      @default(true)
+  showWebsite                  Boolean      @default(true)
+  email                        String?
+  // Payment & status
+  plan                         String?      // 'one_shot' | 'monthly'
+  active                       Boolean      @default(false)
+  stripeSessionId              String?
+  stripeSubscriptionId         String?
+  stripeCustomerId             String?
+  subscriptionStatus           String?
+  subscriptionCurrentPeriodEnd DateTime?
+  createdAt                    DateTime     @default(now())
+  updatedAt                    DateTime     @updatedAt
 }
 
 model Category {

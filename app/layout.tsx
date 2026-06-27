@@ -4,7 +4,7 @@ import './globals.css'
 import { SessionProvider } from 'next-auth/react'
 import { AuthProvider } from '@/context/AuthContext'
 import { ListingsProvider } from '@/context/ListingsContext'
-import Navbar from '@/components/layout/Navbar'
+import ConditionalNavbar from '@/components/layout/ConditionalNavbar'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import { LocaleProvider, type SupportedLocale } from '@/components/providers/LocaleProvider'
 import CookieBanner from '@/components/CookieBanner'
@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SessionProvider>
             <AuthProvider>
               <ListingsProvider>
-                <Navbar />
+                <ConditionalNavbar />
                 <main id="main-content" className="pt-16">{children}</main>
                 <ConditionalFooter />
               </ListingsProvider>

@@ -4,12 +4,19 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import ProDashboardClient from './ProDashboardClient'
 
-export default async function ProDashboardPage() {
+export const dynamic = 'force-dynamic'
+
+type Props = { searchParams: Promise<{ carte?: string }> }
+
+export default async function ProDashboardPage({ searchParams }: Props) {
   const session = await auth()
   if (!session?.user?.id) redirect('/connexion')
 
+  const { carte } = await searchParams
+
   const pro = await prisma.professional.findUnique({
     where: { userId: session.user.id },
+    include: { businessCard: true },
   })
 
   if (!pro) {
@@ -31,5 +38,10 @@ export default async function ProDashboardPage() {
     )
   }
 
-  return <ProDashboardClient pro={JSON.parse(JSON.stringify(pro))} />
+  return (
+    <ProDashboardClient
+      pro={JSON.parse(JSON.stringify(pro))}
+      cardSuccess={carte === 'success'}
+    />
+  )
 }

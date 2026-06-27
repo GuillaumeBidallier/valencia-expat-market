@@ -4,11 +4,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Camera, Pencil, Plus, Trash2, ExternalLink, Check, Loader2, X, Star, Zap, CreditCard, AlertCircle } from 'lucide-react'
-import type { Professional } from '@prisma/client'
+import type { BusinessCard, Professional } from '@prisma/client'
 import type { ProPlan } from '@/lib/stripe'
 import ProStatsClient from './ProStatsClient'
+import BusinessCardSection from './BusinessCardSection'
 
-type Props = { pro: Professional }
+type Props = { pro: Professional & { businessCard: BusinessCard | null }; cardSuccess?: boolean }
 
 const PLANS: { id: ProPlan; label: string; price: string; period: string; highlight?: boolean }[] = [
   { id: 'premium_annual',      label: 'Premium',  price: '49,99 €', period: '/an' },
@@ -130,7 +131,7 @@ function SubscriptionSection({ pro }: { pro: Professional }) {
   )
 }
 
-export default function ProDashboardClient({ pro: initial }: Props) {
+export default function ProDashboardClient({ pro: initial, cardSuccess }: Props) {
   const t = useTranslations('ProDashboard')
   const [pro, setPro] = useState(initial)
   const [saving, setSaving] = useState(false)
@@ -217,6 +218,9 @@ export default function ProDashboardClient({ pro: initial }: Props) {
 
         {/* Stats — Premium+ only */}
         {pro.tier === 'PREMIUM_PLUS' && <ProStatsClient />}
+
+        {/* Business card */}
+        <BusinessCardSection pro={pro} cardSuccessParam={cardSuccess} />
 
         {/* Banner */}
         <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden">

@@ -26,6 +26,43 @@ export async function POST(req: Request) {
 
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
+      const customerId = session.customer as string
+
+      // ── Business card subscription ────────────────────────
+      if (session.metadata?.type === 'business_card') {
+        const professionalId = session.metadata.professionalId
+        if (!professionalId) break
+
+        const subscriptionId = session.subscription as string
+        const sub = await getStripe().subscriptions.retrieve(subscriptionId)
+        const periodEnd = sub.items.data[0]?.current_period_end
+
+        await prisma.businessCard.upsert({
+          where: { professionalId },
+          create: {
+            professionalId,
+            plan: 'monthly',
+            active: true,
+            stripeSessionId: session.id,
+            stripeCustomerId: customerId,
+            stripeSubscriptionId: subscriptionId,
+            subscriptionStatus: sub.status,
+            subscriptionCurrentPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : null,
+          },
+          update: {
+            plan: 'monthly',
+            active: true,
+            stripeSessionId: session.id,
+            stripeCustomerId: customerId,
+            stripeSubscriptionId: subscriptionId,
+            subscriptionStatus: sub.status,
+            subscriptionCurrentPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : null,
+          },
+        })
+        break
+      }
+
+      // ── Pro subscription ──────────────────────────────────
       if (session.mode !== 'subscription') break
 
       const plan = session.metadata?.plan as ProPlan | undefined
@@ -34,7 +71,6 @@ export async function POST(req: Request) {
 
       const planInfo = PRO_PLANS[plan]
       const subscriptionId = session.subscription as string
-      const customerId = session.customer as string
 
       // In API 2026-05-27.dahlia, current_period_end is on each SubscriptionItem
       const sub = await getStripe().subscriptions.retrieve(subscriptionId)
@@ -89,6 +125,18 @@ export async function POST(req: Request) {
 
     case 'customer.subscription.deleted': {
       const sub = event.data.object as Stripe.Subscription
+
+      // Business card subscription cancelled
+      const bcCancelled = await prisma.businessCard.findFirst({ where: { stripeSubscriptionId: sub.id } })
+      if (bcCancelled) {
+        await prisma.businessCard.update({
+          where: { id: bcCancelled.id },
+          data: { active: false, subscriptionStatus: 'canceled' },
+        })
+        break
+      }
+
+      // Pro subscription cancelled
       await prisma.professional.updateMany({
         where: { stripeSubscriptionId: sub.id },
         data: {
