@@ -172,68 +172,78 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
                   className="relative rounded-3xl overflow-hidden shadow-2xl"
                   style={{ transform: 'rotateY(-6deg) rotateX(4deg)', boxShadow: '0 32px 80px -12px rgba(79,70,229,0.35), 0 8px 24px -4px rgba(0,0,0,0.2)' }}
                 >
-                  {/* Header gradient */}
-                  <div className="relative px-5 pt-7 pb-10" style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 60%, #1A1F36 100%)' }}>
-                    {/* Top decoration dots */}
-                    <div className="absolute top-3 right-4 flex gap-1.5 opacity-30">
-                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                    </div>
+                  {/* ── Header banner ── */}
+                  <div
+                    className="relative h-28 overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 60%, #1A1F36 100%)' }}
+                  >
+                    {/* Background photo — pro's banner or a default office photo */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={pro.banner ?? 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=60&auto=format&fit=crop'}
+                      alt=""
+                      className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-overlay"
+                    />
+                    {/* Dark gradient overlay so text is readable */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/50" />
 
                     {/* 1000Click watermark */}
-                    <div className="absolute top-3 left-5 flex items-center gap-1 opacity-50">
-                      <div className="w-3 h-3 rounded-full border border-white/60 flex items-center justify-center">
+                    <div className="absolute top-2.5 right-3 flex items-center gap-1 opacity-60">
+                      <div className="w-2.5 h-2.5 rounded-full border border-white/70 flex items-center justify-center">
                         <div className="w-1 h-1 rounded-full bg-white" />
                       </div>
                       <span className="text-[9px] text-white font-bold tracking-wide">1000Click</span>
                     </div>
-
-                    {/* Avatar */}
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur border-2 border-white/30 flex items-center justify-center text-white font-black text-xl mb-3 shadow-lg">
-                      {previewInitial}
-                    </div>
-
-                    {/* Name + title */}
-                    <h3 className="text-white font-black text-base leading-tight">{previewName}</h3>
-                    <p className="text-white/70 text-xs mt-0.5 font-medium">{previewCategory}</p>
-                    <p className="text-white/50 text-[10px] mt-1 flex items-center gap-1">
-                      <span className="inline-block w-1 h-1 rounded-full bg-white/40" />
-                      {previewCity}, Espagne
-                    </p>
                   </div>
 
-                  {/* White body */}
-                  <div className="bg-white px-5 py-4 -mt-5 rounded-t-2xl relative z-10">
+                  {/* ── White body, overlapping banner ── */}
+                  <div className="bg-white px-5 pb-4 -mt-4 rounded-t-2xl relative z-10">
+                    {/* Logo — overlaps header */}
+                    <div className="w-14 h-14 rounded-2xl border-4 border-white shadow-xl overflow-hidden -mt-9 mb-3">
+                      {pro.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={pro.logo} alt={previewName} className="w-full h-full object-cover" />
+                      ) : (
+                        <div
+                          className="w-full h-full flex items-center justify-center text-white font-black text-xl"
+                          style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 100%)' }}
+                        >
+                          {previewInitial}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Name + headline + city */}
+                    <h3 className="text-navy font-black text-sm leading-tight">{previewName}</h3>
+                    <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#4F46E5' }}>{previewCategory}</p>
+                    <p className="text-[10px] text-gray-400 mt-0.5">{previewCity}, Espagne</p>
+
                     {/* Contact rows */}
-                    <div className="space-y-2 mb-4">
+                    <div className="space-y-1.5 mt-3 mb-3">
                       {[
-                        { icon: <Phone size={11} className="text-gray-400" />, label: '+34 6XX XXX XXX', color: 'text-navy' },
-                        { icon: <MessageCircle size={11} className="text-green-500" />, label: 'WhatsApp', color: 'text-green-600' },
-                        { icon: <Globe size={11} className="text-indigo-primary" />, label: 'www.monsite.es', color: 'text-indigo-primary' },
+                        { icon: <Phone size={10} className="text-gray-400" />, label: '+34 6XX XXX XXX', color: 'text-navy' },
+                        { icon: <MessageCircle size={10} className="text-green-500" />, label: 'WhatsApp', color: 'text-green-600' },
+                        { icon: <Globe size={10} className="text-indigo-primary" />, label: 'www.monsite.es', color: 'text-indigo-primary' },
                       ].map((row, i) => (
-                        <div key={i} className="flex items-center gap-2.5 bg-gray-50 rounded-xl px-3 py-2">
+                        <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-lg px-2.5 py-1.5">
                           {row.icon}
-                          <span className={`text-[11px] font-semibold ${row.color}`}>{row.label}</span>
+                          <span className={`text-[10px] font-semibold ${row.color}`}>{row.label}</span>
                         </div>
                       ))}
                     </div>
 
                     {/* QR + CTA */}
-                    <div className="flex items-center gap-3">
-                      {/* Mini QR placeholder */}
-                      <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
-                        <QrCode size={22} className="text-gray-300" />
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
+                        <QrCode size={18} className="text-gray-300" />
                       </div>
-                      {/* CTA button */}
-                      <div className="flex-1 bg-indigo-primary text-white rounded-xl py-2.5 flex items-center justify-center gap-1.5 text-[11px] font-black shadow-sm shadow-indigo-primary/30">
-                        <Phone size={11} />
-                        Appeler
+                      <div className="flex-1 text-white rounded-xl py-2 flex items-center justify-center gap-1 text-[10px] font-black" style={{ background: '#4F46E5' }}>
+                        <Phone size={10} /> Appeler
                       </div>
                     </div>
 
                     {/* Watermark bottom */}
-                    <p className="text-center text-[9px] text-gray-300 mt-3 font-medium">
+                    <p className="text-center text-[9px] text-gray-300 mt-2.5 font-medium">
                       Carte propulsée par 1000Click.es
                     </p>
                   </div>
