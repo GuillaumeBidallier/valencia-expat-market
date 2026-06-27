@@ -17,6 +17,8 @@ model User {
   role             Role          @default(USER)
   blocked          Boolean       @default(false)
   createdAt        DateTime      @default(now())
+  showPhone        Boolean       @default(true)
+  showWhatsapp     Boolean       @default(true)
   listings         Listing[]
   favorites        Favorite[]
   sentMessages     Message[]     @relation("Sender")
@@ -46,6 +48,7 @@ model Listing {
   messages       Message[]
   reports        Report[]
   phone          String?
+  views          Int            @default(0)
   isPremium      Boolean        @default(false)
   boostExpiresAt DateTime?
   featuredAt     DateTime?

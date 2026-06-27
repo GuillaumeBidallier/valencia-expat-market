@@ -6,15 +6,23 @@ export async function PATCH(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
-  const { name } = await req.json()
-  if (!name?.trim() || name.trim().length < 2) {
-    return NextResponse.json({ error: 'Nom invalide' }, { status: 400 })
+  const body = await req.json()
+  const data: Record<string, unknown> = {}
+
+  if (body.name !== undefined) {
+    if (!body.name?.trim() || body.name.trim().length < 2) {
+      return NextResponse.json({ error: 'Nom invalide' }, { status: 400 })
+    }
+    data.name = body.name.trim()
   }
 
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: { name: name.trim() },
-  })
+  if (typeof body.showPhone === 'boolean') data.showPhone = body.showPhone
+  if (typeof body.showWhatsapp === 'boolean') data.showWhatsapp = body.showWhatsapp
 
+  if (Object.keys(data).length === 0) {
+    return NextResponse.json({ error: 'Aucun champ à mettre à jour' }, { status: 400 })
+  }
+
+  await prisma.user.update({ where: { id: session.user.id }, data })
   return NextResponse.json({ ok: true })
 }

@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation'
 import {
   Plus, ExternalLink, Trash2, CheckCircle2, RefreshCcw,
   HeartOff, LogOut, LayoutList, Heart, User, MessageSquare,
-  ChevronRight, CheckCheck, Pencil,
+  ChevronRight, CheckCheck, Pencil, Eye, Settings, Phone, MessageCircle,
+  Save, Loader2,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
@@ -15,12 +16,13 @@ type ListingItem = {
   id: string; title: string; price: number | null
   city: string; status: 'ACTIVE' | 'SOLD' | 'EXPIRED'
   publishedAt: string; image: string | null
+  views: number; favoritesCount: number
 }
 type FavoriteItem = {
   id: string; listingId: string
   listing: { id: string; title: string; price: number | null; city: string; status: string; image: string | null; sellerName: string }
 }
-type UserInfo = { id: string; name: string; email: string; createdAt: string; role: string }
+type UserInfo = { id: string; name: string; email: string; createdAt: string; role: string; showPhone: boolean; showWhatsapp: boolean }
 type Tab = 'listings' | 'favorites' | 'profile'
 type ProProfile = {
   slug: string
@@ -74,6 +76,12 @@ export default function AccountClient({ user, initialListings, initialFavorites,
   const [savingPwd, setSavingPwd]             = useState(false)
   const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false)
   const [deletingAccount, setDeletingAccount] = useState(false)
+
+  // Préférences de contact
+  const [showPhone, setShowPhone]       = useState(user.showPhone)
+  const [showWhatsapp, setShowWhatsapp] = useState(user.showWhatsapp)
+  const [savingPrefs, setSavingPrefs]   = useState(false)
+  const [prefsSaved, setPrefsSaved]     = useState(false)
 
   const activeCount  = listings.filter(l => l.status === 'ACTIVE').length
   const soldCount    = listings.filter(l => l.status === 'SOLD').length
@@ -139,6 +147,18 @@ export default function AccountClient({ user, initialListings, initialFavorites,
     setTimeout(() => setProfileSaved(false), 3000)
   }
 
+  const handleSavePrefs = async () => {
+    setSavingPrefs(true)
+    await fetch('/api/user/me', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ showPhone, showWhatsapp }),
+    })
+    setSavingPrefs(false)
+    setPrefsSaved(true)
+    setTimeout(() => setPrefsSaved(false), 3000)
+  }
+
   const handleLogout = () => { logout(); router.push('/') }
 
   const handleDeleteAccount = async () => {
@@ -187,6 +207,16 @@ export default function AccountClient({ user, initialListings, initialFavorites,
               {listing.city} · <span className="font-semibold text-gray-600">{priceLabel}</span>
             </p>
             <p className="text-xs text-gray-300 mt-0.5">{dateLabel}</p>
+            <div className="flex items-center gap-3 mt-1.5">
+              <span className="flex items-center gap-1 text-[11px] text-gray-400">
+                <Eye size={11} className="text-gray-300" />
+                {listing.views.toLocaleString('fr-FR')} vue{listing.views !== 1 ? 's' : ''}
+              </span>
+              <span className="flex items-center gap-1 text-[11px] text-gray-400">
+                <Heart size={11} className="text-red-300" />
+                {listing.favoritesCount} favori{listing.favoritesCount !== 1 ? 's' : ''}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -451,6 +481,79 @@ export default function AccountClient({ user, initialListings, initialFavorites,
               </div>
               <ChevronRight size={16} className="text-gray-300 group-hover:text-orange-primary transition-colors" />
             </Link>
+
+            {/* Préférences de contact */}
+            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-50 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center">
+                  <Settings size={16} className="text-slate-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-navy">Préférences de contact</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Choisissez ce qui est visible sur vos annonces</p>
+                </div>
+              </div>
+              <div className="divide-y divide-gray-50">
+                {/* showPhone */}
+                <div className="flex items-center justify-between px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                      <Phone size={14} className="text-emerald-500" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-navy">Numéro de téléphone</p>
+                      <p className="text-xs text-gray-400">Affiché sur vos annonces si renseigné</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={showPhone}
+                    onClick={() => setShowPhone(v => !v)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-primary ${showPhone ? 'bg-indigo-primary' : 'bg-gray-200'}`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${showPhone ? 'translate-x-6' : 'translate-x-1'}`} />
+                  </button>
+                </div>
+                {/* showWhatsapp */}
+                <div className="flex items-center justify-between px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                      <MessageCircle size={14} className="text-green-500" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-navy">WhatsApp</p>
+                      <p className="text-xs text-gray-400">Bouton WhatsApp visible sur vos annonces</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={showWhatsapp}
+                    onClick={() => setShowWhatsapp(v => !v)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-primary ${showWhatsapp ? 'bg-indigo-primary' : 'bg-gray-200'}`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${showWhatsapp ? 'translate-x-6' : 'translate-x-1'}`} />
+                  </button>
+                </div>
+              </div>
+              <div className="px-5 py-3 border-t border-gray-50 flex items-center justify-between">
+                {prefsSaved && (
+                  <span className="text-xs text-emerald-600 flex items-center gap-1 font-medium">
+                    <CheckCircle2 size={13} /> Préférences sauvegardées
+                  </span>
+                )}
+                {!prefsSaved && <span />}
+                <button
+                  onClick={handleSavePrefs}
+                  disabled={savingPrefs}
+                  className="flex items-center gap-1.5 bg-navy text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-navy/90 transition-colors disabled:opacity-50"
+                >
+                  {savingPrefs ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                  {savingPrefs ? 'Sauvegarde…' : 'Sauvegarder'}
+                </button>
+              </div>
+            </div>
 
             {/* Logout */}
             <button

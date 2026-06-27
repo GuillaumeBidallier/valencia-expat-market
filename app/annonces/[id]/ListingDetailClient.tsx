@@ -33,6 +33,12 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
   const [copied, setCopied] = useState(false)
   const shareRef = useRef<HTMLDivElement>(null)
 
+  // Track view — fire-and-forget
+  useEffect(() => {
+    fetch(`/api/listings/${listing.id}/view`, { method: 'POST' }).catch(() => {})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listing.id])
+
   useEffect(() => {
     if (!shareOpen) return
     const handler = (e: MouseEvent) => {

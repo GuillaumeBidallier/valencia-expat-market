@@ -11,11 +11,14 @@ export default async function MonComptePage() {
   const [dbUser, listings, favorites, pro] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, name: true, email: true, createdAt: true, role: true },
+      select: { id: true, name: true, email: true, createdAt: true, role: true, showPhone: true, showWhatsapp: true },
     }),
     prisma.listing.findMany({
       where: { userId, status: { not: 'DELETED' } },
-      include: { images: { take: 1, orderBy: { order: 'asc' } } },
+      include: {
+        images: { take: 1, orderBy: { order: 'asc' } },
+        _count: { select: { favorites: true } },
+      },
       orderBy: { publishedAt: 'desc' },
     }),
     prisma.favorite.findMany({
@@ -58,6 +61,8 @@ export default async function MonComptePage() {
         email: dbUser.email,
         createdAt: dbUser.createdAt.toISOString(),
         role: dbUser.role,
+        showPhone: dbUser.showPhone,
+        showWhatsapp: dbUser.showWhatsapp,
       }}
       initialListings={listings.map(l => ({
         id: l.id,
@@ -67,6 +72,8 @@ export default async function MonComptePage() {
         status: l.status as 'ACTIVE' | 'SOLD' | 'EXPIRED',
         publishedAt: l.publishedAt.toISOString(),
         image: l.images[0]?.url ?? null,
+        views: l.views,
+        favoritesCount: l._count.favorites,
       }))}
       initialFavorites={favorites
         .filter(f => f.listing.status !== 'DELETED')
