@@ -116,7 +116,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
           <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
 
             {/* ── Left: pricing ── */}
-            <div className="flex-1 w-full lg:max-w-sm">
+            <div className="flex-1 w-full lg:max-w-md">
               <ul className="space-y-2.5 mb-7">
                 {[
                   { text: 'Page carte de visite personnalisée', sub: 'Votre nom, accroche, coordonnées' },
@@ -163,7 +163,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
             {/* ── Right: card preview ── */}
             <div className="w-full lg:flex-1 flex items-center justify-center lg:justify-end">
               {/* Outer frame — perspective tilt */}
-              <div className="relative w-full max-w-[280px]" style={{ perspective: '1000px' }}>
+              <div className="relative w-full max-w-[360px]" style={{ perspective: '1000px' }}>
                 {/* Glow behind */}
                 <div className="absolute inset-0 blur-3xl opacity-30 rounded-3xl" style={{ background: 'linear-gradient(135deg, #4F46E5, #E8571A)' }} />
 

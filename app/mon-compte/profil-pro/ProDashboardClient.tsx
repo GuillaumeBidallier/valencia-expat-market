@@ -406,7 +406,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
 
         {/* ════ MA FICHE ══════════════════════════════════════ */}
         {tab === 'fiche' && (
-          <div className="max-w-3xl">
+          <div className="max-w-5xl">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-50 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-orange-soft flex items-center justify-center">
@@ -670,7 +670,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
 
         {/* ════ CARTE DE VISITE ═══════════════════════════════ */}
         {tab === 'carte' && (
-          <div className="max-w-3xl">
+          <div>
             <BusinessCardSection pro={pro} cardSuccessParam={cardSuccess} />
           </div>
         )}
