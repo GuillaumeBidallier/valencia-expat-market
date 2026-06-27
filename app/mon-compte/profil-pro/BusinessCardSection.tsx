@@ -160,97 +160,156 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
               </div>
             </div>
 
-            {/* ── Right: card preview ── */}
-            <div className="w-full lg:flex-1 flex items-center justify-center lg:justify-end">
-              {/* Outer frame — perspective tilt */}
-              <div className="relative w-full max-w-[360px]" style={{ perspective: '1000px' }}>
-                {/* Glow behind */}
-                <div className="absolute inset-0 blur-3xl opacity-30 rounded-3xl" style={{ background: 'linear-gradient(135deg, #4F46E5, #E8571A)' }} />
+            {/* ── Right: phone mockup ── */}
+            <div className="w-full lg:flex-1 flex items-center justify-center py-4">
+              <div className="relative" style={{ transform: 'perspective(900px) rotateY(-5deg) rotateX(2deg)' }}>
 
-                {/* The card */}
+                {/* Ambient glow */}
+                <div className="absolute -inset-6 rounded-full blur-3xl opacity-25 pointer-events-none"
+                  style={{ background: 'radial-gradient(ellipse, #4F46E5 0%, #E8571A 60%, transparent 80%)' }} />
+
+                {/* Phone shell */}
                 <div
-                  className="relative rounded-3xl overflow-hidden shadow-2xl"
-                  style={{ transform: 'rotateY(-6deg) rotateX(4deg)', boxShadow: '0 32px 80px -12px rgba(79,70,229,0.35), 0 8px 24px -4px rgba(0,0,0,0.2)' }}
+                  className="relative rounded-[38px] p-[10px]"
+                  style={{
+                    background: 'linear-gradient(145deg, #2a2a35 0%, #18181f 60%, #0f0f14 100%)',
+                    boxShadow: '0 50px 100px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.12)',
+                    width: '264px',
+                  }}
                 >
-                  {/* ── Header banner ── */}
-                  <div
-                    className="relative h-28 overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 60%, #1A1F36 100%)' }}
-                  >
-                    {/* Background photo — pro's banner or a default office photo */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={pro.banner ?? 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=60&auto=format&fit=crop'}
-                      alt=""
-                      className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-overlay"
-                    />
-                    {/* Dark gradient overlay so text is readable */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/50" />
-
-                    {/* 1000Click watermark */}
-                    <div className="absolute top-2.5 right-3 flex items-center gap-1 opacity-60">
-                      <div className="w-2.5 h-2.5 rounded-full border border-white/70 flex items-center justify-center">
-                        <div className="w-1 h-1 rounded-full bg-white" />
-                      </div>
-                      <span className="text-[9px] text-white font-bold tracking-wide">1000Click</span>
+                  {/* Status bar */}
+                  <div className="flex items-center justify-between px-5 pt-2 pb-1.5">
+                    <span className="text-[10px] font-semibold text-white/70">9:41</span>
+                    <div className="flex items-center gap-1.5">
+                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                        <rect x="0.5" y="3.5" width="2" height="6" rx="0.5" fill="white" fillOpacity="0.6"/>
+                        <rect x="3.5" y="2" width="2" height="7.5" rx="0.5" fill="white" fillOpacity="0.6"/>
+                        <rect x="6.5" y="0.5" width="2" height="9" rx="0.5" fill="white" fillOpacity="0.6"/>
+                        <rect x="9.5" y="0.5" width="3.5" height="9" rx="0.5" fill="white"/>
+                      </svg>
                     </div>
                   </div>
 
-                  {/* ── White body, overlapping banner ── */}
-                  <div className="bg-white px-5 pb-4 -mt-4 rounded-t-2xl relative z-10">
-                    {/* Logo — overlaps header */}
-                    <div className="w-14 h-14 rounded-2xl border-4 border-white shadow-xl overflow-hidden -mt-9 mb-3">
-                      {pro.logo ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={pro.logo} alt={previewName} className="w-full h-full object-cover" />
-                      ) : (
+                  {/* Screen */}
+                  <div className="rounded-[26px] overflow-hidden bg-[#F4F5F7]">
+
+                    {/* ── Banner with gradient mesh ── */}
+                    <div
+                      className="relative overflow-hidden"
+                      style={{
+                        height: '100px',
+                        background: [
+                          'radial-gradient(ellipse at 90% 10%, rgba(232,87,26,0.55) 0%, transparent 45%)',
+                          'radial-gradient(ellipse at 10% 90%, rgba(99,102,241,0.65) 0%, transparent 45%)',
+                          'radial-gradient(ellipse at 55% 55%, rgba(79,70,229,0.25) 0%, transparent 60%)',
+                          'linear-gradient(140deg, #0f0c29 0%, #1a1f36 40%, #312e81 100%)',
+                        ].join(', '),
+                      }}
+                    >
+                      {/* Subtle dot grid overlay */}
+                      <svg className="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <pattern id="dots" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1" fill="white" />
+                          </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#dots)" />
+                      </svg>
+                      {/* Geometric accent rings */}
+                      <svg className="absolute -right-6 -top-6 opacity-15" width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="48" stroke="white" strokeWidth="1"/>
+                        <circle cx="50" cy="50" r="36" stroke="white" strokeWidth="0.5"/>
+                        <circle cx="50" cy="50" r="24" stroke="white" strokeWidth="0.5"/>
+                      </svg>
+
+                      {/* 1000Click watermark */}
+                      <div className="absolute bottom-2.5 right-3 flex items-center gap-1 opacity-50">
+                        <div className="w-2 h-2 rounded-full border border-white/80 flex items-center justify-center">
+                          <div className="w-0.5 h-0.5 rounded-full bg-white" />
+                        </div>
+                        <span className="text-[8px] text-white font-bold tracking-widest uppercase">1000Click</span>
+                      </div>
+                    </div>
+
+                    {/* ── Card body ── */}
+                    <div className="bg-white px-4 pb-4 -mt-3 rounded-t-2xl relative z-10">
+
+                      {/* Logo overlapping banner */}
+                      <div
+                        className="w-14 h-14 rounded-2xl overflow-hidden shadow-lg border-[3px] border-white -mt-8 mb-2.5"
+                        style={{ boxShadow: '0 8px 24px -4px rgba(0,0,0,0.25)' }}
+                      >
+                        {pro.logo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={pro.logo} alt={previewName} className="w-full h-full object-cover" />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center text-white font-black text-2xl"
+                            style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #312e81 100%)' }}
+                          >
+                            {previewInitial}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Identity */}
+                      <p className="text-[13px] font-black text-gray-900 leading-tight">{previewName}</p>
+                      <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#4F46E5' }}>
+                        {previewCategory}
+                      </p>
+                      <p className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
+                        <span className="inline-block w-1 h-1 rounded-full bg-gray-300" />
+                        {previewCity}, Espagne
+                      </p>
+
+                      {/* Divider */}
+                      <div className="border-t border-gray-100 my-3" />
+
+                      {/* Contact rows */}
+                      <div className="space-y-1.5 mb-3">
+                        {[
+                          { icon: <Phone size={10} className="text-indigo-primary" />, label: (pro.phone ?? '+34 6XX XXX XXX'), bg: '#EEF2FF' },
+                          { icon: <MessageCircle size={10} className="text-green-500" />, label: 'WhatsApp', bg: '#F0FDF4' },
+                          { icon: <Globe size={10} className="text-blue-500" />, label: (pro.website ?? 'www.monsite.es'), bg: '#EFF6FF' },
+                        ].map((row, i) => (
+                          <div key={i} className="flex items-center gap-2 rounded-lg px-2.5 py-1.5" style={{ background: row.bg }}>
+                            {row.icon}
+                            <span className="text-[10px] font-semibold text-gray-700 truncate">{row.label}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* QR + CTA */}
+                      <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
+                          <QrCode size={18} className="text-gray-300" />
+                        </div>
                         <div
-                          className="w-full h-full flex items-center justify-center text-white font-black text-xl"
-                          style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 100%)' }}
+                          className="flex-1 text-white rounded-xl py-2.5 flex items-center justify-center gap-1.5 text-[11px] font-black"
+                          style={{ background: 'linear-gradient(135deg, #4F46E5, #312e81)', boxShadow: '0 4px 12px -2px rgba(79,70,229,0.4)' }}
                         >
-                          {previewInitial}
+                          <MessageCircle size={11} /> Contacter
                         </div>
-                      )}
-                    </div>
-
-                    {/* Name + headline + city */}
-                    <h3 className="text-navy font-black text-sm leading-tight">{previewName}</h3>
-                    <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#4F46E5' }}>{previewCategory}</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">{previewCity}, Espagne</p>
-
-                    {/* Contact rows */}
-                    <div className="space-y-1.5 mt-3 mb-3">
-                      {[
-                        { icon: <Phone size={10} className="text-gray-400" />, label: '+34 6XX XXX XXX', color: 'text-navy' },
-                        { icon: <MessageCircle size={10} className="text-green-500" />, label: 'WhatsApp', color: 'text-green-600' },
-                        { icon: <Globe size={10} className="text-indigo-primary" />, label: 'www.monsite.es', color: 'text-indigo-primary' },
-                      ].map((row, i) => (
-                        <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-lg px-2.5 py-1.5">
-                          {row.icon}
-                          <span className={`text-[10px] font-semibold ${row.color}`}>{row.label}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* QR + CTA */}
-                    <div className="flex items-center gap-2">
-                      <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
-                        <QrCode size={18} className="text-gray-300" />
                       </div>
-                      <div className="flex-1 text-white rounded-xl py-2 flex items-center justify-center gap-1 text-[10px] font-black" style={{ background: '#4F46E5' }}>
-                        <Phone size={10} /> Appeler
-                      </div>
-                    </div>
 
-                    {/* Watermark bottom */}
-                    <p className="text-center text-[9px] text-gray-300 mt-2.5 font-medium">
-                      Carte propulsée par 1000Click.es
-                    </p>
+                      {/* Footer */}
+                      <p className="text-center text-[9px] text-gray-300 mt-3 font-medium tracking-wide">
+                        Propulsée par 1000Click.es
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Home indicator */}
+                  <div className="flex justify-center pt-2.5 pb-1">
+                    <div className="w-20 h-[3px] bg-white/20 rounded-full" />
                   </div>
                 </div>
 
                 {/* "Aperçu" badge */}
-                <div className="absolute -top-3 -right-3 bg-orange-primary text-white text-[10px] font-black px-2.5 py-1.5 rounded-full shadow-lg shadow-orange-primary/30 rotate-6">
+                <div
+                  className="absolute -top-2 -right-2 bg-orange-primary text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg rotate-6"
+                  style={{ boxShadow: '0 4px 12px rgba(232,87,26,0.4)' }}
+                >
                   Aperçu
                 </div>
               </div>
