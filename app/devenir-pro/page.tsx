@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {
   CheckCircle, ArrowRight, Zap, Star, Users, Globe,
   TrendingUp, Shield, CreditCard, MapPin, Building2, Phone,
+  QrCode, MessageCircle, Smartphone,
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -86,6 +87,38 @@ const STYLES = `
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientShift 4s ease infinite;
+  }
+
+  @keyframes cardFloat2 {
+    0%, 100% { transform: translateY(0px) rotate(-1deg); }
+    50% { transform: translateY(-10px) rotate(-1deg); }
+  }
+  @keyframes sweepLight {
+    0%   { transform: translateX(-160%); }
+    100% { transform: translateX(160%); }
+  }
+  @keyframes glowBreath {
+    0%, 100% { opacity: 0.18; transform: scale(1); }
+    50%       { opacity: 0.32; transform: scale(1.06); }
+  }
+  @keyframes shadowPulse {
+    0%, 100% { box-shadow: 0 4px 20px -4px rgba(79,70,229,0.45); }
+    50%       { box-shadow: 0 8px 36px -4px rgba(79,70,229,0.85); }
+  }
+  .card-preview-float { animation: cardFloat2 5s ease-in-out infinite; }
+  .card-preview-glow  { animation: glowBreath 5s ease-in-out infinite; }
+  .card-preview-cta   { animation: shadowPulse 2.5s ease-in-out infinite; }
+  .card-preview-sweep {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-preview-sweep::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.16) 50%, transparent 70%);
+    animation: sweepLight 4s ease-in-out infinite;
+    pointer-events: none;
   }
 
   .hero-grid {
@@ -482,6 +515,213 @@ export default function DevenirProPage() {
                   </div>
                 </div>
               ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          CARTE DE VISITE & QR CODE
+      ══════════════════════════════════════════ */}
+      <section className="py-20 px-4 border-t border-gray-100" style={{ background: '#1A1F36' }}>
+        <div className="max-w-5xl mx-auto">
+
+          {/* Header */}
+          <div className="text-center mb-14">
+            <p className="au text-indigo-primary text-xs font-black uppercase tracking-widest mb-3 flex items-center justify-center gap-2">
+              <QrCode size={13} /> Fonctionnalité exclusive
+            </p>
+            <h2 className="au d1 font-black text-white mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}>
+              Votre carte de visite<br />
+              <span className="gradient-text">numérique avec QR code</span>
+            </h2>
+            <p className="au d2 text-white/50 text-base max-w-lg mx-auto leading-relaxed">
+              Partagez un lien en un clic ou imprimez votre QR code. Vos clients arrivent directement sur votre carte et vous contactent en un tap.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
+
+            {/* ── Left: features + price ── */}
+            <div className="space-y-4">
+              {[
+                {
+                  icon: <Smartphone size={18} />,
+                  color: 'bg-indigo-soft text-indigo-primary',
+                  title: 'Une page dédiée à votre image',
+                  desc: 'Bannière, logo, accroche, couleurs de marque — votre carte reflète exactement votre identité professionnelle.',
+                },
+                {
+                  icon: <QrCode size={18} />,
+                  color: 'bg-orange-soft text-orange-primary',
+                  title: 'QR code haute résolution',
+                  desc: 'Téléchargeable en PNG, prêt à imprimer sur vos cartes papier, flyers ou vitrine. Un scan suffit.',
+                },
+                {
+                  icon: <MessageCircle size={18} />,
+                  color: 'bg-indigo-soft text-indigo-primary',
+                  title: 'Bouton de contact intégré',
+                  desc: 'Appel direct, WhatsApp, e-mail ou site web — le visiteur vous contacte en un tap, sans chercher vos coordonnées.',
+                },
+                {
+                  icon: <Globe size={18} />,
+                  color: 'bg-orange-soft text-orange-primary',
+                  title: 'Lien court partageable partout',
+                  desc: 'WhatsApp, email, Instagram, signature mail — un lien unique /carte/votre-nom fonctionne sur tous les supports.',
+                },
+              ].map((item, i) => (
+                <div key={item.title} className={`au d${i + 2} flex gap-4 bg-white/5 border border-white/10 rounded-2xl p-5 step-card`}>
+                  <div className={`w-10 h-10 rounded-xl ${item.color} flex items-center justify-center shrink-0`}>
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="font-black text-white text-sm mb-1">{item.title}</p>
+                    <p className="text-xs text-white/50 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+
+              {/* Price chip */}
+              <div className="au d7 flex items-center justify-between bg-indigo-primary/20 border border-indigo-primary/40 rounded-2xl px-6 py-5 mt-2">
+                <div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-3xl font-black text-white">3,99 €</span>
+                    <span className="text-white/50 text-sm">/mois</span>
+                  </div>
+                  <p className="text-xs text-white/40 mt-0.5">En option sur votre abonnement Pro · sans engagement</p>
+                </div>
+                <Link
+                  href="/mon-compte/profil-pro"
+                  className="shrink-0 inline-flex items-center gap-1.5 bg-indigo-primary hover:bg-indigo-dark text-white font-black text-sm px-5 py-3 rounded-xl transition-colors"
+                >
+                  Activer <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+
+            {/* ── Right: animated card preview ── */}
+            <div className="flex items-center justify-center lg:justify-end">
+              <div className="relative" style={{ width: '360px', maxWidth: '100%' }}>
+
+                {/* Ambient glow */}
+                <div
+                  className="card-preview-glow absolute rounded-full blur-3xl pointer-events-none"
+                  style={{
+                    inset: '-40px',
+                    background: 'radial-gradient(ellipse at 50% 50%, #4F46E5 0%, #E8571A 55%, transparent 75%)',
+                  }}
+                />
+
+                {/* Card */}
+                <div
+                  className="card-preview-float relative rounded-3xl overflow-hidden"
+                  style={{
+                    boxShadow: '0 40px 80px -16px rgba(79,70,229,0.45), 0 16px 32px -8px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.12)',
+                  }}
+                >
+                  {/* Banner — CSS gradient mesh */}
+                  <div
+                    className="card-preview-sweep relative h-40 overflow-hidden"
+                    style={{
+                      background: [
+                        'radial-gradient(ellipse at 85% 15%, rgba(232,87,26,0.65) 0%, transparent 45%)',
+                        'radial-gradient(ellipse at 15% 85%, rgba(99,102,241,0.75) 0%, transparent 45%)',
+                        'radial-gradient(ellipse at 50% 50%, rgba(79,70,229,0.3) 0%, transparent 65%)',
+                        'linear-gradient(140deg, #0f0c29 0%, #1a1f36 45%, #312e81 100%)',
+                      ].join(', '),
+                    }}
+                  >
+                    {/* Dot grid */}
+                    <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <pattern id="dp" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                          <circle cx="2" cy="2" r="1.2" fill="white" />
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill="url(#dp)" />
+                    </svg>
+                    {/* Accent rings */}
+                    <svg className="absolute -right-8 -top-8 opacity-[0.18]" width="140" height="140" viewBox="0 0 140 140" fill="none">
+                      <circle cx="70" cy="70" r="68" stroke="white" strokeWidth="1" />
+                      <circle cx="70" cy="70" r="52" stroke="white" strokeWidth="0.6" />
+                      <circle cx="70" cy="70" r="34" stroke="white" strokeWidth="0.4" />
+                    </svg>
+                    {/* Watermark */}
+                    <div className="absolute top-3 right-4 flex items-center gap-1.5 opacity-55">
+                      <div className="w-2.5 h-2.5 rounded-full border border-white/80 flex items-center justify-center">
+                        <div className="w-1 h-1 rounded-full bg-white" />
+                      </div>
+                      <span className="text-[9px] text-white font-bold tracking-widest uppercase">1000Click</span>
+                    </div>
+                    {/* Bottom gradient fade */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30" />
+                  </div>
+
+                  {/* White body */}
+                  <div className="bg-white px-6 pb-6 -mt-5 rounded-t-3xl relative z-10">
+
+                    {/* Logo overlapping banner */}
+                    <div
+                      className="w-[72px] h-[72px] rounded-2xl overflow-hidden border-4 border-white -mt-10 mb-3 flex items-center justify-center text-white font-black text-3xl"
+                      style={{
+                        background: 'linear-gradient(135deg, #4F46E5 0%, #312e81 100%)',
+                        boxShadow: '0 12px 28px -6px rgba(0,0,0,0.3)',
+                      }}
+                    >
+                      P
+                    </div>
+
+                    <p className="text-xl font-black text-gray-900 leading-tight">Paul Dupont</p>
+                    <p className="text-sm font-bold mt-1" style={{ color: '#4F46E5' }}>Architecte · Rénovation</p>
+                    <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1.5">
+                      <MapPin size={12} className="text-gray-300" />
+                      Valencia, Espagne
+                    </p>
+
+                    <div className="border-t border-gray-100 my-4" />
+
+                    {/* Contact rows */}
+                    <div className="space-y-2 mb-4">
+                      {[
+                        { icon: <Phone size={14} style={{ color: '#4F46E5' }} />, label: '+34 612 345 678', bg: '#EEF2FF', color: '#4F46E5' },
+                        { icon: <MessageCircle size={14} className="text-green-500" />, label: 'WhatsApp', bg: '#F0FDF4', color: '#16a34a' },
+                        { icon: <Globe size={14} className="text-blue-500" />, label: 'www.pauldupont.es', bg: '#EFF6FF', color: '#2563eb' },
+                      ].map((row, i) => (
+                        <div key={i} className="flex items-center gap-3 rounded-xl px-4 py-3" style={{ background: row.bg }}>
+                          {row.icon}
+                          <span className="text-sm font-semibold truncate" style={{ color: row.color }}>{row.label}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* QR + CTA */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
+                        <QrCode size={26} className="text-gray-300" />
+                      </div>
+                      <div
+                        className="card-preview-cta flex-1 text-white rounded-2xl py-4 flex items-center justify-center gap-2 text-sm font-black"
+                        style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #312e81 100%)' }}
+                      >
+                        <MessageCircle size={16} /> Contacter
+                      </div>
+                    </div>
+
+                    <p className="text-center text-[10px] text-gray-300 mt-4 font-medium tracking-wide">
+                      Carte de visite numérique propulsée par 1000Click.es
+                    </p>
+                  </div>
+                </div>
+
+                {/* Badge */}
+                <div
+                  className="absolute -top-2 -right-3 bg-orange-primary text-white text-[11px] font-black px-3 py-1.5 rounded-full rotate-6"
+                  style={{ boxShadow: '0 4px 14px rgba(232,87,26,0.45)' }}
+                >
+                  3,99 €/mois
+                </div>
+              </div>
             </div>
 
           </div>
