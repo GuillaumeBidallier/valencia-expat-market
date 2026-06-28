@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { BUSINESS_CARD_ENABLED } from '@/lib/feature-flags'
 import {
   CheckCircle, ArrowRight, Zap, Star, Users, Globe,
   TrendingUp, Shield, CreditCard, MapPin, Building2, Phone,
@@ -524,7 +525,7 @@ export default function DevenirProPage() {
       {/* ══════════════════════════════════════════
           CARTE DE VISITE & QR CODE
       ══════════════════════════════════════════ */}
-      <section className="py-20 px-4 border-t border-gray-100" style={{ background: '#1A1F36' }}>
+      {BUSINESS_CARD_ENABLED && <section className="py-20 px-4 border-t border-gray-100" style={{ background: '#1A1F36' }}>
         <div className="max-w-5xl mx-auto">
 
           {/* Header */}
@@ -726,7 +727,7 @@ export default function DevenirProPage() {
 
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ══════════════════════════════════════════
           PRICING

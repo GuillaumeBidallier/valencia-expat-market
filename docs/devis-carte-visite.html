@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @page { size: A4; margin: 0; }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    background:#fff;
+    font-family:'Inter',Arial,sans-serif;
+    font-size:9.5pt;
+    color:#1a1a1a;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 16mm 17mm 0 17mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    break-after: page;
+    page-break-after: always;
+    background: #fff;
+  }
+
+  .page-body { flex: 1; }
+
+  .pf {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7pt;
+    color: #bbb;
+    border-top: 1px solid #eee;
+    padding: 3px 0 8mm 0;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .n {
+    position: absolute;
+    top: 0; right: 0;
+    width: 34px; height: 34px;
+    background: #12122a;
+    color: #fff;
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  h1 { font-size:26pt; font-weight:800; letter-spacing:-0.5px; margin-bottom:3px; }
+  .h1sub { font-size:8.5pt; color:#888; margin-bottom:18px; }
+  .stitle { font-size:11pt; font-weight:700; margin:14px 0 8px; }
+
+  .parties {
+    display:grid; grid-template-columns:1fr 1fr;
+    border:1px solid #e2e2e2; margin-bottom:16px;
+  }
+  .party { padding:12px 14px; }
+  .party+.party { border-left:1px solid #e2e2e2; }
+  .plabel { font-size:7pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#999; margin-bottom:8px; }
+  .prow { display:grid; grid-template-columns:78px 1fr; font-size:8pt; gap:1.5px 6px; margin-bottom:1.5px; }
+  .prow .k { color:#aaa; }
+  .prow .v { font-weight:600; }
+
+  .objet {
+    border-left:3px solid #12122a;
+    padding:7px 11px; margin-bottom:16px; font-size:8.5pt;
+  }
+  .objet b { font-size:7.5pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#666; margin-right:6px; }
+
+  .stack { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #e2e2e2; margin-bottom:18px; }
+  .sc { padding:10px 12px; border-right:1px solid #e2e2e2; }
+  .sc:last-child { border-right:none; }
+  .stag { display:inline-block; background:#12122a; color:#fff; font-size:7pt; font-weight:700; padding:2px 7px; margin-bottom:6px; }
+  .sc p { font-size:7.5pt; color:#555; line-height:1.9; }
+
+  table { width:100%; border-collapse:collapse; font-size:8.5pt; }
+  thead tr { background:#12122a; color:#fff; }
+  th { padding:7px 9px; font-weight:600; font-size:7.5pt; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  th.r { text-align:right; } th.c { text-align:center; }
+  tbody tr { border-bottom:1px solid #f0f0f0; }
+  tbody tr:nth-child(even) { background:#fafafa; }
+  td { padding:8px 9px; vertical-align:top; }
+  td.num  { width:20px; color:#aaa; font-size:7.5pt; font-weight:600; }
+  td.dur  { width:62px; text-align:center; color:#666; }
+  td.prix { width:74px; text-align:right; font-weight:700; }
+  td.desc strong { display:block; font-weight:700; margin-bottom:2px; }
+  td.desc p { font-size:7.5pt; color:#555; line-height:1.55; }
+
+  .subtotal-row { background:#f4f4f4 !important; border-bottom: 1px solid #e0e0e0 !important; }
+  .subtotal-row td { padding:7px 9px; font-weight:600; font-size:8pt; }
+  .subtotal-row .tl { text-align:right; color:#555; letter-spacing:.05em; }
+  .subtotal-row .tv { text-align:right; }
+
+  .discount-row { background:#fff8f5 !important; border-bottom: 1px solid #fde8dd !important; }
+  .discount-row td { padding:7px 9px; }
+  .discount-row .tl { text-align:right; font-size:7.5pt; color:#c0392b; font-weight:700; letter-spacing:.05em; }
+  .discount-row .tv { text-align:right; font-weight:800; color:#c0392b; font-size:9.5pt; }
+
+  .trow { background:#12122a !important; color:#fff; border:none !important; }
+  .trow td { padding:9px 9px; font-weight:700; }
+  .trow .tl { text-align:right; font-size:8pt; letter-spacing:.07em; }
+  .trow .tv { text-align:right; font-size:11pt; }
+  .tva { font-size:7pt; color:#aaa; text-align:right; margin-top:4px; }
+
+  .pt { width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:16px; }
+  .pt thead tr { background:#12122a; color:#fff; }
+  .pt th { padding:7px 9px; font-size:7.5pt; font-weight:600; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  .pt th.r { text-align:right; }
+  .pt tbody tr { border-bottom:1px solid #f0f0f0; }
+  .pt tbody tr:nth-child(even) { background:#fafafa; }
+  .pt td { padding:7px 9px; }
+  .pt td.r { text-align:right; font-weight:600; }
+  .pt td.strike { text-align:right; color:#aaa; text-decoration:line-through; }
+  .pt .dark { background:#12122a !important; color:#fff; }
+  .pt .dark td { padding:8px 9px; font-weight:700; }
+  .pt .dark .r { text-align:right; }
+  .pt .disc { background:#fff8f5 !important; }
+  .pt .disc td { color:#c0392b; font-weight:700; }
+  .pt .disc .r { text-align:right; }
+
+  .cgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+  .cbox { border:1px solid #e2e2e2; padding:11px 13px; font-size:8pt; }
+  .cbox h4 { font-size:8pt; font-weight:700; margin-bottom:9px; }
+  .crow { display:flex; align-items:center; gap:9px; margin-bottom:7px; }
+  .pct { background:#12122a; color:#fff; font-weight:700; font-size:8.5pt; padding:3px 7px; min-width:34px; text-align:center; }
+  .crow .cd { flex:1; font-size:7.5pt; color:#555; }
+  .crow .cm { font-weight:700; font-size:8.5pt; }
+  .vnote { font-size:7pt; color:#aaa; margin-top:5px; }
+  .ibadge { display:inline-block; background:#12122a; color:#fff; font-size:7.5pt; font-weight:700; padding:3px 9px; margin-top:7px; }
+  .cstack { display:flex; flex-direction:column; gap:12px; }
+
+  .sgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+  .sbox { border:1px solid #e2e2e2; padding:11px 13px; min-height:72px; }
+  .sbox h4 { font-size:7pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:7px; }
+  .sbox p { font-size:8pt; color:#555; }
+  .dline { font-size:8pt; color:#aaa; margin-top:10px; }
+
+  .cgv h2 { font-size:11pt; font-weight:700; margin-bottom:14px; }
+  .ci { margin-bottom:10px; break-inside:avoid; page-break-inside:avoid; }
+  .ci h4 { font-size:8.5pt; font-weight:700; margin-bottom:3px; }
+  .ci p { font-size:7.5pt; color:#444; line-height:1.65; text-align:justify; }
+
+  .note-box {
+    border:1px solid #e2e2e2;
+    background:#fafafa;
+    padding:10px 13px;
+    font-size:7.5pt;
+    color:#555;
+    line-height:1.65;
+    margin-bottom:16px;
+  }
+  .note-box strong { color:#12122a; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1>Devis MSD-2026-004</h1>
+    <p class="h1sub">28 juin 2026 &nbsp;·&nbsp; Valide 30 jours &nbsp;·&nbsp; Avenant au devis MSD-2026-003</p>
+
+    <div class="parties">
+      <div class="party">
+        <div class="plabel">Émetteur</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">NovaTeck Studio || MYLOSTACK DEVELOPMENT</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Guillaume Bidallier</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">14 chemin de la prée, 17380 Saint Loup</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">France</span></div>
+        <div class="prow"><span class="k">N° entreprise :</span><span class="v">92421320000018</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">06 23 49 09 53</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">bidallierguillaume@gmail.com</span></div>
+        <div class="prow"><span class="k">Site :</span><span class="v">novateckstudio.com</span></div>
+      </div>
+      <div class="party">
+        <div class="plabel">Destinataire</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Dufour Christina</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">Belgique</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">+32 471 49 08 03</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">Agence1991@gmail.com</span></div>
+        <div class="prow"><span class="k">N° TVA :</span><span class="v">—</span></div>
+      </div>
+    </div>
+
+    <div class="objet">
+      <b>Objet :</b> Module additionnel — Carte de visite numérique + QR Code pour les professionnels de Valencia Expat Market (1000Click)
+    </div>
+
+    <div class="note-box">
+      <strong>Contexte :</strong> Ce devis est un avenant au contrat MSD-2026-003 (1 550 € HT). Il couvre le développement complet d'un module de carte de visite numérique permettant à chaque professionnel de générer une page publique personnalisée accessible via un QR code ou un lien court, avec souscription mensuelle intégrée (3,99 €/mois par professionnel via Stripe). Le module est développé et déployé — ce devis en valide la mise en production définitive. <strong>Une remise exceptionnelle est appliquée en tant que client existant.</strong>
+    </div>
+
+    <div class="stitle" style="margin-top:0;">Stack technique</div>
+    <div class="stack">
+      <div class="sc"><div class="stag">Frontend</div><p>Next.js 16<br/>TypeScript<br/>react-qr-code</p></div>
+      <div class="sc"><div class="stag">Paiement</div><p>Stripe Checkout<br/>Abonnement récurrent<br/>Webhook sécurisé</p></div>
+      <div class="sc"><div class="stag">Backend</div><p>Prisma / PostgreSQL<br/>Vercel Blob<br/>API Routes Next.js</p></div>
+      <div class="sc"><div class="stag">Déploiement</div><p>Vercel (existant)<br/>CI/CD automatique<br/>Domaine 1000click.es</p></div>
+    </div>
+
+    <div class="stitle">Prestations détaillées</div>
+
+    <table>
+      <thead><tr>
+        <th>#</th><th>Composant &amp; Description</th><th class="c">Durée</th><th class="r">Tarif catalogue</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td class="desc">
+            <strong>Modélisation &amp; Architecture</strong>
+            <p>Conception du modèle <em>BusinessCard</em> (15 champs) · intégration au modèle <em>Professional</em> existant · définition du flux d'abonnement Stripe · architecture de la page publique standalone</p>
+          </td>
+          <td class="dur">1 jour</td><td class="prix">100 €</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="desc">
+            <strong>Backend &amp; Intégration Stripe</strong>
+            <p>API Stripe Checkout avec <em>price_data</em> inline (abonnement mensuel 3,99 €) · webhook <em>checkout.session.completed</em> et <em>customer.subscription.deleted</em> · API CRUD carte (<em>/api/pro/business-card</em> GET + PUT) · activation / résiliation automatique</p>
+          </td>
+          <td class="dur">3 jours</td><td class="prix">300 €</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="desc">
+            <strong>Page publique <em>/carte/[slug]</em></strong>
+            <p>Page standalone sans navbar/footer · bannière + logo professionnel · nom, accroche, tagline, ville, catégorie · lignes de contact cliquables (tél., WhatsApp, email, site) · bouton CTA fixe en bas de page · watermark 1000Click · SEO (metadata OpenGraph)</p>
+          </td>
+          <td class="dur">2 jours</td><td class="prix">200 €</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="desc">
+            <strong>Interface Pro — Onglet Carte QR</strong>
+            <p>Onglet dédié dans le tableau de bord professionnel · état sans carte (upsell animé avec aperçu de la carte) · état actif : QR code SVG/PNG téléchargeable, lien court à copier, éditeur inline (headline, tagline, palette 8 couleurs, email, 4 toggles de visibilité) · indicateur de renouvellement d'abonnement</p>
+          </td>
+          <td class="dur">3 jours</td><td class="prix">300 €</td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="desc">
+            <strong>Section marketing <em>/devenir-pro</em> &amp; Tests</strong>
+            <p>Section dédiée sur la page de conversion · prévisualisation animée de la carte · tests bout en bout du flux Stripe · déploiement et recette fonctionnelle</p>
+          </td>
+          <td class="dur">1 jour</td><td class="prix">90 €</td>
+        </tr>
+
+        <!-- Subtotal -->
+        <tr class="subtotal-row">
+          <td colspan="3" class="tl">TOTAL TARIF CATALOGUE HT</td>
+          <td class="tv prix">990 €</td>
+        </tr>
+
+        <!-- Discount -->
+        <tr class="discount-row">
+          <td colspan="3" class="tl">Remise client fidèle — projet MSD-2026-003 &nbsp;(−87 %)</td>
+          <td class="tv prix">−865 €</td>
+        </tr>
+
+        <!-- Net total -->
+        <tr class="trow">
+          <td colspan="3" class="tl">TOTAL NET HT À RÉGLER</td>
+          <td class="tv">125 €</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tva">TVA non applicable, art. 293 B du CGI</p>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-004 &nbsp;·&nbsp; NovaTeck Studio || MYLOSTACK DEVELOPMENT &nbsp;·&nbsp; Avenant MSD-2026-003</span><span></span>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <!-- Rappel totaux -->
+    <table style="margin-bottom:4px;">
+      <thead><tr><th>#</th><th>Composant</th><th class="c">Durée</th><th class="r">Tarif catalogue</th></tr></thead>
+      <tbody>
+        <tr class="subtotal-row"><td colspan="3" class="tl">TOTAL TARIF CATALOGUE HT</td><td class="tv prix">990 €</td></tr>
+        <tr class="discount-row"><td colspan="3" class="tl">Remise client fidèle — projet MSD-2026-003 &nbsp;(−87 %)</td><td class="tv prix">−865 €</td></tr>
+        <tr class="trow"><td colspan="3" class="tl">TOTAL NET HT À RÉGLER</td><td class="tv">125 €</td></tr>
+      </tbody>
+    </table>
+    <p class="tva" style="margin-bottom:20px;">TVA non applicable, art. 293 B du CGI</p>
+
+    <div class="stitle" style="margin-top:0;">Récapitulatif budgétaire</div>
+    <table class="pt" style="margin-bottom:5px;">
+      <thead><tr><th>Composant</th><th class="r">Tarif catalogue</th></tr></thead>
+      <tbody>
+        <tr><td>Modélisation &amp; Architecture (1 j.)</td><td class="r">100 €</td></tr>
+        <tr><td>Backend &amp; Intégration Stripe (3 j.)</td><td class="r">300 €</td></tr>
+        <tr><td>Page publique /carte/[slug] (2 j.)</td><td class="r">200 €</td></tr>
+        <tr><td>Interface Pro — Onglet Carte QR (3 j.)</td><td class="r">300 €</td></tr>
+        <tr><td>Section marketing &amp; Tests (1 j.)</td><td class="r">90 €</td></tr>
+        <tr class="subtotal-row"><td>Sous-total tarif catalogue</td><td class="r">990 €</td></tr>
+        <tr class="disc"><td>Remise client fidèle (−87 %)</td><td class="r">−865 €</td></tr>
+        <tr class="dark"><td style="font-size:8pt;letter-spacing:.06em;">TOTAL NET HT À RÉGLER</td><td class="r" style="font-size:10.5pt;">125 €</td></tr>
+      </tbody>
+    </table>
+    <p class="tva" style="margin-bottom:6px;">TVA non applicable, art. 293 B du CGI</p>
+
+    <div class="note-box" style="margin-top:10px;">
+      <strong>Récapitulatif des deux devis :</strong><br/>
+      Devis MSD-2026-003 — Valencia Expat Market (projet principal) &nbsp;···&nbsp; <strong>1 550 € HT</strong><br/>
+      Devis MSD-2026-004 — Module Carte de visite + QR Code &nbsp;···&nbsp; <strong>125 € HT</strong> <span style="color:#aaa;font-size:7pt;">(tarif catalogue 990 € — remise 87 % client fidèle)</span><br/>
+      <span style="font-size:7.5pt;">TOTAL CUMULÉ &nbsp;···&nbsp; <strong style="color:#12122a;">1 675 € HT</strong></span>
+    </div>
+
+    <div class="stitle">Fonctionnement du module en production</div>
+    <div class="note-box">
+      Chaque professionnel abonné (Premium ou Premium+) peut activer sa carte de visite numérique pour <strong>3,99 € / mois</strong> via Stripe. Le paiement est géré automatiquement : activation à la confirmation du paiement, désactivation à la résiliation. La fonctionnalité est <strong>déjà développée et déployée sur l'environnement de production</strong> — elle est maintenue en attente d'activation définitive jusqu'à signature du présent avenant.
+    </div>
+
+    <div class="stitle">Conditions</div>
+    <div class="cgrid">
+      <div class="cbox">
+        <h4>Conditions de paiement</h4>
+        <div class="crow"><span class="pct">100%</span><span class="cd">à la validation et signature du présent avenant</span><span class="cm">125 €</span></div>
+        <p class="vnote">Mode de règlement : Virement bancaire<br/>TVA non applicable, art. 293 B du CGI<br/>Paiement unique — aucun abonnement lié à ce devis<br/>Remise non cumulable avec d'autres offres promotionnelles</p>
+      </div>
+      <div class="cstack">
+        <div class="cbox">
+          <h4>Mise en production</h4>
+          <p style="font-size:7.5pt;color:#555;line-height:1.6;">Le module est livré déployé sur Vercel en attente de validation. L'activation définitive est effectuée dès réception du paiement de 125 € HT.</p>
+        </div>
+        <div class="cbox">
+          <h4>Garantie</h4>
+          <p style="font-size:7.5pt;color:#555;line-height:1.6;">30 jours après mise en production pour correction des anomalies liées au module. Flux Stripe testé et validé en mode live inclus dans ce devis.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stitle">Bon pour accord</div>
+    <p style="font-size:8pt;color:#555;margin-bottom:16px;">
+      En signant ce document, le Client accepte sans réserve les prestations décrites dans cet avenant ainsi que les Conditions Générales de Vente figurant dans le devis MSD-2026-003. La remise de 87 % est accordée à titre exceptionnel en tant que client existant et ne vaut que pour le présent avenant.
+    </p>
+
+    <div class="sgrid">
+      <div class="sbox" style="min-height:110px;">
+        <h4>Signature Prestataire</h4>
+        <p>Guillaume Bidallier<br/>NovaTeck Studio || MYLOSTACK DEVELOPMENT</p>
+        <div class="dline" style="margin-top:36px;">A Saint Loup, le ___/___/______</div>
+      </div>
+      <div class="sbox" style="min-height:110px;">
+        <h4>Signature Client</h4>
+        <p>Nom &amp; Qualité du signataire :</p>
+        <p style="font-size:8pt;color:#aaa;margin-top:4px;">Dufour Christina</p>
+        <div class="dline" style="margin-top:36px;">A _________________, le ___/___/______</div>
+      </div>
+    </div>
+    <p style="font-size:7.5pt;color:#aaa;text-align:center;margin-top:10px;">
+      Faire précéder la signature de la mention manuscrite « Bon pour accord »
+    </p>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-004 &nbsp;·&nbsp; NovaTeck Studio || MYLOSTACK DEVELOPMENT &nbsp;·&nbsp; Avenant MSD-2026-003</span><span></span>
+  </div>
+</div>
+
+</body>
+</html>

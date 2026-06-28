@@ -13,6 +13,7 @@ import type { BusinessCard, Professional } from '@prisma/client'
 import type { ProPlan } from '@/lib/stripe'
 import ProStatsClient from './ProStatsClient'
 import BusinessCardSection from './BusinessCardSection'
+import { BUSINESS_CARD_ENABLED } from '@/lib/feature-flags'
 
 type Tab = 'apercu' | 'fiche' | 'medias' | 'statistiques' | 'carte' | 'abonnement'
 type Props = { pro: Professional & { businessCard: BusinessCard | null }; cardSuccess?: boolean }
@@ -181,7 +182,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
     { key: 'fiche',        label: 'Ma fiche',       icon: Pencil },
     { key: 'medias',       label: 'Médias',         icon: ImageIcon },
     { key: 'statistiques', label: 'Statistiques',   icon: BarChart2,  premiumOnly: true },
-    { key: 'carte',        label: 'Carte QR',       icon: QrCode },
+    ...(BUSINESS_CARD_ENABLED ? [{ key: 'carte' as Tab, label: 'Carte QR', icon: QrCode }] : []),
     { key: 'abonnement',   label: 'Abonnement',     icon: CreditCard },
   ]
 
@@ -383,7 +384,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
                   {[
                     { label: 'Modifier ma fiche', tab: 'fiche' as Tab,   icon: <Pencil size={14} className="text-orange-primary" /> },
                     { label: 'Gérer mes médias',  tab: 'medias' as Tab,  icon: <Camera size={14} className="text-indigo-primary" /> },
-                    { label: 'Ma carte de visite',tab: 'carte' as Tab,   icon: <QrCode size={14} className="text-purple-500" /> },
+                    ...(BUSINESS_CARD_ENABLED ? [{ label: 'Ma carte de visite', tab: 'carte' as Tab, icon: <QrCode size={14} className="text-purple-500" /> }] : []),
                     { label: 'Mon abonnement',    tab: 'abonnement' as Tab, icon: <Star size={14} className="text-orange-primary" /> },
                   ].map(a => (
                     <button
@@ -669,7 +670,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
         )}
 
         {/* ════ CARTE DE VISITE ═══════════════════════════════ */}
-        {tab === 'carte' && (
+        {tab === 'carte' && BUSINESS_CARD_ENABLED && (
           <div>
             <BusinessCardSection pro={pro} cardSuccessParam={cardSuccess} />
           </div>

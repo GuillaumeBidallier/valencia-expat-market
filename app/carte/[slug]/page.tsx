@@ -4,10 +4,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { MapPin, Globe, Phone, MessageCircle, Mail, QrCode } from 'lucide-react'
+import { BUSINESS_CARD_ENABLED } from '@/lib/feature-flags'
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!BUSINESS_CARD_ENABLED) return { title: 'Page introuvable' }
   const { slug } = await params
   const pro = await prisma.professional.findUnique({
     where: { slug },
@@ -27,6 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BusinessCardPage({ params }: Props) {
+  if (!BUSINESS_CARD_ENABLED) notFound()
+
   const { slug } = await params
 
   const pro = await prisma.professional.findUnique({
