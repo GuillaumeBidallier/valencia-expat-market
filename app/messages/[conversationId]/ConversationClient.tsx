@@ -93,20 +93,39 @@ export default function ConversationClient({ conversationId, listing, initialMes
         {messages.map(msg => {
           const isMe = msg.senderId === currentUserId
           return (
-            <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
-                isMe
-                  ? 'bg-indigo-primary text-white rounded-br-sm'
-                  : 'bg-white border border-gray-100 text-navy rounded-bl-sm'
-              }`}>
+            <div key={msg.id} className={`flex items-end gap-2 ${isMe ? 'justify-end' : 'justify-start'}`}>
+              {/* Avatar — interlocuteur seulement */}
+              {!isMe && (
+                <div className="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-black mb-0.5"
+                  style={{ background: 'linear-gradient(135deg, #E8571A 0%, #C4471A 100%)' }}>
+                  {msg.sender.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              <div
+                className={`max-w-[72%] px-4 py-2.5 shadow-sm ${
+                  isMe
+                    ? 'rounded-2xl rounded-br-sm text-white'
+                    : 'rounded-2xl rounded-bl-sm'
+                }`}
+                style={isMe
+                  ? { background: 'linear-gradient(135deg, #4F46E5 0%, #312e81 100%)' }
+                  : { background: '#FFF3EE', border: '1px solid rgba(232,87,26,0.15)' }
+                }
+              >
                 {!isMe && (
-                  <p className="text-xs font-semibold mb-1 text-orange-primary">{msg.sender.name}</p>
+                  <p className="text-xs font-black mb-1" style={{ color: '#E8571A' }}>{msg.sender.name}</p>
                 )}
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.body}</p>
-                <p className={`text-xs mt-1 ${isMe ? 'text-white/60' : 'text-gray-400'}`}>
+                <p className={`text-sm leading-relaxed whitespace-pre-wrap ${isMe ? 'text-white' : 'text-navy'}`}>
+                  {msg.body}
+                </p>
+                <p className={`text-[11px] mt-1.5 ${isMe ? 'text-white/50 text-right' : 'text-orange-primary/40'}`}>
                   {new Date(msg.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
+
+              {/* Espaceur côté envoyeur */}
+              {isMe && <div className="w-7 shrink-0" />}
             </div>
           )
         })}
@@ -126,7 +145,7 @@ export default function ConversationClient({ conversationId, listing, initialMes
           }}
           placeholder="Écrivez votre message... (Entrée pour envoyer)"
           rows={2}
-          className="flex-1 resize-none border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-primary transition-colors"
+          className="flex-1 resize-none border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-primary/20 focus:border-indigo-primary transition-colors"
         />
         <button
           type="submit"
