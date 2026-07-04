@@ -4,6 +4,7 @@ import {
   Image as ImageIcon, Plus, Trash2, GripVertical, Save,
   Megaphone, Mail, ShieldAlert, CheckCircle2, AlertTriangle,
   Loader2, Upload, ExternalLink, ToggleLeft, ToggleRight,
+  Database, RotateCcw, Download,
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -51,6 +52,51 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
   const [saving, startSave]   = useTransition()
   const [saved, setSaved]     = useState(false)
   const [saveError, setSaveError] = useState('')
+
+  // Database tools state
+  const [exporting, setExporting]     = useState(false)
+  const [resetStep, setResetStep]     = useState<'idle' | 'confirm'>('idle')
+  const [resetting, setResetting]     = useState(false)
+  const [resetResult, setResetResult] = useState<{ count: number } | null>(null)
+  const [resetError, setResetError]   = useState('')
+
+  async function handleExport() {
+    setExporting(true)
+    try {
+      const res = await fetch('/api/admin/database/export')
+      if (!res.ok) throw new Error('Export failed')
+      const blob = await res.blob()
+      const url  = URL.createObjectURL(blob)
+      const a    = document.createElement('a')
+      a.href     = url
+      const date = new Date().toISOString().split('T')[0]
+      a.download = `backup-1000click-${date}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      alert("Erreur lors de l'export de la base de données.")
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  async function handleReset() {
+    setResetting(true)
+    setResetError('')
+    setResetResult(null)
+    try {
+      const res  = await fetch('/api/admin/database/reset-professionals', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Erreur inconnue')
+      setResetResult({ count: data.deleted })
+      setResetStep('idle')
+    } catch (e) {
+      setResetError(e instanceof Error ? e.message : 'Erreur inconnue')
+      setResetStep('idle')
+    } finally {
+      setResetting(false)
+    }
+  }
 
   // Drag state
   const dragIdx = useRef<number | null>(null)
@@ -347,6 +393,94 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
             Attention : le site sera inaccessible aux visiteurs tant que ce mode est activé.
           </div>
         )}
+      </section>
+
+      {/* ── Outils base de données ───────────────────────────── */}
+      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-gray-50 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center">
+            <Database size={18} className="text-gray-400" />
+          </div>
+          <div>
+            <h2 className="font-black text-navy text-sm">Outils base de données</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Export et réinitialisation des données — actions irréversibles</p>
+          </div>
+        </div>
+
+        <div className="px-6 py-5 flex flex-col gap-4">
+
+          {/* Export */}
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+            <div>
+              <p className="text-sm font-bold text-navy">Exporter la base de données</p>
+              <p className="text-xs text-gray-400 mt-0.5">Télécharge un fichier JSON complet (utilisateurs sans mot de passe, annonces, pros, messages…)</p>
+            </div>
+            <button
+              onClick={handleExport}
+              disabled={exporting}
+              className="flex items-center gap-2 shrink-0 bg-navy text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-navy/90 transition-colors disabled:opacity-60"
+            >
+              {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+              {exporting ? 'Export…' : 'Exporter'}
+            </button>
+          </div>
+
+          {/* Reset professionals */}
+          <div className={`rounded-xl border px-4 py-3 ${resetStep === 'confirm' ? 'border-red-200 bg-red-50' : 'border-gray-100 bg-gray-50'}`}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-navy">Réinitialiser les comptes professionnels</p>
+                <p className="text-xs text-gray-400 mt-0.5">Supprime <strong>tous</strong> les profils Pro, leurs clics et cartes de visite. Les comptes utilisateurs associés sont conservés.</p>
+              </div>
+              {resetStep === 'idle' ? (
+                <button
+                  onClick={() => { setResetStep('confirm'); setResetResult(null); setResetError('') }}
+                  disabled={resetting}
+                  className="flex items-center gap-2 shrink-0 bg-red-500 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60"
+                >
+                  <RotateCcw size={14} />
+                  Réinitialiser
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => setResetStep('idle')}
+                    className="text-xs font-bold text-gray-500 px-3 py-2 rounded-xl border border-gray-200 hover:bg-white transition-colors"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    disabled={resetting}
+                    className="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-700 transition-colors disabled:opacity-60"
+                  >
+                    {resetting ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
+                    {resetting ? 'Suppression…' : 'Confirmer la suppression'}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {resetStep === 'confirm' && (
+              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                <AlertTriangle size={13} className="shrink-0" />
+                Cette action est irréversible. Tous les profils professionnels seront définitivement supprimés.
+              </p>
+            )}
+            {resetResult && (
+              <p className="mt-3 text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
+                <CheckCircle2 size={13} className="shrink-0" />
+                {resetResult.count} profil{resetResult.count !== 1 ? 's' : ''} professionnel{resetResult.count !== 1 ? 's' : ''} supprimé{resetResult.count !== 1 ? 's' : ''} avec succès.
+              </p>
+            )}
+            {resetError && (
+              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                <AlertTriangle size={13} className="shrink-0" />
+                {resetError}
+              </p>
+            )}
+          </div>
+        </div>
       </section>
 
       {/* ── Save button ──────────────────────────────────────── */}
