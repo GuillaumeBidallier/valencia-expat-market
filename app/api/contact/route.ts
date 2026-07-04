@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+import { getContactEmail } from '@/lib/get-contact-email'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 const FROM = process.env.RESEND_FROM_EMAIL ?? '1000Click <onboarding@resend.dev>'
-const CONTACT_EMAIL = process.env.ADMIN_EMAIL ?? 'contact@vendo.es'
 
 export async function POST(req: NextRequest) {
+  const CONTACT_EMAIL = await getContactEmail()
   const { name, email, subject, message, website } = await req.json()
 
   // Honeypot — hidden field bots tend to fill in, humans never see it
@@ -98,7 +99,7 @@ export async function POST(req: NextRequest) {
             Nous avons bien reçu votre message concernant <strong style="color:#1A1F36;">"${safeSubject}"</strong> et nous vous répondrons dans les plus brefs délais (généralement sous 24-48h).
           </p>
           <div style="background:#FFF3EE;border-radius:12px;padding:16px 20px;margin-bottom:28px;border-left:3px solid #E8571A;">
-            <p style="margin:0;font-size:13px;color:#6B7280;">📧 Une copie de votre message a été enregistrée. Si votre demande est urgente, vous pouvez également nous écrire directement à <a href="mailto:contact@vendo.es" style="color:#E8571A;text-decoration:none;">contact@vendo.es</a>.</p>
+            <p style="margin:0;font-size:13px;color:#6B7280;">📧 Une copie de votre message a été enregistrée. Si votre demande est urgente, vous pouvez également nous écrire directement à <a href="mailto:${CONTACT_EMAIL}" style="color:#E8571A;text-decoration:none;">${CONTACT_EMAIL}</a>.</p>
           </div>
           <p style="margin:0 0 32px;font-size:14px;color:#6B7280;line-height:1.7;">
             En attendant, n'hésitez pas à explorer les annonces de notre communauté ou à consulter notre blog pour des conseils pratiques sur la vie en Espagne.
@@ -109,7 +110,7 @@ export async function POST(req: NextRequest) {
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · contact@vendo.es
+            1000Click · ${CONTACT_EMAIL}
           </p>
         </td></tr>
       </table>

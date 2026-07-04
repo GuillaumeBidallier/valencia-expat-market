@@ -12,7 +12,7 @@ const SUBJECTS = [
   'Autre',
 ]
 
-export default function ContactForm() {
+export default function ContactForm({ contactEmail = 'contact@vendo.es' }: { contactEmail?: string }) {
   const [form, setForm] = useState({ name: '', email: '', subject: SUBJECTS[0], message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
@@ -111,7 +111,7 @@ export default function ContactForm() {
 
       {status === 'error' && (
         <p className="text-sm text-red-500 bg-red-50 rounded-xl px-4 py-3">
-          Une erreur est survenue. Veuillez réessayer ou nous écrire directement à <a href="mailto:contact@vendo.es" className="underline">contact@vendo.es</a>.
+          Une erreur est survenue. Veuillez réessayer ou nous écrire directement à <a href={`mailto:${contactEmail}`} className="underline">{contactEmail}</a>.
         </p>
       )}
 

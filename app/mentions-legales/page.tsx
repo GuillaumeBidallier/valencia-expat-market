@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Building2, Server, Scale, ShieldCheck, FileText, Mail } from 'lucide-react'
+import { getContactEmail } from '@/lib/get-contact-email'
 
 export const metadata: Metadata = {
   title: 'Mentions légales — 1000Click',
@@ -17,7 +18,8 @@ const SECTIONS = [
   { id: 'contact', label: 'Contact', icon: <Mail size={14} /> },
 ]
 
-export default function MentionsLegalesPage() {
+export default async function MentionsLegalesPage() {
+  const contactEmail = await getContactEmail()
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
 
@@ -72,7 +74,7 @@ export default function MentionsLegalesPage() {
                   <p><strong className="text-navy">Dénomination :</strong> 1000Click</p>
                   <p><strong className="text-navy">Nature :</strong> Plateforme communautaire de petites annonces entre expatriés francophones en Espagne</p>
                   <p><strong className="text-navy">Directeur de la publication :</strong> Équipe 1000Click</p>
-                  <p><strong className="text-navy">Email :</strong> <a href="mailto:contact@vendo.es" className="text-orange-primary hover:underline">contact@vendo.es</a></p>
+                  <p><strong className="text-navy">Email :</strong> <a href={`mailto:${contactEmail}`} className="text-orange-primary hover:underline">{contactEmail}</a></p>
                   <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Espagne (Comunitat Valenciana)</p>
                 </div>
               </div>
@@ -171,8 +173,8 @@ export default function MentionsLegalesPage() {
                 Pour toute question d&apos;ordre légal, pour exercer vos droits sur vos données personnelles, ou pour signaler un contenu illicite :
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
-                <a href="mailto:contact@vendo.es" className="bg-white/10 hover:bg-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2">
-                  <Mail size={14} /> contact@vendo.es
+                <a href={`mailto:${contactEmail}`} className="bg-white/10 hover:bg-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2">
+                  <Mail size={14} /> {contactEmail}
                 </a>
                 <Link href="/contact" className="bg-orange-primary hover:bg-orange-dark rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2 justify-center">
                   Formulaire de contact →

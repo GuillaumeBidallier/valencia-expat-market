@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Mail, MessageCircle, Clock, MapPin, ChevronDown } from 'lucide-react'
 import ContactForm from './ContactForm'
+import { getContactEmail } from '@/lib/get-contact-email'
 
 const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app').replace(/\/$/, '')
 
@@ -39,7 +40,8 @@ const FAQ = [
   },
 ]
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const contactEmail = await getContactEmail()
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
 
@@ -73,7 +75,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <p className="font-black text-navy text-sm mb-1">Email</p>
-                <a href="mailto:contact@vendo.es" className="text-orange-primary text-sm hover:underline font-medium">contact@vendo.es</a>
+                <a href={`mailto:${contactEmail}`} className="text-orange-primary text-sm hover:underline font-medium">{contactEmail}</a>
                 <p className="text-xs text-gray-400 mt-1">Réponse sous 24-48h ouvrées</p>
               </div>
             </div>
@@ -132,7 +134,7 @@ export default function ContactPage() {
           <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-6 sm:p-8">
             <h2 className="text-xl font-black text-navy mb-1">Envoyez-nous un message</h2>
             <p className="text-sm text-gray-400 mb-6">Tous les champs marqués d&apos;un * sont obligatoires.</p>
-            <ContactForm />
+            <ContactForm contactEmail={contactEmail} />
           </div>
         </div>
 

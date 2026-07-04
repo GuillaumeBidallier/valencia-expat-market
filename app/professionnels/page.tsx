@@ -1,15 +1,16 @@
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { proCategories } from '@/lib/proCategories'
+import { getContactEmail } from '@/lib/get-contact-email'
+import AdUnit from '@/components/ads/AdUnit'
+import ProfessionnelsUI from './ProfessionnelsUI'
+import ProfessionnelsHeader from './ProfessionnelsHeader'
 
 export const metadata: Metadata = {
   title: 'Professionnels',
   description: 'Trouvez des professionnels francophones en Espagne : immobilier, juridique, comptabilité, déménagement, santé et plus.',
   alternates: { canonical: '/professionnels' },
 }
-import AdUnit from '@/components/ads/AdUnit'
-import ProfessionnelsUI from './ProfessionnelsUI'
-import ProfessionnelsHeader from './ProfessionnelsHeader'
 
 type Props = {
   searchParams: Promise<{ cat?: string; city?: string }>
@@ -18,13 +19,16 @@ type Props = {
 export default async function ProfessionnelsPage({ searchParams }: Props) {
   const { cat, city } = await searchParams
 
-  const pros = await prisma.professional.findMany({
-    where: {
-      ...(cat  && { category: cat }),
-      ...(city && { city: { contains: city, mode: 'insensitive' } }),
-    },
-    orderBy: [{ tier: 'desc' }, { featured: 'desc' }, { name: 'asc' }],
-  })
+  const [pros, contactEmail] = await Promise.all([
+    prisma.professional.findMany({
+      where: {
+        ...(cat  && { category: cat }),
+        ...(city && { city: { contains: city, mode: 'insensitive' } }),
+      },
+      orderBy: [{ tier: 'desc' }, { featured: 'desc' }, { name: 'asc' }],
+    }),
+    getContactEmail(),
+  ])
 
   const activeCat = proCategories.find(c => c.slug === cat)
 
@@ -47,6 +51,7 @@ export default async function ProfessionnelsPage({ searchParams }: Props) {
             cat={cat ?? ''}
             city={city ?? ''}
             activeCatLabel={activeCat?.label}
+            contactEmail={contactEmail}
           />
 
           {/* Skyscraper droit */}
