@@ -9,15 +9,40 @@ export default async function AdminCategoriesPage() {
     redirect('/')
   }
 
-  const categories = await prisma.category.findMany({ orderBy: { order: 'asc' } })
+  const categories = await prisma.category.findMany({
+    where: { parentId: null },
+    orderBy: { order: 'asc' },
+    include: {
+      children: { orderBy: { order: 'asc' } },
+    },
+  })
+
+  // Count listings for each slug (roots and subs)
+  const allSlugs = [
+    ...categories.map(c => c.slug),
+    ...categories.flatMap(c => c.children.map(s => s.slug)),
+  ]
+  void allSlugs // used implicitly via countBySlug lookup
   const counts = await prisma.listing.groupBy({ by: ['categorySlug'], _count: { id: true } })
   const countBySlug = Object.fromEntries(counts.map(c => [c.categorySlug, c._count.id]))
 
   return (
     <AdminCategoriesClient
-      initialCategories={categories.map(c => ({
-        id: c.id, slug: c.slug, label: c.label, icon: c.icon, order: c.order,
-        listingCount: countBySlug[c.slug] ?? 0,
+      initialTree={categories.map(cat => ({
+        id:           cat.id,
+        slug:         cat.slug,
+        label:        cat.label,
+        icon:         cat.icon,
+        order:        cat.order,
+        listingCount: countBySlug[cat.slug] ?? 0,
+        children:     cat.children.map(sub => ({
+          id:           sub.id,
+          slug:         sub.slug,
+          label:        sub.label,
+          icon:         sub.icon,
+          order:        sub.order,
+          listingCount: countBySlug[sub.slug] ?? 0,
+        })),
       }))}
     />
   )
