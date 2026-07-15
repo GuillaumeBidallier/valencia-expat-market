@@ -42,7 +42,8 @@ export async function getCategoriesServer(): Promise<Category[]> {
 /**
  * Builds a 2-level tree from a flat category list.
  * Root categories (parentId = null) get a `children` array.
- * Safe to call from both server and client code.
+ * SERVER-ONLY: this file imports Prisma — never import it from a client component.
+ * Client-side tree building is inlined in hooks/useCategories.ts.
  */
 export function buildCategoryTree(flat: Category[]): CategoryTree[] {
   const roots: CategoryTree[] = []

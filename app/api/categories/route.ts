@@ -112,11 +112,11 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: `Catégorie utilisée par ${inUse} annonce(s), suppression impossible` }, { status: 409 })
   }
 
-  // Delete children first, then parent
-  if (category.children.length > 0) {
-    await prisma.category.deleteMany({ where: { parentId: id } })
-  }
-  await prisma.category.delete({ where: { id } })
+  // Delete children + parent atomically
+  await prisma.$transaction([
+    prisma.category.deleteMany({ where: { parentId: id } }),
+    prisma.category.delete({ where: { id } }),
+  ])
   revalidateTag('categories', { expire: 0 })
   return NextResponse.json({ ok: true })
 }
