@@ -59,7 +59,10 @@ async function AnnoncesContent({ searchParams }: Props) {
   const radius   = params.radius ? Number(params.radius) : 10
   const geoLabel = params.geoLabel ?? 'Ma position'
 
-  const session = await auth()
+  const [session, allCategories] = await Promise.all([
+    auth(),
+    getCategoriesServer(),
+  ])
   const hasLocation = userLat !== undefined && userLng !== undefined
   const defaultGeo: GeoState | null = hasLocation
     ? { city: geoLabel, lat: userLat!, lng: userLng!, radius }
@@ -70,7 +73,13 @@ async function AnnoncesContent({ searchParams }: Props) {
 
   const where = {
     status: 'ACTIVE' as const,
-    ...(cat   && { categorySlug: cat }),
+    ...(cat && (() => {
+      // Expand root category to include all its subcategory slugs
+      const slugsForCat = [cat, ...allCategories.filter(c => c.parentSlug === cat).map(c => c.slug)]
+      return slugsForCat.length === 1
+        ? { categorySlug: cat }
+        : { categorySlug: { in: slugsForCat } }
+    })()),
     ...(ville && { neighborhood: ville }),
     ...(q && {
       OR: [
@@ -140,7 +149,7 @@ async function AnnoncesContent({ searchParams }: Props) {
   const displayTotal = fetchAll ? listings.length : total
   const pages = Math.ceil((fetchAll ? listings.length : total) / PER_PAGE)
 
-  const categories = await getCategoriesServer()
+  const categories = allCategories
   const activeCat = categories.find(c => c.slug === cat)
 
   return (
