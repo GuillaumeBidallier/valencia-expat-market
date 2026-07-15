@@ -1,10 +1,11 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { X, SlidersHorizontal, LocateFixed, Loader2 } from 'lucide-react'
+import { X, SlidersHorizontal, LocateFixed, Loader2, ChevronRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { neighborhoods } from '@/lib/neighborhoods'
 import { useCategories } from '@/hooks/useCategories'
+import type { CategoryTree } from '@/types'
 
 interface Props {
   totalCount: number
@@ -16,6 +17,122 @@ const RADII = [
   { label: '20 km', value: '20' },
   { label: '50 km', value: '50' },
 ]
+
+function CategoryFilterPanel({
+  cat,
+  categories,
+  onUpdate,
+}: {
+  cat: string
+  categories: CategoryTree[]
+  onUpdate: (key: string, value: string) => void
+}) {
+  const t = useTranslations('Filters')
+
+  // Determine which root is active (either directly selected, or parent of selected sub)
+  const activeRoot = categories.find(r =>
+    r.slug === cat || r.children.some(c => c.slug === cat)
+  ) ?? null
+
+  const [openRootSlug, setOpenRootSlug] = useState<string | null>(activeRoot?.slug ?? null)
+
+  // Sync open state when `cat` changes (e.g. cleared by "clear all")
+  useEffect(() => {
+    if (!cat) setOpenRootSlug(null)
+  }, [cat])
+
+  const handleRootClick = (root: CategoryTree) => {
+    if (root.children.length === 0) {
+      // No subcategories — apply filter immediately
+      onUpdate('cat', root.slug === cat ? '' : root.slug)
+      setOpenRootSlug(root.slug === openRootSlug ? null : root.slug)
+    } else {
+      // Toggle open/collapsed; only apply filter when clicking an already-open root with no sub selected
+      if (openRootSlug === root.slug) {
+        // Collapse and clear filter
+        setOpenRootSlug(null)
+        onUpdate('cat', '')
+      } else {
+        setOpenRootSlug(root.slug)
+        // Don't apply root filter yet — wait for sub selection
+        // But if switching roots, clear the current cat filter
+        if (activeRoot?.slug !== root.slug) onUpdate('cat', '')
+      }
+    }
+  }
+
+  const handleSubClick = (subSlug: string) => {
+    onUpdate('cat', subSlug === cat ? '' : subSlug)
+  }
+
+  return (
+    <div>
+      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('category')}</label>
+
+      {/* "All categories" option */}
+      <button
+        onClick={() => { onUpdate('cat', ''); setOpenRootSlug(null) }}
+        className={`w-full text-left text-sm px-3 py-2 rounded-lg mb-1.5 font-medium transition-colors ${
+          !cat ? 'bg-orange-soft text-orange-primary font-bold' : 'text-gray-500 hover:bg-gray-50'
+        }`}
+      >
+        {t('all_categories')}
+      </button>
+
+      {/* Root categories list */}
+      <div className="space-y-1">
+        {categories.map(root => {
+          const isOpen     = openRootSlug === root.slug
+          const rootActive = root.slug === cat
+          const subActive  = root.children.some(c => c.slug === cat)
+          const anyActive  = rootActive || subActive
+
+          return (
+            <div key={root.slug}>
+              <button
+                onClick={() => handleRootClick(root)}
+                className={`w-full flex items-center gap-2 text-left text-sm px-3 py-2 rounded-lg font-medium transition-colors ${
+                  anyActive
+                    ? 'bg-orange-soft text-orange-primary font-bold'
+                    : 'text-navy hover:bg-gray-50'
+                }`}
+              >
+                <span className="shrink-0">{root.icon}</span>
+                <span className="flex-1 truncate">{root.label}</span>
+                {root.children.length > 0 && (
+                  <ChevronRight
+                    size={12}
+                    className={`shrink-0 text-gray-400 transition-transform ${isOpen ? 'rotate-90' : ''}`}
+                  />
+                )}
+              </button>
+
+              {/* Subcategory list */}
+              {isOpen && root.children.length > 0 && (
+                <div className="pl-6 mt-0.5 space-y-0.5">
+                  {root.children.map(sub => (
+                    <button
+                      key={sub.slug}
+                      onClick={() => handleSubClick(sub.slug)}
+                      className={`w-full flex items-center gap-1.5 text-left text-xs px-2 py-1.5 rounded-lg font-medium transition-colors ${
+                        sub.slug === cat
+                          ? 'bg-orange-primary text-white font-bold'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <span>{sub.icon}</span>
+                      <span className="truncate">{sub.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
 export default function AnnoncesFilters({ totalCount }: Props) {
   const t = useTranslations('Filters')
@@ -92,17 +209,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
   const filtersContent = (
     <div className="space-y-5">
       {/* Category */}
-      <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('category')}</label>
-        <select
-          value={cat}
-          onChange={e => update('cat', e.target.value)}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
-        >
-          <option value="">{t('all_categories')}</option>
-          {categories.map(c => <option key={c.slug} value={c.slug}>{c.icon} {c.label}</option>)}
-        </select>
-      </div>
+      <CategoryFilterPanel cat={cat} categories={categories} onUpdate={update} />
 
       {/* Neighborhood */}
       <div>
