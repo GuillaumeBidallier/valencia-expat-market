@@ -67,6 +67,11 @@ export default async function ListingDetailPage({ params }: Props) {
 
   if (!raw) notFound()
 
+  const categoryRecord = await prisma.category.findUnique({
+    where: { slug: raw.categorySlug },
+    include: { parent: { select: { slug: true, label: true, icon: true } } },
+  })
+
   const listing = {
     ...raw,
     price: raw.price ?? null,
@@ -98,7 +103,16 @@ export default async function ListingDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ListingDetailClient listing={listing} isFavorited={!!favorite} />
+      <ListingDetailClient
+        listing={listing}
+        isFavorited={!!favorite}
+        categoryInfo={categoryRecord ? {
+          label: categoryRecord.label,
+          slug: categoryRecord.slug,
+          icon: categoryRecord.icon,
+          parent: categoryRecord.parent ?? null,
+        } : null}
+      />
     </>
   )
 }

@@ -15,7 +15,18 @@ import { useAuth } from '@/context/AuthContext'
 
 const ListingMap = dynamic(() => import('@/components/listings/ListingMap'), { ssr: false })
 
-export default function ListingDetailClient({ listing, isFavorited }: { listing: Listing & { neighborhood: string }; isFavorited?: boolean }) {
+interface Props {
+  listing: Listing & { neighborhood: string }
+  isFavorited?: boolean
+  categoryInfo?: {
+    label: string
+    slug: string
+    icon: string
+    parent: { slug: string; label: string; icon: string } | null
+  } | null
+}
+
+export default function ListingDetailClient({ listing, isFavorited, categoryInfo }: Props) {
   const t = useTranslations('ListingDetail')
   const tShare = useTranslations('Share')
   const { isAuthenticated, user } = useAuth()
@@ -106,7 +117,21 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
         <ChevronRight size={12} />
         <Link href="/annonces" className="hover:text-orange-primary">{t('breadcrumb_listings')}</Link>
         <ChevronRight size={12} />
-        <Link href={`/annonces?cat=${listing.categorySlug}`} className="hover:text-orange-primary">{listing.category ?? listing.categorySlug}</Link>
+        {categoryInfo?.parent ? (
+          <>
+            <Link href={`/annonces?cat=${categoryInfo.parent.slug}`} className="hover:text-orange-primary">
+              {categoryInfo.parent.icon} {categoryInfo.parent.label}
+            </Link>
+            <span className="text-gray-300 mx-1">›</span>
+            <Link href={`/annonces?cat=${categoryInfo.slug}`} className="hover:text-orange-primary">
+              {categoryInfo.icon} {categoryInfo.label}
+            </Link>
+          </>
+        ) : (
+          <Link href={`/annonces?cat=${listing.categorySlug}`} className="hover:text-orange-primary">
+            {categoryInfo?.label ?? listing.category ?? listing.categorySlug}
+          </Link>
+        )}
         <ChevronRight size={12} />
         <span className="text-navy line-clamp-1">{listing.title}</span>
       </nav>
@@ -143,7 +168,7 @@ export default function ListingDetailClient({ listing, isFavorited }: { listing:
           <div className="bg-white rounded-xl border border-gray-100 p-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <Badge className="mb-2">{listing.category ?? listing.categorySlug}</Badge>
+                <Badge className="mb-2">{categoryInfo?.label ?? listing.category ?? listing.categorySlug}</Badge>
                 <h1 className="text-2xl font-bold text-navy">{listing.title}</h1>
               </div>
               <div className="text-2xl font-extrabold text-navy shrink-0">
