@@ -1,44 +1,79 @@
 'use client'
 import { useEffect, useState } from 'react'
-import type { Category } from '@/types'
+import type { Category, CategoryTree } from '@/types'
 
-const FALLBACK: Category[] = [
-  { label: 'Maison & Mobilier', slug: 'meubles', icon: '🛋️' },
-  { label: 'Électroménager', slug: 'electromenager', icon: '🏠' },
-  { label: 'Enfants & Famille', slug: 'enfants', icon: '👶' },
-  { label: 'Véhicules', slug: 'vehicules', icon: '🚗' },
-  { label: 'Mode & Vêtements', slug: 'mode', icon: '👗' },
-  { label: 'Services', slug: 'services', icon: '🔧' },
-  { label: 'Dons', slug: 'dons', icon: '🎁' },
-  { label: 'Livres & Loisirs', slug: 'livres', icon: '📚' },
-  { label: 'Déco & Jardin', slug: 'deco', icon: '🌿' },
-  { label: 'Autres', slug: 'autres', icon: '📦' },
+const FALLBACK_TREE: CategoryTree[] = [
+  { label: 'Maison & Mobilier', slug: 'meubles',        icon: '🛋️', parentId: null, parentSlug: null, children: [] },
+  { label: 'Électroménager',    slug: 'electromenager', icon: '🏠', parentId: null, parentSlug: null, children: [] },
+  { label: 'Enfants & Famille', slug: 'enfants',        icon: '👶', parentId: null, parentSlug: null, children: [] },
+  { label: 'Véhicules',         slug: 'vehicules',      icon: '🚗', parentId: null, parentSlug: null, children: [] },
+  { label: 'Mode & Vêtements',  slug: 'mode',           icon: '👗', parentId: null, parentSlug: null, children: [] },
+  { label: 'Services',          slug: 'services',       icon: '🔧', parentId: null, parentSlug: null, children: [] },
+  { label: 'Dons',              slug: 'dons',           icon: '🎁', parentId: null, parentSlug: null, children: [] },
+  { label: 'Livres & Loisirs',  slug: 'livres',         icon: '📚', parentId: null, parentSlug: null, children: [] },
+  { label: 'Déco & Jardin',     slug: 'deco',           icon: '🌿', parentId: null, parentSlug: null, children: [] },
+  { label: 'Autres',            slug: 'autres',         icon: '📦', parentId: null, parentSlug: null, children: [] },
 ]
 
-let cache: Category[] | null = null
-let inflight: Promise<Category[]> | null = null
+type ApiCategory = {
+  id: string; slug: string; label: string; icon: string
+  order: number; parentId: string | null; parentSlug: string | null
+}
 
-function fetchCategories(): Promise<Category[]> {
+function buildTree(flat: ApiCategory[]): CategoryTree[] {
+  const roots: CategoryTree[] = []
+  const bySlug = new Map<string, CategoryTree>()
+
+  for (const cat of flat) {
+    if (!cat.parentId) {
+      const node: CategoryTree = {
+        label: cat.label, slug: cat.slug, icon: cat.icon,
+        parentId: null, parentSlug: null, children: [],
+      }
+      roots.push(node)
+      bySlug.set(cat.slug, node)
+    }
+  }
+
+  for (const cat of flat) {
+    if (cat.parentId && cat.parentSlug) {
+      const parent = bySlug.get(cat.parentSlug)
+      if (parent) {
+        parent.children.push({
+          label: cat.label, slug: cat.slug, icon: cat.icon,
+          parentId: cat.parentId, parentSlug: cat.parentSlug,
+        })
+      }
+    }
+  }
+
+  return roots
+}
+
+let cache: CategoryTree[] | null = null
+let inflight: Promise<CategoryTree[]> | null = null
+
+function fetchCategoryTree(): Promise<CategoryTree[]> {
   if (cache) return Promise.resolve(cache)
   if (!inflight) {
     inflight = fetch('/api/categories')
       .then(res => res.json())
-      .then((rows: { slug: string; label: string; icon: string }[]) => {
-        cache = rows.map(r => ({ slug: r.slug, label: r.label, icon: r.icon }))
+      .then((rows: ApiCategory[]) => {
+        cache = buildTree(rows)
         return cache
       })
-      .catch(() => FALLBACK)
+      .catch(() => FALLBACK_TREE)
   }
   return inflight
 }
 
-/** Client-side categories, DB-backed and admin-editable. Returns the static fallback until loaded. */
-export function useCategories(): Category[] {
-  const [categories, setCategories] = useState<Category[]>(cache ?? FALLBACK)
+/** Returns root categories with their subcategories in `.children`. */
+export function useCategories(): CategoryTree[] {
+  const [categories, setCategories] = useState<CategoryTree[]>(cache ?? FALLBACK_TREE)
 
   useEffect(() => {
     let active = true
-    fetchCategories().then(cats => { if (active) setCategories(cats) })
+    fetchCategoryTree().then(cats => { if (active) setCategories(cats) })
     return () => { active = false }
   }, [])
 
