@@ -211,6 +211,7 @@ export default function AdminAnnoncesClient({
                 {tab === 'REPORTED'
                   ? (reportedListings as ReportedListing[]).map(l => {
                       const cat           = categories.find(c => c.slug === l.categorySlug)
+                        ?? categories.flatMap(r => r.children).find(c => c.slug === l.categorySlug)
                       const thumb         = l.images[0]?.url
                       const isProcessing  = loadingId === l.id
                       const reasonCounts  = l.reports.reduce<Record<string, number>>((acc, r) => {
@@ -286,6 +287,7 @@ export default function AdminAnnoncesClient({
                     })
                   : listings.map(l => {
                       const cat          = categories.find(c => c.slug === l.categorySlug)
+                        ?? categories.flatMap(r => r.children).find(c => c.slug === l.categorySlug)
                       const thumb        = l.images[0]?.url
                       const isProcessing = loadingId === l.id
                       const date         = new Date(l.publishedAt).toLocaleDateString('fr-FR', {

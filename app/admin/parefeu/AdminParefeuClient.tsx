@@ -200,6 +200,7 @@ export default function AdminParefeuClient({
               <div className="divide-y divide-gray-50">
                 {listings.map(l => {
                   const cat          = categories.find(c => c.slug === l.categorySlug)
+                    ?? categories.flatMap(r => r.children).find(c => c.slug === l.categorySlug)
                   const thumb        = l.images[0]?.url
                   const isProcessing = loadingId === l.id
                   const isExpanded   = expanded === l.id

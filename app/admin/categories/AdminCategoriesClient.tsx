@@ -264,8 +264,10 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Ca
                     </button>
                     <button
                       onClick={() => {
-                        if (cat.listingCount > 0) {
-                          setError(`Catégorie utilisée par ${cat.listingCount} annonce(s) directement, suppression impossible.`)
+                        const childListingCount = cat.children.reduce((sum, s) => sum + s.listingCount, 0)
+                        if (cat.listingCount > 0 || childListingCount > 0) {
+                          const total = cat.listingCount + childListingCount
+                          setError(`Catégorie ou ses sous-catégories utilisées par ${total} annonce(s), suppression impossible.`)
                         } else {
                           setConfirmDeleteId(cat.id)
                         }
