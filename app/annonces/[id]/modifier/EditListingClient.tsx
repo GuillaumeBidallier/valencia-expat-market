@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ImagePlus, X, ArrowLeft, Loader2 } from 'lucide-react'
 import { neighborhoods } from '@/lib/neighborhoods'
-import { useCategories } from '@/hooks/useCategories'
+import CategoryPicker from '@/components/ui/CategoryPicker'
 
 const MAX_IMAGES = 5
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
@@ -25,7 +25,6 @@ type Props = {
 export default function EditListingClient({ listing }: Props) {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
-  const categories = useCategories()
 
   const [form, setForm] = useState({
     title:        listing.title,
@@ -152,15 +151,11 @@ export default function EditListingClient({ listing }: Props) {
 
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5">Catégorie *</label>
-            <select
+            <CategoryPicker
               value={form.categorySlug}
-              onChange={set('categorySlug')}
-              className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition-all ${errors.categorySlug ? 'border-red-400' : 'border-gray-200'}`}
-            >
-              <option value="">Choisir une catégorie</option>
-              {categories.map(c => <option key={c.slug} value={c.slug}>{c.icon} {c.label}</option>)}
-            </select>
-            {errors.categorySlug && <p className="text-xs text-red-500 mt-1">{errors.categorySlug}</p>}
+              onChange={slug => setForm(f => ({ ...f, categorySlug: slug }))}
+              error={errors.categorySlug}
+            />
           </div>
 
           <div>

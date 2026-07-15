@@ -4,9 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ImagePlus, X, Lock, Sparkles, CheckCircle2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useListings } from '@/context/ListingsContext'
-import { useCategories } from '@/hooks/useCategories'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
+import CategoryPicker from '@/components/ui/CategoryPicker'
 import CityAutocomplete, { type CitySelection } from '@/components/listings/CityAutocomplete'
 import { FREE_MAX_PHOTOS, UPGRADED_MAX_PHOTOS } from '@/lib/stripe'
 import { useTranslations } from 'next-intl'
@@ -22,8 +22,6 @@ function DeposerAnnonceForm() {
   const { addListing } = useListings()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const t = useTranslations('PostAd')
-  const categories = useCategories()
-
   const isAdmin   = user?.role === 'ADMIN'
   const isPremium = user?.role === 'PREMIUM' || isAdmin
 
@@ -205,11 +203,11 @@ function DeposerAnnonceForm() {
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-navy">{t('f_category')}</label>
-            <select value={form.categorySlug} onChange={set('categorySlug')} className={`border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition ${errors.categorySlug ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="">{t('p_category')}</option>
-              {categories.map(c => <option key={c.slug} value={c.slug}>{c.icon} {c.label}</option>)}
-            </select>
-            {errors.categorySlug && <p className="text-xs text-red-500">{errors.categorySlug}</p>}
+            <CategoryPicker
+              value={form.categorySlug}
+              onChange={slug => setForm(f => ({ ...f, categorySlug: slug }))}
+              error={errors.categorySlug}
+            />
           </div>
 
           <Input id="price" label={t('f_price')} type="number" placeholder={t('p_price')} value={form.price} onChange={set('price')} />
