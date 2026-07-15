@@ -47,4 +47,10 @@ export interface Category {
   label: string
   slug: string
   icon: string
+  parentId?: string | null
+  parentSlug?: string | null
+}
+
+export interface CategoryTree extends Category {
+  children: Category[]
 }
