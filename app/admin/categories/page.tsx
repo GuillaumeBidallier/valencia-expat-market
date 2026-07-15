@@ -18,11 +18,6 @@ export default async function AdminCategoriesPage() {
   })
 
   // Count listings for each slug (roots and subs)
-  const allSlugs = [
-    ...categories.map(c => c.slug),
-    ...categories.flatMap(c => c.children.map(s => s.slug)),
-  ]
-  void allSlugs // used implicitly via countBySlug lookup
   const counts = await prisma.listing.groupBy({ by: ['categorySlug'], _count: { id: true } })
   const countBySlug = Object.fromEntries(counts.map(c => [c.categorySlug, c._count.id]))
 

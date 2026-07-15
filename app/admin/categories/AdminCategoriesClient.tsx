@@ -34,6 +34,7 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Ca
     setNewSubParentId(null)
     setIsNewRoot(false)
     setError('')
+    setConfirmDeleteId(null)
   }
 
   const openNewRoot = () => {
@@ -72,8 +73,7 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Ca
         setTree(t => [...t, { ...data, listingCount: 0, children: [] }])
       } else if (newSubParentId) {
         // Create subcategory
-        const parent = tree.find(r => r.id === newSubParentId)
-        if (!parent) return
+        if (!tree.find(r => r.id === newSubParentId)) return
         const res = await fetch('/api/categories', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -263,7 +263,13 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Ca
                       <Pencil size={13} />
                     </button>
                     <button
-                      onClick={() => setConfirmDeleteId(cat.id)}
+                      onClick={() => {
+                        if (cat.listingCount > 0) {
+                          setError(`Catégorie utilisée par ${cat.listingCount} annonce(s) directement, suppression impossible.`)
+                        } else {
+                          setConfirmDeleteId(cat.id)
+                        }
+                      }}
                       className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                     >
                       <Trash2 size={13} />
