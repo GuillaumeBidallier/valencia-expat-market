@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 
-const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
 
 export default function robots(): MetadataRoute.Robots {
   return {

@@ -15,7 +15,7 @@ interface Props {
   contactEmail?: string
 }
 
-export default function ProfessionnelsUI({ pros, cat, city, activeCatLabel, contactEmail = 'contact@vendo.es' }: Props) {
+export default function ProfessionnelsUI({ pros, cat, city, activeCatLabel, contactEmail = 'contact@1000clic.fr' }: Props) {
   const t = useTranslations('Pros')
 
   return (

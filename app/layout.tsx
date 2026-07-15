@@ -18,7 +18,7 @@ const nunito = Nunito({
   variable: '--font-nunito',
 })
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr'
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),

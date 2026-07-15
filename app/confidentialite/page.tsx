@@ -78,7 +78,7 @@ export default function ConfidentialitePage() {
                 <p><strong className="text-navy">Nom :</strong> 1000Click</p>
                 <p><strong className="text-navy">Statut :</strong> Plateforme communautaire de petites annonces</p>
                 <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Espagne (Comunitat Valenciana)</p>
-                <p><strong className="text-navy">Contact DPO :</strong> <a href="mailto:privacy@vendo.es" className="text-orange-primary hover:underline">privacy@vendo.es</a></p>
+                <p><strong className="text-navy">Contact DPO :</strong> <a href="mailto:privacy@1000clic.fr" className="text-orange-primary hover:underline">privacy@1000clic.fr</a></p>
                 <p><strong className="text-navy">Autorité de contrôle espagnole :</strong> AEPD — <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-orange-primary hover:underline">aepd.es</a></p>
                 <p><strong className="text-navy">Autorité française :</strong> CNIL — <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-orange-primary hover:underline">cnil.fr</a></p>
               </div>
@@ -204,7 +204,7 @@ export default function ConfidentialitePage() {
               <div className="mt-4 bg-orange-soft rounded-xl p-4 text-sm">
                 <p className="font-medium text-navy mb-1">Comment exercer vos droits ?</p>
                 <p className="text-gray-600 text-xs leading-relaxed">
-                  Envoyez votre demande à <a href="mailto:privacy@vendo.es" className="text-orange-primary hover:underline font-medium">privacy@vendo.es</a> en précisant votre identité et le droit que vous souhaitez exercer. Réponse garantie sous 30 jours calendaires. En cas de non-réponse satisfaisante, vous pouvez saisir l&apos;AEPD (Espagne) ou la CNIL (France).
+                  Envoyez votre demande à <a href="mailto:privacy@1000clic.fr" className="text-orange-primary hover:underline font-medium">privacy@1000clic.fr</a> en précisant votre identité et le droit que vous souhaitez exercer. Réponse garantie sous 30 jours calendaires. En cas de non-réponse satisfaisante, vous pouvez saisir l&apos;AEPD (Espagne) ou la CNIL (France).
                 </p>
               </div>
             </section>
@@ -218,8 +218,8 @@ export default function ConfidentialitePage() {
                 Pour toute question relative à cette politique, pour exercer vos droits ou pour signaler une violation de données :
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
-                <a href="mailto:privacy@vendo.es" className="bg-white/10 hover:bg-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2">
-                  <Mail size={14} /> privacy@vendo.es
+                <a href="mailto:privacy@1000clic.fr" className="bg-white/10 hover:bg-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2">
+                  <Mail size={14} /> privacy@1000clic.fr
                 </a>
                 <Link href="/contact" className="bg-orange-primary hover:bg-orange-dark rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2 justify-center">
                   Formulaire de contact →

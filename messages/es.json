@@ -48,7 +48,7 @@
   },
   "Auth": {
     "login_title": "Iniciar sesión",
-    "demo_hint": "Cuenta demo: demo@vendo.es / demo1234",
+    "demo_hint": "Cuenta demo: demo@1000clic.fr / demo1234",
     "email": "Correo electrónico",
     "password": "Contraseña",
     "forgot": "¿Olvidaste tu contraseña?",

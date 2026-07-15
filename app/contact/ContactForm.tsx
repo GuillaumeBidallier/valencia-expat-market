@@ -12,7 +12,7 @@ const SUBJECTS = [
   'Autre',
 ]
 
-export default function ContactForm({ contactEmail = 'contact@vendo.es' }: { contactEmail?: string }) {
+export default function ContactForm({ contactEmail = 'contact@1000clic.fr' }: { contactEmail?: string }) {
   const [form, setForm] = useState({ name: '', email: '', subject: SUBJECTS[0], message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 

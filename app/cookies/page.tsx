@@ -213,8 +213,8 @@ export default function CookiesPage() {
                 Pour toute question relative à notre utilisation des cookies, ou pour exercer vos droits RGPD en lien avec les données collectées via les cookies :
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
-                <a href="mailto:privacy@vendo.es" className="bg-white/10 hover:bg-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2">
-                  <Mail size={14} /> privacy@vendo.es
+                <a href="mailto:privacy@1000clic.fr" className="bg-white/10 hover:bg-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2">
+                  <Mail size={14} /> privacy@1000clic.fr
                 </a>
                 <Link href="/confidentialite" className="bg-orange-primary hover:bg-orange-dark rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors flex items-center gap-2 justify-center">
                   Politique de confidentialité →

@@ -27,7 +27,7 @@ async function geocodeCity(city: string): Promise<{ lat: number; lng: number } |
     const q = encodeURIComponent(`${city}, Spain`)
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`,
-      { headers: { 'User-Agent': '1000ClickValencia/1.0 contact@vendo.es' }, next: { revalidate: 86400 } }
+      { headers: { 'User-Agent': '1000ClickValencia/1.0 contact@1000clic.fr' }, next: { revalidate: 86400 } }
     )
     if (!res.ok) return CITY_COORDS['valencia']
     const data = await res.json()
@@ -103,7 +103,7 @@ export default async function ProDetailPage({ params }: Props) {
     mention_vendo:  t('mention_vendo'),
   }
 
-  const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app').replace(/\/$/, '')
+  const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
 
   const SCHEMA_TYPE: Record<string, string> = {
     immobilier:   'RealEstateAgent',

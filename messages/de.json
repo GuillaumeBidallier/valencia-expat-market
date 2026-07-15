@@ -48,7 +48,7 @@
   },
   "Auth": {
     "login_title": "Anmelden",
-    "demo_hint": "Demo-Konto: demo@vendo.es / demo1234",
+    "demo_hint": "Demo-Konto: demo@1000clic.fr / demo1234",
     "email": "E-Mail-Adresse",
     "password": "Passwort",
     "forgot": "Passwort vergessen?",
