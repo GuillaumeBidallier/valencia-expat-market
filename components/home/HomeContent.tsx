@@ -51,10 +51,10 @@ export default function HomeContent({
                 <Link
                   key={cat.slug}
                   href={`/annonces?cat=${cat.slug}`}
-                  className="flex flex-col items-center gap-2 p-3 sm:p-4 bg-white border border-gray-200 rounded-xl hover:border-indigo-primary hover:shadow-md transition-all group"
+                  className="flex flex-col items-center gap-2 p-3 sm:p-4 bg-white border border-gray-100 rounded-xl hover:border-orange-primary hover:bg-orange-soft hover:shadow-sm transition-all group"
                 >
                   <span className="text-2xl group-hover:scale-110 transition-transform">{cat.icon}</span>
-                  <span className="text-xs font-semibold text-navy text-center leading-tight">{cat.label}</span>
+                  <span className="text-xs font-semibold text-navy text-center leading-tight group-hover:text-orange-primary transition-colors">{cat.label}</span>
                 </Link>
               ))}
             </div>
