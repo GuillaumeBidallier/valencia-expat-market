@@ -92,21 +92,33 @@ export default function CategoryNavBar({ transparent }: Props) {
                 </Link>
               </div>
 
-              {/* Right: subcategories in columns */}
+              {/* Right: subcategories + their children */}
               {activeCategory.children.length > 0 ? (
-                <div
-                  className="flex-1"
-                  style={{ columns: Math.min(4, Math.ceil(activeCategory.children.length / 4)), columnGap: '2rem' }}
+                <div className="flex-1 grid gap-x-8 gap-y-1"
+                  style={{ gridTemplateColumns: `repeat(${Math.min(4, activeCategory.children.length)}, minmax(0, 1fr))` }}
                 >
                   {activeCategory.children.map(child => (
-                    <Link
-                      key={child.slug}
-                      href={`/annonces?category=${child.slug}`}
-                      className="block text-sm text-gray-800 font-semibold mb-3 hover:text-orange-primary transition-colors break-inside-avoid"
-                      onClick={() => setActiveSlug(null)}
-                    >
-                      {child.label}
-                    </Link>
+                    <div key={child.slug} className="break-inside-avoid mb-4">
+                      {/* Subcategory as bold header */}
+                      <Link
+                        href={`/annonces?category=${child.slug}`}
+                        className="block text-sm text-gray-900 font-semibold mb-1.5 hover:text-orange-primary transition-colors"
+                        onClick={() => setActiveSlug(null)}
+                      >
+                        {child.label}
+                      </Link>
+                      {/* Sub-subcategories listed below */}
+                      {child.children.map(sub => (
+                        <Link
+                          key={sub.slug}
+                          href={`/annonces?category=${sub.slug}`}
+                          className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
+                          onClick={() => setActiveSlug(null)}
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
                   ))}
                 </div>
               ) : (
