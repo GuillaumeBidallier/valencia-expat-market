@@ -21,29 +21,22 @@ type ApiCategory = {
 }
 
 function buildTree(flat: ApiCategory[]): CategoryTree[] {
-  const roots: CategoryTree[] = []
-  const bySlug = new Map<string, CategoryTree>()
+  const byId = new Map<string, CategoryTree>()
 
   for (const cat of flat) {
-    if (!cat.parentId) {
-      const node: CategoryTree = {
-        label: cat.label, slug: cat.slug, icon: cat.icon,
-        parentId: null, parentSlug: null, children: [],
-      }
-      roots.push(node)
-      bySlug.set(cat.slug, node)
-    }
+    byId.set(cat.id, {
+      label: cat.label, slug: cat.slug, icon: cat.icon,
+      parentId: cat.parentId, parentSlug: cat.parentSlug, children: [],
+    })
   }
 
+  const roots: CategoryTree[] = []
   for (const cat of flat) {
-    if (cat.parentId && cat.parentSlug) {
-      const parent = bySlug.get(cat.parentSlug)
-      if (parent) {
-        parent.children.push({
-          label: cat.label, slug: cat.slug, icon: cat.icon,
-          parentId: cat.parentId, parentSlug: cat.parentSlug,
-        })
-      }
+    const node = byId.get(cat.id)!
+    if (cat.parentId) {
+      byId.get(cat.parentId)?.children.push(node)
+    } else {
+      roots.push(node)
     }
   }
 

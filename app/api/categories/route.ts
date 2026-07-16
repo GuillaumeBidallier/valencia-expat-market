@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
   if (parsed.data.parentId) {
     const parent = await prisma.category.findUnique({ where: { id: parsed.data.parentId } })
     if (!parent) return NextResponse.json({ error: 'Catégorie parente introuvable' }, { status: 404 })
-    if (parent.parentId) return NextResponse.json({ error: 'Impossible d\'imbriquer plus de 2 niveaux' }, { status: 400 })
+    // No depth restriction — N levels supported
   }
 
   const maxOrder = await prisma.category.aggregate({ _max: { order: true } })
@@ -101,20 +101,27 @@ export async function DELETE(req: NextRequest) {
 
   const category = await prisma.category.findUnique({
     where: { id },
-    include: { children: true },
+    include: { children: { include: { children: true } } },
   })
   if (!category) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
 
-  // Block delete if any listing uses this category or any of its children
-  const slugsToCheck = [category.slug, ...category.children.map(c => c.slug)]
-  const inUse = await prisma.listing.count({ where: { categorySlug: { in: slugsToCheck } } })
+  // Collect all descendant slugs recursively
+  const allSlugs = [category.slug]
+  for (const child of category.children) {
+    allSlugs.push(child.slug)
+    for (const grandchild of child.children) allSlugs.push(grandchild.slug)
+  }
+  const inUse = await prisma.listing.count({ where: { categorySlug: { in: allSlugs } } })
   if (inUse > 0) {
     return NextResponse.json({ error: `Catégorie utilisée par ${inUse} annonce(s), suppression impossible` }, { status: 409 })
   }
 
-  // Delete children + parent atomically
+  // Collect all descendant ids, delete deepest first to respect FK constraints
+  const childIds = category.children.map(c => c.id)
+  const grandchildIds = category.children.flatMap(c => c.children.map(g => g.id))
   await prisma.$transaction([
-    prisma.category.deleteMany({ where: { parentId: id } }),
+    prisma.category.deleteMany({ where: { id: { in: grandchildIds } } }),
+    prisma.category.deleteMany({ where: { id: { in: childIds } } }),
     prisma.category.delete({ where: { id } }),
   ])
   revalidateTag('categories', { expire: 0 })

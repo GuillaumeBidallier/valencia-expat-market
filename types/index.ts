@@ -52,5 +52,5 @@ export interface Category {
 }
 
 export interface CategoryTree extends Category {
-  children: Category[]
+  children: CategoryTree[]
 }

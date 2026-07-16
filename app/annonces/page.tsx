@@ -74,8 +74,20 @@ async function AnnoncesContent({ searchParams }: Props) {
   const where = {
     status: 'ACTIVE' as const,
     ...(cat && (() => {
-      // Expand root category to include all its subcategory slugs
-      const slugsForCat = [cat, ...allCategories.filter(c => c.parentSlug === cat).map(c => c.slug)]
+      // Collect the selected slug + all descendants (slugs whose parentSlug chain includes cat)
+      const byParentSlug = new Map<string, string[]>()
+      for (const c of allCategories) {
+        if (c.parentSlug) {
+          const arr = byParentSlug.get(c.parentSlug) ?? []
+          arr.push(c.slug)
+          byParentSlug.set(c.parentSlug, arr)
+        }
+      }
+      const collect = (slug: string): string[] => {
+        const children = byParentSlug.get(slug) ?? []
+        return [slug, ...children.flatMap(collect)]
+      }
+      const slugsForCat = collect(cat)
       return slugsForCat.length === 1
         ? { categorySlug: cat }
         : { categorySlug: { in: slugsForCat } }
