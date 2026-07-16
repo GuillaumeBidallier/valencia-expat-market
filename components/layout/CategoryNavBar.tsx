@@ -51,7 +51,7 @@ export default function CategoryNavBar({ transparent }: Props) {
               )}
               <Link
                 href={`/annonces?category=${cat.slug}`}
-                className={`text-sm whitespace-nowrap py-2 border-b-2 transition-colors font-normal ${
+                className={`text-xs whitespace-nowrap py-2 border-b-2 transition-colors font-normal ${
                   activeSlug === cat.slug
                     ? 'text-orange-primary border-orange-primary'
                     : transparent
