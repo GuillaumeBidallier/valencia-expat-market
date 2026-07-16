@@ -5,6 +5,7 @@ import { Menu, X, ChevronDown, Plus, MessageSquare, ShieldCheck, Search } from '
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
+import CategoryNavBar from '@/components/layout/CategoryNavBar'
 import { useUnreadCount } from '@/hooks/useUnreadCount'
 import { useTranslations } from 'next-intl'
 import { useLocale, type SupportedLocale } from '@/components/providers/LocaleProvider'
@@ -241,6 +242,8 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      <CategoryNavBar transparent={transparent} />
 
       {/* Mobile menu — always solid */}
       {menuOpen && (

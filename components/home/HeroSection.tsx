@@ -40,7 +40,7 @@ export default function HeroSection({ slides }: Props) {
 
   return (
     <>
-      <section className="relative -mt-16 min-h-[560px] sm:min-h-[620px] overflow-hidden">
+      <section className="relative -mt-[104px] min-h-[560px] sm:min-h-[620px] overflow-hidden">
         {SLIDES.map((slide, i) => (
           <Image
             key={slide.src}

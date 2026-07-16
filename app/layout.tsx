@@ -60,7 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <AuthProvider>
               <ListingsProvider>
                 <ConditionalNavbar />
-                <main id="main-content" className="pt-16">{children}</main>
+                <main id="main-content" className="pt-[104px]">{children}</main>
                 <ConditionalFooter />
               </ListingsProvider>
             </AuthProvider>
