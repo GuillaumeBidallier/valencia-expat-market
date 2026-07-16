@@ -3,7 +3,7 @@ import { getCategoriesServer } from '@/lib/categories'
 
 export default async function CategoryGrid() {
   const categories = await getCategoriesServer()
-  const displayed = categories.slice(0, 7)
+  const displayed = categories.filter(c => !c.parentId).slice(0, 7)
   return (
     <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
       {displayed.map(cat => (
