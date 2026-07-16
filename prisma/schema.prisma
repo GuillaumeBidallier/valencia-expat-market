@@ -179,16 +179,29 @@ model BusinessCard {
 }
 
 model Category {
-  id        String     @id @default(cuid())
-  slug      String     @unique
-  label     String
-  icon      String
-  order     Int        @default(0)
-  parentId  String?
-  parent    Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
-  children  Category[] @relation("CategoryChildren")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id           String                @id @default(cuid())
+  slug         String                @unique
+  label        String
+  icon         String
+  order        Int                   @default(0)
+  parentId     String?
+  parent       Category?             @relation("CategoryChildren", fields: [parentId], references: [id])
+  children     Category[]            @relation("CategoryChildren")
+  translations CategoryTranslation[]
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+}
+
+model CategoryTranslation {
+  id         String   @id @default(cuid())
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  locale     String
+  label      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([categoryId, locale])
 }
 
 model Report {

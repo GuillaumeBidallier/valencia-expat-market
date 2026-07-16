@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @page { size: A4; margin: 0; }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    background:#fff;
+    font-family:'Inter',Arial,sans-serif;
+    font-size:9.5pt;
+    color:#1a1a1a;
+  }
+
+  /* ── Page shell ── */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  /* Content area — leaves room for the absolute footer */
+  .page-body {
+    padding: 14mm 17mm 0 17mm;
+    /* footer is 12mm tall + 6mm bottom gap = 18mm reserved */
+    height: calc(297mm - 18mm);
+    overflow: hidden;
+  }
+
+  /* Absolute footer pinned to page bottom */
+  .pf {
+    position: absolute;
+    bottom: 6mm;
+    left: 17mm;
+    right: 17mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6.5pt;
+    color: #bbb;
+    border-top: 1px solid #eee;
+    padding-top: 3px;
+  }
+
+  .n {
+    position: absolute;
+    top: 0; right: 0;
+    width: 34px; height: 34px;
+    background: #12122a;
+    color: #fff;
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size:24pt; font-weight:800; letter-spacing:-0.5px; margin-bottom:3px; }
+  .h1sub { font-size:8pt; color:#888; margin-bottom:14px; }
+  .stitle { font-size:10.5pt; font-weight:700; margin:12px 0 7px; }
+
+  /* ── Parties ── */
+  .parties {
+    display:grid; grid-template-columns:1fr 1fr;
+    border:1px solid #e2e2e2; margin-bottom:13px;
+  }
+  .party { padding:10px 13px; }
+  .party+.party { border-left:1px solid #e2e2e2; }
+  .plabel { font-size:6.5pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#999; margin-bottom:7px; }
+  .prow { display:grid; grid-template-columns:76px 1fr; font-size:7.5pt; gap:1.5px 6px; margin-bottom:1.5px; }
+  .prow .k { color:#aaa; }
+  .prow .v { font-weight:600; }
+
+  /* ── Objet ── */
+  .objet {
+    border-left:3px solid #12122a;
+    padding:6px 11px; margin-bottom:13px; font-size:8pt;
+  }
+  .objet b { font-size:7pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#666; margin-right:6px; }
+
+  /* ── Stack ── */
+  .stack { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #e2e2e2; margin-bottom:13px; }
+  .sc { padding:8px 11px; border-right:1px solid #e2e2e2; }
+  .sc:last-child { border-right:none; }
+  .stag { display:inline-block; background:#12122a; color:#fff; font-size:6.5pt; font-weight:700; padding:2px 6px; margin-bottom:5px; }
+  .sc p { font-size:7pt; color:#555; line-height:1.85; }
+
+  /* ── Main table ── */
+  table { width:100%; border-collapse:collapse; font-size:8pt; }
+  thead tr { background:#12122a; color:#fff; }
+  th { padding:6px 8px; font-weight:600; font-size:7pt; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  th.r { text-align:right; } th.c { text-align:center; }
+  tbody tr { border-bottom:1px solid #f0f0f0; }
+  tbody tr:nth-child(even) { background:#fafafa; }
+  td { padding:6.5px 8px; vertical-align:top; }
+  td.num  { width:18px; color:#aaa; font-size:7pt; font-weight:600; }
+  td.dur  { width:58px; text-align:center; color:#666; font-size:7.5pt; }
+  td.prix { width:72px; text-align:right; font-weight:700; }
+  td.desc strong { display:block; font-weight:700; margin-bottom:1.5px; font-size:8pt; }
+  td.desc p { font-size:7pt; color:#555; line-height:1.5; }
+
+  .subtotal-row { background:#f4f4f4 !important; border-bottom:1px solid #e0e0e0 !important; }
+  .subtotal-row td { padding:6px 8px; font-weight:600; font-size:7.5pt; }
+  .subtotal-row .tl { text-align:right; color:#555; letter-spacing:.05em; }
+  .subtotal-row .tv { text-align:right; }
+
+  .discount-row { background:#fff8f5 !important; border-bottom:1px solid #fde8dd !important; }
+  .discount-row td { padding:6px 8px; }
+  .discount-row .tl { text-align:right; font-size:7pt; color:#c0392b; font-weight:700; letter-spacing:.05em; }
+  .discount-row .tv { text-align:right; font-weight:800; color:#c0392b; font-size:9pt; }
+
+  .trow { background:#12122a !important; color:#fff; border:none !important; }
+  .trow td { padding:8px 8px; font-weight:700; }
+  .trow .tl { text-align:right; font-size:7.5pt; letter-spacing:.07em; }
+  .trow .tv { text-align:right; font-size:11pt; }
+  .tva { font-size:6.5pt; color:#aaa; text-align:right; margin-top:3px; }
+
+  /* ── Recap table (page 2) ── */
+  .pt { width:100%; border-collapse:collapse; font-size:8pt; margin-bottom:13px; }
+  .pt thead tr { background:#12122a; color:#fff; }
+  .pt th { padding:6px 8px; font-size:7pt; font-weight:600; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  .pt th.r { text-align:right; }
+  .pt tbody tr { border-bottom:1px solid #f0f0f0; }
+  .pt tbody tr:nth-child(even) { background:#fafafa; }
+  .pt td { padding:6px 8px; }
+  .pt td.r { text-align:right; font-weight:600; }
+  .pt td.strike { text-align:right; color:#aaa; text-decoration:line-through; }
+  .pt .dark { background:#12122a !important; color:#fff; }
+  .pt .dark td { padding:7px 8px; font-weight:700; }
+  .pt .dark .r { text-align:right; }
+
+  /* ── Conditions grid ── */
+  .cgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:13px; }
+  .cbox { border:1px solid #e2e2e2; padding:10px 12px; font-size:7.5pt; }
+  .cbox h4 { font-size:7.5pt; font-weight:700; margin-bottom:8px; }
+  .crow { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .pct { background:#12122a; color:#fff; font-weight:700; font-size:8pt; padding:3px 6px; min-width:32px; text-align:center; }
+  .crow .cd { flex:1; font-size:7pt; color:#555; }
+  .crow .cm { font-weight:700; font-size:8pt; }
+  .vnote { font-size:6.5pt; color:#aaa; margin-top:4px; }
+  .cstack { display:flex; flex-direction:column; gap:10px; }
+
+  /* ── Option box ── */
+  .option-box {
+    border:2px solid #12122a;
+    background:#f8f8fc;
+    padding:10px 12px;
+    font-size:7pt;
+    color:#333;
+    line-height:1.65;
+    margin-bottom:13px;
+    position:relative;
+  }
+  .option-tag {
+    position:absolute;
+    top:-9px; left:12px;
+    background:#12122a;
+    color:#fff;
+    font-size:6.5pt;
+    font-weight:800;
+    padding:2px 9px;
+    letter-spacing:.06em;
+  }
+  .option-box .opt-header {
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:5px;
+  }
+  .option-box .opt-title { font-weight:800; font-size:8pt; color:#12122a; }
+  .option-box .opt-price { font-weight:800; font-size:9.5pt; color:#12122a; }
+  .option-box .opt-total { font-size:6.5pt; color:#888; margin-left:5px; font-weight:500; }
+  .option-box ul { margin-left:13px; }
+  .option-box li { margin-bottom:2px; }
+
+  /* ── CGV ── */
+  .cgv h2 { font-size:10.5pt; font-weight:700; margin-bottom:12px; }
+  .ci { margin-bottom:8px; break-inside:avoid; page-break-inside:avoid; }
+  .ci h4 { font-size:8pt; font-weight:700; margin-bottom:2px; }
+  .ci p { font-size:7pt; color:#444; line-height:1.6; text-align:justify; }
+
+  /* ── Note box ── */
+  .note-box {
+    border:1px solid #e2e2e2;
+    background:#fafafa;
+    padding:8px 12px;
+    font-size:7pt;
+    color:#555;
+    line-height:1.6;
+    margin-bottom:13px;
+  }
+  .note-box strong { color:#12122a; }
+
+  /* ── Signatures ── */
+  .sgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .sbox { border:1px solid #e2e2e2; padding:10px 12px; min-height:66px; }
+  .sbox h4 { font-size:6.5pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:6px; }
+  .sbox p { font-size:7.5pt; color:#555; }
+  .dline { font-size:7.5pt; color:#aaa; margin-top:18px; }
+
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1>Devis MSD-2026-007</h1>
+    <p class="h1sub">16 juillet 2026 &nbsp;·&nbsp; Valide 30 jours &nbsp;·&nbsp; Module additionnel à MSD-2026-003</p>
+
+    <div class="parties">
+      <div class="party">
+        <div class="plabel">Émetteur</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">NovaTeck Studio || MYLOSTACK DEVELOPMENT</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Guillaume Bidallier</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">14 chemin de la prée, 17380 Saint Loup</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">France</span></div>
+        <div class="prow"><span class="k">N° entreprise :</span><span class="v">92421320000018</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">06 23 49 09 53</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">bidallierguillaume@gmail.com</span></div>
+        <div class="prow"><span class="k">Site :</span><span class="v">novateckstudio.com</span></div>
+      </div>
+      <div class="party">
+        <div class="plabel">Destinataire</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Dufour Christina</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">Belgique</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">+32 471 49 08 03</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">Agence1991@gmail.com</span></div>
+        <div class="prow"><span class="k">N° TVA :</span><span class="v">—</span></div>
+      </div>
+    </div>
+
+    <div class="objet">
+      <b>Objet :</b> Module Multi-pays — Architecture multi-tenancy permettant de déployer la plateforme 1000clic dans plusieurs pays (domaines indépendants, catégories, couleurs et Stripe configurables par pays depuis l'admin)
+    </div>
+
+    <div class="note-box">
+      <strong>Contexte :</strong> Ce devis couvre la transformation de la plateforme 1000clic.fr en architecture multi-pays. Un seul code source, un seul déploiement Vercel — mais chaque pays (ex. 1000clic.be, 1000clic.ch…) dispose de son propre espace indépendant : catégories, annonces, professionnels, couleurs, images hero et compte Stripe totalement séparés. L'ajout d'un nouveau pays se fait ensuite en quelques clics depuis le panneau administrateur. <strong>Une remise exceptionnelle de fidélité est appliquée.</strong>
+    </div>
+
+    <div class="stitle" style="margin-top:0;">Stack technique</div>
+    <div class="stack">
+      <div class="sc"><div class="stag">Architecture</div><p>Multi-tenancy<br/>Détection domaine<br/>Next.js Middleware</p></div>
+      <div class="sc"><div class="stag">Base de données</div><p>Prisma / PostgreSQL<br/>Modèle Site<br/>Migration Neon</p></div>
+      <div class="sc"><div class="stag">Thème</div><p>CSS variables / site<br/>Couleurs admin<br/>Hero image / site</p></div>
+      <div class="sc"><div class="stag">Paiements</div><p>Stripe commun<br/>Metadata par pays<br/>Tableau de bord unifié</p></div>
+    </div>
+
+    <div class="stitle">Prestations détaillées</div>
+
+    <table>
+      <thead><tr>
+        <th>#</th><th>Composant &amp; Description</th><th class="c">Durée</th><th class="r">Tarif catalogue</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td class="desc">
+            <strong>Conception &amp; Architecture multi-sites</strong>
+            <p>Modélisation du modèle <em>Site</em> (domaine, nom du pays, devise, locale, couleur primaire, couleur secondaire, email contact, image hero, clés Stripe) · définition des liaisons entre Site et les tables existantes (catégories, annonces, utilisateurs, professionnels) · validation de l'architecture avant migration</p>
+          </td>
+          <td class="dur">1,5 j</td><td class="prix">150 €</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="desc">
+            <strong>Migration base de données</strong>
+            <p>Ajout du modèle <em>Site</em> via Prisma · rattachement des catégories, annonces, professionnels et comptes utilisateurs à un site · migration sans perte de données pour le site Espagne existant · script de seed pour initialiser le site 1000clic.fr par défaut</p>
+          </td>
+          <td class="dur">2,5 j</td><td class="prix">250 €</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="desc">
+            <strong>Middleware &amp; Détection de domaine</strong>
+            <p>Middleware Next.js interceptant chaque requête · résolution du site actif par hostname (ex. 1000clic.be → site Belgique) · injection du contexte site dans les composants serveur et API routes · fallback sur le site par défaut si domaine inconnu</p>
+          </td>
+          <td class="dur">1 j</td><td class="prix">100 €</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="desc">
+            <strong>Scoping des données par site</strong>
+            <p>Toutes les requêtes Prisma filtrées par siteId · catégories indépendantes par site · annonces et favoris isolés · professionnels isolés · recherche et filtres scopés · compteurs et statistiques admin séparés par site</p>
+          </td>
+          <td class="dur">3 j</td><td class="prix">300 €</td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="desc">
+            <strong>Panel admin — Gestion des sites</strong>
+            <p>Nouvelle section admin « Sites &amp; Pays » · création d'un nouveau site (domaine, nom, pays, devise) · configuration des couleurs primaire et secondaire avec aperçu temps réel · upload de l'image hero · saisie des clés Stripe · activation / désactivation d'un site</p>
+          </td>
+          <td class="dur">2,5 j</td><td class="prix">250 €</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="desc">
+            <strong>Thème dynamique par site</strong>
+            <p>Chargement des couleurs configurées en admin sous forme de CSS custom properties au niveau du layout (pas de build requis) · application au logo, aux boutons, aux badges et à tous les éléments de marque · thème entièrement personnalisable sans modifier le code</p>
+          </td>
+          <td class="dur">1 j</td><td class="prix">100 €</td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td class="desc">
+            <strong>Stripe commun multi-pays</strong>
+            <p>Un seul compte Stripe pour tous les pays · checkout et webhooks routés selon le site actif · métadonnées Stripe enrichies du pays d'origine pour chaque paiement (filtrable dans le tableau de bord Stripe) · abonnements pros (49,99 €/an et 99,99 €/an) fonctionnels sur chaque instance</p>
+          </td>
+          <td class="dur">2 j</td><td class="prix">200 €</td>
+        </tr>
+        <tr>
+          <td class="num">8</td>
+          <td class="desc">
+            <strong>Tests &amp; Déploiement Vercel multi-domaine</strong>
+            <p>Configuration Vercel pour accepter plusieurs domaines personnalisés sur le même projet · tests complets de bout en bout sur deux sites simulés (Espagne + Belgique) · vérification de l'isolation des données · recette fonctionnelle · documentation procédure d'ajout d'un pays</p>
+          </td>
+          <td class="dur">2 j</td><td class="prix">200 €</td>
+        </tr>
+
+        <tr>
+          <td class="num">9</td>
+          <td class="desc">
+            <strong>Traductions des catégories par langue <span style="background:#12122a;color:#fff;font-size:6.5pt;font-weight:800;padding:2px 7px;margin-left:6px;vertical-align:middle;">OFFERT</span></strong>
+            <p>Ajout d'un modèle <em>CategoryTranslation</em> (catégorie, locale, libellé traduit) · interface admin pour saisir le libellé de chaque catégorie et sous-catégorie dans chaque langue du site · API retournant automatiquement le bon libellé selon la langue active de l'utilisateur · compatible avec la sélection de langue déjà présente sur la plateforme</p>
+          </td>
+          <td class="dur">1,5 j</td>
+          <td class="prix" style="text-decoration:line-through;color:#aaa;font-weight:400;">150 €</td>
+        </tr>
+
+        <tr class="subtotal-row">
+          <td colspan="3" class="tl">TOTAL TARIF CATALOGUE HT</td>
+          <td class="tv">1 700 €</td>
+        </tr>
+        <tr class="discount-row">
+          <td colspan="3" class="tl">REMISE EXCEPTIONNELLE CLIENT FIDÈLE (70 %) + TRADUCTIONS OFFERTES</td>
+          <td class="tv">− 1 240 €</td>
+        </tr>
+        <tr class="trow">
+          <td colspan="3" class="tl">TOTAL NET À PAYER TTC</td>
+          <td class="tv">460 €</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tva">Prestataire non assujetti à la TVA — article 293 B du CGI · Prix exprimés en euros HT</p>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-007 — Module Multi-pays — 1000clic.fr</span>
+    <span>NovaTeck Studio || MYLOSTACK DEVELOPMENT · Guillaume Bidallier · 06 23 49 09 53</span>
+    <span>Page 1 / 2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1 style="font-size:17pt;margin-bottom:2px;">Récapitulatif &amp; Conditions</h1>
+    <p class="h1sub">Devis MSD-2026-007 &nbsp;·&nbsp; 16 juillet 2026</p>
+
+    <div class="stitle" style="margin-top:0;">Récapitulatif financier</div>
+    <table class="pt">
+      <thead><tr>
+        <th>Désignation</th>
+        <th class="r">Tarif catalogue</th>
+        <th class="r">Remise</th>
+        <th class="r">Net HT</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>Module Multi-pays — 15,5 jours de développement (8 composants)</td>
+          <td class="strike">1 550 €</td>
+          <td class="r" style="color:#c0392b;font-weight:700;">− 1 090 €</td>
+          <td class="r">460 €</td>
+        </tr>
+        <tr>
+          <td>Traductions catégories par langue (1,5 jour) <span style="background:#12122a;color:#fff;font-size:6.5pt;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle;">OFFERT</span></td>
+          <td class="strike">150 €</td>
+          <td class="r" style="color:#c0392b;font-weight:700;">− 150 €</td>
+          <td class="r" style="font-weight:700;">0 €</td>
+        </tr>
+        <tr class="dark">
+          <td><strong>TOTAL NET À RÉGLER TTC</strong></td>
+          <td class="r strike">1 700 €</td>
+          <td class="r">−&thinsp;73 %</td>
+          <td class="r"><strong>460 €</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="stitle">Planning &amp; Livrables</div>
+    <div class="cgrid">
+      <div class="cbox">
+        <h4>Jalons de livraison</h4>
+        <div class="crow"><div class="pct">J1–2</div><div class="cd">Conception architecture, modèle Site, migration BDD</div></div>
+        <div class="crow"><div class="pct">J3–5</div><div class="cd">Migration BDD complète, seed site Espagne, scoping données</div></div>
+        <div class="crow"><div class="pct">J6</div><div class="cd">Middleware détection domaine, injection contexte site</div></div>
+        <div class="crow"><div class="pct">J7–9</div><div class="cd">Scoping complet catégories, annonces, pros, admin</div></div>
+        <div class="crow"><div class="pct">J10–12</div><div class="cd">Panel admin gestion des sites, couleurs, hero, Stripe</div></div>
+        <div class="crow"><div class="pct">J13</div><div class="cd">Thème dynamique CSS variables par site</div></div>
+        <div class="crow"><div class="pct">J14–15</div><div class="cd">Stripe isolé par site, webhooks multi-domaine</div></div>
+        <div class="crow"><div class="pct">J15–16</div><div class="cd">Tests bout-en-bout, Vercel multi-domaine, recette</div></div>
+        <div class="vnote">Durée totale estimée : 3 à 4 semaines selon disponibilités</div>
+      </div>
+      <div class="cstack">
+        <div class="cbox">
+          <h4>Livrables inclus</h4>
+          <div class="crow"><div class="cd">✓ &nbsp;Code source versionné sur GitHub</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Migration BDD sans perte de données</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Site Espagne existant 100 % préservé</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Panel admin pour créer un nouveau pays</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Documentation procédure ajout d'un pays</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Recette fonctionnelle double-site</div></div>
+        </div>
+        <div class="cbox">
+          <h4>Modalités de paiement</h4>
+          <div class="crow"><div class="pct">50%</div><div class="cd">à la commande (acompte)</div><div class="cm">230 €</div></div>
+          <div class="crow"><div class="pct">50%</div><div class="cd">à la livraison finale</div><div class="cm">230 €</div></div>
+          <p class="vnote">Paiement par virement bancaire · TVA non applicable, art. 293 B du CGI</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stitle">Conditions générales</div>
+    <div class="cgv">
+      <div class="ci">
+        <h4>1. Acceptation</h4>
+        <p>Ce devis est valable 30 jours à compter de sa date d'émission. L'acceptation se matérialise par le retour du devis signé ou par un accord écrit par email. Toute modification du périmètre après acceptation fera l'objet d'un avenant tarifé séparément.</p>
+      </div>
+      <div class="ci">
+        <h4>2. Modalités de paiement</h4>
+        <p>50 % à la commande (230 € TTC) et 50 % à la livraison finale (230 € TTC). Paiement par virement bancaire. Tout retard de paiement entraîne la suspension immédiate des travaux et une pénalité de 1,5 % par mois de retard.</p>
+      </div>
+      <div class="ci">
+        <h4>3. Intégrité du site existant</h4>
+        <p>La migration est réalisée de manière non-destructive : toutes les données du site Espagne (annonces, utilisateurs, catégories, professionnels) sont intégralement conservées et rattachées automatiquement au site par défaut. Un point de validation intermédiaire est prévu avant chaque étape critique.</p>
+      </div>
+      <div class="ci">
+        <h4>4. Propriété intellectuelle</h4>
+        <p>Le code source développé dans le cadre de ce devis est cédé au client à la réception du solde. NovaTeck Studio se réserve le droit de mentionner la réalisation dans ses références commerciales.</p>
+      </div>
+      <div class="ci">
+        <h4>5. Garantie</h4>
+        <p>Garantie de correction des bugs imputables au développement pendant 30 jours après la livraison finale, sans facturation supplémentaire. Les évolutions fonctionnelles ou les ajouts de nouveaux pays après livraison sont facturés séparément.</p>
+      </div>
+    </div>
+
+    <div class="sgrid">
+      <div class="sbox">
+        <h4>Bon pour accord — Prestataire</h4>
+        <p>NovaTeck Studio || MYLOSTACK DEVELOPMENT<br/>Guillaume Bidallier</p>
+        <div class="dline">Signature : ___________________________</div>
+      </div>
+      <div class="sbox">
+        <h4>Bon pour accord — Client</h4>
+        <p>Dufour Christina<br/>Date : ___________________________</p>
+        <div class="dline">Signature : ___________________________</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-007 — Module Multi-pays — 1000clic.fr</span>
+    <span>NovaTeck Studio || MYLOSTACK DEVELOPMENT · Guillaume Bidallier · 06 23 49 09 53</span>
+    <span>Page 2 / 2</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+import { cookies } from 'next/headers'
 import { Category, CategoryTree } from '@/types'
 import { prisma } from '@/lib/prisma'
 
@@ -16,27 +17,32 @@ const FALLBACK_CATEGORIES: Category[] = [
   { label: 'Autres',            slug: 'autres',         icon: '📦', parentId: null, parentSlug: null },
 ]
 
-const fetchCategories = unstable_cache(
-  async (): Promise<Category[]> => {
+const fetchCategoriesLocalized = unstable_cache(
+  async (locale: string): Promise<Category[]> => {
     const rows = await prisma.category.findMany({
       orderBy: [{ order: 'asc' }],
-      include: { parent: { select: { slug: true } } },
+      include: {
+        parent: { select: { slug: true } },
+        translations: { where: { locale }, select: { label: true } },
+      },
     })
     return rows.map(r => ({
-      label:      r.label,
+      label:      r.translations[0]?.label ?? r.label,
       slug:       r.slug,
       icon:       r.icon,
       parentId:   r.parentId   ?? null,
       parentSlug: r.parent?.slug ?? null,
     }))
   },
-  ['categories'],
+  ['categories-localized'],
   { revalidate: 60, tags: ['categories'] }
 )
 
 /** Server components / route handlers only — imports Prisma, never import this from a client component. */
 export async function getCategoriesServer(): Promise<Category[]> {
-  return fetchCategories().catch(() => FALLBACK_CATEGORIES)
+  const cookieStore = await cookies()
+  const locale = cookieStore.get('vem_lang')?.value ?? 'fr'
+  return fetchCategoriesLocalized(locale).catch(() => FALLBACK_CATEGORIES)
 }
 
 /**

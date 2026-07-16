@@ -43,32 +43,49 @@ function buildTree(flat: ApiCategory[]): CategoryTree[] {
   return roots
 }
 
-let cache: CategoryTree[] | null = null
-let inflight: Promise<CategoryTree[]> | null = null
-
-function fetchCategoryTree(): Promise<CategoryTree[]> {
-  if (cache) return Promise.resolve(cache)
-  if (!inflight) {
-    inflight = fetch('/api/categories')
-      .then(res => res.json())
-      .then((rows: ApiCategory[]) => {
-        cache = buildTree(rows)
-        return cache
-      })
-      .catch(() => FALLBACK_TREE)
-  }
-  return inflight
+function getLocale(): string {
+  if (typeof document === 'undefined') return 'fr'
+  const m = document.cookie.match(/(?:^|;\s*)vem_lang=([^;]+)/)
+  return m?.[1] ?? 'fr'
 }
 
-/** Returns root categories with their subcategories in `.children`. */
+const treeCache = new Map<string, CategoryTree[]>()
+const inflightMap = new Map<string, Promise<CategoryTree[]>>()
+
+function fetchCategoryTree(locale: string): Promise<CategoryTree[]> {
+  if (treeCache.has(locale)) return Promise.resolve(treeCache.get(locale)!)
+  if (!inflightMap.has(locale)) {
+    inflightMap.set(locale,
+      fetch(`/api/categories?locale=${locale}`)
+        .then(res => res.json())
+        .then((rows: ApiCategory[]) => {
+          const tree = buildTree(rows)
+          treeCache.set(locale, tree)
+          inflightMap.delete(locale)
+          return tree
+        })
+        .catch(() => FALLBACK_TREE)
+    )
+  }
+  return inflightMap.get(locale)!
+}
+
+/** Returns root categories with their subcategories in `.children`, in the current locale. */
 export function useCategories(): CategoryTree[] {
-  const [categories, setCategories] = useState<CategoryTree[]>(cache ?? FALLBACK_TREE)
+  const [categories, setCategories] = useState<CategoryTree[]>(FALLBACK_TREE)
 
   useEffect(() => {
+    const locale = getLocale()
     let active = true
-    fetchCategoryTree().then(cats => { if (active) setCategories(cats) })
+    fetchCategoryTree(locale).then(cats => { if (active) setCategories(cats) })
     return () => { active = false }
   }, [])
 
   return categories
+}
+
+/** Invalidates the client-side category cache (call after admin mutations). */
+export function invalidateCategoryCache() {
+  treeCache.clear()
+  inflightMap.clear()
 }

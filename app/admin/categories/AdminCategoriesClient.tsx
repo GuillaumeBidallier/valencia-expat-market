@@ -11,6 +11,15 @@ type TreeRow = {
 type FormState = { label: string; icon: string; slug: string }
 const EMPTY: FormState = { label: '', icon: '', slug: '' }
 
+const TRANSLATION_LOCALES = [
+  { code: 'en', name: 'Anglais' },
+  { code: 'es', name: 'Espagnol' },
+  { code: 'de', name: 'Allemand' },
+  { code: 'nl', name: 'Néerlandais' },
+  { code: 'uk', name: 'Ukrainien' },
+  { code: 'ru', name: 'Russe' },
+]
+
 function slugify(str: string): string {
   return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40)
 }
@@ -31,12 +40,13 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Tr
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [translations, setTranslations] = useState<Record<string, string>>({})
 
   const isEditing = isNewRoot || newSubParentId !== null || editTarget !== null
 
   const closeForm = () => {
     setIsNewRoot(false); setNewSubParentId(null); setEditTarget(null)
-    setError(''); setForm(EMPTY); setConfirmDeleteId(null)
+    setError(''); setForm(EMPTY); setConfirmDeleteId(null); setTranslations({})
   }
 
   const openNewRoot = () => { closeForm(); setIsNewRoot(true) }
@@ -49,6 +59,11 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Tr
   const openEdit = (row: TreeRow, parentId: string | null) => {
     closeForm(); setEditTarget({ id: row.id, parentId })
     setForm({ label: row.label, icon: row.icon, slug: row.slug })
+    // Load existing translations in background
+    fetch(`/api/categories/${row.id}`)
+      .then(r => r.json())
+      .then((data: Record<string, string>) => setTranslations(data))
+      .catch(() => {})
   }
 
   // Find parent row in tree (recursive)
@@ -114,9 +129,12 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Tr
         setTree(t => appendChildInTree(t, newSubParentId!, { ...data, listingCount: 0, children: [] }))
 
       } else if (isEdit) {
+        const translationPayload = Object.entries(translations)
+          .filter(([, label]) => label.trim())
+          .map(([locale, label]) => ({ locale, label: label.trim() }))
         const res = await fetch('/api/categories', {
           method: 'PUT', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: editTarget!.id, label: form.label.trim(), icon: form.icon.trim() }),
+          body: JSON.stringify({ id: editTarget!.id, label: form.label.trim(), icon: form.icon.trim(), translations: translationPayload }),
         })
         const data = await res.json()
         if (!res.ok) { setError(data.error ?? 'Erreur'); return }
@@ -283,6 +301,26 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Tr
                   <input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="meubles"
                     disabled={!!editTarget}
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" />
+                </div>
+              </div>
+            )}
+
+            {/* Translation section — edit mode only */}
+            {editTarget && (
+              <div className="border-t border-gray-100 pt-4">
+                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-3">Traductions</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {TRANSLATION_LOCALES.map(({ code, name }) => (
+                    <div key={code}>
+                      <label className="block text-[10px] font-semibold text-gray-400 mb-1">{name}</label>
+                      <input
+                        value={translations[code] ?? ''}
+                        onChange={e => setTranslations(t => ({ ...t, [code]: e.target.value }))}
+                        placeholder={form.label || '…'}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

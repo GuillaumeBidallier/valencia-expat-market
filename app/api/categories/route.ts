@@ -10,16 +10,20 @@ async function requireAdmin() {
   return session
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const locale = req.nextUrl.searchParams.get('locale') ?? 'fr'
   const rows = await prisma.category.findMany({
     orderBy: [{ order: 'asc' }],
-    include: { parent: { select: { slug: true } } },
+    include: {
+      parent: { select: { slug: true } },
+      translations: { where: { locale }, select: { label: true } },
+    },
   })
   return NextResponse.json(
     rows.map(r => ({
       id:         r.id,
       slug:       r.slug,
-      label:      r.label,
+      label:      r.translations[0]?.label ?? r.label,
       icon:       r.icon,
       order:      r.order,
       parentId:   r.parentId   ?? null,
@@ -75,10 +79,14 @@ export async function POST(req: NextRequest) {
 }
 
 const updateSchema = z.object({
-  id:    z.string().min(1),
-  label: z.string().min(1).max(60).optional(),
-  icon:  z.string().min(1).max(8).optional(),
-  order: z.number().int().optional(),
+  id:           z.string().min(1),
+  label:        z.string().min(1).max(60).optional(),
+  icon:         z.string().min(1).max(8).optional(),
+  order:        z.number().int().optional(),
+  translations: z.array(z.object({
+    locale: z.string().min(2).max(5),
+    label:  z.string().max(60),
+  })).optional(),
 })
 
 export async function PUT(req: NextRequest) {
@@ -87,8 +95,19 @@ export async function PUT(req: NextRequest) {
   const parsed = updateSchema.safeParse(await req.json())
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides' }, { status: 400 })
 
-  const { id, ...data } = parsed.data
-  const category = await prisma.category.update({ where: { id }, data })
+  const { id, translations, ...data } = parsed.data
+
+  const [category] = await Promise.all([
+    prisma.category.update({ where: { id }, data }),
+    ...(translations ?? [])
+      .filter(t => t.label.trim())
+      .map(t => prisma.categoryTranslation.upsert({
+        where:  { categoryId_locale: { categoryId: id, locale: t.locale } },
+        update: { label: t.label.trim() },
+        create: { categoryId: id, locale: t.locale, label: t.label.trim() },
+      })),
+  ])
+
   revalidateTag('categories', { expire: 0 })
   return NextResponse.json(category)
 }
