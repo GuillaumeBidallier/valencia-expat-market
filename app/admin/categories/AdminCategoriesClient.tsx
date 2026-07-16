@@ -8,6 +8,10 @@ type CatRow = SubRow & { children: SubRow[] }
 type FormState = { slug: string; label: string; icon: string }
 const EMPTY: FormState = { slug: '', label: '', icon: '' }
 
+function slugify(str: string): string {
+  return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40)
+}
+
 type EditTarget = { type: 'root' | 'sub'; id: string; parentId?: string }
 
 export default function AdminCategoriesClient({ initialTree }: { initialTree: CatRow[] }) {
@@ -57,8 +61,10 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Ca
   }
 
   const save = async () => {
-    if (!form.label.trim() || !form.icon.trim()) { setError('Icône et nom requis.'); return }
-    if ((isNewRoot || newSubParentId) && !form.slug.trim()) { setError('Slug requis.'); return }
+    if (!form.label.trim()) { setError('Nom requis.'); return }
+    if (isNewRoot && !form.icon.trim()) { setError('Icône requise pour une catégorie racine.'); return }
+    const slug = newSubParentId ? slugify(form.label.trim()) : form.slug.trim()
+    if ((isNewRoot || newSubParentId) && !slug) { setError('Slug invalide.'); return }
     setSaving(true); setError('')
     try {
       if (isNewRoot) {
@@ -72,12 +78,12 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Ca
         if (!res.ok) { setError(data.error ?? 'Erreur'); return }
         setTree(t => [...t, { ...data, listingCount: 0, children: [] }])
       } else if (newSubParentId) {
-        // Create subcategory
+        // Create subcategory — slug auto-generated, no icon
         if (!tree.find(r => r.id === newSubParentId)) return
         const res = await fetch('/api/categories', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slug: form.slug.trim().toLowerCase(), label: form.label.trim(), icon: form.icon.trim(), parentId: newSubParentId }),
+          body: JSON.stringify({ slug, label: form.label.trim(), icon: '', parentId: newSubParentId }),
         })
         const data = await res.json()
         if (!res.ok) { setError(data.error ?? 'Erreur'); return }
@@ -183,24 +189,39 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Ca
               </h2>
               <button onClick={closeForm} className="text-gray-400 hover:text-gray-600"><X size={18} /></button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Icône (emoji)</label>
-                <input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} placeholder="🛋️"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50" />
+            {newSubParentId ? (
+              /* Subcategory form: label only, slug auto-generated */
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Nom affiché</label>
+                  <input value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} placeholder="Voitures"
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50" />
+                </div>
+                {form.label.trim() && (
+                  <p className="text-xs text-gray-400">Slug généré : <span className="font-mono text-navy">/{slugify(form.label.trim())}</span></p>
+                )}
               </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Nom affiché</label>
-                <input value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} placeholder="Maison & Mobilier"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50" />
+            ) : (
+              /* Root category form: icon + label + slug */
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Icône (emoji)</label>
+                  <input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} placeholder="🛋️"
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50" />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Nom affiché</label>
+                  <input value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} placeholder="Maison & Mobilier"
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50" />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Slug (URL)</label>
+                  <input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="meubles"
+                    disabled={!!editTarget}
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" />
+                </div>
               </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Slug (URL)</label>
-                <input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="meubles"
-                  disabled={!!editTarget}
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" />
-              </div>
-            </div>
+            )}
             {error && <p className="text-xs text-red-500">{error}</p>}
             <div className="flex items-center gap-2">
               <button onClick={save} disabled={saving}

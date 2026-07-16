@@ -31,7 +31,7 @@ export async function GET() {
 const createSchema = z.object({
   slug:     z.string().min(1).max(40).regex(/^[a-z0-9-]+$/, 'Slug : lettres minuscules, chiffres et tirets uniquement'),
   label:    z.string().min(1).max(60),
-  icon:     z.string().min(1).max(8),
+  icon:     z.string().max(8).optional().default(''),
   parentId: z.string().nullable().optional(),
 })
 
