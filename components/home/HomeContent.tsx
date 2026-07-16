@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { Shield, Users, Tag, Home, Briefcase, Car, Sofa, Smartphone, PawPrint, Wrench, Globe } from 'lucide-react'
+import { Shield, Users, Tag } from 'lucide-react'
 import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
 import PromoBanner from '@/components/home/PromoBanner'
@@ -9,6 +9,7 @@ import HeroSection, { type HeroSlide } from '@/components/home/HeroSection'
 import { useTranslations } from 'next-intl'
 import type { Listing } from '@/types'
 import type { Professional } from '@prisma/client'
+import { useCategories } from '@/hooks/useCategories'
 
 export default function HomeContent({
   featured,
@@ -23,17 +24,8 @@ export default function HomeContent({
   heroSlides?: HeroSlide[]
 }) {
   const t = useTranslations('Home')
-
-  const categoryItems = [
-    { icon: Home,        label: t('cat_real_estate'), slug: 'meubles' },
-    { icon: Briefcase,   label: t('cat_jobs'),        slug: 'services' },
-    { icon: Car,         label: t('cat_vehicles'),    slug: 'vehicules' },
-    { icon: Sofa,        label: t('cat_home'),        slug: 'meubles' },
-    { icon: Smartphone,  label: t('cat_electronics'), slug: 'electromenager' },
-    { icon: PawPrint,    label: t('cat_pets'),        slug: 'animaux' },
-    { icon: Wrench,      label: t('cat_services'),    slug: 'services' },
-    { icon: Globe,       label: t('cat_misc'),        slug: 'autres' },
-  ]
+  const allCategories = useCategories()
+  const categoryItems = allCategories.filter(c => !c.parentId).slice(0, 8)
 
   const trustItems = [
     { icon: Tag,    title: t('trust_free_title'),      desc: t('trust_free_desc') },
@@ -57,11 +49,11 @@ export default function HomeContent({
             <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
               {categoryItems.map((cat) => (
                 <Link
-                  key={cat.label}
+                  key={cat.slug}
                   href={`/annonces?cat=${cat.slug}`}
                   className="flex flex-col items-center gap-2 p-3 sm:p-4 bg-white border border-gray-200 rounded-xl hover:border-indigo-primary hover:shadow-md transition-all group"
                 >
-                  <cat.icon size={28} className="text-indigo-primary group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                  <span className="text-2xl group-hover:scale-110 transition-transform">{cat.icon}</span>
                   <span className="text-xs font-semibold text-navy text-center leading-tight">{cat.label}</span>
                 </Link>
               ))}
