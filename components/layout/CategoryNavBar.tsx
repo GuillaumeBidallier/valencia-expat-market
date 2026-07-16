@@ -38,12 +38,12 @@ export default function CategoryNavBar({ transparent }: Props) {
     >
       {/* Category bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-10 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+        <div className="flex items-center justify-center h-10 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           {categories.map((cat, i) => (
             <span key={cat.slug} className="flex items-center shrink-0">
               {i > 0 && (
                 <span
-                  className={`mx-2.5 text-xs select-none ${transparent ? 'text-white/30' : 'text-gray-300'}`}
+                  className={`mx-4 text-xs select-none ${transparent ? 'text-white/30' : 'text-gray-300'}`}
                   aria-hidden="true"
                 >
                   ·
