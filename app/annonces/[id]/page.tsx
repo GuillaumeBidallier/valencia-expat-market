@@ -83,18 +83,34 @@ export default async function ListingDetailPage({ params }: Props) {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': listing.price !== null ? 'Product' : 'Offer',
+    '@type': listing.price !== null ? 'Product' : 'Article',
     name: listing.title,
     description: listing.description ?? undefined,
     image: listing.images.map(i => i.url),
     url: `${BASE}/annonces/${id}`,
-    offers: {
+    offers: listing.price !== null ? {
       '@type': 'Offer',
-      price: listing.price ?? 0,
+      price: listing.price,
       priceCurrency: 'EUR',
       availability: 'https://schema.org/InStock',
       url: `${BASE}/annonces/${id}`,
-    },
+    } : undefined,
+  }
+
+  const breadcrumbsLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: BASE },
+      { '@type': 'ListItem', position: 2, name: 'Annonces', item: `${BASE}/annonces` },
+      ...(categoryRecord?.parent ? [
+        { '@type': 'ListItem', position: 3, name: categoryRecord.parent.label, item: `${BASE}/annonces?cat=${categoryRecord.parent.slug}` },
+        { '@type': 'ListItem', position: 4, name: categoryRecord.label, item: `${BASE}/annonces?cat=${categoryRecord.slug}` },
+      ] : categoryRecord ? [
+        { '@type': 'ListItem', position: 3, name: categoryRecord.label, item: `${BASE}/annonces?cat=${categoryRecord.slug}` },
+      ] : []),
+      { '@type': 'ListItem', position: categoryRecord ? (categoryRecord.parent ? 5 : 4) : 3, name: listing.title, item: `${BASE}/annonces/${id}` },
+    ],
   }
 
   return (
@@ -102,6 +118,10 @@ export default async function ListingDetailPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
       />
       <ListingDetailClient
         listing={listing}
