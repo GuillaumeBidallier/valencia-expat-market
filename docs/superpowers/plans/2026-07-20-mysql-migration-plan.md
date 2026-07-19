@@ -72,6 +72,25 @@ MYSQL_DATABASE_URL="mysql://vendo_user:<PASSWORD>@51.75.116.192:3306/vendo"
 
 No commit for this step — it's a local secret, not code.
 
+- [ ] **Step 4: Create the shadow database (discovered requirement)**
+
+`prisma migrate dev` needs to create and drop a temporary "shadow" database to compute schema diffs — this requires a `CREATE`/`DROP DATABASE`-level privilege, which `GRANT ALL PRIVILEGES ON vendo.*` (scoped to one database) does not include. Rather than granting `vendo_user` broad server-wide database-creation rights, follow the same convention already used by another project on this server (`forgeapp_shadow`): create one dedicated shadow database and scope privileges to it explicitly.
+
+```bash
+ssh ovh-db "mysql -e \"
+CREATE DATABASE IF NOT EXISTS vendo_shadow CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+GRANT ALL PRIVILEGES ON vendo_shadow.* TO 'vendo_user'@'%';
+FLUSH PRIVILEGES;
+\""
+```
+
+Add to `.env.local`:
+```
+SHADOW_DATABASE_URL="mysql://vendo_user:<PASSWORD>@51.75.116.192:3306/vendo_shadow"
+```
+
+Task 2 Step 1 (below) includes a `shadowDatabaseUrl` line in the datasource block that consumes this — without it, `prisma migrate dev` fails with `P3014`/`P1010` (access denied creating the default auto-named shadow database).
+
 ---
 
 ### Task 2: Convert `prisma/schema.prisma` to MySQL
@@ -105,11 +124,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 ```
-(`previewFeatures = ["driverAdapters"]` and `directUrl` were both Neon-specific — MySQL on a normal server needs neither.)
+(`previewFeatures = ["driverAdapters"]` and `directUrl` were both Neon-specific — MySQL on a normal server needs neither. `shadowDatabaseUrl` is new — see Task 1 Step 4: the `vendo_user` MySQL account only has privileges on `vendo`/`vendo_shadow`, not server-wide `CREATE DATABASE`, so `migrate dev` needs an explicit pre-created shadow database to diff against instead of auto-creating/dropping one itself.)
 
 - [ ] **Step 2: Replace `Professional.photos`/`zones` with relations, and widen long-text/URL fields**
 
