@@ -1,12 +1,11 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -35,7 +34,7 @@ enum Role {
 model Listing {
   id             String         @id @default(cuid())
   title          String
-  description    String
+  description    String         @db.Text
   price          Float?
   categorySlug   String
   city           String
@@ -72,7 +71,7 @@ model SiteSettings {
   id                  String  @id @default("default")
   autoPublish         Boolean @default(true)
   heroImages          Json    @default("[]")
-  announcementText    String?
+  announcementText    String? @db.Text
   announcementEnabled Boolean @default(false)
   contactEmail        String?
   maintenanceMode     Boolean @default(false)
@@ -90,7 +89,7 @@ model ListingImage {
   id        String  @id @default(cuid())
   listingId String
   listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  url       String
+  url       String  @db.Text
   order     Int     @default(0)
 }
 
@@ -111,18 +110,18 @@ model Professional {
   name        String
   category    String
   city        String
-  description String?
+  description String?  @db.Text
   phone       String?
   whatsapp    String?
-  website     String?
-  logo        String?
-  banner      String?
-  photos      String[]
+  website     String?  @db.Text
+  logo        String?  @db.Text
+  banner      String?  @db.Text
+  photos      ProfessionalPhoto[]
   tier        ProTier  @default(FREE)
   verified    Boolean  @default(false)
   featured    Boolean  @default(false)
   recommended Boolean  @default(false)
-  zones       String[]
+  zones       ProfessionalZone[]
   phoneHidden Boolean  @default(false)
   userId      String?  @unique
   user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -135,6 +134,25 @@ model Professional {
   updatedAt   DateTime @updatedAt
   clicks        ProClick[]
   businessCard  BusinessCard?
+}
+
+model ProfessionalPhoto {
+  id             String       @id @default(cuid())
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  url            String       @db.Text
+  order          Int          @default(0)
+
+  @@index([professionalId])
+}
+
+model ProfessionalZone {
+  id             String       @id @default(cuid())
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  zone           String
+
+  @@index([professionalId])
 }
 
 enum ProTier {
@@ -209,7 +227,7 @@ model Report {
   listingId String
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
   userId    String?
-  reason    String
+  reason    String   @db.Text
   createdAt DateTime @default(now())
 
   @@unique([listingId, userId])
@@ -238,9 +256,9 @@ model BlogPost {
   slug        String    @unique
   lang        String    @default("fr")
   title       String
-  excerpt     String
-  content     String
-  coverImage  String?
+  excerpt     String    @db.Text
+  content     String    @db.Text
+  coverImage  String?   @db.Text
   category    String    @default("guide")
   author      String    @default("Équipe Vendo")
   published   Boolean   @default(false)
@@ -258,7 +276,7 @@ model Message {
   sender     User      @relation("Sender", fields: [senderId], references: [id])
   receiverId String
   receiver   User      @relation("Receiver", fields: [receiverId], references: [id])
-  body       String
+  body       String    @db.Text
   readAt     DateTime?
   createdAt  DateTime  @default(now())
 }
