@@ -29,6 +29,9 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
 
-  const pro = await prisma.professional.create({ data: parsed.data })
+  const { photos, ...rest } = parsed.data
+  const pro = await prisma.professional.create({
+    data: { ...rest, photos: { create: photos.map((url, order) => ({ url, order })) } },
+  })
   return NextResponse.json(pro, { status: 201 })
 }

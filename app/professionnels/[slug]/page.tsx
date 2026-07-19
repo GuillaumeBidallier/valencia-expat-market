@@ -65,8 +65,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProDetailPage({ params }: Props) {
   const { slug } = await params
-  const pro = await prisma.professional.findUnique({ where: { slug } })
-  if (!pro) notFound()
+  const proRow = await prisma.professional.findUnique({
+    where: { slug },
+    include: { photos: { orderBy: { order: 'asc' } }, zones: true },
+  })
+  if (!proRow) notFound()
+  const pro = { ...proRow, photos: proRow.photos.map(p => p.url), zones: proRow.zones.map(z => z.zone) }
 
   const [session, geoCoords, t] = await Promise.all([
     auth(),

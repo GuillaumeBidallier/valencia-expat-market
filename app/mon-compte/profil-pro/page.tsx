@@ -14,10 +14,13 @@ export default async function ProDashboardPage({ searchParams }: Props) {
 
   const { carte } = await searchParams
 
-  const pro = await prisma.professional.findUnique({
+  const proRow = await prisma.professional.findUnique({
     where: { userId: session.user.id },
-    include: { businessCard: true },
+    include: { businessCard: true, photos: { orderBy: { order: 'asc' } }, zones: true },
   })
+  const pro = proRow
+    ? { ...proRow, photos: proRow.photos.map(p => p.url), zones: proRow.zones.map(z => z.zone) }
+    : null
 
   if (!pro) {
     return (

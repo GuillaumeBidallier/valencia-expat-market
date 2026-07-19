@@ -9,9 +9,11 @@ export default async function AdminProsPage() {
     redirect('/')
   }
 
-  const pros = await prisma.professional.findMany({
+  const proRows = await prisma.professional.findMany({
     orderBy: [{ tier: 'desc' }, { name: 'asc' }],
+    include: { photos: { orderBy: { order: 'asc' } }, zones: true },
   })
+  const pros = proRows.map(row => ({ ...row, photos: row.photos.map(p => p.url), zones: row.zones.map(z => z.zone) }))
 
   return <AdminProsClient initialPros={pros} />
 }

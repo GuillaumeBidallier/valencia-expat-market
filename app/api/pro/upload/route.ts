@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
   } else if (type === 'banner') {
     await prisma.professional.update({ where: { id: pro.id }, data: { banner: blob.url } })
   } else {
-    await prisma.professional.update({ where: { id: pro.id }, data: { photos: { push: blob.url } } })
+    const photoCount = await prisma.professionalPhoto.count({ where: { professionalId: pro.id } })
+    await prisma.professionalPhoto.create({ data: { professionalId: pro.id, url: blob.url, order: photoCount } })
   }
 
   return NextResponse.json({ url: blob.url })

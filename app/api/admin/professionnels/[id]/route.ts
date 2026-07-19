@@ -34,8 +34,22 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   const parsed = updateSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
 
-  const pro = await prisma.professional.update({ where: { id }, data: parsed.data })
-  return NextResponse.json(pro)
+  const { photos, ...rest } = parsed.data
+  if (photos) {
+    await prisma.professionalPhoto.deleteMany({ where: { professionalId: id } })
+    if (photos.length > 0) {
+      await prisma.professionalPhoto.createMany({
+        data: photos.map((url, order) => ({ professionalId: id, url, order })),
+      })
+    }
+  }
+
+  const pro = await prisma.professional.update({
+    where: { id },
+    data: rest,
+    include: { photos: { orderBy: { order: 'asc' } }, zones: true },
+  })
+  return NextResponse.json({ ...pro, photos: pro.photos.map(p => p.url), zones: pro.zones.map(z => z.zone) })
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Params }) {

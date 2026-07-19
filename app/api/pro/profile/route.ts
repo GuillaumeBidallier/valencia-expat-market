@@ -58,9 +58,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Configuration Stripe manquante.' }, { status: 500 })
   }
 
+  const { zones, ...restFields } = fields
   const slug = await uniqueSlug(slugify(fields.name))
   const pro = await prisma.professional.create({
-    data: { ...fields, slug, userId: session.user.id, tier: 'FREE' },
+    data: {
+      ...restFields,
+      slug,
+      userId: session.user.id,
+      tier: 'FREE',
+      zones: { create: zones.map(zone => ({ zone })) },
+    },
   })
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
@@ -95,10 +102,12 @@ export async function GET() {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const pro = await prisma.professional.findUnique({
+  const proRow = await prisma.professional.findUnique({
     where: { userId: session.user.id },
+    include: { photos: { orderBy: { order: 'asc' } }, zones: true },
   })
-  return NextResponse.json(pro ?? null)
+  if (!proRow) return NextResponse.json(null)
+  return NextResponse.json({ ...proRow, photos: proRow.photos.map(p => p.url), zones: proRow.zones.map(z => z.zone) })
 }
 
 export async function PATCH(req: NextRequest) {
@@ -109,15 +118,36 @@ export async function PATCH(req: NextRequest) {
   if (!pro) return NextResponse.json({ error: 'No professional profile linked' }, { status: 404 })
 
   const body = await req.json()
-  const allowed = ['name', 'description', 'phone', 'whatsapp', 'website', 'city', 'zones', 'logo', 'banner', 'photos', 'phoneHidden'] as const
+  const allowed = ['name', 'description', 'phone', 'whatsapp', 'website', 'city', 'logo', 'banner', 'phoneHidden'] as const
   const data: Record<string, unknown> = {}
   for (const key of allowed) {
     if (key in body) data[key] = body[key]
   }
 
-  const updated = await prisma.professional.update({
+  // photos/zones are relations now — the client always sends the full desired
+  // array (both the zones-edit form and the photo-removal flow in
+  // ProDashboardClient.tsx replace the whole list), so replace-all is correct.
+  if ('zones' in body && Array.isArray(body.zones)) {
+    await prisma.professionalZone.deleteMany({ where: { professionalId: pro.id } })
+    if (body.zones.length > 0) {
+      await prisma.professionalZone.createMany({
+        data: (body.zones as string[]).map(zone => ({ professionalId: pro.id, zone })),
+      })
+    }
+  }
+  if ('photos' in body && Array.isArray(body.photos)) {
+    await prisma.professionalPhoto.deleteMany({ where: { professionalId: pro.id } })
+    if (body.photos.length > 0) {
+      await prisma.professionalPhoto.createMany({
+        data: (body.photos as string[]).map((url, order) => ({ professionalId: pro.id, url, order })),
+      })
+    }
+  }
+
+  const updatedRow = await prisma.professional.update({
     where: { id: pro.id },
     data,
+    include: { photos: { orderBy: { order: 'asc' } }, zones: true },
   })
-  return NextResponse.json(updated)
+  return NextResponse.json({ ...updatedRow, photos: updatedRow.photos.map(p => p.url), zones: updatedRow.zones.map(z => z.zone) })
 }

@@ -9,11 +9,16 @@ import {
   QrCode, Settings, Image as ImageIcon, Phone, Globe, MessageCircle,
   MapPin, Shield, CheckCircle2,
 } from 'lucide-react'
-import type { BusinessCard, Professional } from '@prisma/client'
+import type { BusinessCard, Professional as PrismaProfessional } from '@prisma/client'
 import type { ProPlan } from '@/lib/stripe'
 import ProStatsClient from './ProStatsClient'
 import BusinessCardSection from './BusinessCardSection'
 import { BUSINESS_CARD_ENABLED } from '@/lib/feature-flags'
+
+// photos/zones are relations in Prisma now, but every server route in this app
+// maps them to flat string arrays before sending JSON to the client — this type
+// reflects the actual wire shape this component receives and sends.
+type Professional = PrismaProfessional & { photos: string[]; zones: string[] }
 
 type Tab = 'apercu' | 'fiche' | 'medias' | 'statistiques' | 'carte' | 'abonnement'
 type Props = { pro: Professional & { businessCard: BusinessCard | null }; cardSuccess?: boolean }

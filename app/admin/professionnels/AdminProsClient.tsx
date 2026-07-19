@@ -2,8 +2,13 @@
 import { useState } from 'react'
 import { Plus, Pencil, Trash2, CheckCircle, Star, ArrowLeft, X, MapPin } from 'lucide-react'
 import Link from 'next/link'
-import type { Professional } from '@prisma/client'
+import type { Professional as PrismaProfessional } from '@prisma/client'
 import { proCategories } from '@/lib/proCategories'
+
+// photos/zones are relations in Prisma now, but every server route in this app
+// maps them to flat string arrays before sending JSON to the client — this type
+// reflects the actual wire shape this component receives and sends.
+type Professional = PrismaProfessional & { photos: string[]; zones: string[] }
 
 const TIER_LABELS: Record<string, string> = { FREE: 'Gratuit', PREMIUM: 'Premium', PREMIUM_PLUS: 'Premium+' }
 const TIER_COLORS: Record<string, string> = {

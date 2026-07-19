@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   // 1. Pros avec zone correspondant au quartier de l'annonce (Géo Pub)
   const geoMatched = neighborhood
     ? await prisma.professional.findMany({
-        where: { ...activeFilter, zones: { has: neighborhood } },
+        where: { ...activeFilter, zones: { some: { zone: neighborhood } } },
         orderBy: baseOrder,
         take: count,
       })
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
   // 2. Pros proches de la ville de l'utilisateur (géoloc IP — évite les doublons avec le quartier de l'annonce)
   const cityMatched = (userCity && userCity !== neighborhood)
     ? await prisma.professional.findMany({
-        where: { ...activeFilter, zones: { has: userCity }, id: { notIn: exclude1 } },
+        where: { ...activeFilter, zones: { some: { zone: userCity } }, id: { notIn: exclude1 } },
         orderBy: baseOrder,
         take: count - geoMatched.length,
       })
