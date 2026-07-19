@@ -463,6 +463,7 @@ git commit -m "fix: drop Postgres-only mode:insensitive, rely on MySQL default c
 - Modify: `app/api/pro/upload/route.ts`
 - Modify: `app/api/admin/professionnels/route.ts`
 - Modify: `app/api/admin/professionnels/[id]/route.ts`
+- Modify: `app/api/ads/route.ts`
 - Modify: `prisma/make-demo-pro.ts`
 
 **Interfaces:**
@@ -700,7 +701,51 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
 }
 ```
 
-- [ ] **Step 7: `prisma/make-demo-pro.ts` — seed data**
+- [ ] **Step 7: `app/api/ads/route.ts` — zone-matching query filter**
+
+This file queries `Professional` filtering by whether a zone is in its `zones` list, using Prisma's scalar-array `has` filter (only valid on the old `String[]` field — now invalid on the relation). Replace:
+```ts
+  const geoMatched = neighborhood
+    ? await prisma.professional.findMany({
+        where: { ...activeFilter, zones: { has: neighborhood } },
+        orderBy: baseOrder,
+        take: count,
+      })
+    : []
+```
+with:
+```ts
+  const geoMatched = neighborhood
+    ? await prisma.professional.findMany({
+        where: { ...activeFilter, zones: { some: { zone: neighborhood } } },
+        orderBy: baseOrder,
+        take: count,
+      })
+    : []
+```
+Then replace:
+```ts
+  const cityMatched = (userCity && userCity !== neighborhood)
+    ? await prisma.professional.findMany({
+        where: { ...activeFilter, zones: { has: userCity }, id: { notIn: exclude1 } },
+        orderBy: baseOrder,
+        take: count - geoMatched.length,
+      })
+    : []
+```
+with:
+```ts
+  const cityMatched = (userCity && userCity !== neighborhood)
+    ? await prisma.professional.findMany({
+        where: { ...activeFilter, zones: { some: { zone: userCity } }, id: { notIn: exclude1 } },
+        orderBy: baseOrder,
+        take: count - geoMatched.length,
+      })
+    : []
+```
+No response-shape mapping is needed here — `components/ads/AdUnit.tsx` (the only consumer of this endpoint) doesn't read `zones`/`photos` from the response at all, so the relational shape Prisma returns for those fields is never touched by the frontend.
+
+- [ ] **Step 8: `prisma/make-demo-pro.ts` — seed data**
 
 Find the `professional.upsert` block (it sets `photos: [...]` and `zones: [...]` directly as arrays in `create`). Replace the two array fields inside the existing `create` object:
 ```ts
@@ -732,7 +777,7 @@ and
 ```
 Note: since this is an `upsert` with `update: {}` (no-op on existing rows) and `create: {...}`, the nested `create` syntax for relations only applies on first creation — that matches the existing script's intent (idempotent, only sets these on first run).
 
-- [ ] **Step 8: Verify**
+- [ ] **Step 9: Verify**
 
 ```bash
 export DATABASE_URL="$MYSQL_DATABASE_URL"
@@ -740,17 +785,17 @@ npx tsc --noEmit
 ```
 Expected: **zero errors** project-wide. This is the last file-fixing task — every file touched by the Postgres→MySQL switch is now converted.
 
-- [ ] **Step 9: Manual verification**
+- [ ] **Step 10: Manual verification**
 
 ```bash
 npm run dev
 ```
-(Dev server now points at the empty MySQL database via `DATABASE_URL=$MYSQL_DATABASE_URL` — nothing exists yet, that's expected and fine for this check.) Run `npx tsx prisma/make-admin.ts`, log in as `admin@vendo.es`, then run `npx tsx prisma/make-demo-pro.ts` and confirm no errors — this exercises the exact relational `create` paths just written. Visit `/professionnels/sophie-martin-architecte` and confirm the photos gallery and zones both render correctly, proving the read-side mapping (Step 1) works end-to-end against real relational data.
+(Dev server now points at the empty MySQL database via `DATABASE_URL=$MYSQL_DATABASE_URL` — nothing exists yet, that's expected and fine for this check.) Run `npx tsx prisma/make-admin.ts`, log in as `admin@vendo.es`, then run `npx tsx prisma/make-demo-pro.ts` and confirm no errors — this exercises the exact relational `create` paths just written. Visit `/professionnels/sophie-martin-architecte` and confirm the photos gallery and zones both render correctly, proving the read-side mapping (Step 1) works end-to-end against real relational data. Also hit `/api/ads?neighborhood=Valencia` directly and confirm it returns a JSON array (not a 500) — proving the Step 7 filter fix works.
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 11: Commit**
 
 ```bash
-git add app/professionnels/[slug]/page.tsx app/mon-compte/profil-pro/page.tsx app/api/pro/profile/route.ts app/api/pro/upload/route.ts app/api/admin/professionnels/route.ts "app/api/admin/professionnels/[id]/route.ts" prisma/make-demo-pro.ts
+git add app/professionnels/[slug]/page.tsx app/mon-compte/profil-pro/page.tsx app/api/pro/profile/route.ts app/api/pro/upload/route.ts app/api/admin/professionnels/route.ts "app/api/admin/professionnels/[id]/route.ts" app/api/ads/route.ts prisma/make-demo-pro.ts
 git commit -m "feat: adapt Professional.photos/zones to relational tables"
 ```
 
