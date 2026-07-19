@@ -96,8 +96,20 @@ Nouveaux champs légaux sur `Site` (pour les pages légales, cf. plus bas) :
 - `Category` : `siteId String`, contrainte `@@unique([siteId, slug])` (au
   lieu de `slug @unique` global).
 - `Listing` : `siteId String`.
-- `Professional` : `siteId String`.
-- `User` : `siteId String`.
+- `Professional` : `siteId String` (le `slug @unique` reste global pour
+  l'instant — YAGNI, pas de collision réelle tant qu'un seul site a des
+  données).
+- `User` : `siteId String`, contrainte `@@unique([siteId, email])` (au lieu
+  de `email @unique` global) — un même email peut créer un compte sur
+  chaque pays. Impacte 3 points de lookup par email :
+  `auth.ts::authorize`, `app/api/auth/register/route.ts`,
+  `app/api/auth/forgot-password/route.ts`.
+
+`SiteSettings` (fusion avec `Site`, cf. section Modèle de données) est
+**reportée à la phase admin (Plan 2)** : le singleton `id: "default"` reste
+global et continue de s'appliquer à tous les sites tant que le panel admin
+"Sites & Pays" n'existe pas — état intermédiaire sûr (pas de fuite de
+données, juste un réglage pas encore différencié par pays).
 
 Hérite du scoping via relation (pas de colonne directe) : `Favorite`,
 `Message`, `Report`, `ProClick`, `BusinessCard`, `PhotoUpgrade`,
@@ -162,23 +174,37 @@ permettre un filtrage dans le dashboard Stripe. Tarifs identiques partout
 ## Ordre de mise en œuvre (garde-fous)
 
 Chaque étape = un commit testable isolément, rien n'est activé avant que le
-site par défaut soit vérifié identique à l'état actuel :
+site par défaut soit vérifié identique à l'état actuel. Vu le nombre réel de
+fichiers concernés (~50, découvert pendant le plan), le chantier est
+découpé en plans successifs, chacun livrant un système qui fonctionne :
 
-1. Schéma Prisma (`Site`, `siteId` nullable partout, `SiteSettings` migré) +
-   script de backfill.
-2. Contraindre `siteId` NOT NULL + `@@unique([siteId, slug])` sur
-   `Category`.
-3. Middleware : résolution de domaine + header `x-site-id` + fallback site
-   par défaut.
-4. `lib/site.ts::getCurrentSite()`.
-5. Scoping des requêtes API une par une (catégories, annonces, pros,
-   users/auth) par le site résolu.
-6. Panel admin `Sites & Pays` + sélecteur de site admin.
-7. Pages légales dynamiques par site.
-8. Thème dynamique (CSS variables).
-9. Metadata Stripe par site.
-10. Tests bout-en-bout avec un deuxième site de démonstration (sans vrai
-    domaine/Stripe), recette complète sur le site Espagne.
+**Plan 1 — Fondations** (ce plan) :
+1. Schéma Prisma (`Site`, `siteId` nullable partout) + script de backfill,
+   puis contrainte NOT NULL + `@@unique([siteId, slug])` sur `Category` et
+   `@@unique([siteId, email])` sur `User`.
+2. `proxy.ts` (renommage de `middleware.ts`, cf. dépréciation Next 16) :
+   résolution de domaine + header `x-site-id` + fallback site par défaut.
+3. `lib/site.ts::getCurrentSite()`.
+4. Scoping complet des catégories (lecture + écriture) — sert de patron de
+   référence pour les plans suivants.
+5. Rattachement au site sur les points de création directs (inscription,
+   dépôt d'annonce, création fiche pro en self-service et en admin) —
+   nécessaire pour que la contrainte NOT NULL ne casse pas ces parcours.
+   Le filtrage en lecture des annonces/pros par site est différé au Plan 2.
+
+**Plan 2 — Scoping données + panel admin** :
+6. Filtrage en lecture de toutes les requêtes annonces/professionnels par
+   site (~40 fichiers identifiés : pages publiques, API, admin, sitemap,
+   exports).
+7. Fusion `SiteSettings` → `Site`.
+8. Panel admin `Sites & Pays` + sélecteur de site admin.
+
+**Plan 3 — Habillage pays** :
+9. Pages légales dynamiques par site.
+10. Thème dynamique (CSS variables).
+11. Metadata Stripe par site.
+12. Tests bout-en-bout avec un deuxième site de démonstration, recette
+    complète sur le site Espagne, puis activation du vrai deuxième pays.
 
 ## Hors périmètre (explicite)
 
