@@ -95,8 +95,8 @@ async function AnnoncesContent({ searchParams }: Props) {
     ...(ville && { neighborhood: ville }),
     ...(q && {
       OR: [
-        { title:       { contains: q, mode: 'insensitive' as const } },
-        { description: { contains: q, mode: 'insensitive' as const } },
+        { title:       { contains: q } },
+        { description: { contains: q } },
       ],
     }),
     ...((priceMin !== undefined || priceMax !== undefined) && {

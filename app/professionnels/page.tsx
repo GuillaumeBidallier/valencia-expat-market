@@ -23,7 +23,7 @@ export default async function ProfessionnelsPage({ searchParams }: Props) {
     prisma.professional.findMany({
       where: {
         ...(cat  && { category: cat }),
-        ...(city && { city: { contains: city, mode: 'insensitive' } }),
+        ...(city && { city: { contains: city } }),
       },
       orderBy: [{ tier: 'desc' }, { featured: 'desc' }, { name: 'asc' }],
     }),

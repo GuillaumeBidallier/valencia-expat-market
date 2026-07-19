@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   const pros = await prisma.professional.findMany({
     where: {
       ...(cat  && { category: cat }),
-      ...(city && { city: { contains: city, mode: 'insensitive' } }),
+      ...(city && { city: { contains: city } }),
     },
     orderBy: [
       { tier: 'desc' },

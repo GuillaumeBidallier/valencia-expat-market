@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     status: 'ACTIVE' as const,
     ...(cat && { categorySlug: cat }),
     ...(ville && { neighborhood: ville }),
-    ...(q && { title: { contains: q, mode: 'insensitive' as const } }),
+    ...(q && { title: { contains: q } }),
   }
 
   const [listings, total] = await Promise.all([

@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const suggestions = await prisma.listing.findMany({
     where: {
       status: 'ACTIVE',
-      title: { contains: q, mode: 'insensitive' },
+      title: { contains: q },
     },
     select: { id: true, title: true },
     orderBy: { publishedAt: 'desc' },

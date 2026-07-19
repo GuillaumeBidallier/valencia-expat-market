@@ -114,7 +114,7 @@ export default async function SeoPage({ params, searchParams }: Props) {
     urlBase = `/petites-annonces-${v.slug}`
     where = {
       status: 'ACTIVE' as const,
-      OR: v.dbTerms.map(t => ({ city: { equals: t, mode: 'insensitive' as const } })),
+      OR: v.dbTerms.map(t => ({ city: { equals: t } })),
     }
   } else {
     const c = r.data
