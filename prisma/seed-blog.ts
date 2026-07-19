@@ -1,12 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaNeon } from '@prisma/adapter-neon'
 
-const raw = process.env.DATABASE_URL!
-const url = new URL(raw)
-url.searchParams.delete('pgbouncer')
-const prisma = new PrismaClient({
-  adapter: new PrismaNeon({ connectionString: url.toString() }),
-})
+const prisma = new PrismaClient()
 
 const POSTS = [
   {

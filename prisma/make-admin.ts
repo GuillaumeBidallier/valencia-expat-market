@@ -1,13 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaNeon } from '@prisma/adapter-neon'
 import bcrypt from 'bcryptjs'
 
-const raw = process.env.DATABASE_URL!
-const url = new URL(raw)
-url.searchParams.delete('pgbouncer')
-const prisma = new PrismaClient({
-  adapter: new PrismaNeon({ connectionString: url.toString() }),
-})
+const prisma = new PrismaClient()
 
 async function main() {
   const passwordHash = await bcrypt.hash('Admin1234!', 12)

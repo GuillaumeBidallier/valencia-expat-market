@@ -1,13 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaNeon } from '@prisma/adapter-neon'
 import bcrypt from 'bcryptjs'
 
-const raw = process.env.DATABASE_URL!
-const url = new URL(raw)
-url.searchParams.delete('pgbouncer')
-const prisma = new PrismaClient({
-  adapter: new PrismaNeon({ connectionString: url.toString() }),
-})
+const prisma = new PrismaClient()
 
 const PHONES = [
   '+34 612 345 678', '+34 623 456 789', '+34 634 567 890', '+34 645 678 901',
