@@ -17,21 +17,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
-        const parsed = credentialsSchema.safeParse(credentials)
-        if (!parsed.success) return null
+        try {
+          const parsed = credentialsSchema.safeParse(credentials)
+          if (!parsed.success) return null
 
-        const siteId = (await headers()).get('x-site-id')
-        if (!siteId) return null
+          const siteId = (await headers()).get('x-site-id')
+          if (!siteId) return null
 
-        const user = await prisma.user.findFirst({
-          where: { email: parsed.data.email, siteId },
-        }).catch(() => null)
-        if (!user || user.blocked) return null
+          const user = await prisma.user.findFirst({
+            where: { email: parsed.data.email, siteId },
+          })
+          if (!user || user.blocked) return null
 
-        const valid = await bcrypt.compare(parsed.data.password, user.passwordHash)
-        if (!valid) return null
+          const valid = await bcrypt.compare(parsed.data.password, user.passwordHash)
+          if (!valid) return null
 
-        return { id: user.id, name: user.name, email: user.email, role: user.role }
+          return { id: user.id, name: user.name, email: user.email, role: user.role }
+        } catch {
+          return null
+        }
       },
     }),
   ],
