@@ -369,11 +369,13 @@ npx prisma migrate dev --name enforce_site_scoping
 ```
 Expected: succeeds cleanly with no data-loss prompt (Task 2's backfill already satisfies the constraints). If it prompts about data loss or fails, stop — some rows likely still have `siteId = null`; re-run Task 2's script and investigate.
 
-- [ ] **Step 6: Delete the now-obsolete backfill script**
+- [ ] **Step 6: Delete now-obsolete one-shot scripts**
 
-`prisma/backfill-default-site.ts` filtered on `siteId: null`, which can never type-check or match anything once the column is required.
+`prisma/backfill-default-site.ts` filtered on `siteId: null`, which can never type-check or match anything once the column is required — its job (Task 2) is permanently done.
+
+`prisma/migrate-postgres-to-mysql.ts` (from the earlier MySQL-migration project, already executed during the real production cutover) creates `User`/`Category`/`Listing`/`Professional` rows without `siteId` — same situation: one-shot script whose job is permanently complete, now broken by this same required-field change, not worth patching.
 ```bash
-rm prisma/backfill-default-site.ts
+rm prisma/backfill-default-site.ts prisma/migrate-postgres-to-mysql.ts
 ```
 
 - [ ] **Step 7: Verify — get the complete error list**
@@ -387,7 +389,7 @@ Expected: fails with errors in files that either look up `Category` by bare `slu
 
 ```bash
 git add prisma/schema.prisma prisma/migrations
-git rm prisma/backfill-default-site.ts
+git rm prisma/backfill-default-site.ts prisma/migrate-postgres-to-mysql.ts
 git commit -m "feat: enforce siteId NOT NULL and per-site uniqueness (contract step)"
 ```
 
