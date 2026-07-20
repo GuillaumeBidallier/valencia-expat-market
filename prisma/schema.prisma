@@ -27,10 +27,10 @@ model Site {
 
 model User {
   id               String        @id @default(cuid())
-  siteId           String?
-  site             Site?         @relation(fields: [siteId], references: [id])
+  siteId           String
+  site             Site          @relation(fields: [siteId], references: [id])
   name             String
-  email            String        @unique
+  email            String
   passwordHash     String
   role             Role          @default(USER)
   blocked          Boolean       @default(false)
@@ -43,7 +43,7 @@ model User {
   receivedMessages Message[]     @relation("Receiver")
   professional     Professional?
 
-  @@index([siteId])
+  @@unique([siteId, email])
 }
 
 enum Role {
@@ -54,8 +54,8 @@ enum Role {
 
 model Listing {
   id             String         @id @default(cuid())
-  siteId         String?
-  site           Site?          @relation(fields: [siteId], references: [id])
+  siteId         String
+  site           Site           @relation(fields: [siteId], references: [id])
   title          String
   description    String         @db.Text
   price          Float?
@@ -131,8 +131,8 @@ model Favorite {
 
 model Professional {
   id          String   @id @default(cuid())
-  siteId      String?
-  site        Site?    @relation(fields: [siteId], references: [id])
+  siteId      String
+  site        Site     @relation(fields: [siteId], references: [id])
   slug        String   @unique
   name        String
   category    String
@@ -227,9 +227,9 @@ model BusinessCard {
 
 model Category {
   id           String                @id @default(cuid())
-  siteId       String?
-  site         Site?                 @relation(fields: [siteId], references: [id])
-  slug         String                @unique
+  siteId       String
+  site         Site                  @relation(fields: [siteId], references: [id])
+  slug         String
   label        String
   icon         String
   order        Int                   @default(0)
@@ -240,7 +240,7 @@ model Category {
   createdAt    DateTime              @default(now())
   updatedAt    DateTime              @updatedAt
 
-  @@index([siteId])
+  @@unique([siteId, slug])
 }
 
 model CategoryTranslation {
