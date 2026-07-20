@@ -25,9 +25,39 @@ async function isMaintenanceModeOn(): Promise<boolean> {
   }
 }
 
+const DEFAULT_DOMAIN = '1000clic.fr'
+const SITE_CACHE_TTL_MS = 60_000
+let siteCache: { domains: Map<string, string>; expiresAt: number } | null = null
+
+async function resolveSiteId(hostname: string): Promise<string | null> {
+  const now = Date.now()
+  if (!siteCache || now > siteCache.expiresAt) {
+    try {
+      const sites = await prisma.site.findMany({ where: { active: true }, select: { id: true, domain: true } })
+      siteCache = { domains: new Map(sites.map(s => [s.domain, s.id])), expiresAt: now + SITE_CACHE_TTL_MS }
+    } catch (err) {
+      console.error('[middleware] failed to refresh site cache:', err)
+      if (!siteCache) return null
+    }
+  }
+  const bareHost = hostname.replace(/^www\./, '')
+  return siteCache!.domains.get(hostname)
+    ?? siteCache!.domains.get(bareHost)
+    ?? siteCache!.domains.get(DEFAULT_DOMAIN)
+    ?? siteCache!.domains.values().next().value
+    ?? null
+}
+
 export default auth(async (req) => {
   const isAuthenticated = !!req.auth
   const { pathname } = req.nextUrl
+
+  const hostname = req.headers.get('host')?.split(':')[0] ?? DEFAULT_DOMAIN
+  const siteId = await resolveSiteId(hostname)
+  const requestHeaders = new Headers(req.headers)
+  requestHeaders.delete('x-site-id')
+  if (siteId) requestHeaders.set('x-site-id', siteId)
+  const response = NextResponse.next({ request: { headers: requestHeaders } })
 
   if (await isMaintenanceModeOn()) {
     const isAdminOrAuthRoute = pathname.startsWith('/admin') || pathname.startsWith('/api/admin') || pathname === '/connexion' || pathname.startsWith('/api/auth')
@@ -48,6 +78,8 @@ export default auth(async (req) => {
   if (!isAuthenticated && (pathname === '/deposer-annonce' || pathname === '/mon-compte' || pathname.startsWith('/messages'))) {
     return NextResponse.redirect(new URL('/connexion', req.url))
   }
+
+  return response
 })
 
 export const config = {
