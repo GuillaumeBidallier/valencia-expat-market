@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { z } from 'zod'
+import { getCurrentSiteId } from '@/lib/site'
 
 const schema = z.object({
   name:        z.string().min(2).max(100),
@@ -30,8 +31,9 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
 
   const { photos, ...rest } = parsed.data
+  const siteId = await getCurrentSiteId()
   const pro = await prisma.professional.create({
-    data: { ...rest, photos: { create: photos.map((url, order) => ({ url, order })) } },
+    data: { ...rest, siteId, photos: { create: photos.map((url, order) => ({ url, order })) } },
   })
   return NextResponse.json(pro, { status: 201 })
 }

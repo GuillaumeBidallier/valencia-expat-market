@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { neighborhoodCoords } from '@/lib/neighborhoods'
 import { checkFirewall } from '@/lib/content-firewall'
 import { sendAdminNewListingEmail } from '@/lib/email'
+import { getCurrentSiteId } from '@/lib/site'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
@@ -80,11 +81,13 @@ export async function POST(req: NextRequest) {
 
   const { lat: _lat, lng: _lng, ...listingData } = parsed.data
   void _lat; void _lng
+  const siteId = await getCurrentSiteId()
 
   const listing = await prisma.listing.create({
     data: {
       ...listingData,
       userId: session.user.id,
+      siteId,
       lat,
       lng,
       status: autoPublish ? 'ACTIVE' : 'PENDING',

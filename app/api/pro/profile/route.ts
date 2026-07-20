@@ -3,6 +3,7 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import { getStripe, getPriceId, PRO_PLANS, type ProPlan } from '@/lib/stripe'
+import { getCurrentSiteId } from '@/lib/site'
 
 function slugify(str: string): string {
   return str
@@ -60,11 +61,13 @@ export async function POST(req: NextRequest) {
 
   const { zones, ...restFields } = fields
   const slug = await uniqueSlug(slugify(fields.name))
+  const siteId = await getCurrentSiteId()
   const pro = await prisma.professional.create({
     data: {
       ...restFields,
       slug,
       userId: session.user.id,
+      siteId,
       tier: 'FREE',
       zones: { create: zones.map(zone => ({ zone })) },
     },
