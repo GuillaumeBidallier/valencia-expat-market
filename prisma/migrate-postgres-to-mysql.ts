@@ -241,6 +241,8 @@ async function main() {
   // rate-limit log with no downstream relations; starting empty on MySQL is correct.
 
   console.log('\nVerifying row counts...')
+  const expectedPhotoCount = pros.reduce((sum, p) => sum + (((p.photos as string[]) ?? []).length), 0)
+  const expectedZoneCount = pros.reduce((sum, p) => sum + (((p.zones as string[]) ?? []).length), 0)
   const checks: [string, number, () => Promise<number>][] = [
     ['User', users.length, () => mysql.user.count()],
     ['Category', categories.length, () => mysql.category.count()],
@@ -251,6 +253,8 @@ async function main() {
     ['Message', messages.length, () => mysql.message.count()],
     ['Report', reports.length, () => mysql.report.count()],
     ['Professional', pros.length, () => mysql.professional.count()],
+    ['ProfessionalPhoto', expectedPhotoCount, () => mysql.professionalPhoto.count()],
+    ['ProfessionalZone', expectedZoneCount, () => mysql.professionalZone.count()],
     ['ProClick', clicks.length, () => mysql.proClick.count()],
     ['BusinessCard', cards.length, () => mysql.businessCard.count()],
     ['PasswordResetToken', tokens.length, () => mysql.passwordResetToken.count()],
