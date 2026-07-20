@@ -3,6 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
+import { headers } from 'next/headers'
 import { authConfig } from './auth.config'
 
 const credentialsSchema = z.object({
@@ -19,8 +20,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = credentialsSchema.safeParse(credentials)
         if (!parsed.success) return null
 
-        const user = await prisma.user.findUnique({
-          where: { email: parsed.data.email },
+        const siteId = (await headers()).get('x-site-id')
+        if (!siteId) return null
+
+        const user = await prisma.user.findFirst({
+          where: { email: parsed.data.email, siteId },
         }).catch(() => null)
         if (!user || user.blocked) return null
 

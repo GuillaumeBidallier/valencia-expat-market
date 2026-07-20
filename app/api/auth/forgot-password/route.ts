@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendPasswordResetEmail } from '@/lib/email'
+import { getCurrentSiteId } from '@/lib/site'
 import crypto from 'crypto'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
@@ -12,7 +13,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Always return 200 to avoid user enumeration
-  const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } })
+  const siteId = await getCurrentSiteId()
+  const user = await prisma.user.findFirst({ where: { email: email.toLowerCase().trim(), siteId } })
   if (!user) return NextResponse.json({ ok: true })
 
   // Invalidate old tokens for this user

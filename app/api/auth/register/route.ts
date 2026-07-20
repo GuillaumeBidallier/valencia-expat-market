@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { sendWelcomeEmail } from '@/lib/email'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+import { getCurrentSiteId } from '@/lib/site'
 
 const schema = z.object({
   name: z.string().min(2).max(60),
@@ -28,15 +29,16 @@ export async function POST(req: NextRequest) {
   if (!allowed) return NextResponse.json({ error: 'Trop de tentatives, réessayez plus tard.' }, { status: 429 })
 
   const { name, email, password } = parsed.data
+  const siteId = await getCurrentSiteId()
 
-  const existing = await prisma.user.findUnique({ where: { email } })
+  const existing = await prisma.user.findFirst({ where: { email, siteId } })
   if (existing) {
     return NextResponse.json({ error: 'Cet email est déjà utilisé' }, { status: 409 })
   }
 
   const passwordHash = await bcrypt.hash(password, 12)
   const user = await prisma.user.create({
-    data: { name, email, passwordHash },
+    data: { name, email, passwordHash, siteId },
     select: { id: true, name: true, email: true },
   })
 
