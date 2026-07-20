@@ -1153,42 +1153,172 @@ No code changes in this task. If Steps 1–2 revealed no issues, this plan's imp
 
 ---
 
-### Task 8: Production cutover — runbook (NOT automated)
+### Task 8: Enforce `maintenanceMode` in middleware (discovered gap — blocks safe cutover)
 
-**This task is a documented procedure to execute live with the user, not a subagent dispatch.** It is included here so the sequence is planned and reviewable in advance, but must never be run unattended — it flips real production traffic.
+**Why this task exists:** the final whole-branch review found that `SiteSettings.maintenanceMode` is stored and toggleable from `/admin/parametres`, but **nothing in the request path ever reads it** — toggling it currently changes zero user-facing behavior. The original Task 8 (now Task 9) runbook assumed enabling it would freeze writes during cutover; that assumption was false. This task closes the gap with a small, permanently-useful fix (the admin toggle becomes real), not a cutover-only hack.
 
-- [ ] **Step 1: Final data sync**
+**Files:**
+- Modify: `middleware.ts`
 
-Re-run the Task 6 script one last time, immediately before cutover, to capture any writes made to Postgres between the Task 7 rehearsal and now:
+**Interfaces:**
+- Consumes: `SiteSettings.maintenanceMode` (Prisma, MySQL — already reachable from middleware since this app's `middleware.ts` already imports NextAuth and runs server-side; Next.js 16 defaults middleware/proxy to the Node.js runtime, so a Prisma query here is safe, matching prior art already established when this same check was needed in the parked multi-pays branch's `proxy.ts`).
+- Produces: when `maintenanceMode` is `true`, every request except admin routes, the login page, and static assets receives a `503` maintenance response instead of reaching the app.
+
+- [ ] **Step 1: Add a cached maintenance-mode check to `middleware.ts`**
+
+Replace:
+```ts
+import NextAuth from 'next-auth'
+import { authConfig } from '@/auth.config'
+import { NextResponse } from 'next/server'
+
+const { auth } = NextAuth({
+  ...authConfig,
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+})
+
+export default auth((req) => {
+  const isAuthenticated = !!req.auth
+  const { pathname } = req.nextUrl
+
+  // Redirect logged-in users away from auth pages
+  if (isAuthenticated && (pathname === '/connexion' || pathname === '/inscription')) {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+
+  // Redirect unauthenticated users away from protected pages
+  if (!isAuthenticated && (pathname === '/deposer-annonce' || pathname === '/mon-compte' || pathname.startsWith('/messages'))) {
+    return NextResponse.redirect(new URL('/connexion', req.url))
+  }
+})
+
+export const config = {
+  matcher: ['/connexion', '/inscription', '/deposer-annonce', '/mon-compte', '/messages/:path*'],
+}
+```
+with:
+```ts
+import NextAuth from 'next-auth'
+import { authConfig } from '@/auth.config'
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+
+const { auth } = NextAuth({
+  ...authConfig,
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+})
+
+const MAINTENANCE_CACHE_TTL_MS = 15_000
+let maintenanceCache: { value: boolean; expiresAt: number } | null = null
+
+async function isMaintenanceModeOn(): Promise<boolean> {
+  const now = Date.now()
+  if (maintenanceCache && now < maintenanceCache.expiresAt) return maintenanceCache.value
+  try {
+    const settings = await prisma.siteSettings.findUnique({ where: { id: 'default' }, select: { maintenanceMode: true } })
+    const value = settings?.maintenanceMode ?? false
+    maintenanceCache = { value, expiresAt: now + MAINTENANCE_CACHE_TTL_MS }
+    return value
+  } catch (err) {
+    console.error('[middleware] failed to read maintenanceMode, failing open:', err)
+    return maintenanceCache?.value ?? false
+  }
+}
+
+export default auth(async (req) => {
+  const isAuthenticated = !!req.auth
+  const { pathname } = req.nextUrl
+
+  if (await isMaintenanceModeOn()) {
+    const isAdminOrAuthRoute = pathname.startsWith('/admin') || pathname.startsWith('/api/admin') || pathname === '/connexion' || pathname.startsWith('/api/auth')
+    if (!isAdminOrAuthRoute) {
+      return new NextResponse('Site en maintenance — de retour très bientôt.', {
+        status: 503,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Retry-After': '120' },
+      })
+    }
+  }
+
+  // Redirect logged-in users away from auth pages
+  if (isAuthenticated && (pathname === '/connexion' || pathname === '/inscription')) {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+
+  // Redirect unauthenticated users away from protected pages
+  if (!isAuthenticated && (pathname === '/deposer-annonce' || pathname === '/mon-compte' || pathname.startsWith('/messages'))) {
+    return NextResponse.redirect(new URL('/connexion', req.url))
+  }
+})
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon\\.ico|robots\\.txt|sitemap\\.xml).*)'],
+}
+```
+Notes for the implementer:
+- The `matcher` is broadened from the original 5 narrow paths to (almost) everything, the same way the parked multi-pays branch's `proxy.ts` had to broaden its matcher for a cross-cutting check — maintenance mode needs to gate the whole app, not 5 routes. The original 2 auth-redirect conditions are preserved verbatim, just reached after the new maintenance check.
+- **Admin routes (`/admin/*`, `/api/admin/*`) and the login page stay reachable during maintenance** — this is intentional: the operator needs to log in and toggle the flag back off, and needs admin pages working to run the cutover's own smoke test (Task 9 Step 5).
+- **Stripe webhooks (`/api/webhooks/stripe`) are NOT in the admin-allowlist and WILL be blocked (503) during maintenance.** This is intentional per the final review's finding — Stripe delivers webhook events regardless of app-level gating, so blocking them at the edge is the only way to stop subscription/card writes from landing during the frozen window. Stripe retries failed webhook deliveries automatically for a period, so events aren't lost, just delayed until maintenance mode is turned off — no separate Stripe-dashboard action needed.
+- **Fails open on DB error** (same pattern already reviewed and approved for the parked multi-pays branch's `proxy.ts` site-cache lookup): if the `SiteSettings` query throws, the site keeps serving normally rather than a DB hiccup taking down the whole app.
+
+- [ ] **Step 2: Verify**
+
 ```bash
 export DATABASE_URL="$MYSQL_DATABASE_URL"
-export OLD_POSTGRES_DATABASE_URL="$DIRECT_URL"
-npx tsx prisma/migrate-postgres-to-mysql.ts
+npx tsc --noEmit
+npm run dev
+```
+With `maintenanceMode` off (default), confirm the site behaves identically to before — homepage loads, login/redirect behavior unchanged. Then toggle it on via `/admin/parametres`, confirm: homepage now returns 503, `/admin/annonces` still loads normally, `/connexion` still loads normally, and `curl -X POST http://localhost:3000/api/webhooks/stripe` returns 503 (blocked). Toggle it back off, confirm normal behavior returns within `MAINTENANCE_CACHE_TTL_MS` (15s).
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add middleware.ts
+git commit -m "feat: enforce maintenanceMode in middleware (was stored but never read)"
 ```
 
-- [ ] **Step 2: Enable maintenance mode**
+---
 
-Via the admin panel (`/admin/parametres`), toggle `maintenanceMode` on. Confirm the live site shows the maintenance page.
+### Task 9: Production cutover — runbook (NOT automated)
 
-- [ ] **Step 3: Final sync (post-maintenance)**
+**This task is a documented procedure to execute live with the user, not a subagent dispatch.** It is included here so the sequence is planned and reviewable in advance, but must never be run unattended — it flips real production traffic. **Do not execute this until Task 8 is done and reviewed** — the maintenance-mode freeze this runbook depends on doesn't exist without it.
 
-Re-run the migration script one more time, now that no new writes can land on Postgres (maintenance mode blocks user actions) — this is the authoritative final sync.
+**Two things to know going in, so nothing is confusing mid-procedure:**
+- The MySQL schema is already fully applied (Task 2's `migrate dev` ran against the real `vendo` database, not a throwaway one) — no `prisma migrate deploy` step is needed at cutover, only the `DATABASE_URL` env var change in Step 4.
+- `SHADOW_DATABASE_URL` is a `migrate dev`-only concept (local schema-authoring) — it must NOT be set in Vercel's Production environment variables; only `DATABASE_URL` is needed there.
+- The MySQL tables use collation `utf8mb4_unicode_ci` (Prisma's default for MySQL) — not `utf8mb4_0900_ai_ci` as the `vendo` database itself was created with in Task 1. This was a documentation mismatch, not a bug: Task 7's rehearsal empirically proved case/accent-insensitive search works correctly under `utf8mb4_unicode_ci` (`"VELO"` matched `"Vélo"`), so no fix is needed — just don't be surprised the collation isn't what Task 1 initially set at the database level.
 
-- [ ] **Step 4: Merge and deploy the code**
+- [ ] **Step 1: Enable maintenance mode and verify the freeze actually holds**
 
-Merge this plan's branch to `main` (if it was built on a separate branch/worktree — check with the user's preference at execution time, matching the pattern established for the multi-pays plan). Update Vercel's Production environment variables: set `DATABASE_URL` to the MySQL connection string, remove `DIRECT_URL` (no longer used). Redeploy.
+Via the admin panel (`/admin/parametres`), toggle `maintenanceMode` on. Confirm: the live site (still on Postgres at this point) now shows the 503 maintenance response for a logged-out visit to `/`, `/admin/parametres` still loads, and — this is the check that matters — attempt a real write (e.g. try to submit a listing, or wait for/simulate a Stripe webhook) and confirm it's actually rejected with 503, not silently processed. Do not proceed to Step 2 until this is confirmed; if writes still land on Postgres, Task 8 did not deploy correctly, and continuing would reproduce the exact data-loss risk this task was created to close.
 
-- [ ] **Step 5: Smoke test**
+- [ ] **Step 2: Wipe and reload MySQL, then run the authoritative final sync**
 
-Immediately after deploy, with maintenance mode still on (so only admin/testing traffic hits the new setup): log in as admin, check `/admin/annonces`, `/admin/professionnels`, `/admin/categories` show correct data, post one test listing, confirm it appears.
+The migration script's `upsert(..., update: {})` only inserts rows with new `id`s — it does **not** propagate edits or deletes to rows that already exist in MySQL from the Task 7 rehearsal. Re-running it as-is against the already-populated `vendo` database would silently miss any Postgres row changed since the rehearsal. Fix: wipe MySQL back to empty immediately before this final sync, so the sync is a full, complete copy (handling updates and deletes for free) rather than an incremental patch.
 
-- [ ] **Step 6: Go live**
+```bash
+set -a && source .env.local && set +a
+export DATABASE_URL="$MYSQL_DATABASE_URL"
+npx prisma migrate reset --force --skip-seed   # re-applies the `init` migration against vendo, wiping all data
+export OLD_POSTGRES_DATABASE_URL="$DIRECT_URL"
+npx tsx --env-file=.env.local prisma/migrate-postgres-to-mysql.ts
+```
+Expect the same `✅ Migration complete, all row counts match.` outcome as Task 7's rehearsal — this time it's a full copy taken while writes are frozen (Step 1), so it's authoritative. Budget a few minutes for this — Task 7's rehearsal showed the script is slow (~91 rows/table can take over a minute against the OVH host's network round-trip); run it and wait, don't assume a timeout means failure without checking the actual output.
 
-Disable maintenance mode. Monitor for errors (Vercel logs) for the first several minutes of real traffic.
+- [ ] **Step 3: Merge and deploy the code**
 
-- [ ] **Step 7: Keep Neon as a rollback safety net**
+Merge this plan's branch to `main` (if it was built on a separate branch/worktree — check with the user's preference at execution time, matching the pattern established for the multi-pays plan). Update Vercel's Production environment variables: set `DATABASE_URL` to the MySQL connection string, remove `DIRECT_URL` (no longer used, was Postgres-only). Do NOT add `SHADOW_DATABASE_URL` to Production. Redeploy.
 
-Do not delete or downgrade the Neon project yet. If a problem surfaces, the fastest rollback is: re-enable maintenance mode, flip `DATABASE_URL` back to the Neon connection string in Vercel, redeploy, disable maintenance mode — Neon still has all data up to the Step 1/3 sync point. Keep Neon paused-but-available for 1–2 weeks before considering decommissioning it.
+- [ ] **Step 4: Smoke test**
+
+Immediately after deploy, with maintenance mode still on (so only admin traffic reaches the new setup, per Task 8's allowlist): log in as admin, check `/admin/annonces`, `/admin/professionnels`, `/admin/categories` show correct data, post one test listing, confirm it appears, then delete it.
+
+- [ ] **Step 5: Go live**
+
+Disable maintenance mode. Monitor Vercel logs for the first several minutes of real traffic. Check Stripe's dashboard for any webhook deliveries queued/retried during the freeze window (Task 8 Step 1's note) — they should now deliver successfully against the live MySQL-backed app.
+
+- [ ] **Step 6: Keep Neon as a rollback safety net**
+
+Do not delete or downgrade the Neon project yet. If a problem surfaces, the fastest rollback is: re-enable maintenance mode, flip `DATABASE_URL` back to the Neon connection string in Vercel, redeploy, disable maintenance mode — Neon still has all data up to the Step 1/2 freeze point (any writes made on MySQL after cutover and before rollback are lost on rollback; this is an accepted, disclosed tradeoff of a fast single-direction rollback path, not something to engineer dual-write reconciliation for at this scale). Keep Neon paused-but-available for 1–2 weeks before considering decommissioning it.
 
 ---
 
