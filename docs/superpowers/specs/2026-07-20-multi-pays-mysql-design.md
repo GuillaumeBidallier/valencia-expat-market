@@ -54,13 +54,18 @@ Mêmes composants qu'avant, adaptés à MySQL :
   secondaryColor, active, createdAt/updatedAt). Champs `String` courts
   (domaine, nom) — pas besoin de `@db.Text`, comme établi pendant la
   migration MySQL pour les champs de ce type.
-- **`SiteSettings` fusionné dans `Site` dès cette reprise** (pas reporté à
-  plus tard comme la première fois) : `heroImages`, `announcementText`,
-  `announcementEnabled`, `contactEmail`, `maintenanceMode` déménagent sur
-  `Site`, avec une relation 1-1 remplaçant le singleton `id: "default"`.
-  Simplification par rapport au premier essai — évite une deuxième
-  migration de fusion plus tard, et le mode maintenance (déjà rendu
-  fonctionnel pendant la migration MySQL) devient naturellement par-site.
+- **`SiteSettings` reste global pour l'instant, comme dans le premier
+  essai** (pas fusionné dans `Site` cette fois-ci — correction par rapport
+  à une première intention notée plus haut dans ce document pendant le
+  cadrage : la fusion toucherait 7 fichiers de plus
+  (`app/page.tsx`, `app/admin/annonces/page.tsx`,
+  `app/admin/parametres/page.tsx`, `app/api/listings/route.ts`,
+  `app/api/admin/settings/route.ts`, `app/api/admin/database/export/route.ts`,
+  `lib/get-contact-email.ts`) sans rien apporter à l'objectif concret de
+  cette reprise, qui est le sélecteur de pays pour catégories/annonces/
+  pros/utilisateurs. Le mode maintenance (déjà fonctionnel, ajouté pendant
+  la migration MySQL) reste global à tous les sites — état intermédiaire
+  sûr, non bloquant. Réévaluable dans un futur "Plan 3".
 - `middleware.ts` (convention actuelle du projet — pas de renommage en
   `proxy.ts` nécessaire ; le mode maintenance y accède déjà à Prisma via
   `runtime: 'nodejs'`, réutilisé tel quel) : résolution du site par
