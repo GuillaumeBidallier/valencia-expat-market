@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { cookies } from 'next/headers'
 import { Category, CategoryTree } from '@/types'
 import { prisma } from '@/lib/prisma'
+import { getCurrentSiteId } from '@/lib/site'
 
 /** Used only if the DB is unreachable — keeps the site usable. */
 const FALLBACK_CATEGORIES: Category[] = [
@@ -18,8 +19,9 @@ const FALLBACK_CATEGORIES: Category[] = [
 ]
 
 const fetchCategoriesLocalized = unstable_cache(
-  async (locale: string): Promise<Category[]> => {
+  async (locale: string, siteId: string): Promise<Category[]> => {
     const rows = await prisma.category.findMany({
+      where: { siteId },
       orderBy: [{ order: 'asc' }],
       include: {
         parent: { select: { slug: true } },
@@ -42,7 +44,8 @@ const fetchCategoriesLocalized = unstable_cache(
 export async function getCategoriesServer(): Promise<Category[]> {
   const cookieStore = await cookies()
   const locale = cookieStore.get('vem_lang')?.value ?? 'fr'
-  return fetchCategoriesLocalized(locale).catch(() => FALLBACK_CATEGORIES)
+  const siteId = await getCurrentSiteId()
+  return fetchCategoriesLocalized(locale, siteId).catch(() => FALLBACK_CATEGORIES)
 }
 
 /**

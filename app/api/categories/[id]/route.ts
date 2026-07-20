@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getCurrentSiteId } from '@/lib/site'
 
 async function requireAdmin() {
   const session = await auth()
@@ -14,11 +15,12 @@ export async function GET(
 ) {
   if (!(await requireAdmin())) return NextResponse.json({ error: 'Interdit' }, { status: 403 })
   const { id } = await params
+  const siteId = await getCurrentSiteId()
   const category = await prisma.category.findUnique({
     where: { id },
     include: { translations: { select: { locale: true, label: true } } },
   })
-  if (!category) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+  if (!category || category.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
   return NextResponse.json(
     Object.fromEntries(category.translations.map(t => [t.locale, t.label]))
   )

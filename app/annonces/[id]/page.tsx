@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { getCurrentSiteId } from '@/lib/site'
 import ListingDetailClient from './ListingDetailClient'
 
 const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
@@ -67,8 +68,9 @@ export default async function ListingDetailPage({ params }: Props) {
 
   if (!raw) notFound()
 
+  const siteId = await getCurrentSiteId()
   const categoryRecord = await prisma.category.findUnique({
-    where: { slug: raw.categorySlug },
+    where: { siteId_slug: { siteId, slug: raw.categorySlug } },
     include: { parent: { select: { slug: true, label: true, icon: true } } },
   })
 

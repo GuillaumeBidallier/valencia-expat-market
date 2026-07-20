@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getCurrentSiteId } from '@/lib/site'
 import { z } from 'zod'
 
 async function requireAdmin() {
@@ -12,7 +13,9 @@ async function requireAdmin() {
 
 export async function GET(req: NextRequest) {
   const locale = req.nextUrl.searchParams.get('locale') ?? 'fr'
+  const siteId = await getCurrentSiteId()
   const rows = await prisma.category.findMany({
+    where: { siteId },
     orderBy: [{ order: 'asc' }],
     include: {
       parent: { select: { slug: true } },
@@ -45,19 +48,24 @@ export async function POST(req: NextRequest) {
   const parsed = createSchema.safeParse(await req.json())
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides' }, { status: 400 })
 
-  const existing = await prisma.category.findUnique({ where: { slug: parsed.data.slug } })
+  const siteId = await getCurrentSiteId()
+
+  const existing = await prisma.category.findUnique({
+    where: { siteId_slug: { siteId, slug: parsed.data.slug } },
+  })
   if (existing) return NextResponse.json({ error: 'Ce slug existe déjà' }, { status: 409 })
 
   // Validate parentId if provided
   if (parsed.data.parentId) {
     const parent = await prisma.category.findUnique({ where: { id: parsed.data.parentId } })
-    if (!parent) return NextResponse.json({ error: 'Catégorie parente introuvable' }, { status: 404 })
+    if (!parent || parent.siteId !== siteId) return NextResponse.json({ error: 'Catégorie parente introuvable' }, { status: 404 })
     // No depth restriction — N levels supported
   }
 
-  const maxOrder = await prisma.category.aggregate({ _max: { order: true } })
+  const maxOrder = await prisma.category.aggregate({ where: { siteId }, _max: { order: true } })
   const category = await prisma.category.create({
     data: {
+      siteId,
       slug:     parsed.data.slug.trim().toLowerCase(),
       label:    parsed.data.label.trim(),
       icon:     parsed.data.icon.trim(),
@@ -97,6 +105,10 @@ export async function PUT(req: NextRequest) {
 
   const { id, translations, ...data } = parsed.data
 
+  const siteId = await getCurrentSiteId()
+  const target = await prisma.category.findUnique({ where: { id } })
+  if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+
   const [category] = await Promise.all([
     prisma.category.update({ where: { id }, data }),
     ...(translations ?? [])
@@ -118,11 +130,12 @@ export async function DELETE(req: NextRequest) {
   const { id } = await req.json()
   if (!id) return NextResponse.json({ error: 'id requis' }, { status: 400 })
 
+  const siteId = await getCurrentSiteId()
   const category = await prisma.category.findUnique({
     where: { id },
     include: { children: { include: { children: true } } },
   })
-  if (!category) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+  if (!category || category.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
 
   // Collect all descendant slugs recursively
   const allSlugs = [category.slug]
@@ -130,7 +143,7 @@ export async function DELETE(req: NextRequest) {
     allSlugs.push(child.slug)
     for (const grandchild of child.children) allSlugs.push(grandchild.slug)
   }
-  const inUse = await prisma.listing.count({ where: { categorySlug: { in: allSlugs } } })
+  const inUse = await prisma.listing.count({ where: { categorySlug: { in: allSlugs }, siteId } })
   if (inUse > 0) {
     return NextResponse.json({ error: `Catégorie utilisée par ${inUse} annonce(s), suppression impossible` }, { status: 409 })
   }
