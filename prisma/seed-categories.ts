@@ -377,6 +377,12 @@ const CATEGORIES: Cat1[] = [
 async function main() {
   console.log('🌱 Seeding categories...\n')
 
+  const site = await prisma.site.upsert({
+    where: { domain: '1000clic.fr' },
+    update: {},
+    create: { domain: '1000clic.fr', name: '1000Click Valencia', country: 'Espagne' },
+  })
+
   // Warn if listings exist
   const listingCount = await prisma.listing.count()
   if (listingCount > 0) {
@@ -408,8 +414,8 @@ async function main() {
     const cat1 = CATEGORIES[i]
 
     const root = await prisma.category.upsert({
-      where: { slug: cat1.slug },
-      create: { slug: cat1.slug, label: cat1.label, icon: cat1.icon, order: i },
+      where: { siteId_slug: { siteId: site.id, slug: cat1.slug } },
+      create: { siteId: site.id, slug: cat1.slug, label: cat1.label, icon: cat1.icon, order: i },
       update: { label: cat1.label, icon: cat1.icon, order: i },
     })
     rootCount++
@@ -428,8 +434,8 @@ async function main() {
       const cat2 = cat1.children[j]
 
       const sub = await prisma.category.upsert({
-        where: { slug: cat2.slug },
-        create: { slug: cat2.slug, label: cat2.label, icon: '', order: j, parentId: root.id },
+        where: { siteId_slug: { siteId: site.id, slug: cat2.slug } },
+        create: { siteId: site.id, slug: cat2.slug, label: cat2.label, icon: '', order: j, parentId: root.id },
         update: { label: cat2.label, order: j, parentId: root.id },
       })
       subCount++
@@ -447,8 +453,8 @@ async function main() {
         const cat3 = cat2.children![k]
 
         const subsub = await prisma.category.upsert({
-          where: { slug: cat3.slug },
-          create: { slug: cat3.slug, label: cat3.label, icon: '', order: k, parentId: sub.id },
+          where: { siteId_slug: { siteId: site.id, slug: cat3.slug } },
+          create: { siteId: site.id, slug: cat3.slug, label: cat3.label, icon: '', order: k, parentId: sub.id },
           update: { label: cat3.label, order: k, parentId: sub.id },
         })
         subsubCount++

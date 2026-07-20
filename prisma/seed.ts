@@ -332,21 +332,27 @@ const LISTINGS: {
 ]
 
 async function main() {
+  const site = await prisma.site.upsert({
+    where: { domain: '1000clic.fr' },
+    update: {},
+    create: { domain: '1000clic.fr', name: '1000Click Valencia', country: 'Espagne' },
+  })
+
   // Clear all listings (cascades to ListingImage, Favorite, Message)
   await prisma.listing.deleteMany()
 
   const passwordHash = await bcrypt.hash('demo1234', 12)
 
   const user1 = await prisma.user.upsert({
-    where: { email: 'demo@vendo.es' },
+    where: { siteId_email: { siteId: site.id, email: 'demo@vendo.es' } },
     update: {},
-    create: { name: 'Marie Dupont', email: 'demo@vendo.es', passwordHash },
+    create: { name: 'Marie Dupont', email: 'demo@vendo.es', passwordHash, siteId: site.id },
   })
 
   const user2 = await prisma.user.upsert({
-    where: { email: 'demo2@vendo.es' },
+    where: { siteId_email: { siteId: site.id, email: 'demo2@vendo.es' } },
     update: {},
-    create: { name: 'Thomas Martin', email: 'demo2@vendo.es', passwordHash },
+    create: { name: 'Thomas Martin', email: 'demo2@vendo.es', passwordHash, siteId: site.id },
   })
 
   // Annonces 1-15 → Marie, 16-23 → Thomas
@@ -358,6 +364,7 @@ async function main() {
         phone,
         isPremium: isPremium ?? false,
         userId,
+        siteId: site.id,
         images: {
           create: images.map((url, order) => ({ url, order })),
         },

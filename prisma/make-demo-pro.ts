@@ -4,6 +4,12 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
+  const site = await prisma.site.upsert({
+    where: { domain: '1000clic.fr' },
+    update: {},
+    create: { domain: '1000clic.fr', name: '1000Click Valencia', country: 'Espagne' },
+  })
+
   const email    = 'demo.pro@1000click.es'
   const password = 'DemoPro2026!'
 
@@ -11,9 +17,9 @@ async function main() {
 
   // 1. User
   const user = await prisma.user.upsert({
-    where: { email },
+    where: { siteId_email: { siteId: site.id, email } },
     update: { passwordHash, role: 'PREMIUM' },
-    create: { name: 'Sophie Martin', email, passwordHash, role: 'PREMIUM' },
+    create: { name: 'Sophie Martin', email, passwordHash, role: 'PREMIUM', siteId: site.id },
   })
 
   // 2. Professional profile (PREMIUM_PLUS, recommended)
@@ -22,6 +28,7 @@ async function main() {
     update: {},
     create: {
       slug: 'sophie-martin-architecte',
+      siteId: site.id,
       name: 'Sophie Martin Architecte',
       category: 'Architecture & Design',
       city: 'Valencia',
@@ -103,6 +110,7 @@ async function main() {
         data: {
           ...rest,
           userId: user.id,
+          siteId: site.id,
           publishedAt: new Date(),
           views: Math.floor(Math.random() * 80) + 10,
         },
