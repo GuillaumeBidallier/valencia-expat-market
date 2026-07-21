@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { getCurrentSiteId } from '@/lib/site'
+import { getAdminSiteId, getCurrentSiteId } from '@/lib/site'
 import { z } from 'zod'
 
 async function requireAdmin() {
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
   const parsed = createSchema.safeParse(await req.json())
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides' }, { status: 400 })
 
-  const siteId = await getCurrentSiteId()
+  const siteId = await getAdminSiteId()
 
   const existing = await prisma.category.findUnique({
     where: { siteId_slug: { siteId, slug: parsed.data.slug } },
@@ -105,7 +105,7 @@ export async function PUT(req: NextRequest) {
 
   const { id, translations, ...data } = parsed.data
 
-  const siteId = await getCurrentSiteId()
+  const siteId = await getAdminSiteId()
   const target = await prisma.category.findUnique({ where: { id } })
   if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
 
@@ -130,7 +130,7 @@ export async function DELETE(req: NextRequest) {
   const { id } = await req.json()
   if (!id) return NextResponse.json({ error: 'id requis' }, { status: 400 })
 
-  const siteId = await getCurrentSiteId()
+  const siteId = await getAdminSiteId()
   const category = await prisma.category.findUnique({
     where: { id },
     include: { children: { include: { children: true } } },

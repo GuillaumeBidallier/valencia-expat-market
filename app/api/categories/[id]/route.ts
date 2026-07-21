@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { getCurrentSiteId } from '@/lib/site'
+import { getAdminSiteId } from '@/lib/site'
 
 async function requireAdmin() {
   const session = await auth()
@@ -15,7 +15,7 @@ export async function GET(
 ) {
   if (!(await requireAdmin())) return NextResponse.json({ error: 'Interdit' }, { status: 403 })
   const { id } = await params
-  const siteId = await getCurrentSiteId()
+  const siteId = await getAdminSiteId()
   const category = await prisma.category.findUnique({
     where: { id },
     include: { translations: { select: { locale: true, label: true } } },

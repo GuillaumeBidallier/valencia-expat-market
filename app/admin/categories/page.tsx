@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getAdminSiteId } from '@/lib/site'
 import AdminCategoriesClient from './AdminCategoriesClient'
 
 export default async function AdminCategoriesPage() {
@@ -9,8 +10,9 @@ export default async function AdminCategoriesPage() {
     redirect('/')
   }
 
+  const siteId = await getAdminSiteId()
   const categories = await prisma.category.findMany({
-    where: { parentId: null },
+    where: { parentId: null, siteId },
     orderBy: { order: 'asc' },
     include: {
       children: {
