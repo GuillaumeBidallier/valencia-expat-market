@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { getAdminSiteId } from '@/lib/site'
 
 export async function GET(req: NextRequest) {
   const session = await auth()
@@ -9,9 +10,10 @@ export async function GET(req: NextRequest) {
   }
 
   const status = req.nextUrl.searchParams.get('status') ?? 'PENDING'
+  const siteId = await getAdminSiteId()
 
   const listings = await prisma.listing.findMany({
-    where: { status: status as 'PENDING' | 'ACTIVE' | 'REJECTED' },
+    where: { status: status as 'PENDING' | 'ACTIVE' | 'REJECTED', siteId },
     include: {
       images: { orderBy: { order: 'asc' }, take: 1 },
       user: { select: { name: true, email: true } },

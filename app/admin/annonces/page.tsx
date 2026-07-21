@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getAdminSiteId } from '@/lib/site'
 import AdminAnnoncesClient from './AdminAnnoncesClient'
 
 export default async function AdminAnnoncesPage() {
@@ -9,9 +10,10 @@ export default async function AdminAnnoncesPage() {
     redirect('/')
   }
 
+  const siteId = await getAdminSiteId()
   const [pendingListings, settings] = await Promise.all([
     prisma.listing.findMany({
-      where: { status: 'PENDING' },
+      where: { status: 'PENDING', siteId },
       include: {
         images: { orderBy: { order: 'asc' }, take: 1 },
         user: { select: { id: true, name: true, email: true, blocked: true } },

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { sendListingApprovedEmail, sendListingRejectedEmail } from '@/lib/email'
+import { getAdminSiteId } from '@/lib/site'
 
 const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
 
@@ -20,6 +21,10 @@ export async function PUT(
   if (!['ACTIVE', 'REJECTED', 'PENDING', 'SOLD', 'DELETED'].includes(status)) {
     return NextResponse.json({ error: 'Statut invalide' }, { status: 400 })
   }
+
+  const siteId = await getAdminSiteId()
+  const target = await prisma.listing.findUnique({ where: { id } })
+  if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
 
   const listing = await prisma.listing.update({
     where: { id },
@@ -58,6 +63,10 @@ export async function DELETE(
   }
 
   const { id } = await params
+  const siteId = await getAdminSiteId()
+  const target = await prisma.listing.findUnique({ where: { id } })
+  if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+
   await prisma.listing.update({ where: { id }, data: { status: 'DELETED' } })
   return NextResponse.json({ ok: true })
 }
