@@ -44,8 +44,12 @@ const fetchCategoriesLocalized = unstable_cache(
 export async function getCategoriesServer(): Promise<Category[]> {
   const cookieStore = await cookies()
   const locale = cookieStore.get('vem_lang')?.value ?? 'fr'
-  const siteId = await getCurrentSiteId()
-  return fetchCategoriesLocalized(locale, siteId).catch(() => FALLBACK_CATEGORIES)
+  try {
+    const siteId = await getCurrentSiteId()
+    return await fetchCategoriesLocalized(locale, siteId)
+  } catch {
+    return FALLBACK_CATEGORIES
+  }
 }
 
 /**
