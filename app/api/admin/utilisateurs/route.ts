@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { getAdminSiteId } from '@/lib/site'
 
 export async function GET(req: NextRequest) {
   const session = await auth()
@@ -10,14 +11,13 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url)
   const q = searchParams.get('q') ?? ''
+  const siteId = await getAdminSiteId()
 
   const users = await prisma.user.findMany({
-    where: q ? {
-      OR: [
-        { name:  { contains: q } },
-        { email: { contains: q } },
-      ],
-    } : undefined,
+    where: {
+      siteId,
+      ...(q ? { OR: [{ name: { contains: q } }, { email: { contains: q } }] } : {}),
+    },
     select: {
       id: true, name: true, email: true, role: true,
       blocked: true, createdAt: true,

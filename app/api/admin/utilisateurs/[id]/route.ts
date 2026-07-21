@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { Role } from '@prisma/client'
+import { getAdminSiteId } from '@/lib/site'
 
 export async function PUT(
   req: NextRequest,
@@ -20,6 +21,10 @@ export async function PUT(
   if (id === adminId.id && (body.role === 'USER' || body.blocked === true)) {
     return NextResponse.json({ error: 'Vous ne pouvez pas modifier votre propre accès admin.' }, { status: 400 })
   }
+
+  const siteId = await getAdminSiteId()
+  const target = await prisma.user.findUnique({ where: { id } })
+  if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
 
   const data: { blocked?: boolean; role?: Role } = {}
   if (typeof body.blocked === 'boolean') data.blocked = body.blocked
