@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import { getAdminSiteId } from '@/lib/site'
 import {
   ClipboardList, Users, Star, BarChart3, Flag, Shield,
   AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight, BookOpen, Tags, Settings2,
@@ -15,6 +16,7 @@ export default async function AdminPage() {
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
   const adminName  = (session.user as { name?: string }).name ?? 'Admin'
   const monthLabel = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+  const siteId     = await getAdminSiteId()
 
   const [
     pendingCount, activeCount, soldCount,
@@ -23,22 +25,22 @@ export default async function AdminPage() {
     reportsCount, reportedListingsCount, firewallBlockedCount,
     blogTotal, blogPublished, categoriesCount,
   ] = await Promise.all([
-    prisma.listing.count({ where: { status: 'PENDING' } }),
-    prisma.listing.count({ where: { status: 'ACTIVE' } }),
-    prisma.listing.count({ where: { status: 'SOLD' } }),
-    prisma.user.count(),
-    prisma.user.count({ where: { createdAt: { gte: monthStart } } }),
-    prisma.user.count({ where: { role: 'PREMIUM' } }),
-    prisma.user.count({ where: { blocked: true } }),
-    prisma.professional.count(),
-    prisma.professional.count({ where: { tier: 'PREMIUM' } }),
-    prisma.professional.count({ where: { tier: 'PREMIUM_PLUS' } }),
-    prisma.report.count(),
-    prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' } } }),
-    prisma.listing.count({ where: { blockedReason: { not: null } } }),
+    prisma.listing.count({ where: { status: 'PENDING', siteId } }),
+    prisma.listing.count({ where: { status: 'ACTIVE', siteId } }),
+    prisma.listing.count({ where: { status: 'SOLD', siteId } }),
+    prisma.user.count({ where: { siteId } }),
+    prisma.user.count({ where: { siteId, createdAt: { gte: monthStart } } }),
+    prisma.user.count({ where: { siteId, role: 'PREMIUM' } }),
+    prisma.user.count({ where: { siteId, blocked: true } }),
+    prisma.professional.count({ where: { siteId } }),
+    prisma.professional.count({ where: { siteId, tier: 'PREMIUM' } }),
+    prisma.professional.count({ where: { siteId, tier: 'PREMIUM_PLUS' } }),
+    prisma.report.count({ where: { listing: { siteId } } }),
+    prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' }, siteId } }),
+    prisma.listing.count({ where: { blockedReason: { not: null }, siteId } }),
     prisma.blogPost.count(),
     prisma.blogPost.count({ where: { published: true } }),
-    prisma.category.count(),
+    prisma.category.count({ where: { siteId } }),
   ])
 
   const freePros  = prosCount - premiumPros - plusPros

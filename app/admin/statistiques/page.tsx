@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import { getAdminSiteId } from '@/lib/site'
 import {
   ArrowLeft, Users, FileText, Star, TrendingUp, TrendingDown,
   ShoppingCart, AlertTriangle, CheckCircle, Clock, CreditCard,
@@ -89,6 +90,7 @@ export default async function AdminStatsPage() {
   const monthStart   = new Date(now.getFullYear(), now.getMonth(), 1)
   const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)
   const weekStart    = new Date(now); weekStart.setDate(now.getDate() - 7)
+  const siteId       = await getAdminSiteId()
 
   const [
     totalUsers,
@@ -111,26 +113,26 @@ export default async function AdminStatsPage() {
     listingsByCategory,
     messagesCount,
   ] = await Promise.all([
-    prisma.user.count(),
-    prisma.user.count({ where: { createdAt: { gte: monthStart } } }),
-    prisma.user.count({ where: { role: 'PREMIUM' } }),
-    prisma.user.count({ where: { blocked: true } }),
-    prisma.user.count({ where: { createdAt: { gte: lastMonthStart, lt: monthStart } } }),
-    prisma.user.count({ where: { createdAt: { gte: weekStart } } }),
-    prisma.listing.count({ where: { status: { not: 'DELETED' } } }),
-    prisma.listing.count({ where: { status: 'ACTIVE' } }),
-    prisma.listing.count({ where: { status: 'PENDING' } }),
-    prisma.listing.count({ where: { status: 'SOLD' } }),
-    prisma.listing.count({ where: { status: 'REJECTED' } }),
-    prisma.listing.count({ where: { publishedAt: { gte: monthStart }, status: { not: 'DELETED' } } }),
-    prisma.professional.count(),
-    prisma.professional.count({ where: { tier: 'PREMIUM' } }),
-    prisma.professional.count({ where: { tier: 'PREMIUM_PLUS' } }),
-    prisma.report.count(),
+    prisma.user.count({ where: { siteId } }),
+    prisma.user.count({ where: { siteId, createdAt: { gte: monthStart } } }),
+    prisma.user.count({ where: { siteId, role: 'PREMIUM' } }),
+    prisma.user.count({ where: { siteId, blocked: true } }),
+    prisma.user.count({ where: { siteId, createdAt: { gte: lastMonthStart, lt: monthStart } } }),
+    prisma.user.count({ where: { siteId, createdAt: { gte: weekStart } } }),
+    prisma.listing.count({ where: { siteId, status: { not: 'DELETED' } } }),
+    prisma.listing.count({ where: { siteId, status: 'ACTIVE' } }),
+    prisma.listing.count({ where: { siteId, status: 'PENDING' } }),
+    prisma.listing.count({ where: { siteId, status: 'SOLD' } }),
+    prisma.listing.count({ where: { siteId, status: 'REJECTED' } }),
+    prisma.listing.count({ where: { siteId, publishedAt: { gte: monthStart }, status: { not: 'DELETED' } } }),
+    prisma.professional.count({ where: { siteId } }),
+    prisma.professional.count({ where: { siteId, tier: 'PREMIUM' } }),
+    prisma.professional.count({ where: { siteId, tier: 'PREMIUM_PLUS' } }),
+    prisma.report.count({ where: { listing: { siteId } } }),
     prisma.photoUpgrade.count({ where: { paid: true } }),
     prisma.listing.groupBy({
       by: ['categorySlug'],
-      where: { status: 'ACTIVE' },
+      where: { status: 'ACTIVE', siteId },
       _count: { id: true },
       orderBy: { _count: { id: 'desc' } },
       take: 8,
