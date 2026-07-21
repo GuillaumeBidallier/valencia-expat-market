@@ -100,14 +100,25 @@ Mêmes composants qu'avant, adaptés à MySQL :
 - **Scoping des vues admin existantes par le site sélectionné** — c'est la
   partie qui rend le sélecteur réellement utile, pas juste décoratif :
   `app/admin/annonces`, `app/admin/professionnels`, `app/admin/categories`,
-  `app/admin/utilisateurs` (pages + leurs routes API `POST`/`PUT`/`DELETE`
-  associées) filtrent leurs requêtes par le `siteId` lu depuis le cookie
-  `vem_admin_site` plutôt que par le site résolu par domaine — c'est la
-  seule façon pour un admin sur `1000clic.fr` de gérer les données d'un
-  autre pays sans changer d'URL.
+  `app/admin/utilisateurs`, **`app/admin/signalements`, `app/admin/parefeu`**
+  (décision de cadrage : ces deux dernières sont aussi scopées, pas laissées
+  globales — cohérence complète plutôt que périmètre réduit) — pages + leurs
+  routes API `POST`/`PUT`/`DELETE` associées — filtrent leurs requêtes par
+  le `siteId` lu depuis le cookie `vem_admin_site` plutôt que par le site
+  résolu par domaine — c'est la seule façon pour un admin sur `1000clic.fr`
+  de gérer les données d'un autre pays sans changer d'URL. Ces deux pages
+  ne font que lire/muter des `Listing` déjà `siteId`-scopés depuis Plan 1
+  (`reports`/`blockedReason` sont des champs de `Listing`, pas des tables
+  séparées à scoper) — ajout d'un `where: { siteId }` de plus, même patron
+  que les 4 autres pages.
 - `app/admin/page.tsx` (tableau de bord) et `app/admin/statistiques`
   suivent le même scoping pour que les compteurs affichés correspondent
   au site sélectionné.
+- **Le sélecteur est toujours visible**, même avec un seul site actif —
+  décision de cadrage : pas de logique conditionnelle qui le cache tant
+  qu'il n'y a qu'une seule option, pour pouvoir le tester dès cette reprise
+  et éviter un changement d'interface surprise le jour où un 2e site
+  apparaît.
 
 ### Hors périmètre (explicite, pour cette reprise)
 
