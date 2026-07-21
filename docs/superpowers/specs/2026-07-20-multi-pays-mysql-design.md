@@ -121,6 +121,21 @@ Mêmes composants qu'avant, adaptés à MySQL :
   publique fonctionnelle à la fin de cette reprise — seulement une gestion
   admin fonctionnelle. C'est un choix de scope assumé pour livrer quelque
   chose d'utilisable rapidement plutôt que de tout refaire d'un coup.
+
+  **Contrainte de séquencement pour Plan 2 (signalée par la review finale
+  de Plan 1) :** ce report est sûr tant qu'un seul site a des données
+  publiques (annonces/pros) — situation actuelle. Mais Plan 2 ajoute
+  précisément la capacité de créer un deuxième site et d'y attacher des
+  données depuis l'admin. **Dès qu'un deuxième site possède ne serait-ce
+  qu'une annonce ou une fiche pro, les pages publiques non scopées
+  (`app/annonces`, `app/professionnels`, sitemap) commenceront à mélanger
+  le contenu des deux sites sur chaque domaine** — une vraie fuite de
+  contenu entre pays, pas seulement « pas de vitrine ». Plan 2 doit donc
+  soit (a) scoper ces pages publiques en lecture avant d'autoriser la
+  création de données publiques sur un deuxième site actif, soit (b)
+  documenter et faire respecter explicitement que tout site créé via le
+  panel admin reste `active: false` (ou équivalent) tant que ce scoping
+  n'est pas fait.
 - Admins restreints à un seul site.
 
 ## Vérification
