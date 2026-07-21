@@ -16,6 +16,7 @@ model Site {
   primaryColor   String   @default("#F97316")
   secondaryColor String   @default("#12122A")
   active         Boolean  @default(true)
+  publiclyLive   Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

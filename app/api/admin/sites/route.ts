@@ -32,6 +32,6 @@ export async function POST(req: NextRequest) {
   const existing = await prisma.site.findUnique({ where: { domain: parsed.data.domain } })
   if (existing) return NextResponse.json({ error: 'Ce domaine existe déjà' }, { status: 409 })
 
-  const site = await prisma.site.create({ data: parsed.data })
+  const site = await prisma.site.create({ data: { ...parsed.data, publiclyLive: false } })
   return NextResponse.json(site, { status: 201 })
 }

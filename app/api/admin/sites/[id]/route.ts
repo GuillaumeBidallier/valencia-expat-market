@@ -15,6 +15,7 @@ const updateSchema = z.object({
   primaryColor:   z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   secondaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   active:         z.boolean().optional(),
+  publiclyLive:   z.boolean().optional(),
 })
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

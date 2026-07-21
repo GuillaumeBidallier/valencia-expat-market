@@ -5,7 +5,7 @@ import { ArrowLeft, Plus, Pencil, Globe2, X } from 'lucide-react'
 
 type Site = {
   id: string; domain: string; name: string; country: string
-  primaryColor: string; secondaryColor: string; active: boolean
+  primaryColor: string; secondaryColor: string; active: boolean; publiclyLive: boolean
   createdAt: string; updatedAt: string
 }
 
@@ -86,6 +86,26 @@ export default function AdminSitesClient({ initialSites }: { initialSites: Site[
     }
   }
 
+  async function togglePubliclyLive(site: Site) {
+    try {
+      const res = await fetch(`/api/admin/sites/${site.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ publiclyLive: !site.publiclyLive }),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? 'Erreur lors de la mise à jour du statut public')
+        return
+      }
+      const updated = await res.json()
+      setError(null)
+      setSites(prev => prev.map(s => s.id === site.id ? { ...s, ...updated } : s))
+    } catch {
+      setError('Erreur réseau lors de la mise à jour du statut public')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#F4F5F7]">
       <div className="bg-navy text-white">
@@ -123,6 +143,13 @@ export default function AdminSitesClient({ initialSites }: { initialSites: Site[
                 </div>
               </div>
               <div className="flex items-center gap-3">
+                <button
+                  onClick={() => togglePubliclyLive(site)}
+                  className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${site.publiclyLive ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}
+                  title="Bascule si les formulaires publics (annonces, inscription pro) sont ouverts sur ce site"
+                >
+                  {site.publiclyLive ? 'Publié' : 'Pas encore public'}
+                </button>
                 <button
                   onClick={() => toggleActive(site)}
                   className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${site.active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}
