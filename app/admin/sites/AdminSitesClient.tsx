@@ -59,20 +59,30 @@ export default function AdminSitesClient({ initialSites }: { initialSites: Site[
         setSites(prev => [...prev, created])
       }
       setShowForm(false)
+    } catch {
+      setError('Erreur réseau, veuillez réessayer.')
     } finally {
       setSaving(false)
     }
   }
 
   async function toggleActive(site: Site) {
-    const res = await fetch(`/api/admin/sites/${site.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ active: !site.active }),
-    })
-    if (res.ok) {
+    try {
+      const res = await fetch(`/api/admin/sites/${site.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active: !site.active }),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? 'Erreur lors de la mise à jour du statut')
+        return
+      }
       const updated = await res.json()
+      setError(null)
       setSites(prev => prev.map(s => s.id === site.id ? { ...s, ...updated } : s))
+    } catch {
+      setError('Erreur réseau lors de la mise à jour du statut')
     }
   }
 
@@ -95,6 +105,10 @@ export default function AdminSitesClient({ initialSites }: { initialSites: Site[
         >
           <Plus size={16} /> Ajouter un pays
         </button>
+
+        {error && !showForm && (
+          <p className="mb-4 text-red-500 text-xs bg-red-50 rounded-lg px-3 py-2">{error}</p>
+        )}
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100">
           {sites.map(site => (
