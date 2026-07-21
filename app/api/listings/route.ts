@@ -83,6 +83,11 @@ export async function POST(req: NextRequest) {
   void _lat; void _lng
   const siteId = await getCurrentSiteId()
 
+  const site = await prisma.site.findUnique({ where: { id: siteId }, select: { publiclyLive: true } })
+  if (!site?.publiclyLive) {
+    return NextResponse.json({ error: 'Ce site n\'est pas encore ouvert au public.' }, { status: 403 })
+  }
+
   const listing = await prisma.listing.create({
     data: {
       ...listingData,

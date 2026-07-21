@@ -62,6 +62,12 @@ export async function POST(req: NextRequest) {
   const { zones, ...restFields } = fields
   const slug = await uniqueSlug(slugify(fields.name))
   const siteId = await getCurrentSiteId()
+
+  const site = await prisma.site.findUnique({ where: { id: siteId }, select: { publiclyLive: true } })
+  if (!site?.publiclyLive) {
+    return NextResponse.json({ error: 'Ce site n\'est pas encore ouvert au public.' }, { status: 403 })
+  }
+
   const pro = await prisma.professional.create({
     data: {
       ...restFields,
