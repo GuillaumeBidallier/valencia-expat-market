@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getAdminSiteId } from '@/lib/site'
 import AdminParefeuClient from './AdminParefeuClient'
 
 export default async function AdminParefeuPage() {
@@ -9,10 +10,11 @@ export default async function AdminParefeuPage() {
 
   const now        = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  const siteId     = await getAdminSiteId()
 
   const [blocked, blockedThisMonth, byCategory] = await Promise.all([
     prisma.listing.findMany({
-      where: { blockedReason: { not: null } },
+      where: { blockedReason: { not: null }, siteId },
       include: {
         images: { orderBy: { order: 'asc' }, take: 1 },
         user: { select: { id: true, name: true, email: true, blocked: true } },
@@ -20,11 +22,11 @@ export default async function AdminParefeuPage() {
       orderBy: { publishedAt: 'desc' },
     }),
     prisma.listing.count({
-      where: { blockedReason: { not: null }, publishedAt: { gte: monthStart } },
+      where: { blockedReason: { not: null }, publishedAt: { gte: monthStart }, siteId },
     }),
     prisma.listing.groupBy({
       by: ['blockedReason'],
-      where: { blockedReason: { not: null } },
+      where: { blockedReason: { not: null }, siteId },
       _count: { id: true },
       orderBy: { _count: { id: 'desc' } },
     }),

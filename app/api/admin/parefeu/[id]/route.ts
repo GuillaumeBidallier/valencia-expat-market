@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { getAdminSiteId } from '@/lib/site'
 
 // POST /api/admin/parefeu/[id] — approve (false positive) or delete
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -10,6 +11,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   const { id } = await params
+  const siteId = await getAdminSiteId()
+  const target = await prisma.listing.findUnique({ where: { id } })
+  if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+
   const { action } = await req.json() as { action: 'approve' | 'delete' }
 
   if (action === 'approve') {

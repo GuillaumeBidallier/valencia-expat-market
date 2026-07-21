@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { getAdminSiteId } from '@/lib/site'
 
 export async function GET() {
   const session = await auth()
@@ -8,8 +9,9 @@ export async function GET() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
+  const siteId = await getAdminSiteId()
   const listings = await prisma.listing.findMany({
-    where: { reports: { some: {} }, status: { not: 'DELETED' } },
+    where: { reports: { some: {} }, status: { not: 'DELETED' }, siteId },
     include: {
       images: { orderBy: { order: 'asc' }, take: 1 },
       user: { select: { id: true, name: true, email: true, blocked: true } },

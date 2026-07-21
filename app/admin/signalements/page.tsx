@@ -1,14 +1,16 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getAdminSiteId } from '@/lib/site'
 import AdminSignalementsClient from './AdminSignalementsClient'
 
 export default async function AdminSignalementsPage() {
   const session = await auth()
   if ((session?.user as { role?: string })?.role !== 'ADMIN') redirect('/')
 
+  const siteId = await getAdminSiteId()
   const reported = await prisma.listing.findMany({
-    where: { reports: { some: {} }, status: { not: 'DELETED' } },
+    where: { reports: { some: {} }, status: { not: 'DELETED' }, siteId },
     include: {
       images: { orderBy: { order: 'asc' }, take: 1 },
       user: { select: { id: true, name: true, email: true, blocked: true } },
