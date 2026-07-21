@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { z } from 'zod'
+import { getAdminSiteId } from '@/lib/site'
 
 type Params = Promise<{ id: string }>
 
@@ -34,6 +35,10 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   const parsed = updateSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
 
+  const siteId = await getAdminSiteId()
+  const target = await prisma.professional.findUnique({ where: { id } })
+  if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+
   const { photos, ...rest } = parsed.data
   if (photos) {
     await prisma.professionalPhoto.deleteMany({ where: { professionalId: id } })
@@ -55,6 +60,10 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
 export async function DELETE(_req: NextRequest, { params }: { params: Params }) {
   if (!await requireAdmin()) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   const { id } = await params
+  const siteId = await getAdminSiteId()
+  const target = await prisma.professional.findUnique({ where: { id } })
+  if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+
   await prisma.professional.delete({ where: { id } })
   return NextResponse.json({ ok: true })
 }
