@@ -18,53 +18,15 @@ const CATEGORIES: Cat1[] = [
     slug: 'vehicules', label: 'Véhicules', icon: '🚗',
     t: { en: 'Vehicles', es: 'Vehículos', de: 'Fahrzeuge', nl: "Voertuigen", uk: 'Транспорт', ru: 'Транспорт' },
     children: [
-      {
-        slug: 'voitures', label: 'Voitures',
-        t: { en: 'Cars', es: 'Coches', de: 'Autos', nl: "Auto's", uk: 'Автомобілі', ru: 'Автомобили' },
-        children: [
-          { slug: 'berlines-citadines', label: 'Berlines & Citadines', t: { en: 'Sedans & City Cars', es: 'Berlinas y Utilitarios', de: 'Limousinen & Stadtautos', nl: 'Sedans & Stadswagens', uk: 'Седани та міські авто', ru: 'Седаны и городские авто' } },
-          { slug: 'suv-4x4', label: 'SUV & 4x4', t: { en: 'SUVs & 4x4', es: 'SUV y 4x4', de: 'SUVs & Geländewagen', nl: "SUV's & 4x4", uk: 'Позашляховики', ru: 'Внедорожники' } },
-          { slug: 'breaks-monospaces', label: 'Breaks & Monospaces', t: { en: 'Estate Cars & Minivans', es: 'Familiares y Monovolúmenes', de: 'Kombis & Vans', nl: 'Stationwagens & Vans', uk: 'Універсали та мінівени', ru: 'Универсалы и минивэны' } },
-          { slug: 'cabriolets-coupes', label: 'Cabriolets & Coupés', t: { en: 'Convertibles & Coupés', es: 'Descapotables y Cupés', de: 'Cabrios & Coupés', nl: 'Cabriolets & Coupés', uk: 'Кабріолети та купе', ru: 'Кабриолеты и купе' } },
-          { slug: 'utilitaires', label: 'Utilitaires légers', t: { en: 'Light Vans & Trucks', es: 'Vehículos comerciales ligeros', de: 'Leichte Nutzfahrzeuge', nl: 'Lichte bedrijfswagens', uk: 'Легкі вантажівки', ru: 'Лёгкий коммерческий транспорт' } },
-          { slug: 'voitures-collection', label: 'Voitures de collection', t: { en: 'Classic Cars', es: 'Coches clásicos', de: 'Oldtimer', nl: 'Oldtimers', uk: 'Колекційні авто', ru: 'Коллекционные авто' } },
-        ],
-      },
-      {
-        slug: 'motos-scooters', label: 'Motos & Scooters',
-        t: { en: 'Motorcycles & Scooters', es: 'Motos y Scooters', de: 'Motorräder & Roller', nl: 'Motoren & Scooters', uk: 'Мотоцикли та скутери', ru: 'Мотоциклы и скутеры' },
-        children: [
-          { slug: 'motos', label: 'Motos', t: { en: 'Motorcycles', es: 'Motos', de: 'Motorräder', nl: 'Motoren', uk: 'Мотоцикли', ru: 'Мотоциклы' } },
-          { slug: 'scooters', label: 'Scooters', t: { en: 'Scooters', es: 'Scooters', de: 'Roller', nl: 'Scooters', uk: 'Скутери', ru: 'Скутеры' } },
-          { slug: 'quads-buggy', label: 'Quads & Buggy', t: { en: 'Quads & Buggies', es: 'Quads y Buggy', de: 'Quads & Buggys', nl: "Quad's & Buggy's", uk: 'Квадроцикли', ru: 'Квадроциклы' } },
-        ],
-      },
-      {
-        slug: 'caravaning', label: 'Caravaning & Camping',
-        t: { en: 'Caravanning & Camping', es: 'Caravaning y Camping', de: 'Camping & Wohnmobile', nl: "Caravans & Kamperen", uk: 'Кемпінг та кемпери', ru: 'Кемпинг и автодома' },
-        children: [
-          { slug: 'camping-cars', label: 'Camping-cars', t: { en: 'Motorhomes', es: 'Autocaravanas', de: 'Wohnmobile', nl: 'Campers', uk: 'Будинки на колесах', ru: 'Автодома' } },
-          { slug: 'caravanes', label: 'Caravanes', t: { en: 'Caravans', es: 'Caravanas', de: 'Wohnwagen', nl: 'Caravans', uk: 'Причепи', ru: 'Прицепы' } },
-          { slug: 'vans-amenages', label: 'Vans aménagés', t: { en: 'Converted Vans', es: 'Furgonetas camper', de: 'Ausgebaute Vans', nl: 'Camperbestelwagens', uk: 'Кемпер-фургони', ru: 'Кемпер-фургоны' } },
-        ],
-      },
-      {
-        slug: 'nautisme', label: 'Nautisme',
-        t: { en: 'Nautical', es: 'Náutica', de: 'Nautik', nl: 'Watersport', uk: 'Водний транспорт', ru: 'Водный транспорт' },
-        children: [
-          { slug: 'bateaux', label: 'Bateaux', t: { en: 'Boats', es: 'Barcos', de: 'Boote', nl: 'Boten', uk: 'Човни та яхти', ru: 'Лодки и яхты' } },
-          { slug: 'jet-skis', label: 'Jet-skis', t: { en: 'Jet Skis', es: 'Motos de agua', de: 'Jetskis', nl: "Jetski's", uk: 'Гідроцикли', ru: 'Гидроциклы' } },
-        ],
-      },
-      {
-        slug: 'pieces-auto', label: 'Pièces & Équipements auto',
-        t: { en: 'Parts & Car Accessories', es: 'Recambios y Accesorios', de: 'Teile & Kfz-Zubehör', nl: 'Onderdelen & Autoaccessoires', uk: 'Запчастини та автоаксесуари', ru: 'Запчасти и автоаксессуары' },
-        children: [
-          { slug: 'pieces-detachees', label: 'Pièces détachées', t: { en: 'Spare Parts', es: 'Piezas de repuesto', de: 'Ersatzteile', nl: 'Reserveonderdelen', uk: 'Запасні частини', ru: 'Запасные части' } },
-          { slug: 'jantes-pneus', label: 'Jantes & Pneus', t: { en: 'Rims & Tyres', es: 'Llantas y Neumáticos', de: 'Felgen & Reifen', nl: 'Velgen & Banden', uk: 'Диски та шини', ru: 'Диски и шины' } },
-          { slug: 'accessoires-auto', label: 'Accessoires auto', t: { en: 'Car Accessories', es: 'Accesorios de coche', de: 'Auto-Accessoires', nl: 'Autoaccessoires', uk: 'Автоаксесуари', ru: 'Автоаксессуары' } },
-        ],
-      },
+      { slug: 'voitures', label: 'Voitures', t: { en: 'Cars', es: 'Coches', de: 'Autos', nl: "Auto's", uk: 'Автомобілі', ru: 'Автомобили' } },
+      { slug: 'motos', label: 'Motos', t: { en: 'Motorcycles', es: 'Motos', de: 'Motorräder', nl: 'Motoren', uk: 'Мотоцикли', ru: 'Мотоциклы' } },
+      { slug: 'caravaning', label: 'Caravaning', t: { en: 'Caravanning', es: 'Caravaning', de: 'Caravaning', nl: 'Caravaning', uk: 'Кемпінг', ru: 'Кемпинг' } },
+      { slug: 'utilitaires', label: 'Utilitaires', t: { en: 'Vans & Trucks', es: 'Furgonetas y Camiones', de: 'Nutzfahrzeuge', nl: 'Bedrijfswagens', uk: 'Комерційний транспорт', ru: 'Коммерческий транспорт' } },
+      { slug: 'nautisme', label: 'Nautisme', t: { en: 'Nautical', es: 'Náutica', de: 'Nautik', nl: 'Watersport', uk: 'Водний транспорт', ru: 'Водный транспорт' } },
+      { slug: 'equipement_auto', label: 'Équipement auto', t: { en: 'Car Equipment', es: 'Equipamiento de coche', de: 'Auto-Zubehör', nl: 'Auto-uitrusting', uk: 'Автообладнання', ru: 'Автооборудование' } },
+      { slug: 'equipement_moto', label: 'Équipement moto', t: { en: 'Motorcycle Equipment', es: 'Equipamiento de moto', de: 'Motorrad-Zubehör', nl: 'Motoruitrusting', uk: 'Мотообладнання', ru: 'Мотооборудование' } },
+      { slug: 'equipement_caravaning', label: 'Équipement caravaning', t: { en: 'Caravanning Equipment', es: 'Equipamiento de caravaning', de: 'Camping-Zubehör', nl: 'Camping-uitrusting', uk: 'Кемпінгове спорядження', ru: 'Кемпинговое снаряжение' } },
+      { slug: 'equipement_nautisme', label: 'Équipement nautisme', t: { en: 'Nautical Equipment', es: 'Equipamiento náutico', de: 'Nautik-Zubehör', nl: 'Watersportuitrusting', uk: 'Спорядження для водного транспорту', ru: 'Снаряжение для водного транспорта' } },
     ],
   },
 
