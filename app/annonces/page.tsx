@@ -16,6 +16,7 @@ import AdUnit from '@/components/ads/AdUnit'
 import AnnoncesUI from '@/components/annonces/AnnoncesUI'
 import { getCategoriesServer } from '@/lib/categories'
 import { haversineKm, boundingBox } from '@/lib/neighborhoods'
+import { buildVehicleAttributeClauses } from '@/lib/vehicleAttributesQuery'
 
 const PER_PAGE = 20
 
@@ -30,6 +31,7 @@ type Props = {
     q?: string; cat?: string; ville?: string
     priceMin?: string; priceMax?: string; sort?: string; page?: string
     lat?: string; lng?: string; radius?: string; geoLabel?: string
+    [key: string]: string | undefined
   }>
 }
 
@@ -112,6 +114,11 @@ async function AnnoncesContent({ searchParams }: Props) {
     }),
   }
 
+  const vehicleClauses = cat ? buildVehicleAttributeClauses(cat, params) : []
+  const whereWithAttrs = vehicleClauses.length > 0
+    ? { ...where, AND: vehicleClauses }
+    : where
+
   const orderByDb =
     sort === 'price_asc'  ? [{ price: { sort: 'asc'  as const, nulls: 'last' as const } }] :
     sort === 'price_desc' ? [{ price: { sort: 'desc' as const, nulls: 'last' as const } }] :
@@ -122,13 +129,13 @@ async function AnnoncesContent({ searchParams }: Props) {
 
   const [rawListings, total, favRows] = await Promise.all([
     prisma.listing.findMany({
-      where,
+      where: whereWithAttrs,
       include: { images: { orderBy: { order: 'asc' }, take: 1 } },
       orderBy: fetchAll ? undefined : orderByDb,
       skip: fetchAll ? undefined : (page - 1) * PER_PAGE,
       take: fetchAll ? undefined : PER_PAGE,
     }),
-    prisma.listing.count({ where }),
+    prisma.listing.count({ where: whereWithAttrs }),
     session?.user?.id
       ? prisma.favorite.findMany({ where: { userId: session.user.id }, select: { listingId: true } })
       : Promise.resolve([]),
