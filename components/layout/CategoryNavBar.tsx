@@ -15,6 +15,27 @@ const VEHICULES_MIRRORS: { slug: string; label: string; children: never[] }[] = 
   { slug: 'reparation-mecanique', label: 'Réparation mécanique', children: [] },
 ]
 
+// Brand shortcuts shown under "Voitures" / "Motos" in the mega-menu, matching
+// leboncoin's own nav (their top marques + "Voir toutes les marques"). These
+// are search shortcuts (?attr_brand=), not real categories.
+const BRAND_SHORTCUTS: Record<string, { value: string; label: string }[]> = {
+  voitures: [
+    { value: 'AUDI', label: 'Audi' },
+    { value: 'BMW', label: 'BMW' },
+    { value: 'MERCEDES-BENZ', label: 'Mercedes' },
+    { value: 'PEUGEOT', label: 'Peugeot' },
+    { value: 'RENAULT', label: 'Renault' },
+    { value: 'VOLKSWAGEN', label: 'Volkswagen' },
+  ],
+  motos: [
+    { value: 'BMW', label: 'BMW' },
+    { value: 'HONDA', label: 'Honda' },
+    { value: 'KAWASAKI', label: 'Kawasaki' },
+    { value: 'SUZUKI', label: 'Suzuki' },
+    { value: 'YAMAHA', label: 'Yamaha' },
+  ],
+}
+
 export default function CategoryNavBar({ transparent }: Props) {
   const categories = useCategories()
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
@@ -110,29 +131,52 @@ export default function CategoryNavBar({ transparent }: Props) {
                 <div className="flex-1 grid gap-x-8 gap-y-1"
                   style={{ gridTemplateColumns: `repeat(${Math.min(4, displayChildren.length)}, minmax(0, 1fr))` }}
                 >
-                  {displayChildren.map(child => (
-                    <div key={child.slug} className="break-inside-avoid mb-4">
-                      {/* Subcategory as bold header */}
-                      <Link
-                        href={`/annonces?cat=${child.slug}`}
-                        className="block text-sm text-gray-900 font-semibold mb-1.5 hover:text-orange-primary transition-colors"
-                        onClick={() => setActiveSlug(null)}
-                      >
-                        {child.label}
-                      </Link>
-                      {/* Sub-subcategories listed below */}
-                      {child.children.map(sub => (
+                  {displayChildren.map(child => {
+                    const brandShortcuts = BRAND_SHORTCUTS[child.slug]
+                    return (
+                      <div key={child.slug} className="break-inside-avoid mb-4">
+                        {/* Subcategory as bold header */}
                         <Link
-                          key={sub.slug}
-                          href={`/annonces?cat=${sub.slug}`}
-                          className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
+                          href={`/annonces?cat=${child.slug}`}
+                          className="block text-sm text-gray-900 font-semibold mb-1.5 hover:text-orange-primary transition-colors"
                           onClick={() => setActiveSlug(null)}
                         >
-                          {sub.label}
+                          {child.label}
                         </Link>
-                      ))}
-                    </div>
-                  ))}
+                        {/* Sub-subcategories listed below */}
+                        {child.children.map(sub => (
+                          <Link
+                            key={sub.slug}
+                            href={`/annonces?cat=${sub.slug}`}
+                            className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
+                            onClick={() => setActiveSlug(null)}
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                        {/* Brand shortcuts (Voitures/Motos) — search shortcuts, not real categories */}
+                        {brandShortcuts && brandShortcuts.map(b => (
+                          <Link
+                            key={b.value}
+                            href={`/annonces?cat=${child.slug}&attr_brand=${encodeURIComponent(b.value)}`}
+                            className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
+                            onClick={() => setActiveSlug(null)}
+                          >
+                            {b.label}
+                          </Link>
+                        ))}
+                        {brandShortcuts && (
+                          <Link
+                            href={`/annonces?cat=${child.slug}`}
+                            className="block text-xs text-orange-primary font-semibold mb-1 hover:underline pl-1"
+                            onClick={() => setActiveSlug(null)}
+                          >
+                            Voir toutes les marques
+                          </Link>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               ) : (
                 <div className="flex-1 flex items-center">
