@@ -18,6 +18,7 @@ export interface Listing {
   phone?: string | null
   lat?: number | null
   lng?: number | null
+  attributes?: Record<string, string | number> | null
   // Champs de compatibilité frontend
   category?: string
   userName?: string
@@ -32,6 +33,7 @@ export interface NewListing {
   lat?: number
   lng?: number
   phone?: string
+  attributes?: Record<string, string | number>
 }
 
 export interface User {

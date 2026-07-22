@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { auth } from '@/auth'
 import { z } from 'zod'
 import { neighborhoodCoords } from '@/lib/neighborhoods'
@@ -26,6 +27,8 @@ const updateSchema = z.object({
   price: z.number().nullable().optional(),
   status: z.enum(['ACTIVE', 'SOLD', 'EXPIRED']).optional(),
   neighborhood: z.string().min(1).optional(),
+  categorySlug: z.string().min(1).optional(),
+  attributes: z.record(z.string(), z.union([z.string(), z.number()])).nullable().optional(),
 })
 
 export async function PUT(req: NextRequest, { params }: { params: Params }) {
@@ -57,9 +60,14 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   const coords = parsed.data.neighborhood
     ? neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']
     : undefined
+  const { attributes, ...rest } = parsed.data
   const updated = await prisma.listing.update({
     where: { id },
-    data: { ...parsed.data, ...(coords && { lat: coords.lat, lng: coords.lng }) },
+    data: {
+      ...rest,
+      ...(attributes !== undefined && { attributes: attributes === null ? Prisma.JsonNull : attributes }),
+      ...(coords && { lat: coords.lat, lng: coords.lng }),
+    },
   })
   return NextResponse.json(updated)
 }

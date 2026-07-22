@@ -81,6 +81,7 @@ export default async function ListingDetailPage({ params }: Props) {
     featuredAt: raw.featuredAt?.toISOString() ?? null,
     publishedAt: raw.publishedAt.toISOString(),
     updatedAt: raw.updatedAt.toISOString(),
+    attributes: raw.attributes as Record<string, string | number> | null,
   }
 
   const jsonLd = {

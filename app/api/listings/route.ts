@@ -49,6 +49,7 @@ const createSchema = z.object({
   lat: z.number().optional(),
   lng: z.number().optional(),
   phone: z.string().optional(),
+  attributes: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
 })
 
 export async function POST(req: NextRequest) {
