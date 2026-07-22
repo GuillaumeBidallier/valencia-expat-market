@@ -12,6 +12,33 @@ import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/listings/FavoriteButton'
 import { Listing } from '@/types'
 import { useAuth } from '@/context/AuthContext'
+import { VEHICLE_ATTRIBUTES } from '@/lib/vehicleAttributes'
+
+function formatVehicleAttributes(categorySlug: string, attributes: Record<string, string | number> | null | undefined): string[] {
+  const fields = VEHICLE_ATTRIBUTES[categorySlug]
+  if (!fields || !attributes) return []
+
+  const parts: string[] = []
+  for (const field of fields) {
+    if (field.type === 'brand-model') {
+      const brand = attributes[field.brandKey]
+      const model = attributes[field.modelKey]
+      if (brand) parts.push([brand, model].filter(Boolean).join(' '))
+    } else if (field.type === 'select') {
+      const raw = attributes[field.key]
+      if (raw !== undefined && raw !== '') {
+        const opt = field.options.find(o => o.value === String(raw))
+        if (opt) parts.push(field.key === 'critair' ? `Crit'air ${opt.label}` : opt.label)
+      }
+    } else {
+      const raw = attributes[field.key]
+      if (raw !== undefined && raw !== '') {
+        parts.push(field.unit ? `${raw} ${field.unit}` : String(raw))
+      }
+    }
+  }
+  return parts
+}
 
 const ListingMap = dynamic(() => import('@/components/listings/ListingMap'), { ssr: false })
 
@@ -179,6 +206,18 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
               <span className="flex items-center gap-1"><MapPin size={14} /> {listing.neighborhood}, {listing.city}</span>
               <span className="flex items-center gap-1"><Calendar size={14} /> {t('published_on')} {publishDate}</span>
             </div>
+
+            {(() => {
+              const attrs = formatVehicleAttributes(listing.categorySlug, listing.attributes)
+              return attrs.length > 0 ? (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {attrs.map((a, i) => (
+                    <span key={i} className="text-xs font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-lg">{a}</span>
+                  ))}
+                </div>
+              ) : null
+            })()}
+
             <div>
               <h2 className="font-semibold text-navy mb-2">{t('description')}</h2>
               <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">{listing.description}</p>
