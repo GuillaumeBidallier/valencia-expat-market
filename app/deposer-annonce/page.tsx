@@ -7,6 +7,7 @@ import { useListings } from '@/context/ListingsContext'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import CategoryPicker from '@/components/ui/CategoryPicker'
+import VehicleAttributesFields from '@/components/listings/VehicleAttributesFields'
 import CityAutocomplete, { type CitySelection } from '@/components/listings/CityAutocomplete'
 import { FREE_MAX_PHOTOS, UPGRADED_MAX_PHOTOS } from '@/lib/stripe'
 import { useTranslations } from 'next-intl'
@@ -38,6 +39,7 @@ function DeposerAnnonceForm() {
     description: '',
     phone: '',
   })
+  const [attributes, setAttributes] = useState<Record<string, string | number>>({})
   const [location, setLocation] = useState<CitySelection | null>(null)
   const [files, setFiles]       = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
@@ -139,6 +141,7 @@ function DeposerAnnonceForm() {
         lat:          location.lat,
         lng:          location.lng,
         phone:        form.phone || undefined,
+        attributes:   Object.keys(attributes).length > 0 ? attributes : undefined,
       })
 
       if (files.length > 0) {
@@ -205,10 +208,16 @@ function DeposerAnnonceForm() {
             <label className="text-sm font-medium text-navy">{t('f_category')}</label>
             <CategoryPicker
               value={form.categorySlug}
-              onChange={slug => setForm(f => ({ ...f, categorySlug: slug }))}
+              onChange={slug => { setForm(f => ({ ...f, categorySlug: slug })); setAttributes({}) }}
               error={errors.categorySlug}
             />
           </div>
+
+          <VehicleAttributesFields
+            categorySlug={form.categorySlug}
+            value={attributes}
+            onChange={setAttributes}
+          />
 
           <Input id="price" label={t('f_price')} type="number" placeholder={t('p_price')} value={form.price} onChange={set('price')} />
 
