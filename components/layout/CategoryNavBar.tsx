@@ -50,7 +50,7 @@ export default function CategoryNavBar({ transparent }: Props) {
                 </span>
               )}
               <Link
-                href={`/annonces?category=${cat.slug}`}
+                href={`/annonces?cat=${cat.slug}`}
                 className={`text-xs whitespace-nowrap py-2 border-b-2 transition-colors font-normal ${
                   activeSlug === cat.slug
                     ? 'text-orange-primary border-orange-primary'
@@ -84,7 +84,7 @@ export default function CategoryNavBar({ transparent }: Props) {
                   <span className="font-black text-navy text-sm leading-tight">{activeCategory.label}</span>
                 </div>
                 <Link
-                  href={`/annonces?category=${activeCategory.slug}`}
+                  href={`/annonces?cat=${activeCategory.slug}`}
                   className="text-xs text-orange-primary font-semibold hover:underline"
                   onClick={() => setActiveSlug(null)}
                 >
@@ -101,7 +101,7 @@ export default function CategoryNavBar({ transparent }: Props) {
                     <div key={child.slug} className="break-inside-avoid mb-4">
                       {/* Subcategory as bold header */}
                       <Link
-                        href={`/annonces?category=${child.slug}`}
+                        href={`/annonces?cat=${child.slug}`}
                         className="block text-sm text-gray-900 font-semibold mb-1.5 hover:text-orange-primary transition-colors"
                         onClick={() => setActiveSlug(null)}
                       >
@@ -111,7 +111,7 @@ export default function CategoryNavBar({ transparent }: Props) {
                       {child.children.map(sub => (
                         <Link
                           key={sub.slug}
-                          href={`/annonces?category=${sub.slug}`}
+                          href={`/annonces?cat=${sub.slug}`}
                           className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
                           onClick={() => setActiveSlug(null)}
                         >
