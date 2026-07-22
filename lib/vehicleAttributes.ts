@@ -125,6 +125,15 @@ const BOAT_TYPE: AttrOption[] = [
   { value: 'autre', label: 'Autre' },
 ]
 
+const TRUCK_TYPE: AttrOption[] = [
+  { value: 'camion', label: 'Camion' },
+  { value: 'bus', label: 'Bus' },
+  { value: 'tracteurroutier', label: 'Tracteur routier' },
+  { value: 'remorque', label: 'Remorque' },
+  { value: 'semiremorque', label: 'Semi remorque' },
+  { value: 'autres', label: 'Autres' },
+]
+
 export const VEHICLE_ATTRIBUTES: Record<string, AttrFieldDef[]> = {
   voitures: [
     { type: 'brand-model', vehicleType: 'car', brandKey: 'brand', modelKey: 'model', label: 'Marque' },
@@ -169,6 +178,18 @@ export const VEHICLE_ATTRIBUTES: Record<string, AttrFieldDef[]> = {
   ],
   nautisme: [
     { type: 'select', key: 'boat_type', label: 'Type de bateau', options: BOAT_TYPE },
+  ],
+  camions: [
+    { type: 'brand-model', vehicleType: 'utility', brandKey: 'brand', modelKey: 'model', label: 'Marque' },
+    { type: 'select', key: 'truck_type', label: 'Type', options: TRUCK_TYPE },
+    { type: 'range', key: 'regdate', label: 'Année' },
+    { type: 'select', key: 'fuel', label: 'Carburant', options: FUEL },
+    { type: 'range', key: 'mileage', label: 'Kilométrage', unit: 'km' },
+    { type: 'range', key: 'horse_power_din', label: 'Puissance DIN', unit: 'ch' },
+    { type: 'range', key: 'horsepower', label: 'Puissance fiscale', unit: 'cv' },
+    { type: 'select', key: 'gearbox', label: 'Boîte de vitesses', options: GEARBOX },
+    { type: 'select', key: 'vehicule_color', label: 'Couleur', options: VEHICULE_COLOR },
+    { type: 'select', key: 'critair', label: "Crit'air", options: CRITAIR },
   ],
 }
 

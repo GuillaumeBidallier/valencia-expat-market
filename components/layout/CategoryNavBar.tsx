@@ -7,6 +7,14 @@ interface Props {
   transparent: boolean
 }
 
+// Categories that live elsewhere in the tree (e.g. under Loisirs & Sports or Services)
+// but are shown as shortcuts in the Véhicules mega-menu, matching leboncoin's own
+// "mirror" behaviour for Vélos / Équipements vélos.
+const VEHICULES_MIRRORS: { slug: string; label: string; children: never[] }[] = [
+  { slug: 'velos-trottinettes', label: 'Vélos & Trottinettes', children: [] },
+  { slug: 'reparation-mecanique', label: 'Réparation mécanique', children: [] },
+]
+
 export default function CategoryNavBar({ transparent }: Props) {
   const categories = useCategories()
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
@@ -26,6 +34,11 @@ export default function CategoryNavBar({ transparent }: Props) {
   }
 
   const activeCategory = categories.find(c => c.slug === activeSlug)
+  const displayChildren = activeCategory
+    ? activeCategory.slug === 'vehicules'
+      ? [...activeCategory.children, ...VEHICULES_MIRRORS]
+      : activeCategory.children
+    : []
 
   return (
     <div
@@ -93,11 +106,11 @@ export default function CategoryNavBar({ transparent }: Props) {
               </div>
 
               {/* Right: subcategories + their children */}
-              {activeCategory.children.length > 0 ? (
+              {displayChildren.length > 0 ? (
                 <div className="flex-1 grid gap-x-8 gap-y-1"
-                  style={{ gridTemplateColumns: `repeat(${Math.min(4, activeCategory.children.length)}, minmax(0, 1fr))` }}
+                  style={{ gridTemplateColumns: `repeat(${Math.min(4, displayChildren.length)}, minmax(0, 1fr))` }}
                 >
-                  {activeCategory.children.map(child => (
+                  {displayChildren.map(child => (
                     <div key={child.slug} className="break-inside-avoid mb-4">
                       {/* Subcategory as bold header */}
                       <Link
