@@ -9,10 +9,20 @@ interface Props {
 
 // Categories that live elsewhere in the tree (e.g. under Loisirs & Sports or Services)
 // but are shown as shortcuts in the Véhicules mega-menu, matching leboncoin's own
-// "mirror" behaviour for Vélos / Équipements vélos.
+// "mirror" behaviour for Vélos / Équipements vélos / Services de réparations mécaniques.
 const VEHICULES_MIRRORS: { slug: string; label: string; children: never[] }[] = [
   { slug: 'velos-trottinettes', label: 'Vélos & Trottinettes', children: [] },
-  { slug: 'reparation-mecanique', label: 'Réparation mécanique', children: [] },
+  { slug: 'equipements-velos', label: 'Équipements vélos', children: [] },
+  { slug: 'reparation-mecanique', label: 'Services de réparations mécaniques', children: [] },
+]
+
+// Exact 3-column grouping used by leboncoin's own Véhicules mega-menu: Voitures/Motos
+// (with brand shortcuts) on their own, then the vehicle-type categories, then all
+// the "Équipement *" + mirrored services categories.
+const VEHICULES_COLUMNS: string[][] = [
+  ['voitures', 'motos'],
+  ['caravaning', 'utilitaires', 'camions', 'nautisme', 'velos-trottinettes'],
+  ['equipement_auto', 'equipement_moto', 'equipement_caravaning', 'equipement_nautisme', 'equipements-velos', 'reparation-mecanique'],
 ]
 
 // Brand shortcuts shown under "Voitures" / "Motos" in the mega-menu, matching
@@ -36,6 +46,55 @@ const BRAND_SHORTCUTS: Record<string, { value: string; label: string }[]> = {
   ],
 }
 
+type NavChild = { slug: string; label: string; children: readonly { slug: string; label: string }[] }
+
+function renderChildCard(child: NavChild, setActiveSlug: (slug: string | null) => void) {
+  const brandShortcuts = BRAND_SHORTCUTS[child.slug]
+  return (
+    <div key={child.slug} className="break-inside-avoid mb-4">
+      {/* Subcategory as bold header */}
+      <Link
+        href={`/annonces?cat=${child.slug}`}
+        className="block text-sm text-gray-900 font-semibold mb-1.5 hover:text-orange-primary transition-colors"
+        onClick={() => setActiveSlug(null)}
+      >
+        {child.label}
+      </Link>
+      {/* Sub-subcategories listed below */}
+      {child.children.map(sub => (
+        <Link
+          key={sub.slug}
+          href={`/annonces?cat=${sub.slug}`}
+          className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
+          onClick={() => setActiveSlug(null)}
+        >
+          {sub.label}
+        </Link>
+      ))}
+      {/* Brand shortcuts (Voitures/Motos) — search shortcuts, not real categories */}
+      {brandShortcuts && brandShortcuts.map(b => (
+        <Link
+          key={b.value}
+          href={`/annonces?cat=${child.slug}&attr_brand=${encodeURIComponent(b.value)}`}
+          className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
+          onClick={() => setActiveSlug(null)}
+        >
+          {b.label}
+        </Link>
+      ))}
+      {brandShortcuts && (
+        <Link
+          href={`/annonces?cat=${child.slug}`}
+          className="block text-xs text-orange-primary font-semibold mb-1 hover:underline pl-1"
+          onClick={() => setActiveSlug(null)}
+        >
+          Voir toutes les marques
+        </Link>
+      )}
+    </div>
+  )
+}
+
 export default function CategoryNavBar({ transparent }: Props) {
   const categories = useCategories()
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
@@ -55,11 +114,15 @@ export default function CategoryNavBar({ transparent }: Props) {
   }
 
   const activeCategory = categories.find(c => c.slug === activeSlug)
-  const displayChildren = activeCategory
-    ? activeCategory.slug === 'vehicules'
+  const isVehicules = activeCategory?.slug === 'vehicules'
+  const combinedItems = activeCategory
+    ? isVehicules
       ? [...activeCategory.children, ...VEHICULES_MIRRORS]
       : activeCategory.children
     : []
+  const vehiculesColumns = isVehicules
+    ? VEHICULES_COLUMNS.map(slugs => slugs.map(slug => combinedItems.find(c => c.slug === slug)).filter((c): c is typeof combinedItems[number] => Boolean(c)))
+    : null
 
   return (
     <div
@@ -127,56 +190,19 @@ export default function CategoryNavBar({ transparent }: Props) {
               </div>
 
               {/* Right: subcategories + their children */}
-              {displayChildren.length > 0 ? (
+              {vehiculesColumns ? (
+                <div className="flex-1 grid grid-cols-3 gap-x-8 gap-y-1">
+                  {vehiculesColumns.map((column, i) => (
+                    <div key={i}>
+                      {column.map(child => renderChildCard(child, setActiveSlug))}
+                    </div>
+                  ))}
+                </div>
+              ) : combinedItems.length > 0 ? (
                 <div className="flex-1 grid gap-x-8 gap-y-1"
-                  style={{ gridTemplateColumns: `repeat(${Math.min(4, displayChildren.length)}, minmax(0, 1fr))` }}
+                  style={{ gridTemplateColumns: `repeat(${Math.min(4, combinedItems.length)}, minmax(0, 1fr))` }}
                 >
-                  {displayChildren.map(child => {
-                    const brandShortcuts = BRAND_SHORTCUTS[child.slug]
-                    return (
-                      <div key={child.slug} className="break-inside-avoid mb-4">
-                        {/* Subcategory as bold header */}
-                        <Link
-                          href={`/annonces?cat=${child.slug}`}
-                          className="block text-sm text-gray-900 font-semibold mb-1.5 hover:text-orange-primary transition-colors"
-                          onClick={() => setActiveSlug(null)}
-                        >
-                          {child.label}
-                        </Link>
-                        {/* Sub-subcategories listed below */}
-                        {child.children.map(sub => (
-                          <Link
-                            key={sub.slug}
-                            href={`/annonces?cat=${sub.slug}`}
-                            className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
-                            onClick={() => setActiveSlug(null)}
-                          >
-                            {sub.label}
-                          </Link>
-                        ))}
-                        {/* Brand shortcuts (Voitures/Motos) — search shortcuts, not real categories */}
-                        {brandShortcuts && brandShortcuts.map(b => (
-                          <Link
-                            key={b.value}
-                            href={`/annonces?cat=${child.slug}&attr_brand=${encodeURIComponent(b.value)}`}
-                            className="block text-xs text-gray-500 mb-1 hover:text-orange-primary transition-colors pl-1"
-                            onClick={() => setActiveSlug(null)}
-                          >
-                            {b.label}
-                          </Link>
-                        ))}
-                        {brandShortcuts && (
-                          <Link
-                            href={`/annonces?cat=${child.slug}`}
-                            className="block text-xs text-orange-primary font-semibold mb-1 hover:underline pl-1"
-                            onClick={() => setActiveSlug(null)}
-                          >
-                            Voir toutes les marques
-                          </Link>
-                        )}
-                      </div>
-                    )
-                  })}
+                  {combinedItems.map(child => renderChildCard(child, setActiveSlug))}
                 </div>
               ) : (
                 <div className="flex-1 flex items-center">

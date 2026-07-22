@@ -189,6 +189,7 @@ const CATEGORIES: Cat1[] = [
         children: [
           { slug: 'fitness-musculation', label: 'Fitness & Musculation', t: { en: 'Fitness & Gym', es: 'Fitness y Musculación', de: 'Fitness & Bodybuilding', nl: 'Fitness & Krachttraining', uk: 'Фітнес та Бодібілдинг', ru: 'Фитнес и Бодибилдинг' } },
           { slug: 'velos-trottinettes', label: 'Vélos & Trottinettes', t: { en: 'Bikes & Scooters', es: 'Bicicletas y Patinetes', de: 'Fahrräder & Roller', nl: 'Fietsen & Steps', uk: 'Велосипеди та самокати', ru: 'Велосипеды и самокаты' } },
+          { slug: 'equipements-velos', label: 'Équipements vélos', t: { en: 'Bike Equipment', es: 'Equipamiento de bicicleta', de: 'Fahrrad-Zubehör', nl: 'Fietsuitrusting', uk: 'Велоспорядження', ru: 'Велоснаряжение' } },
           { slug: 'sports-collectifs', label: 'Sports collectifs', t: { en: 'Team Sports', es: 'Deportes de equipo', de: 'Mannschaftssport', nl: 'Teamsporten', uk: 'Командні види спорту', ru: 'Командные виды спорта' } },
           { slug: 'sports-nautiques', label: 'Sports nautiques & Ski', t: { en: 'Water Sports & Ski', es: 'Deportes acuáticos y Esquí', de: 'Wassersport & Ski', nl: 'Watersport & Ski', uk: 'Водні та Зимові види спорту', ru: 'Водные и Зимние виды спорта' } },
         ],
@@ -310,7 +311,7 @@ const CATEGORIES: Cat1[] = [
         ],
       },
       { slug: 'demenagement-transport', label: 'Déménagement & Transport', t: { en: 'Moving & Transport', es: 'Mudanzas y Transporte', de: 'Umzug & Transport', nl: 'Verhuizen & Transport', uk: 'Переїзд та Транспорт', ru: 'Переезд и Транспорт' } },
-      { slug: 'reparation-mecanique', label: 'Réparation mécanique', t: { en: 'Vehicle Repair Services', es: 'Servicios de reparación mecánica', de: 'Kfz-Reparaturdienste', nl: 'Reparatiediensten voertuigen', uk: 'Послуги з ремонту транспорту', ru: 'Услуги по ремонту транспорта' } },
+      { slug: 'reparation-mecanique', label: 'Services de réparations mécaniques', t: { en: 'Vehicle Repair Services', es: 'Servicios de reparación mecánica', de: 'Kfz-Reparaturdienste', nl: 'Reparatiediensten voertuigen', uk: 'Послуги з ремонту транспорту', ru: 'Услуги по ремонту транспорта' } },
       { slug: 'informatique-web', label: 'Informatique & Web', t: { en: 'IT & Web Services', es: 'Informática y Web', de: 'IT & Webdienste', nl: 'IT & Webdiensten', uk: 'ІТ та Веб-послуги', ru: 'ИТ и Веб-услуги' } },
       { slug: 'autres-services', label: 'Autres services', t: { en: 'Other Services', es: 'Otros servicios', de: 'Sonstige Dienstleistungen', nl: 'Overige diensten', uk: 'Інші послуги', ru: 'Другие услуги' } },
     ],
