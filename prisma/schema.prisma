@@ -80,6 +80,7 @@ model Listing {
   lat            Float?
   lng            Float?
   blockedReason  String?
+  attributes     Json?
 
   @@index([siteId])
 }
