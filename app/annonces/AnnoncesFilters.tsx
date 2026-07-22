@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { neighborhoods } from '@/lib/neighborhoods'
 import { useCategories } from '@/hooks/useCategories'
 import type { CategoryTree } from '@/types'
+import VehicleAttributesFilters from '@/components/listings/VehicleAttributesFilters'
 
 interface Props {
   totalCount: number
@@ -210,6 +211,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
     <div className="space-y-5">
       {/* Category */}
       <CategoryFilterPanel cat={cat} categories={categories} onUpdate={update} />
+      {cat && <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} />}
 
       {/* Neighborhood */}
       <div>
