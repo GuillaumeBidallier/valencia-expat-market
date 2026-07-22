@@ -142,6 +142,7 @@
   "Filters": {
     "title": "Filters",
     "category": "Category",
+    "brand": "Brand",
     "all_categories": "All categories",
     "neighborhood": "Neighborhood",
     "all_neighborhoods": "All neighborhoods",

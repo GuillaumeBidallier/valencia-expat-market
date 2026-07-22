@@ -1,16 +1,13 @@
 'use client'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { X, SlidersHorizontal, LocateFixed, Loader2, ChevronRight } from 'lucide-react'
+import { X, LocateFixed, Loader2, ChevronRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { neighborhoods } from '@/lib/neighborhoods'
 import { useCategories } from '@/hooks/useCategories'
 import type { CategoryTree } from '@/types'
-import VehicleAttributesFilters from '@/components/listings/VehicleAttributesFilters'
-
-interface Props {
-  totalCount: number
-}
+import FilterDropdown from '@/components/ui/FilterDropdown'
+import VehicleAttributesFilters, { hasBrandModelField, countActiveVehicleFilters } from '@/components/listings/VehicleAttributesFilters'
 
 const RADII = [
   { label: '5 km',  value: '5'  },
@@ -19,44 +16,41 @@ const RADII = [
   { label: '50 km', value: '50' },
 ]
 
-function CategoryFilterPanel({
+function findCategoryLabel(categories: CategoryTree[], slug: string): string | null {
+  for (const root of categories) {
+    if (root.slug === slug) return root.label
+    const sub = root.children.find(c => c.slug === slug)
+    if (sub) return sub.label
+  }
+  return null
+}
+
+function CategoryPickerPanel({
   cat,
   categories,
   onUpdate,
+  onClose,
 }: {
   cat: string
   categories: CategoryTree[]
   onUpdate: (key: string, value: string) => void
+  onClose?: () => void
 }) {
   const t = useTranslations('Filters')
-
-  // Determine which root is active (either directly selected, or parent of selected sub)
-  const activeRoot = categories.find(r =>
-    r.slug === cat || r.children.some(c => c.slug === cat)
-  ) ?? null
-
+  const activeRoot = categories.find(r => r.slug === cat || r.children.some(c => c.slug === cat)) ?? null
   const [openRootSlug, setOpenRootSlug] = useState<string | null>(activeRoot?.slug ?? null)
-
-  // Sync open state when `cat` changes (e.g. cleared by "clear all")
-  useEffect(() => {
-    if (!cat) setOpenRootSlug(null)
-  }, [cat])
 
   const handleRootClick = (root: CategoryTree) => {
     if (root.children.length === 0) {
-      // No subcategories — apply filter immediately
       onUpdate('cat', root.slug === cat ? '' : root.slug)
       setOpenRootSlug(root.slug === openRootSlug ? null : root.slug)
+      if (root.slug !== cat) onClose?.()
     } else {
-      // Toggle open/collapsed; only apply filter when clicking an already-open root with no sub selected
       if (openRootSlug === root.slug) {
-        // Collapse and clear filter
         setOpenRootSlug(null)
         onUpdate('cat', '')
       } else {
         setOpenRootSlug(root.slug)
-        // Don't apply root filter yet — wait for sub selection
-        // But if switching roots, clear the current cat filter
         if (activeRoot?.slug !== root.slug) onUpdate('cat', '')
       }
     }
@@ -64,15 +58,13 @@ function CategoryFilterPanel({
 
   const handleSubClick = (subSlug: string) => {
     onUpdate('cat', subSlug === cat ? '' : subSlug)
+    onClose?.()
   }
 
   return (
-    <div>
-      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('category')}</label>
-
-      {/* "All categories" option */}
+    <div className="max-h-96 overflow-y-auto">
       <button
-        onClick={() => { onUpdate('cat', ''); setOpenRootSlug(null) }}
+        onClick={() => { onUpdate('cat', ''); setOpenRootSlug(null); onClose?.() }}
         className={`w-full text-left text-sm px-3 py-2 rounded-lg mb-1.5 font-medium transition-colors ${
           !cat ? 'bg-orange-soft text-orange-primary font-bold' : 'text-gray-500 hover:bg-gray-50'
         }`}
@@ -80,7 +72,6 @@ function CategoryFilterPanel({
         {t('all_categories')}
       </button>
 
-      {/* Root categories list */}
       <div className="space-y-1">
         {categories.map(root => {
           const isOpen     = openRootSlug === root.slug
@@ -93,22 +84,16 @@ function CategoryFilterPanel({
               <button
                 onClick={() => handleRootClick(root)}
                 className={`w-full flex items-center gap-2 text-left text-sm px-3 py-2 rounded-lg font-medium transition-colors ${
-                  anyActive
-                    ? 'bg-orange-soft text-orange-primary font-bold'
-                    : 'text-navy hover:bg-gray-50'
+                  anyActive ? 'bg-orange-soft text-orange-primary font-bold' : 'text-navy hover:bg-gray-50'
                 }`}
               >
                 <span className="shrink-0">{root.icon}</span>
                 <span className="flex-1 truncate">{root.label}</span>
                 {root.children.length > 0 && (
-                  <ChevronRight
-                    size={12}
-                    className={`shrink-0 text-gray-400 transition-transform ${isOpen ? 'rotate-90' : ''}`}
-                  />
+                  <ChevronRight size={12} className={`shrink-0 text-gray-400 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
                 )}
               </button>
 
-              {/* Subcategory list */}
               {isOpen && root.children.length > 0 && (
                 <div className="pl-6 mt-0.5 space-y-0.5">
                   {root.children.map(sub => (
@@ -116,9 +101,7 @@ function CategoryFilterPanel({
                       key={sub.slug}
                       onClick={() => handleSubClick(sub.slug)}
                       className={`w-full flex items-center gap-1.5 text-left text-xs px-2 py-1.5 rounded-lg font-medium transition-colors ${
-                        sub.slug === cat
-                          ? 'bg-orange-primary text-white font-bold'
-                          : 'text-gray-600 hover:bg-gray-100'
+                        sub.slug === cat ? 'bg-orange-primary text-white font-bold' : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
                       <span>{sub.icon}</span>
@@ -135,12 +118,11 @@ function CategoryFilterPanel({
   )
 }
 
-export default function AnnoncesFilters({ totalCount }: Props) {
+export default function AnnoncesFilters() {
   const t = useTranslations('Filters')
   const categories = useCategories()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [showMobile, setShowMobile] = useState(false)
   const [geoLoading, setGeoLoading] = useState(false)
   const [geoError, setGeoError] = useState('')
 
@@ -152,6 +134,7 @@ export default function AnnoncesFilters({ totalCount }: Props) {
   const lat      = searchParams.get('lat')      ?? ''
   const lng      = searchParams.get('lng')      ?? ''
   const radius   = searchParams.get('radius')   ?? '10'
+  const brand    = searchParams.get('attr_brand') ?? ''
 
   const hasLocation = Boolean(lat && lng)
   const activeCount = [cat, ville, priceMin, priceMax, hasLocation ? 'loc' : ''].filter(Boolean).length
@@ -207,13 +190,21 @@ export default function AnnoncesFilters({ totalCount }: Props) {
     router.push(q ? `/annonces?q=${encodeURIComponent(q)}` : '/annonces')
   }
 
-  const filtersContent = (
-    <div className="space-y-5">
-      {/* Category */}
-      <CategoryFilterPanel cat={cat} categories={categories} onUpdate={update} />
-      {cat && <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} />}
+  const categoryLabel = cat ? (findCategoryLabel(categories, cat) ?? cat) : t('all_categories')
+  const locationLabel = hasLocation ? t('position_active') : ville || t('my_position')
+  const priceLabel = priceMin || priceMax
+    ? `${priceMin || '0'}€ - ${priceMax || '∞'}€`
+    : t('price')
+  const sortLabel = sort === 'distance' ? t('sort_nearest')
+    : sort === 'price_asc' ? t('sort_price_asc')
+    : sort === 'price_desc' ? t('sort_price_desc')
+    : t('sort_by')
 
-      {/* Neighborhood */}
+  const showBrandButton = cat && hasBrandModelField(cat)
+  const vehicleFilterCount = cat ? countActiveVehicleFilters(cat, searchParams) : 0
+
+  const locationPanel = (
+    <div className="space-y-4">
       <div>
         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('neighborhood')}</label>
         <select
@@ -225,8 +216,6 @@ export default function AnnoncesFilters({ totalCount }: Props) {
           {neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
         </select>
       </div>
-
-      {/* Localisation */}
       <div>
         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('my_position')}</label>
         {hasLocation ? (
@@ -262,95 +251,90 @@ export default function AnnoncesFilters({ totalCount }: Props) {
           </div>
         )}
       </div>
+    </div>
+  )
 
-      {/* Price range */}
-      <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('price')}</label>
-        <div className="flex gap-2 items-center">
-          <input
-            type="number"
-            placeholder="Min"
-            defaultValue={priceMin}
-            key={`min-${priceMin}`}
-            onBlur={e => applyPrice(e.target.value, priceMax)}
-            className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
-          />
-          <span className="text-gray-300 shrink-0">—</span>
-          <input
-            type="number"
-            placeholder="Max"
-            defaultValue={priceMax}
-            key={`max-${priceMax}`}
-            onBlur={e => applyPrice(priceMin, e.target.value)}
-            className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
-          />
-        </div>
+  const pricePanel = (
+    <div>
+      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('price')}</label>
+      <div className="flex gap-2 items-center">
+        <input
+          type="number"
+          placeholder="Min"
+          defaultValue={priceMin}
+          key={`min-${priceMin}`}
+          onBlur={e => applyPrice(e.target.value, priceMax)}
+          className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
+        />
+        <span className="text-gray-300 shrink-0">—</span>
+        <input
+          type="number"
+          placeholder="Max"
+          defaultValue={priceMax}
+          key={`max-${priceMax}`}
+          onBlur={e => applyPrice(priceMin, e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
+        />
       </div>
+    </div>
+  )
 
-      {/* Sort */}
-      <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('sort_by')}</label>
-        <select
-          value={sort}
-          onChange={e => update('sort', e.target.value)}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
-        >
-          <option value="">{t('sort_recent')}</option>
-          {hasLocation && <option value="distance">{t('sort_nearest')}</option>}
-          <option value="price_asc">{t('sort_price_asc')}</option>
-          <option value="price_desc">{t('sort_price_desc')}</option>
-        </select>
-      </div>
-
-      {activeCount > 0 && (
-        <button
-          onClick={clearAll}
-          className="w-full flex items-center justify-center gap-1.5 text-xs text-red-500 font-semibold py-2 rounded-lg border border-red-200 hover:bg-red-50 transition-colors"
-        >
-          <X size={12} /> {t('clear_filters', { count: activeCount })}
-        </button>
-      )}
+  const sortPanel = (
+    <div>
+      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('sort_by')}</label>
+      <select
+        value={sort}
+        onChange={e => update('sort', e.target.value)}
+        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
+      >
+        <option value="">{t('sort_recent')}</option>
+        {hasLocation && <option value="distance">{t('sort_nearest')}</option>}
+        <option value="price_asc">{t('sort_price_asc')}</option>
+        <option value="price_desc">{t('sort_price_desc')}</option>
+      </select>
     </div>
   )
 
   return (
-    <>
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:block w-56 shrink-0">
-        <div className="bg-white border border-gray-100 rounded-xl p-4 sticky top-32 shadow-sm">
-          <h3 className="font-bold text-navy text-sm mb-4">{t('title')}</h3>
-          {filtersContent}
-        </div>
-      </aside>
+    <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <FilterDropdown label={categoryLabel} active={Boolean(cat)}>
+          <CategoryPickerPanel cat={cat} categories={categories} onUpdate={update} />
+        </FilterDropdown>
 
-      {/* Mobile */}
-      <div className="lg:hidden w-full">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm text-gray-600 font-medium">
-            <strong className="text-navy">{totalCount !== 1 ? t('listing_count_plural', { count: totalCount }) : t('listing_count', { count: totalCount })}</strong>
-          </span>
+        <FilterDropdown label={locationLabel} active={Boolean(ville || hasLocation)}>
+          {locationPanel}
+        </FilterDropdown>
+
+        <FilterDropdown label={priceLabel} active={Boolean(priceMin || priceMax)}>
+          {pricePanel}
+        </FilterDropdown>
+
+        {showBrandButton && (
+          <FilterDropdown label={brand ? brand.replace(/-/g, ' ') : t('brand')} active={Boolean(brand)} panelClassName="w-[28rem]">
+            <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} mode="brand" />
+          </FilterDropdown>
+        )}
+
+        {cat && (
+          <FilterDropdown label={t('title')} badge={vehicleFilterCount} align="right" panelClassName="w-80">
+            <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} mode="rest" />
+          </FilterDropdown>
+        )}
+
+        <FilterDropdown label={sortLabel} active={Boolean(sort)} align="right">
+          {sortPanel}
+        </FilterDropdown>
+
+        {activeCount > 0 && (
           <button
-            onClick={() => setShowMobile(v => !v)}
-            className="flex items-center gap-1.5 text-sm font-semibold text-orange-primary border border-orange-primary/30 bg-orange-soft px-3 py-1.5 rounded-lg"
+            onClick={clearAll}
+            className="flex items-center gap-1.5 text-xs text-red-500 font-semibold px-3 py-2 rounded-full border border-red-200 hover:bg-red-50 transition-colors ml-auto"
           >
-            <SlidersHorizontal size={13} />
-            {t('title')}
-            {activeCount > 0 && (
-              <span className="w-4 h-4 bg-orange-primary text-white rounded-full text-[10px] flex items-center justify-center">{activeCount}</span>
-            )}
+            <X size={12} /> {t('clear_filters', { count: activeCount })}
           </button>
-        </div>
-
-        {showMobile && (
-          <div className="bg-white border border-gray-100 rounded-xl p-4 mb-4 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-bold text-navy text-sm">{t('title')}</span>
-              <button onClick={() => setShowMobile(false)}><X size={15} className="text-gray-400" /></button>
-            </div>
-            {filtersContent}
-          </div>
         )}
       </div>
-    </>
+    </div>
   )
 }

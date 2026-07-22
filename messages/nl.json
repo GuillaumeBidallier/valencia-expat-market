@@ -142,6 +142,7 @@
   "Filters": {
     "title": "Filters",
     "category": "Categorie",
+    "brand": "Merk",
     "all_categories": "Alle categorieën",
     "neighborhood": "Wijk",
     "all_neighborhoods": "Alle wijken",

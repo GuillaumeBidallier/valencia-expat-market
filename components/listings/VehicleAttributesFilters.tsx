@@ -12,11 +12,39 @@ interface Props {
   cat: string
   searchParams: SearchParamsLike
   onUpdate: (key: string, value: string) => void
+  /** 'brand' renders only the marque/modèle field, 'rest' renders everything else, 'all' renders both (default). */
+  mode?: 'all' | 'brand' | 'rest'
 }
 
-export default function VehicleAttributesFilters({ cat, searchParams, onUpdate }: Props) {
+export function hasBrandModelField(cat: string): boolean {
+  return (VEHICLE_ATTRIBUTES[cat] ?? []).some(f => f.type === 'brand-model')
+}
+
+/** Count of populated non-brand attribute filters, for a "Filtres (n)" badge. */
+export function countActiveVehicleFilters(cat: string, searchParams: SearchParamsLike): number {
   const fields = VEHICLE_ATTRIBUTES[cat]
-  if (!fields || fields.length === 0) return null
+  if (!fields) return 0
+  let count = 0
+  for (const field of fields) {
+    if (field.type === 'brand-model') continue
+    if (field.type === 'select') {
+      if ((searchParams.get(`attr_${field.key}`) ?? '').split(',').filter(Boolean).length > 0) count++
+    } else {
+      if (searchParams.get(`attr_${field.key}_min`)) count++
+      if (searchParams.get(`attr_${field.key}_max`)) count++
+    }
+  }
+  return count
+}
+
+export default function VehicleAttributesFilters({ cat, searchParams, onUpdate, mode = 'all' }: Props) {
+  const allFields = VEHICLE_ATTRIBUTES[cat]
+  if (!allFields || allFields.length === 0) return null
+
+  const fields = allFields.filter(f =>
+    mode === 'all' ? true : mode === 'brand' ? f.type === 'brand-model' : f.type !== 'brand-model'
+  )
+  if (fields.length === 0) return null
 
   const toggleMulti = (key: string, value: string) => {
     const current = (searchParams.get(`attr_${key}`) ?? '').split(',').filter(Boolean)
@@ -25,7 +53,7 @@ export default function VehicleAttributesFilters({ cat, searchParams, onUpdate }
   }
 
   return (
-    <div className="space-y-4 pt-4 mt-4 border-t border-gray-100">
+    <div className="space-y-4">
       {fields.map(field => {
         if (field.type === 'brand-model') {
           return (

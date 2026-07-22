@@ -142,6 +142,7 @@
   "Filters": {
     "title": "Filter",
     "category": "Kategorie",
+    "brand": "Marke",
     "all_categories": "Alle Kategorien",
     "neighborhood": "Stadtteil",
     "all_neighborhoods": "Alle Stadtteile",

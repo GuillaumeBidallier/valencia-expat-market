@@ -142,6 +142,7 @@
   "Filters": {
     "title": "Фильтры",
     "category": "Категория",
+    "brand": "Марка",
     "all_categories": "Все категории",
     "neighborhood": "Район",
     "all_neighborhoods": "Все районы",
