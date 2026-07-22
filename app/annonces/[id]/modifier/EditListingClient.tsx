@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ImagePlus, X, ArrowLeft, Loader2 } from 'lucide-react'
 import { neighborhoods } from '@/lib/neighborhoods'
 import CategoryPicker from '@/components/ui/CategoryPicker'
+import VehicleAttributesFields from '@/components/listings/VehicleAttributesFields'
 
 const MAX_IMAGES = 5
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
@@ -19,6 +20,7 @@ type Props = {
     price: number | null; categorySlug: string
     neighborhood: string; phone: string
     images: ExistingImage[]
+    attributes: Record<string, string | number> | null
   }
 }
 
@@ -34,6 +36,7 @@ export default function EditListingClient({ listing }: Props) {
     neighborhood: listing.neighborhood,
     phone:        listing.phone,
   })
+  const [attributes, setAttributes] = useState<Record<string, string | number>>(listing.attributes ?? {})
   const [existingImages, setExistingImages] = useState<ExistingImage[]>(listing.images)
   const [removedIds, setRemovedIds]         = useState<Set<string>>(new Set())
   const [newFiles, setNewFiles]             = useState<File[]>([])
@@ -91,6 +94,8 @@ export default function EditListingClient({ listing }: Props) {
           description:  form.description.trim(),
           price:        form.price ? Number(form.price) : null,
           neighborhood: form.neighborhood,
+          categorySlug: form.categorySlug,
+          attributes:   Object.keys(attributes).length > 0 ? attributes : null,
         }),
       })
 
@@ -153,10 +158,16 @@ export default function EditListingClient({ listing }: Props) {
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5">Catégorie *</label>
             <CategoryPicker
               value={form.categorySlug}
-              onChange={slug => setForm(f => ({ ...f, categorySlug: slug }))}
+              onChange={slug => { setForm(f => ({ ...f, categorySlug: slug })); setAttributes({}) }}
               error={errors.categorySlug}
             />
           </div>
+
+          <VehicleAttributesFields
+            categorySlug={form.categorySlug}
+            value={attributes}
+            onChange={setAttributes}
+          />
 
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5">Prix (€) — laisser vide pour un don</label>
