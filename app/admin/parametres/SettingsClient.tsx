@@ -60,6 +60,11 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
   const [resetResult, setResetResult] = useState<{ count: number } | null>(null)
   const [resetError, setResetError]   = useState('')
 
+  const [resetListingsStep, setResetListingsStep]     = useState<'idle' | 'confirm'>('idle')
+  const [resettingListings, setResettingListings]     = useState(false)
+  const [resetListingsResult, setResetListingsResult] = useState<{ count: number } | null>(null)
+  const [resetListingsError, setResetListingsError]   = useState('')
+
   async function handleExport() {
     setExporting(true)
     try {
@@ -95,6 +100,24 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       setResetStep('idle')
     } finally {
       setResetting(false)
+    }
+  }
+
+  async function handleResetListings() {
+    setResettingListings(true)
+    setResetListingsError('')
+    setResetListingsResult(null)
+    try {
+      const res  = await fetch('/api/admin/database/reset-listings', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Erreur inconnue')
+      setResetListingsResult({ count: data.deleted })
+      setResetListingsStep('idle')
+    } catch (e) {
+      setResetListingsError(e instanceof Error ? e.message : 'Erreur inconnue')
+      setResetListingsStep('idle')
+    } finally {
+      setResettingListings(false)
     }
   }
 
@@ -477,6 +500,62 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
               <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
                 <AlertTriangle size={13} className="shrink-0" />
                 {resetError}
+              </p>
+            )}
+          </div>
+
+          {/* Reset listings */}
+          <div className={`rounded-xl border px-4 py-3 ${resetListingsStep === 'confirm' ? 'border-red-200 bg-red-50' : 'border-gray-100 bg-gray-50'}`}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-navy">Réinitialiser les annonces</p>
+                <p className="text-xs text-gray-400 mt-0.5">Supprime <strong>toutes</strong> les annonces, leurs images, favoris, messages et signalements. Les comptes utilisateurs associés sont conservés.</p>
+              </div>
+              {resetListingsStep === 'idle' ? (
+                <button
+                  onClick={() => { setResetListingsStep('confirm'); setResetListingsResult(null); setResetListingsError('') }}
+                  disabled={resettingListings}
+                  className="flex items-center gap-2 shrink-0 bg-red-500 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60"
+                >
+                  <RotateCcw size={14} />
+                  Réinitialiser
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => setResetListingsStep('idle')}
+                    className="text-xs font-bold text-gray-500 px-3 py-2 rounded-xl border border-gray-200 hover:bg-white transition-colors"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={handleResetListings}
+                    disabled={resettingListings}
+                    className="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-700 transition-colors disabled:opacity-60"
+                  >
+                    {resettingListings ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
+                    {resettingListings ? 'Suppression…' : 'Confirmer la suppression'}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {resetListingsStep === 'confirm' && (
+              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                <AlertTriangle size={13} className="shrink-0" />
+                Cette action est irréversible. Toutes les annonces seront définitivement supprimées.
+              </p>
+            )}
+            {resetListingsResult && (
+              <p className="mt-3 text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
+                <CheckCircle2 size={13} className="shrink-0" />
+                {resetListingsResult.count} annonce{resetListingsResult.count !== 1 ? 's' : ''} supprimée{resetListingsResult.count !== 1 ? 's' : ''} avec succès.
+              </p>
+            )}
+            {resetListingsError && (
+              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                <AlertTriangle size={13} className="shrink-0" />
+                {resetListingsError}
               </p>
             )}
           </div>
