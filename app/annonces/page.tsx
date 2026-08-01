@@ -56,6 +56,8 @@ async function AnnoncesContent({ searchParams }: Props) {
   const priceMin = params.priceMin ? Number(params.priceMin) : undefined
   const priceMax = params.priceMax ? Number(params.priceMax) : undefined
   const sort     = params.sort     ?? ''
+  const seller   = (params.seller  ?? '').split(',').filter(Boolean)
+  const urgent   = params.urgent === '1'
   const page     = Math.max(1, parseInt(params.page ?? '1'))
   const userLat  = params.lat    ? Number(params.lat)    : undefined
   const userLng  = params.lng    ? Number(params.lng)    : undefined
@@ -112,6 +114,11 @@ async function AnnoncesContent({ searchParams }: Props) {
       lat: { gte: bbox.latMin, lte: bbox.latMax },
       lng: { gte: bbox.lngMin, lte: bbox.lngMax },
     }),
+    ...(urgent && { boostExpiresAt: { gt: new Date() } }),
+    // Only filter when exactly one seller type is checked — both or neither means "show all".
+    ...(seller.length === 1 && {
+      user: { professional: seller[0] === 'pro' ? { isNot: null } : { is: null } },
+    }),
   }
 
   const vehicleClauses = cat ? buildVehicleAttributeClauses(cat, params) : []
@@ -122,7 +129,9 @@ async function AnnoncesContent({ searchParams }: Props) {
   const orderByDb =
     sort === 'price_asc'  ? [{ price: { sort: 'asc'  as const, nulls: 'last' as const } }] :
     sort === 'price_desc' ? [{ price: { sort: 'desc' as const, nulls: 'last' as const } }] :
-    [{ featuredAt: 'desc' as const }, { publishedAt: 'desc' as const }]
+    sort === 'recent'     ? [{ publishedAt: 'desc' as const }] :
+    sort === 'oldest'     ? [{ publishedAt: 'asc'  as const }] :
+    [{ isPremium: 'desc' as const }, { featuredAt: 'desc' as const }, { publishedAt: 'desc' as const }]
 
   // When sorting by distance, fetch all from bounding box without skip/take
   const fetchAll = hasLocation && sort === 'distance'

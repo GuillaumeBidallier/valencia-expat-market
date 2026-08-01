@@ -185,8 +185,11 @@ export default function AnnoncesFilters() {
   const radius   = searchParams.get('radius')   ?? '10'
   const brand    = searchParams.get('attr_brand') ?? ''
 
+  const seller  = searchParams.get('seller') ?? ''
+  const urgent  = searchParams.get('urgent') ?? ''
+
   const hasLocation = Boolean(lat && lng)
-  const activeCount = [cat, ville, priceMin, priceMax, hasLocation ? 'loc' : ''].filter(Boolean).length
+  const activeCount = [cat, ville, priceMin, priceMax, seller, urgent, hasLocation ? 'loc' : ''].filter(Boolean).length
 
   const update = useCallback((key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -247,6 +250,8 @@ export default function AnnoncesFilters() {
   const sortLabel = sort === 'distance' ? t('sort_nearest')
     : sort === 'price_asc' ? t('sort_price_asc')
     : sort === 'price_desc' ? t('sort_price_desc')
+    : sort === 'recent' ? t('sort_recent')
+    : sort === 'oldest' ? t('sort_oldest')
     : t('sort_by')
 
   const showBrandButton = cat && hasBrandModelField(cat)
@@ -336,11 +341,55 @@ export default function AnnoncesFilters() {
         onChange={e => update('sort', e.target.value)}
         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
       >
-        <option value="">{t('sort_recent')}</option>
+        <option value="">{t('sort_pertinence')}</option>
+        <option value="recent">{t('sort_recent')}</option>
+        <option value="oldest">{t('sort_oldest')}</option>
         {hasLocation && <option value="distance">{t('sort_nearest')}</option>}
         <option value="price_asc">{t('sort_price_asc')}</option>
         <option value="price_desc">{t('sort_price_desc')}</option>
       </select>
+    </div>
+  )
+
+  const sellerTypes = seller.split(',').filter(Boolean)
+  const toggleSeller = (v: string) => {
+    const next = sellerTypes.includes(v) ? sellerTypes.filter(s => s !== v) : [...sellerTypes, v]
+    update('seller', next.join(','))
+  }
+  const urgentOnly = urgent === '1'
+
+  const sellerPanel = (
+    <div className="space-y-4">
+      <div>
+        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('sellers_title')}</label>
+        <div className="space-y-1.5">
+          {[
+            { value: 'particulier', label: t('sellers_individual') },
+            { value: 'pro', label: t('sellers_pro') },
+          ].map(o => (
+            <label key={o.value} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={sellerTypes.includes(o.value)}
+                onChange={() => toggleSeller(o.value)}
+                className="w-4 h-4 rounded border-gray-300 text-orange-primary focus:ring-orange-primary"
+              />
+              {o.label}
+            </label>
+          ))}
+        </div>
+      </div>
+      <div>
+        <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={urgentOnly}
+            onChange={e => update('urgent', e.target.checked ? '1' : '')}
+            className="w-4 h-4 rounded border-gray-300 text-orange-primary focus:ring-orange-primary"
+          />
+          {t('urgent_only')}
+        </label>
+      </div>
     </div>
   )
 
@@ -373,6 +422,10 @@ export default function AnnoncesFilters() {
 
         <FilterDropdown label={sortLabel} active={Boolean(sort)} align="right">
           {sortPanel}
+        </FilterDropdown>
+
+        <FilterDropdown label={t('sellers_title')} badge={sellerTypes.length + (urgentOnly ? 1 : 0)} align="right">
+          {sellerPanel}
         </FilterDropdown>
 
         {activeCount > 0 && (

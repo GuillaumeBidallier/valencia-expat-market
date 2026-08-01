@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ImagePlus, X, Lock, Sparkles, CheckCircle2, Loader2 } from 'lucide-react'
+import { ImagePlus, X, Lock, Sparkles, CheckCircle2, Loader2, Zap } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useListings } from '@/context/ListingsContext'
 import Input from '@/components/ui/Input'
@@ -29,6 +29,10 @@ function DeposerAnnonceForm() {
   const [hasUpgrade, setHasUpgrade]     = useState(false)
   const [verifying, setVerifying]       = useState(false)
   const [upgradeLoading, setUpgradeLoading] = useState(false)
+
+  const [hasBoost, setHasBoost]         = useState(false)
+  const [verifyingBoost, setVerifyingBoost] = useState(false)
+  const [boostLoading, setBoostLoading] = useState(false)
 
   const [hidePhone, setHidePhone]       = useState(false)
   const [hidePhoneSaving, setHidePhoneSaving] = useState(false)
@@ -59,6 +63,15 @@ function DeposerAnnonceForm() {
       .then(d => { if (d.hasUpgrade) setHasUpgrade(true) })
       .catch(() => {})
   }, [isAuthenticated, isPremium])
+
+  // Check for an existing paid, unused "urgent" boost on mount
+  useEffect(() => {
+    if (!isAuthenticated) return
+    fetch('/api/stripe/listing-boost')
+      .then(r => r.json())
+      .then(d => { if (d.hasBoost) setHasBoost(true) })
+      .catch(() => {})
+  }, [isAuthenticated])
 
   // Load current contact-visibility preference
   useEffect(() => {
@@ -97,6 +110,21 @@ function DeposerAnnonceForm() {
       .then(d => { if (d.ok) setHasUpgrade(true) })
       .finally(() => setVerifying(false))
   }, [upgradeSession, hasUpgrade])
+
+  // Handle Stripe redirect with boost_session param
+  const boostSession = searchParams.get('boost_session')
+  useEffect(() => {
+    if (!boostSession || hasBoost) return
+    setVerifyingBoost(true)
+    fetch('/api/stripe/listing-boost/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ stripeSessionId: boostSession }),
+    })
+      .then(r => r.json())
+      .then(d => { if (d.ok) setHasBoost(true) })
+      .finally(() => setVerifyingBoost(false))
+  }, [boostSession, hasBoost])
 
   useEffect(() => {
     if (!isAuthenticated) router.replace('/connexion')
@@ -143,6 +171,21 @@ function DeposerAnnonceForm() {
     }
   }
 
+  const handleBuyBoost = async () => {
+    setBoostLoading(true)
+    try {
+      const res = await fetch('/api/stripe/listing-boost', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ returnUrl: window.location.href }),
+      })
+      const { url } = await res.json()
+      if (url) window.location.href = url
+    } finally {
+      setBoostLoading(false)
+    }
+  }
+
   const validate = () => {
     const e: Record<string, string> = {}
     if (!form.title.trim())    e.title        = t('err_title')
@@ -180,6 +223,15 @@ function DeposerAnnonceForm() {
       // Consume the upgrade token after successful submission
       if (hasUpgrade) {
         await fetch('/api/stripe/photo-upgrade/consume', { method: 'POST' })
+      }
+
+      // Apply the "urgent" boost to this listing, if a paid credit is available
+      if (hasBoost) {
+        await fetch('/api/stripe/listing-boost/consume', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ listingId: id }),
+        })
       }
 
       router.push(pendingReview ? '/annonce-en-attente' : `/annonces/${id}`)
@@ -221,6 +273,20 @@ function DeposerAnnonceForm() {
         <div className="mb-6 flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">
           <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
           <p className="text-sm font-semibold text-emerald-700">{t('upgrade_ok')}</p>
+        </div>
+      )}
+
+      {verifyingBoost && (
+        <div className="mb-6 flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+          <Loader2 size={16} className="text-blue-500 animate-spin shrink-0" />
+          <p className="text-sm text-blue-700">{t('boost_verifying')}</p>
+        </div>
+      )}
+
+      {hasBoost && !verifyingBoost && (
+        <div className="mb-6 flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">
+          <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+          <p className="text-sm font-semibold text-emerald-700">{t('boost_ok')}</p>
         </div>
       )}
 
@@ -368,6 +434,33 @@ function DeposerAnnonceForm() {
               <span className="block text-xs text-gray-400 mt-0.5">{t('hide_phone_hint')}</span>
             </span>
           </label>
+        </div>
+
+        {/* Boost "urgent" */}
+        <div className="bg-white rounded-xl border border-gray-100 p-6">
+          {hasBoost ? (
+            <div className="flex items-center gap-3">
+              <Zap size={18} className="text-orange-primary shrink-0" />
+              <p className="text-sm font-semibold text-navy">{t('boost_will_apply')}</p>
+            </div>
+          ) : (
+            <div className="flex items-start gap-3 bg-gradient-to-r from-orange-50 to-red-50 border border-orange-100 rounded-xl px-4 py-4">
+              <Zap size={16} className="text-orange-primary shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-navy">{t('boost_title')}</p>
+                <p className="text-xs text-gray-500 mt-0.5 mb-3">{t('boost_desc')}</p>
+                <button
+                  type="button"
+                  onClick={handleBuyBoost}
+                  disabled={boostLoading}
+                  className="flex items-center gap-2 bg-orange-primary hover:bg-orange-primary/90 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors disabled:opacity-60"
+                >
+                  {boostLoading ? <Loader2 size={14} className="animate-spin" /> : <Zap size={14} />}
+                  {t('boost_btn')}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {firewallError && (
