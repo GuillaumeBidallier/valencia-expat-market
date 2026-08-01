@@ -87,6 +87,8 @@
     "p_location": "Bijv. Ruzafa, Benimaclet, Paterna…",
     "f_phone": "Telefoon / WhatsApp",
     "p_phone": "+34 6XX XXX XXX",
+    "hide_phone_label": "Mijn telefoonnummer en WhatsApp verbergen op mijn advertenties",
+    "hide_phone_hint": "Kopers kunnen je nog steeds via bericht bereiken. Op elk moment aanpasbaar in Mijn account.",
     "submit": "Advertentie publiceren",
     "submitting": "Publiceren...",
     "err_title": "Titel is verplicht",

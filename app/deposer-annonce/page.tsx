@@ -30,6 +30,9 @@ function DeposerAnnonceForm() {
   const [verifying, setVerifying]       = useState(false)
   const [upgradeLoading, setUpgradeLoading] = useState(false)
 
+  const [hidePhone, setHidePhone]       = useState(false)
+  const [hidePhoneSaving, setHidePhoneSaving] = useState(false)
+
   const MAX_IMAGES = isAdmin ? ADMIN_MAX : isPremium ? UPGRADED_MAX_PHOTOS : hasUpgrade ? UPGRADED_MAX_PHOTOS : FREE_MAX_PHOTOS
 
   const [form, setForm] = useState({
@@ -56,6 +59,29 @@ function DeposerAnnonceForm() {
       .then(d => { if (d.hasUpgrade) setHasUpgrade(true) })
       .catch(() => {})
   }, [isAuthenticated, isPremium])
+
+  // Load current contact-visibility preference
+  useEffect(() => {
+    if (!isAuthenticated) return
+    fetch('/api/user/me')
+      .then(r => r.json())
+      .then(d => { if (d.showPhone === false) setHidePhone(true) })
+      .catch(() => {})
+  }, [isAuthenticated])
+
+  const handleToggleHidePhone = async (checked: boolean) => {
+    setHidePhone(checked)
+    setHidePhoneSaving(true)
+    try {
+      await fetch('/api/user/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ showPhone: !checked, showWhatsapp: !checked }),
+      })
+    } finally {
+      setHidePhoneSaving(false)
+    }
+  }
 
   // Handle Stripe redirect with upgrade_session param
   const upgradeSession = searchParams.get('upgrade_session')
@@ -328,6 +354,20 @@ function DeposerAnnonceForm() {
           </div>
 
           <Input id="phone" label={t('f_phone')} type="tel" placeholder={t('p_phone')} value={form.phone} onChange={set('phone')} />
+
+          <label className="flex items-start gap-2.5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={hidePhone}
+              onChange={e => handleToggleHidePhone(e.target.checked)}
+              disabled={hidePhoneSaving}
+              className="mt-0.5 w-4 h-4 rounded border-gray-300 text-orange-primary focus:ring-orange-primary shrink-0"
+            />
+            <span className="text-sm text-gray-600">
+              {t('hide_phone_label')}
+              <span className="block text-xs text-gray-400 mt-0.5">{t('hide_phone_hint')}</span>
+            </span>
+          </label>
         </div>
 
         {firewallError && (

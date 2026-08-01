@@ -56,7 +56,7 @@ export default async function ListingDetailPage({ params }: Props) {
       where: { id, status: { not: 'DELETED' } },
       include: {
         images: { orderBy: { order: 'asc' } },
-        user: { select: { name: true } },
+        user: { select: { name: true, showPhone: true, showWhatsapp: true } },
       },
     }),
     session?.user?.id

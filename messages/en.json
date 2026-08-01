@@ -87,6 +87,8 @@
     "p_location": "E.g. Ruzafa, Benimaclet, Paterna…",
     "f_phone": "Phone / WhatsApp",
     "p_phone": "+34 6XX XXX XXX",
+    "hide_phone_label": "Hide my phone number and WhatsApp on my listings",
+    "hide_phone_hint": "Buyers can still contact you by message. Changeable anytime in My account.",
     "submit": "Publish ad",
     "submitting": "Publishing...",
     "err_title": "Title is required",
