@@ -10,9 +10,9 @@
     "admin": "Admin"
   },
   "Hero": {
-    "line1": "El sitio gratuito de",
-    "line2": "anuncios entre",
-    "highlight": "expatriados.",
+    "line1": "El sitio de",
+    "line2": "anuncios,",
+    "highlight": "gratis.",
     "trust": "El sitio solo conecta compradores y vendedores: el pago y la entrega se realizan directamente entre ustedes."
   },
   "Home": {
