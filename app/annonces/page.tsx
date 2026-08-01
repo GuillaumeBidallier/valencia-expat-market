@@ -43,7 +43,7 @@ function toListingWithDist(l: RawListing & { images: { id: string; url: string; 
     featuredAt:     l.featuredAt?.toISOString()     ?? null,
     boostExpiresAt: l.boostExpiresAt?.toISOString() ?? null,
     images:         l.images,
-    attributes:     l.attributes as Record<string, string | number> | null,
+    attributes:     l.attributes as Record<string, string | number | string[]> | null,
     distanceKm,
   }
 }

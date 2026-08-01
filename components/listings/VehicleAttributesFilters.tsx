@@ -1,6 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic'
-import { VEHICLE_ATTRIBUTES } from '@/lib/vehicleAttributes'
+import { CATEGORY_ATTRIBUTES } from '@/lib/categoryAttributes'
 
 const BrandModelPicker = dynamic(() => import('@/components/ui/BrandModelPicker'), { ssr: false })
 
@@ -17,18 +17,31 @@ interface Props {
 }
 
 export function hasBrandModelField(cat: string): boolean {
-  return (VEHICLE_ATTRIBUTES[cat] ?? []).some(f => f.type === 'brand-model')
+  return (CATEGORY_ATTRIBUTES[cat] ?? []).some(f => f.type === 'brand-model')
+}
+
+/** Parses the "min-max" / "min-" (open-ended) encoding used for stepper range filters. */
+function parseStepperRange(raw: string): { min: number | null; max: number | null; hasValue: boolean } {
+  if (!raw) return { min: null, max: null, hasValue: false }
+  const [minStr, maxStr] = raw.split('-')
+  return {
+    min: minStr !== '' ? Number(minStr) : null,
+    max: maxStr !== undefined && maxStr !== '' ? Number(maxStr) : null,
+    hasValue: true,
+  }
 }
 
 /** Count of populated non-brand attribute filters, for a "Filtres (n)" badge. */
 export function countActiveVehicleFilters(cat: string, searchParams: SearchParamsLike): number {
-  const fields = VEHICLE_ATTRIBUTES[cat]
+  const fields = CATEGORY_ATTRIBUTES[cat]
   if (!fields) return 0
   let count = 0
   for (const field of fields) {
     if (field.type === 'brand-model') continue
     if (field.type === 'select') {
       if ((searchParams.get(`attr_${field.key}`) ?? '').split(',').filter(Boolean).length > 0) count++
+    } else if (field.type === 'stepper') {
+      if (searchParams.get(`attr_${field.key}`)) count++
     } else {
       if (searchParams.get(`attr_${field.key}_min`)) count++
       if (searchParams.get(`attr_${field.key}_max`)) count++
@@ -38,7 +51,7 @@ export function countActiveVehicleFilters(cat: string, searchParams: SearchParam
 }
 
 export default function VehicleAttributesFilters({ cat, searchParams, onUpdate, mode = 'all' }: Props) {
-  const allFields = VEHICLE_ATTRIBUTES[cat]
+  const allFields = CATEGORY_ATTRIBUTES[cat]
   if (!allFields || allFields.length === 0) return null
 
   const fields = allFields.filter(f =>
@@ -88,6 +101,54 @@ export default function VehicleAttributesFilters({ cat, searchParams, onUpdate, 
                     {o.label}
                   </button>
                 ))}
+              </div>
+            </div>
+          )
+        }
+        if (field.type === 'stepper') {
+          const raw = searchParams.get(`attr_${field.key}`) ?? ''
+          const { min, max, hasValue } = parseStepperRange(raw)
+          const maxIsOpen = hasValue && raw.split('-')[1] === ''
+
+          const handleClick = (optValue: number, openEnded?: boolean) => {
+            if (!hasValue || min === null) {
+              onUpdate(`attr_${field.key}`, openEnded ? `${optValue}-` : `${optValue}-${optValue}`)
+              return
+            }
+            const isSameSingleSelection = optValue === min && (max === min || (maxIsOpen && openEnded))
+            if (isSameSingleSelection) {
+              onUpdate(`attr_${field.key}`, '')
+              return
+            }
+            if (optValue < min) {
+              onUpdate(`attr_${field.key}`, openEnded ? `${optValue}-` : `${optValue}-${optValue}`)
+              return
+            }
+            onUpdate(`attr_${field.key}`, openEnded ? `${min}-` : `${min}-${optValue}`)
+          }
+
+          return (
+            <div key={field.key}>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">{field.label}</label>
+              <p className="text-[11px] text-gray-400 mb-2">Sélectionnez un minimum et un maximum</p>
+              <div className="flex flex-wrap gap-1.5">
+                {field.options.map(o => {
+                  const inRange = hasValue && min !== null && o.value >= min && (maxIsOpen || o.value <= (max ?? min))
+                  return (
+                    <button
+                      key={o.value}
+                      type="button"
+                      onClick={() => handleClick(o.value, o.openEnded)}
+                      className={`w-9 h-9 rounded-full border text-sm font-semibold transition-colors ${
+                        inRange
+                          ? 'bg-orange-primary text-white border-orange-primary'
+                          : 'bg-white text-gray-600 border-gray-200 hover:border-orange-primary/40'
+                      }`}
+                    >
+                      {o.label}
+                    </button>
+                  )
+                })}
               </div>
             </div>
           )

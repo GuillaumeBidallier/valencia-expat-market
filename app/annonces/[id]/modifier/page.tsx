@@ -29,7 +29,7 @@ export default async function EditListingPage({ params }: Props) {
         neighborhood: listing.neighborhood,
         phone: listing.phone ?? '',
         images: listing.images.map(img => ({ id: img.id, url: img.url })),
-        attributes: listing.attributes as Record<string, string | number> | null,
+        attributes: listing.attributes as Record<string, string | number | string[]> | null,
       }}
     />
   )

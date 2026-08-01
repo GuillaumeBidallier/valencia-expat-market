@@ -28,7 +28,7 @@ const updateSchema = z.object({
   status: z.enum(['ACTIVE', 'SOLD', 'EXPIRED']).optional(),
   neighborhood: z.string().min(1).optional(),
   categorySlug: z.string().min(1).optional(),
-  attributes: z.record(z.string(), z.union([z.string(), z.number()])).nullable().optional(),
+  attributes: z.record(z.string(), z.union([z.string(), z.number(), z.array(z.string())])).nullable().optional(),
 })
 
 export async function PUT(req: NextRequest, { params }: { params: Params }) {

@@ -16,6 +16,8 @@ export interface SelectFieldDef {
   key: string
   label: string
   options: AttrOption[]
+  /** When true, listings can have several values at once (stored as a string[]). */
+  multi?: boolean
 }
 
 export interface RangeFieldDef {
@@ -25,7 +27,31 @@ export interface RangeFieldDef {
   unit?: string
 }
 
-export type AttrFieldDef = BrandModelFieldDef | SelectFieldDef | RangeFieldDef
+export interface StepperOption {
+  value: number
+  label: string
+  /** Last option in the row acts as "N or more" — filters omit the upper bound. */
+  openEnded?: boolean
+}
+
+export interface StepperFieldDef {
+  type: 'stepper'
+  key: string
+  label: string
+  unit?: string
+  options: StepperOption[]
+}
+
+export type AttrFieldDef = BrandModelFieldDef | SelectFieldDef | RangeFieldDef | StepperFieldDef
+
+/** Builds the 1..N-1, "N+" stepper options used for room/bedroom counts. */
+export function stepperUpTo(max: number): StepperOption[] {
+  return Array.from({ length: max }, (_, i) => i + 1).map(n => ({
+    value: n,
+    label: n === max ? `${n}+` : String(n),
+    openEnded: n === max,
+  }))
+}
 
 const FUEL: AttrOption[] = [
   { value: '1', label: 'Essence' },

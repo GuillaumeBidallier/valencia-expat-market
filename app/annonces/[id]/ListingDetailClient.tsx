@@ -12,10 +12,10 @@ import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/listings/FavoriteButton'
 import { Listing } from '@/types'
 import { useAuth } from '@/context/AuthContext'
-import { VEHICLE_ATTRIBUTES } from '@/lib/vehicleAttributes'
+import { CATEGORY_ATTRIBUTES } from '@/lib/categoryAttributes'
 
-function formatVehicleAttributes(categorySlug: string, attributes: Record<string, string | number> | null | undefined): string[] {
-  const fields = VEHICLE_ATTRIBUTES[categorySlug]
+function formatVehicleAttributes(categorySlug: string, attributes: Record<string, string | number | string[]> | null | undefined): string[] {
+  const fields = CATEGORY_ATTRIBUTES[categorySlug]
   if (!fields || !attributes) return []
 
   const parts: string[] = []
@@ -24,6 +24,13 @@ function formatVehicleAttributes(categorySlug: string, attributes: Record<string
       const brand = attributes[field.brandKey]
       const model = attributes[field.modelKey]
       if (brand) parts.push([brand, model].filter(Boolean).join(' '))
+    } else if (field.type === 'select' && field.multi) {
+      const raw = attributes[field.key]
+      const values = Array.isArray(raw) ? raw : []
+      const labels = values
+        .map(v => field.options.find(o => o.value === v)?.label)
+        .filter((l): l is string => Boolean(l))
+      if (labels.length > 0) parts.push(labels.join(', '))
     } else if (field.type === 'select') {
       const raw = attributes[field.key]
       if (raw !== undefined && raw !== '') {

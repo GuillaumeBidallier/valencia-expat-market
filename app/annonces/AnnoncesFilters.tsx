@@ -19,8 +19,11 @@ const RADII = [
 function findCategoryLabel(categories: CategoryTree[], slug: string): string | null {
   for (const root of categories) {
     if (root.slug === slug) return root.label
-    const sub = root.children.find(c => c.slug === slug)
-    if (sub) return sub.label
+    for (const sub of root.children) {
+      if (sub.slug === slug) return sub.label
+      const subsub = sub.children.find(c => c.slug === slug)
+      if (subsub) return subsub.label
+    }
   }
   return null
 }
@@ -37,8 +40,12 @@ function CategoryPickerPanel({
   onClose?: () => void
 }) {
   const t = useTranslations('Filters')
-  const activeRoot = categories.find(r => r.slug === cat || r.children.some(c => c.slug === cat)) ?? null
+  const activeRoot = categories.find(r =>
+    r.slug === cat || r.children.some(c => c.slug === cat || c.children.some(g => g.slug === cat))
+  ) ?? null
+  const activeSub = activeRoot?.children.find(c => c.slug === cat || c.children.some(g => g.slug === cat)) ?? null
   const [openRootSlug, setOpenRootSlug] = useState<string | null>(activeRoot?.slug ?? null)
+  const [openSubSlug, setOpenSubSlug] = useState<string | null>(activeSub?.slug ?? null)
 
   const handleRootClick = (root: CategoryTree) => {
     if (root.children.length === 0) {
@@ -48,23 +55,40 @@ function CategoryPickerPanel({
     } else {
       if (openRootSlug === root.slug) {
         setOpenRootSlug(null)
+        setOpenSubSlug(null)
         onUpdate('cat', '')
       } else {
         setOpenRootSlug(root.slug)
+        setOpenSubSlug(null)
         if (activeRoot?.slug !== root.slug) onUpdate('cat', '')
       }
     }
   }
 
-  const handleSubClick = (subSlug: string) => {
-    onUpdate('cat', subSlug === cat ? '' : subSlug)
+  const handleSubClick = (sub: CategoryTree) => {
+    if (sub.children.length === 0) {
+      onUpdate('cat', sub.slug === cat ? '' : sub.slug)
+      onClose?.()
+      return
+    }
+    if (openSubSlug === sub.slug) {
+      setOpenSubSlug(null)
+      onUpdate('cat', '')
+    } else {
+      setOpenSubSlug(sub.slug)
+      onUpdate('cat', sub.slug)
+    }
+  }
+
+  const handleSubSubClick = (subSubSlug: string) => {
+    onUpdate('cat', subSubSlug === cat ? '' : subSubSlug)
     onClose?.()
   }
 
   return (
     <div className="max-h-96 overflow-y-auto">
       <button
-        onClick={() => { onUpdate('cat', ''); setOpenRootSlug(null); onClose?.() }}
+        onClick={() => { onUpdate('cat', ''); setOpenRootSlug(null); setOpenSubSlug(null); onClose?.() }}
         className={`w-full text-left text-sm px-3 py-2 rounded-lg mb-1.5 font-medium transition-colors ${
           !cat ? 'bg-orange-soft text-orange-primary font-bold' : 'text-gray-500 hover:bg-gray-50'
         }`}
@@ -76,7 +100,7 @@ function CategoryPickerPanel({
         {categories.map(root => {
           const isOpen     = openRootSlug === root.slug
           const rootActive = root.slug === cat
-          const subActive  = root.children.some(c => c.slug === cat)
+          const subActive  = root.children.some(c => c.slug === cat || c.children.some(g => g.slug === cat))
           const anyActive  = rootActive || subActive
 
           return (
@@ -96,18 +120,43 @@ function CategoryPickerPanel({
 
               {isOpen && root.children.length > 0 && (
                 <div className="pl-6 mt-0.5 space-y-0.5">
-                  {root.children.map(sub => (
-                    <button
-                      key={sub.slug}
-                      onClick={() => handleSubClick(sub.slug)}
-                      className={`w-full flex items-center gap-1.5 text-left text-xs px-2 py-1.5 rounded-lg font-medium transition-colors ${
-                        sub.slug === cat ? 'bg-orange-primary text-white font-bold' : 'text-gray-600 hover:bg-gray-100'
-                      }`}
-                    >
-                      <span>{sub.icon}</span>
-                      <span className="truncate">{sub.label}</span>
-                    </button>
-                  ))}
+                  {root.children.map(sub => {
+                    const isSubOpen = openSubSlug === sub.slug
+                    const subActiveHere = sub.slug === cat || sub.children.some(g => g.slug === cat)
+                    return (
+                      <div key={sub.slug}>
+                        <button
+                          onClick={() => handleSubClick(sub)}
+                          className={`w-full flex items-center gap-1.5 text-left text-xs px-2 py-1.5 rounded-lg font-medium transition-colors ${
+                            subActiveHere ? 'bg-orange-primary text-white font-bold' : 'text-gray-600 hover:bg-gray-100'
+                          }`}
+                        >
+                          <span>{sub.icon}</span>
+                          <span className="flex-1 truncate">{sub.label}</span>
+                          {sub.children.length > 0 && (
+                            <ChevronRight size={11} className={`shrink-0 transition-transform ${isSubOpen ? 'rotate-90' : ''}`} />
+                          )}
+                        </button>
+
+                        {isSubOpen && sub.children.length > 0 && (
+                          <div className="pl-5 mt-0.5 space-y-0.5">
+                            {sub.children.map(subsub => (
+                              <button
+                                key={subsub.slug}
+                                onClick={() => handleSubSubClick(subsub.slug)}
+                                className={`w-full flex items-center gap-1.5 text-left text-[11px] px-2 py-1.5 rounded-lg font-medium transition-colors ${
+                                  subsub.slug === cat ? 'bg-orange-primary text-white font-bold' : 'text-gray-500 hover:bg-gray-100'
+                                }`}
+                              >
+                                <span>{subsub.icon}</span>
+                                <span className="truncate">{subsub.label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               )}
             </div>

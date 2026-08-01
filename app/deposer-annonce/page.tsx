@@ -42,7 +42,7 @@ function DeposerAnnonceForm() {
     description: '',
     phone: '',
   })
-  const [attributes, setAttributes] = useState<Record<string, string | number>>({})
+  const [attributes, setAttributes] = useState<Record<string, string | number | string[]>>({})
   const [location, setLocation] = useState<CitySelection | null>(null)
   const [files, setFiles]       = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])

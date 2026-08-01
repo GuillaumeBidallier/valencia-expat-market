@@ -148,7 +148,7 @@ export default async function SeoPage({ params, searchParams }: Props) {
     featuredAt: l.featuredAt?.toISOString() ?? null,
     publishedAt: l.publishedAt.toISOString(),
     updatedAt: l.updatedAt.toISOString(),
-    attributes: l.attributes as Record<string, string | number> | null,
+    attributes: l.attributes as Record<string, string | number | string[]> | null,
   }))
 
   const breadcrumbsLd = {

@@ -20,7 +20,7 @@ type Props = {
     price: number | null; categorySlug: string
     neighborhood: string; phone: string
     images: ExistingImage[]
-    attributes: Record<string, string | number> | null
+    attributes: Record<string, string | number | string[]> | null
   }
 }
 
@@ -36,7 +36,7 @@ export default function EditListingClient({ listing }: Props) {
     neighborhood: listing.neighborhood,
     phone:        listing.phone,
   })
-  const [attributes, setAttributes] = useState<Record<string, string | number>>(listing.attributes ?? {})
+  const [attributes, setAttributes] = useState<Record<string, string | number | string[]>>(listing.attributes ?? {})
   const [existingImages, setExistingImages] = useState<ExistingImage[]>(listing.images)
   const [removedIds, setRemovedIds]         = useState<Set<string>>(new Set())
   const [newFiles, setNewFiles]             = useState<File[]>([])
