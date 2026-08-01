@@ -10,9 +10,9 @@
     "admin": "Admin"
   },
   "Hero": {
-    "line1": "Le site gratuit des",
-    "line2": "petites annonces entre",
-    "highlight": "expatriés.",
+    "line1": "Le site des",
+    "line2": "petites annonces",
+    "highlight": "gratuites",
     "trust": "Le site met uniquement en relation acheteurs et vendeurs : paiement et remise des articles se font directement entre vous."
   },
   "Home": {
