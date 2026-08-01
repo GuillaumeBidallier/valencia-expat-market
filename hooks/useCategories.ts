@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import type { Category, CategoryTree } from '@/types'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 const FALLBACK_TREE: CategoryTree[] = [
   { label: 'Maison & Mobilier', slug: 'meubles',        icon: '🛋️', parentId: null, parentSlug: null, children: [] },
@@ -43,12 +44,6 @@ function buildTree(flat: ApiCategory[]): CategoryTree[] {
   return roots
 }
 
-function getLocale(): string {
-  if (typeof document === 'undefined') return 'fr'
-  const m = document.cookie.match(/(?:^|;\s*)vem_lang=([^;]+)/)
-  return m?.[1] ?? 'fr'
-}
-
 const treeCache = new Map<string, CategoryTree[]>()
 const inflightMap = new Map<string, Promise<CategoryTree[]>>()
 
@@ -72,14 +67,14 @@ function fetchCategoryTree(locale: string): Promise<CategoryTree[]> {
 
 /** Returns root categories with their subcategories in `.children`, in the current locale. */
 export function useCategories(): CategoryTree[] {
+  const { locale } = useLocale()
   const [categories, setCategories] = useState<CategoryTree[]>(FALLBACK_TREE)
 
   useEffect(() => {
-    const locale = getLocale()
     let active = true
     fetchCategoryTree(locale).then(cats => { if (active) setCategories(cats) })
     return () => { active = false }
-  }, [])
+  }, [locale])
 
   return categories
 }
