@@ -161,6 +161,7 @@ export default function CguPage() {
                   <p className="text-sm font-medium text-navy mb-1">💡 Conseils de sécurité</p>
                   <p className="text-xs text-gray-600">Nous vous recommandons de vous rencontrer dans un lieu public, d&apos;inspecter le bien avant paiement, et de privilégier les échanges en main propre contre espèces ou virement bancaire. Ne payez jamais à l&apos;avance pour un bien non vu.</p>
                 </div>
+                <p>Les professionnels titulaires d&apos;un abonnement payant sur 1000Click peuvent demander une facture sur présentation d&apos;un justificatif de paiement. Cette facture leur est envoyée par email.</p>
               </div>
             </section>
 
@@ -197,8 +198,8 @@ export default function CguPage() {
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
                 <div className="grid sm:grid-cols-3 gap-3">
                   {[
-                    { label: 'Annonce active', value: '60 jours', sub: 'Puis expiration automatique' },
-                    { label: 'Republication', value: 'Illimitée', sub: 'Depuis votre espace compte' },
+                    { label: 'Annonce active', value: '90 jours', sub: 'Puis suppression automatique' },
+                    { label: 'Republication', value: 'Illimitée', sub: 'Avant suppression, depuis votre espace compte' },
                     { label: 'Annonce en attente', value: '7 jours', sub: 'Supprimée sans modération' },
                   ].map(item => (
                     <div key={item.label} className="bg-gray-50 rounded-xl p-4 text-center">
@@ -209,6 +210,7 @@ export default function CguPage() {
                   ))}
                 </div>
                 <p>L&apos;utilisateur peut marquer son annonce comme « Vendue » à tout moment depuis son espace personnel, ce qui la retire des résultats de recherche tout en la conservant dans son historique.</p>
+                <p><strong className="text-navy">Toutes les annonces, qu&apos;elles proviennent de particuliers ou de professionnels, sont automatiquement supprimées 90 jours après leur publication — qu&apos;elles aient été vendues ou non.</strong> Cette suppression est définitive. Nous vous invitons à sauvegarder toute information utile avant cette échéance.</p>
               </div>
             </section>
 

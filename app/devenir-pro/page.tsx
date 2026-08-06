@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Devenir Pro sur 1000Click — Touchez les expatriés en Espagne',
+  title: 'Espace Pro sur 1000Click — Touchez les expatriés en Espagne',
   description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers d\'expatriés francophones installés en Espagne. Premium dès 49 €/mois.',
 }
 
