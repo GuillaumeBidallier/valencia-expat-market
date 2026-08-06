@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,8 +7,11 @@ import { ImagePlus, X, ArrowLeft, Loader2 } from 'lucide-react'
 import { neighborhoods } from '@/lib/neighborhoods'
 import CategoryPicker from '@/components/ui/CategoryPicker'
 import VehicleAttributesFields from '@/components/listings/VehicleAttributesFields'
+import { VIP_UNLIMITED_PHOTOS } from '@/lib/stripe'
+import { isRealEstateCategory } from '@/lib/realEstateAttributes'
+import { isVehicleCategory } from '@/lib/vehicleAttributes'
 
-const MAX_IMAGES = 5
+const BASE_MAX_IMAGES = 5
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE = 5 * 1024 * 1024
 
@@ -44,6 +47,20 @@ export default function EditListingClient({ listing }: Props) {
   const [errors, setErrors]                 = useState<Record<string, string>>({})
   const [uploadError, setUploadError]       = useState('')
   const [saving, setSaving]                 = useState(false)
+  const [proProfile, setProProfile]         = useState<{ tier: string; category: string } | null>(null)
+
+  useEffect(() => {
+    fetch('/api/pro/profile')
+      .then(r => r.json())
+      .then(d => { if (d?.tier) setProProfile({ tier: d.tier, category: d.category }) })
+      .catch(() => {})
+  }, [])
+
+  const isVipMatch =
+    proProfile?.tier === 'VIP' &&
+    ((proProfile.category === 'immobilier' && isRealEstateCategory(form.categorySlug)) ||
+     (proProfile.category === 'automobiles' && isVehicleCategory(form.categorySlug)))
+  const MAX_IMAGES = isVipMatch ? VIP_UNLIMITED_PHOTOS : BASE_MAX_IMAGES
 
   const totalImages = existingImages.filter(i => !removedIds.has(i.id)).length + newFiles.length
 

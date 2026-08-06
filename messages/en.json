@@ -102,6 +102,7 @@
     "photos_premium": "Up to {max} photos included · JPG, PNG or WebP · max 5 MB each.",
     "photos_upgraded": "12 photos unlocked (3 included + 9 purchased) · JPG, PNG or WebP · max 5 MB each.",
     "photos_free": "3 photos included for free · JPG, PNG or WebP · max 5 MB each.",
+    "photos_vip": "Unlimited photos · VIP perk · JPG, PNG or WebP · max 5 MB each.",
     "upgrade_title": "3 photo limit reached",
     "upgrade_desc": "Add 9 extra photos for this ad — one-time payment, no subscription.",
     "upgrade_btn": "9 extra photos — €7.99",

@@ -9,7 +9,9 @@ import Button from '@/components/ui/Button'
 import CategoryPicker from '@/components/ui/CategoryPicker'
 import VehicleAttributesFields from '@/components/listings/VehicleAttributesFields'
 import CityAutocomplete, { type CitySelection } from '@/components/listings/CityAutocomplete'
-import { FREE_MAX_PHOTOS, UPGRADED_MAX_PHOTOS } from '@/lib/stripe'
+import { FREE_MAX_PHOTOS, UPGRADED_MAX_PHOTOS, VIP_UNLIMITED_PHOTOS } from '@/lib/stripe'
+import { isRealEstateCategory } from '@/lib/realEstateAttributes'
+import { isVehicleCategory } from '@/lib/vehicleAttributes'
 import { useTranslations } from 'next-intl'
 
 const ADMIN_MAX = 15
@@ -33,7 +35,7 @@ function DeposerAnnonceForm() {
   const [hidePhone, setHidePhone]       = useState(false)
   const [hidePhoneSaving, setHidePhoneSaving] = useState(false)
 
-  const MAX_IMAGES = isAdmin ? ADMIN_MAX : isPremium ? UPGRADED_MAX_PHOTOS : hasUpgrade ? UPGRADED_MAX_PHOTOS : FREE_MAX_PHOTOS
+  const [proProfile, setProProfile] = useState<{ tier: string; category: string } | null>(null)
 
   const [form, setForm] = useState({
     title: '',
@@ -42,6 +44,13 @@ function DeposerAnnonceForm() {
     description: '',
     phone: '',
   })
+
+  const isVipMatch =
+    proProfile?.tier === 'VIP' &&
+    ((proProfile.category === 'immobilier' && isRealEstateCategory(form.categorySlug)) ||
+     (proProfile.category === 'automobiles' && isVehicleCategory(form.categorySlug)))
+
+  const MAX_IMAGES = isAdmin ? ADMIN_MAX : isVipMatch ? VIP_UNLIMITED_PHOTOS : isPremium ? UPGRADED_MAX_PHOTOS : hasUpgrade ? UPGRADED_MAX_PHOTOS : FREE_MAX_PHOTOS
   const [attributes, setAttributes] = useState<Record<string, string | number | string[]>>({})
   const [location, setLocation] = useState<CitySelection | null>(null)
   const [files, setFiles]       = useState<File[]>([])
@@ -66,6 +75,15 @@ function DeposerAnnonceForm() {
     fetch('/api/user/me')
       .then(r => r.json())
       .then(d => { if (d.showPhone === false) setHidePhone(true) })
+      .catch(() => {})
+  }, [isAuthenticated])
+
+  // Check for a linked Professional profile (VIP pros get unlimited photos in their own trade)
+  useEffect(() => {
+    if (!isAuthenticated) return
+    fetch('/api/pro/profile')
+      .then(r => r.json())
+      .then(d => { if (d?.tier) setProProfile({ tier: d.tier, category: d.category }) })
       .catch(() => {})
   }, [isAuthenticated])
 
@@ -196,9 +214,11 @@ function DeposerAnnonceForm() {
 
   if (!isAuthenticated) return null
 
-  const showUpgradeCTA = !isPremium && !hasUpgrade && files.length >= FREE_MAX_PHOTOS
+  const showUpgradeCTA = !isPremium && !hasUpgrade && !isVipMatch && files.length >= FREE_MAX_PHOTOS
   const photosLabel = isAdmin
     ? t('photos_admin', { max: ADMIN_MAX })
+    : isVipMatch
+    ? t('photos_vip')
     : isPremium
     ? t('photos_premium', { max: UPGRADED_MAX_PHOTOS })
     : hasUpgrade

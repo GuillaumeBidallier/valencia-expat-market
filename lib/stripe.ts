@@ -4,6 +4,8 @@ export const PHOTO_UPGRADE_PRICE_CENTS = 799
 export const PHOTO_UPGRADE_EXTRA = 9
 export const FREE_MAX_PHOTOS = 3
 export const UPGRADED_MAX_PHOTOS = FREE_MAX_PHOTOS + PHOTO_UPGRADE_EXTRA
+/** Soft cap used for VIP pros' "unlimited" photos, in their own trade's listings. */
+export const VIP_UNLIMITED_PHOTOS = 100
 
 export type ProPlan = 'smart_annual' | 'pro_annual' | 'vip_annual'
 
