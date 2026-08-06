@@ -3,10 +3,11 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { getAdminSiteId } from '@/lib/site'
+import PendingModerationPanel from './PendingModerationPanel'
 import {
-  ClipboardList, Users, Star, BarChart3, Flag, Shield,
-  AlertTriangle, Clock, CheckCircle, TrendingUp, ChevronRight, BookOpen, Tags, Settings2,
-  HelpCircle, Sparkles, ArrowRight,
+  Users, Star, Flag, Shield,
+  AlertTriangle, Clock, CheckCircle, ChevronRight, BookOpen, Tags, Settings2,
+  HelpCircle, BarChart3,
 } from 'lucide-react'
 
 export default async function AdminPage() {
@@ -15,9 +16,8 @@ export default async function AdminPage() {
 
   const now        = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-  const weekStart   = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+  const weekStart  = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
   const adminName  = (session.user as { name?: string }).name ?? 'Admin'
-  const monthLabel = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
   const dayLabel   = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
   const siteId     = await getAdminSiteId()
 
@@ -27,6 +27,7 @@ export default async function AdminPage() {
     prosCount, premiumPros, plusPros, vipPros,
     reportsCount, reportedListingsCount, firewallBlockedCount,
     blogTotal, blogPublished, categoriesCount,
+    pendingListingsRaw, recentActivityRaw,
   ] = await Promise.all([
     prisma.listing.count({ where: { status: 'PENDING', siteId } }),
     prisma.listing.count({ where: { status: 'ACTIVE', siteId } }),
@@ -45,383 +46,164 @@ export default async function AdminPage() {
     prisma.blogPost.count(),
     prisma.blogPost.count({ where: { published: true } }),
     prisma.category.count({ where: { siteId } }),
+    prisma.listing.findMany({
+      where: { status: 'PENDING', siteId },
+      orderBy: { publishedAt: 'asc' },
+      take: 6,
+      select: { id: true, title: true, price: true, city: true, publishedAt: true, user: { select: { name: true } } },
+    }),
+    prisma.listing.findMany({
+      where: { siteId, publishedAt: { gte: weekStart }, status: { not: 'DELETED' } },
+      select: { publishedAt: true },
+    }),
   ])
 
   const freePros   = prosCount - premiumPros - plusPros - vipPros
   const payingPros = premiumPros + plusPros + vipPros
 
-  // ── "À faire aujourd'hui" — plain-language, direct-link action items ──────
-  const todoItems = [
-    pendingCount > 0 && {
-      icon: <Clock size={16} />,
-      text: `${pendingCount} annonce${pendingCount > 1 ? 's' : ''} en attente de validation`,
-      hint: 'Elles ne sont pas encore visibles par les visiteurs',
-      href: '/admin/annonces',
-      cta: 'Valider',
-      color: 'text-amber-600', bg: 'bg-amber-50',
-    },
-    reportedListingsCount > 0 && {
-      icon: <AlertTriangle size={16} />,
-      text: `${reportedListingsCount} annonce${reportedListingsCount > 1 ? 's' : ''} signalée${reportedListingsCount > 1 ? 's' : ''} par des utilisateurs`,
-      hint: 'À examiner pour décider de les garder ou de les retirer',
-      href: '/admin/signalements',
-      cta: 'Examiner',
-      color: 'text-red-500', bg: 'bg-red-50',
-    },
-    firewallBlockedCount > 0 && {
-      icon: <Shield size={16} />,
-      text: `${firewallBlockedCount} annonce${firewallBlockedCount > 1 ? 's' : ''} bloquée${firewallBlockedCount > 1 ? 's' : ''} automatiquement`,
-      hint: 'Contenu suspect détecté (armes, faux documents...) — à vérifier',
-      href: '/admin/parefeu',
-      cta: 'Vérifier',
-      color: 'text-purple-600', bg: 'bg-purple-50',
-    },
-  ].filter(Boolean) as { icon: React.ReactNode; text: string; hint: string; href: string; cta: string; color: string; bg: string }[]
+  const pendingListings = pendingListingsRaw.map(l => ({
+    id: l.id,
+    title: l.title,
+    price: l.price,
+    city: l.city,
+    publishedAt: l.publishedAt.toISOString(),
+    userName: l.user.name,
+  }))
+
+  // ── Activité des 7 derniers jours, en nombre d'annonces par jour ──────
+  const dayBuckets = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(now.getTime() - (6 - i) * 24 * 60 * 60 * 1000)
+    return { key: d.toDateString(), label: d.toLocaleDateString('fr-FR', { weekday: 'short' }), count: 0 }
+  })
+  for (const l of recentActivityRaw) {
+    const key = l.publishedAt.toDateString()
+    const bucket = dayBuckets.find(b => b.key === key)
+    if (bucket) bucket.count++
+  }
+  const maxDayCount = Math.max(1, ...dayBuckets.map(b => b.count))
+
+  const statBand = [
+    { label: 'en attente', value: pendingCount, href: '/admin/annonces', urgent: pendingCount > 0, icon: <Clock size={14} /> },
+    { label: 'signalée' + (reportedListingsCount > 1 ? 's' : ''), value: reportedListingsCount, href: '/admin/signalements', urgent: reportedListingsCount > 0, icon: <AlertTriangle size={14} /> },
+    { label: 'bloquée' + (firewallBlockedCount > 1 ? 's' : '') + ' (pare-feu)', value: firewallBlockedCount, href: '/admin/parefeu', urgent: firewallBlockedCount > 0, icon: <Shield size={14} /> },
+    { label: 'utilisateurs', value: usersCount, href: '/admin/utilisateurs', urgent: false, icon: <Users size={14} />, title: `+${newUsersMonth} ce mois` },
+    { label: 'annonces actives', value: activeCount, href: '/admin/annonces', urgent: false, icon: <CheckCircle size={14} />, title: `${soldCount} vendue${soldCount > 1 ? 's' : ''}` },
+  ]
+
+  const otherModules = [
+    { href: '/admin/signalements', icon: <Flag size={16} />, label: 'Signalements', sub: `${reportedListingsCount} annonce${reportedListingsCount > 1 ? 's' : ''} · ${reportsCount} signalement${reportsCount > 1 ? 's' : ''}`, alert: reportedListingsCount > 0 },
+    { href: '/admin/parefeu', icon: <Shield size={16} />, label: 'Pare-feu automatique', sub: `${firewallBlockedCount} bloquée${firewallBlockedCount > 1 ? 's' : ''}`, alert: firewallBlockedCount > 0 },
+    { href: '/admin/utilisateurs', icon: <Users size={16} />, label: 'Utilisateurs', sub: `${usersCount} inscrits · ${blockedUsers} bloqué${blockedUsers > 1 ? 's' : ''}`, alert: false },
+    { href: '/admin/statistiques', icon: <BarChart3 size={16} />, label: 'Statistiques détaillées', sub: 'Vue d\'ensemble complète', alert: false },
+    { href: '/admin/blog', icon: <BookOpen size={16} />, label: 'Blog', sub: `${blogPublished}/${blogTotal} publiés`, alert: false },
+    { href: '/admin/categories', icon: <Tags size={16} />, label: 'Catégories', sub: `${categoriesCount} au total`, alert: false },
+    { href: '/admin/parametres', icon: <Settings2 size={16} />, label: 'Paramètres', sub: 'Accueil, bannière, maintenance', alert: false },
+  ]
 
   return (
     <div className="min-h-screen bg-[#F4F5F7]">
+      <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
 
-      {/* ── Header ──────────────────────────────────────────── */}
-      <div className="bg-navy text-white">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <p className="text-xs text-white/40 uppercase tracking-widest font-semibold mb-1">Panneau d&apos;administration · {dayLabel}</p>
-          <h1 className="text-2xl font-black tracking-tight">Bonjour, {adminName} 👋</h1>
-          <p className="text-sm text-white/40 mt-0.5">Voici l&apos;état de 1000Click en {monthLabel}.</p>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-
-        {/* ── À faire aujourd'hui ─────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-50 flex items-center gap-2.5">
-            <Sparkles size={16} className="text-orange-primary" />
-            <p className="font-black text-navy text-sm">À faire aujourd&apos;hui</p>
-          </div>
-          {todoItems.length === 0 ? (
-            <div className="px-6 py-6 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                <CheckCircle size={17} className="text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-navy">Tout est à jour ✓</p>
-                <p className="text-xs text-gray-400 mt-0.5">Rien ne nécessite votre attention pour le moment.</p>
-              </div>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-50">
-              {todoItems.map(item => (
-                <Link
-                  key={item.text}
-                  href={item.href}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50/80 transition-colors group"
-                >
-                  <div className={`w-9 h-9 rounded-xl ${item.bg} flex items-center justify-center shrink-0`}>
-                    <span className={item.color}>{item.icon}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-navy">{item.text}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{item.hint}</p>
-                  </div>
-                  <span className="shrink-0 flex items-center gap-1 text-xs font-bold text-orange-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                    {item.cta} <ArrowRight size={12} />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          )}
+        {/* ── Header compact ─────────────────────────────────── */}
+        <div className="flex items-baseline justify-between">
+          <h1 className="text-xl font-black text-navy tracking-tight">Bonjour, {adminName} 👋</h1>
+          <p className="text-xs text-gray-400 capitalize">{dayLabel}</p>
         </div>
 
-        {/* ── Hero KPIs ──────────────────────────────────────── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            {
-              href: '/admin/annonces',
-              label: 'Annonces en attente',
-              value: pendingCount,
-              icon: <Clock size={18} />,
-              color: pendingCount > 0 ? 'text-amber-600' : 'text-gray-400',
-              bg: pendingCount > 0 ? 'bg-amber-50' : 'bg-gray-50',
-              sub: pendingCount > 0 ? 'À modérer' : 'Tout traité',
-              urgent: pendingCount > 0,
-            },
-            {
-              href: '/admin/signalements',
-              label: 'Annonces signalées',
-              value: reportedListingsCount,
-              icon: <AlertTriangle size={18} />,
-              color: reportedListingsCount > 0 ? 'text-red-500' : 'text-gray-400',
-              bg: reportedListingsCount > 0 ? 'bg-red-50' : 'bg-gray-50',
-              sub: reportedListingsCount > 0 ? `${reportsCount} signalement${reportsCount > 1 ? 's' : ''}` : 'Aucun actif',
-              urgent: reportedListingsCount > 0,
-            },
-            {
-              href: '/admin/utilisateurs',
-              label: 'Utilisateurs inscrits',
-              value: usersCount,
-              icon: <Users size={18} />,
-              color: 'text-indigo-primary',
-              bg: 'bg-indigo-soft',
-              sub: `+${newUsersMonth} ce mois`,
-              urgent: false,
-            },
-            {
-              href: '/admin/annonces',
-              label: 'Annonces actives',
-              value: activeCount,
-              icon: <CheckCircle size={18} />,
-              color: 'text-emerald-600',
-              bg: 'bg-emerald-50',
-              sub: `${soldCount} vendues · ${newListingsWeek} cette semaine`,
-              urgent: false,
-            },
-          ].map(k => (
+        {/* ── Bandeau de stats compact ────────────────────────── */}
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm flex flex-wrap divide-x divide-gray-50">
+          {statBand.map(s => (
             <Link
-              key={k.label}
-              href={k.href}
-              className={`bg-white rounded-2xl border shadow-sm hover:shadow-md p-5 flex flex-col gap-3 transition-all ${k.urgent ? 'border-amber-200' : 'border-gray-100 hover:border-gray-200'}`}
+              key={s.label}
+              href={s.href}
+              title={s.title}
+              className="flex-1 min-w-[140px] px-4 py-3 flex items-center gap-2.5 hover:bg-gray-50/80 transition-colors"
             >
-              <div className="flex items-start justify-between">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${k.bg}`}>
-                  <span className={k.color}>{k.icon}</span>
-                </div>
-                {k.urgent && <span className="w-2 h-2 rounded-full bg-amber-400 mt-1 animate-pulse" />}
-              </div>
-              <div>
-                <p className="text-3xl font-black text-navy leading-none mb-1">{k.value}</p>
-                <p className="text-sm text-gray-500 font-medium">{k.label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{k.sub}</p>
+              <span className={s.urgent ? 'text-amber-500' : 'text-gray-300'}>{s.icon}</span>
+              <div className="min-w-0">
+                <p className={`text-lg font-black leading-none ${s.urgent ? 'text-amber-600' : 'text-navy'}`}>{s.value}</p>
+                <p className="text-[11px] text-gray-400 truncate">{s.label}</p>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* ── Navigation modules ─────────────────────────────── */}
-        {([
-          {
-            group: 'Contenu du site',
-            groupDesc: 'Ce que les visiteurs voient et publient',
-            modules: [
-              {
-                href: '/admin/annonces',
-                icon: <ClipboardList size={22} />,
-                label: 'Modération annonces',
-                desc: 'Valider ou refuser les annonces déposées par les utilisateurs',
-                color: 'text-orange-primary',
-                bg: 'bg-orange-soft',
-                badge: pendingCount > 0 ? pendingCount : null,
-                badgeColor: 'bg-amber-500',
-                items: [
-                  { label: 'En attente', value: pendingCount, dot: 'bg-amber-400' },
-                  { label: 'Publiées', value: activeCount, dot: 'bg-emerald-400' },
-                  { label: 'Vendues', value: soldCount, dot: 'bg-gray-300' },
-                ],
-              },
-              {
-                href: '/admin/signalements',
-                icon: <Flag size={22} />,
-                label: 'Signalements',
-                desc: 'Annonces qu\'un utilisateur a jugées problématiques',
-                color: reportedListingsCount > 0 ? 'text-red-500' : 'text-gray-400',
-                bg: reportedListingsCount > 0 ? 'bg-red-50' : 'bg-gray-50',
-                badge: reportedListingsCount > 0 ? reportedListingsCount : null,
-                badgeColor: 'bg-red-500',
-                items: [
-                  { label: 'Annonces signalées', value: reportedListingsCount, dot: reportedListingsCount > 0 ? 'bg-red-400' : 'bg-gray-200' },
-                  { label: 'Total signalements', value: reportsCount, dot: 'bg-amber-400' },
-                ],
-              },
-              {
-                href: '/admin/parefeu',
-                icon: <Shield size={22} />,
-                label: 'Pare-feu automatique',
-                desc: 'Contenu suspect bloqué automatiquement avant publication',
-                color: firewallBlockedCount > 0 ? 'text-amber-600' : 'text-gray-400',
-                bg: firewallBlockedCount > 0 ? 'bg-amber-50' : 'bg-gray-50',
-                badge: firewallBlockedCount > 0 ? firewallBlockedCount : null,
-                badgeColor: 'bg-amber-500',
-                items: [
-                  { label: 'Bloquées automatiquement', value: firewallBlockedCount, dot: firewallBlockedCount > 0 ? 'bg-amber-400' : 'bg-gray-200' },
-                ],
-              },
-            ],
-          },
-          {
-            group: 'Communauté',
-            groupDesc: 'Les personnes inscrites sur le site',
-            modules: [
-              {
-                href: '/admin/utilisateurs',
-                icon: <Users size={22} />,
-                label: 'Utilisateurs',
-                desc: 'Comptes particuliers inscrits sur la plateforme',
-                color: 'text-indigo-primary',
-                bg: 'bg-indigo-soft',
-                badge: blockedUsers > 0 ? blockedUsers : null,
-                badgeColor: 'bg-red-400',
-                items: [
-                  { label: 'Total', value: usersCount, dot: 'bg-indigo-400' },
-                  { label: 'Nouveaux ce mois', value: newUsersMonth, dot: 'bg-emerald-400' },
-                  { label: 'Bloqués', value: blockedUsers, dot: 'bg-red-400' },
-                ],
-              },
-              {
-                href: '/admin/professionnels',
-                icon: <Star size={22} />,
-                label: 'Professionnels',
-                desc: 'Fiches de l\'annuaire pro et leurs abonnements',
-                color: 'text-purple-600',
-                bg: 'bg-purple-50',
-                badge: null,
-                badgeColor: '',
-                items: [
-                  { label: 'Gratuit', value: freePros, dot: 'bg-gray-300' },
-                  { label: 'Smart', value: premiumPros, dot: 'bg-indigo-400' },
-                  { label: 'Pro', value: plusPros, dot: 'bg-orange-primary' },
-                  { label: 'VIP', value: vipPros, dot: 'bg-navy' },
-                ],
-              },
-            ],
-          },
-          {
-            group: 'Réglages & contenu éditorial',
-            groupDesc: 'Configuration du site et pages annexes',
-            modules: [
-              {
-                href: '/admin/statistiques',
-                icon: <BarChart3 size={22} />,
-                label: 'Statistiques',
-                desc: 'Vue d\'ensemble détaillée de l\'activité du site',
-                color: 'text-emerald-600',
-                bg: 'bg-emerald-50',
-                badge: null,
-                badgeColor: '',
-                items: [
-                  { label: 'Nouveaux/mois', value: newUsersMonth, dot: 'bg-emerald-400' },
-                  { label: 'Pros payants', value: payingPros, dot: 'bg-blue-400' },
-                  { label: 'Annonces/semaine', value: newListingsWeek, dot: 'bg-indigo-400' },
-                ],
-              },
-              {
-                href: '/admin/blog',
-                icon: <BookOpen size={22} />,
-                label: 'Blog',
-                desc: 'Articles publiés sur le blog du site',
-                color: 'text-pink-600',
-                bg: 'bg-pink-50',
-                badge: null,
-                badgeColor: '',
-                items: [
-                  { label: 'Total articles', value: blogTotal, dot: 'bg-pink-400' },
-                  { label: 'Publiés', value: blogPublished, dot: 'bg-emerald-400' },
-                  { label: 'Brouillons', value: blogTotal - blogPublished, dot: 'bg-gray-300' },
-                ],
-              },
-              {
-                href: '/admin/categories',
-                icon: <Tags size={22} />,
-                label: 'Catégories',
-                desc: 'Rubriques dans lesquelles les annonces sont classées',
-                color: 'text-teal-600',
-                bg: 'bg-teal-50',
-                badge: null,
-                badgeColor: '',
-                items: [
-                  { label: 'Total', value: categoriesCount, dot: 'bg-teal-400' },
-                ],
-              },
-              {
-                href: '/admin/parametres',
-                icon: <Settings2 size={22} />,
-                label: 'Paramètres',
-                desc: 'Images d\'accueil, bannière, mode maintenance...',
-                color: 'text-slate-600',
-                bg: 'bg-slate-50',
-                badge: null,
-                badgeColor: '',
-                items: [],
-              },
-            ],
-          },
-        ] as const).map(section => (
-          <div key={section.group}>
-            <div className="mb-4">
-              <p className="text-xs font-black text-gray-400 uppercase tracking-widest">{section.group}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{section.groupDesc}</p>
+        {/* ── À modérer : liste directement actionnable ──────────── */}
+        <PendingModerationPanel initialListings={pendingListings} />
+
+        {/* ── Professionnels + activité, côte à côte ─────────────── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <Link href="/admin/professionnels" className="bg-white rounded-xl border border-gray-100 shadow-sm hover:border-gray-200 transition-colors p-5 block">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-black text-navy uppercase tracking-wider flex items-center gap-2">
+                <Star size={14} className="text-purple-500" /> Professionnels
+              </p>
+              <ChevronRight size={15} className="text-gray-300" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {section.modules.map(m => (
-                <Link
-                  key={m.href}
-                  href={m.href}
-                  className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all overflow-hidden"
-                >
-                  <div className="p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${m.bg}`}>
-                        <span className={m.color}>{m.icon}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {m.badge != null && m.badge > 0 && (
-                          <span className={`${m.badgeColor} text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center`}>
-                            {m.badge}
-                          </span>
-                        )}
-                        <ChevronRight size={16} className="text-gray-300 group-hover:text-gray-400 group-hover:translate-x-0.5 transition-all" />
-                      </div>
-                    </div>
-                    <p className="font-black text-navy text-sm group-hover:text-orange-primary transition-colors">{m.label}</p>
-                    <p className="text-xs text-gray-400 mt-0.5 mb-3 leading-relaxed">{m.desc}</p>
-                    {m.items.length > 0 && (
-                      <div className="space-y-1.5">
-                        {m.items.map(item => (
-                          <div key={item.label} className="flex items-center justify-between">
-                            <div className="flex items-center gap-1.5">
-                              <span className={`w-1.5 h-1.5 rounded-full ${item.dot}`} />
-                              <span className="text-xs text-gray-400">{item.label}</span>
-                            </div>
-                            <span className="text-xs font-bold text-navy tabular-nums">{item.value}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <div className={`h-1 ${m.bg}`} />
-                </Link>
+            <p className="text-2xl font-black text-navy leading-none mb-1">{prosCount}<span className="text-sm text-gray-400 font-medium"> au total</span></p>
+            <p className="text-xs text-gray-400 mb-3">{payingPros} payant{payingPros > 1 ? 's' : ''} sur {prosCount}</p>
+            <div className="space-y-1.5">
+              {[
+                { label: 'Gratuit', value: freePros, dot: 'bg-gray-300' },
+                { label: 'Smart', value: premiumPros, dot: 'bg-indigo-400' },
+                { label: 'Pro', value: plusPros, dot: 'bg-orange-primary' },
+                { label: 'VIP', value: vipPros, dot: 'bg-navy' },
+              ].map(t => (
+                <div key={t.label} className="flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-1.5 text-gray-500"><span className={`w-1.5 h-1.5 rounded-full ${t.dot}`} />{t.label}</span>
+                  <span className="font-bold text-navy tabular-nums">{t.value}</span>
+                </div>
               ))}
             </div>
-          </div>
-        ))}
+          </Link>
 
-        {/* ── Quick stats strip ──────────────────────────────── */}
-        <div className="bg-navy rounded-2xl px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-6">
-          {[
-            { label: 'Pros payants', value: `${prosCount > 0 ? Math.round((payingPros / prosCount) * 100) : 0}%`, sub: `${payingPros} sur ${prosCount}`, icon: <TrendingUp size={14} /> },
-            { label: 'Pros référencés', value: prosCount, sub: `${plusPros + vipPros} Pro/VIP`, icon: <Star size={14} /> },
-            { label: 'Nouvelles inscriptions', value: newUsersMonth, sub: 'ce mois', icon: <Users size={14} /> },
-            { label: 'Annonces en ligne', value: activeCount, sub: `${newListingsWeek} cette semaine`, icon: <CheckCircle size={14} /> },
-          ].map(s => (
-            <div key={s.label}>
-              <div className="flex items-center gap-1.5 text-white/30 mb-1">
-                {s.icon}
-                <span className="text-[10px] uppercase tracking-wider font-semibold">{s.label}</span>
-              </div>
-              <p className="text-2xl font-black text-white">{s.value}</p>
-              <p className="text-xs text-white/30 mt-0.5">{s.sub}</p>
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <p className="text-xs font-black text-navy uppercase tracking-wider mb-3">Activité — 7 derniers jours</p>
+            <div className="flex items-end justify-between gap-2 h-20 mb-2">
+              {dayBuckets.map(b => (
+                <div key={b.key} className="flex-1 flex flex-col items-center gap-1.5">
+                  <div className="w-full flex items-end justify-center h-16">
+                    <div
+                      className={`w-full max-w-[22px] rounded-t ${b.count > 0 ? 'bg-orange-primary' : 'bg-gray-100'}`}
+                      style={{ height: `${Math.max(6, (b.count / maxDayCount) * 100)}%` }}
+                      title={`${b.count} annonce${b.count > 1 ? 's' : ''}`}
+                    />
+                  </div>
+                  <span className="text-[10px] text-gray-400 capitalize">{b.label}</span>
+                </div>
+              ))}
             </div>
-          ))}
+            <p className="text-xs text-gray-400">{newListingsWeek} annonce{newListingsWeek > 1 ? 's' : ''} déposée{newListingsWeek > 1 ? 's' : ''} cette semaine</p>
+          </div>
+        </div>
+
+        {/* ── Autres modules, en liste dense ──────────────────────── */}
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-5 py-3 border-b border-gray-50">
+            <p className="text-xs font-black text-navy uppercase tracking-wider">Autres modules</p>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {otherModules.map(m => (
+              <Link key={m.href} href={m.href} className="flex items-center gap-3 px-5 py-2.5 hover:bg-gray-50/80 transition-colors group">
+                <span className={m.alert ? 'text-amber-500' : 'text-gray-400'}>{m.icon}</span>
+                <span className="text-sm font-semibold text-navy w-48 shrink-0">{m.label}</span>
+                <span className="text-xs text-gray-400 flex-1">{m.sub}</span>
+                <ChevronRight size={14} className="text-gray-300 group-hover:translate-x-0.5 transition-transform shrink-0" />
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* ── Besoin d'aide ? — glossaire pour une utilisatrice non technique ── */}
-        <details className="bg-white rounded-2xl border border-gray-100 shadow-sm group">
-          <summary className="px-6 py-4 flex items-center gap-2.5 cursor-pointer select-none list-none">
-            <HelpCircle size={16} className="text-indigo-primary" />
-            <p className="font-black text-navy text-sm flex-1">Besoin d&apos;aide ? Comprendre ce tableau de bord</p>
-            <ChevronRight size={16} className="text-gray-300 group-open:rotate-90 transition-transform" />
+        <details className="bg-white rounded-xl border border-gray-100 shadow-sm group">
+          <summary className="px-5 py-3 flex items-center gap-2.5 cursor-pointer select-none list-none">
+            <HelpCircle size={15} className="text-indigo-primary" />
+            <p className="font-black text-navy text-xs uppercase tracking-wider flex-1">Besoin d&apos;aide ? Comprendre ce tableau de bord</p>
+            <ChevronRight size={15} className="text-gray-300 group-open:rotate-90 transition-transform" />
           </summary>
-          <div className="px-6 pb-6 pt-1 grid sm:grid-cols-2 gap-x-8 gap-y-4 border-t border-gray-50">
+          <div className="px-5 pb-5 pt-1 grid sm:grid-cols-2 gap-x-8 gap-y-4 border-t border-gray-50">
             {[
-              { term: 'Annonce en attente', def: 'Vient d\'être déposée par un utilisateur — elle n\'est pas encore visible sur le site tant qu\'elle n\'est pas validée dans "Modération annonces".' },
+              { term: 'Annonce en attente', def: 'Vient d\'être déposée par un utilisateur — elle n\'est pas encore visible sur le site tant qu\'elle n\'est pas validée.' },
               { term: 'Annonce signalée', def: 'Un utilisateur a cliqué sur "Signaler" sur cette annonce (contenu suspect, arnaque...). À examiner dans "Signalements".' },
               { term: 'Pare-feu', def: 'Un système automatique qui bloque instantanément les annonces au contenu clairement interdit (armes, drogues, faux documents...), avant même qu\'un humain les voie.' },
               { term: 'Palier Smart / Pro / VIP', def: 'Les 3 abonnements payants pour les professionnels de l\'annuaire, du moins cher (Smart) au plus complet (VIP, avec bannière et photos illimitées).' },
