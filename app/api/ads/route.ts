@@ -6,12 +6,15 @@ export async function GET(req: NextRequest) {
   const category     = searchParams.get('category')     ?? undefined
   const neighborhood = searchParams.get('neighborhood') ?? undefined
   const count        = Math.min(8, parseInt(searchParams.get('count') ?? '4'))
+  // 'VIP' restricts to the dedicated grand-format homepage banner (VIP-only perk).
+  // Default rotation (sidebar/inline/banner/rectangle) is a Pro/VIP perk — Smart has no ad placement.
+  const tierFilter   = searchParams.get('tierFilter') ?? undefined
 
   // Géolocalisation IP : Vercel injecte x-vercel-ip-city automatiquement (gratuit, sans API externe)
   const rawCity = req.headers.get('x-vercel-ip-city')
   const userCity = rawCity ? decodeURIComponent(rawCity) : undefined
 
-  const tiers = ['PREMIUM', 'PREMIUM_PLUS', 'VIP'] as ('PREMIUM' | 'PREMIUM_PLUS' | 'VIP')[]
+  const tiers: ('PREMIUM_PLUS' | 'VIP')[] = tierFilter === 'VIP' ? ['VIP'] : ['PREMIUM_PLUS', 'VIP']
   const baseOrder = [{ tier: 'desc' as const }, { featured: 'desc' as const }, { name: 'asc' as const }]
   const activeFilter = {
     tier: { in: tiers },

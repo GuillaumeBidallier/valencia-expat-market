@@ -5,6 +5,7 @@ import ListingCard from '@/components/listings/ListingCard'
 import AdUnit from '@/components/ads/AdUnit'
 import PromoBanner from '@/components/home/PromoBanner'
 import ProsBanner from '@/components/home/ProsBanner'
+import VipBanner from '@/components/home/VipBanner'
 import HeroSection, { type HeroSlide } from '@/components/home/HeroSection'
 import { useTranslations } from 'next-intl'
 import type { Listing } from '@/types'
@@ -38,6 +39,7 @@ export default function HomeContent({
   return (
     <div className="min-h-screen bg-gray-50">
       <HeroSection slides={heroSlides} />
+      <VipBanner />
 
       <div className="max-w-screen-2xl mx-auto px-2 lg:px-6 flex gap-4 items-start">
         <div className="hidden xl:block shrink-0 sticky top-20 pt-10">
