@@ -106,8 +106,9 @@ export default function AccountClient({ user, initialListings, initialFavorites,
   const memberSince = new Date(user.createdAt).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
   const avatarLetter = user.name.charAt(0).toUpperCase()
 
-  const tierLabel = proProfile?.tier === 'PREMIUM_PLUS' ? 'Premium+' : proProfile?.tier === 'PREMIUM' ? 'Premium' : 'Gratuit'
-  const tierColor = proProfile?.tier === 'PREMIUM_PLUS'
+  const tierLabel = proProfile?.tier === 'VIP' ? 'VIP' : proProfile?.tier === 'PREMIUM_PLUS' ? 'Pro' : proProfile?.tier === 'PREMIUM' ? 'Smart' : 'Gratuit'
+  const tierColor = proProfile?.tier === 'VIP'
+    ? 'bg-navy text-white' : proProfile?.tier === 'PREMIUM_PLUS'
     ? 'bg-indigo-primary text-white' : proProfile?.tier === 'PREMIUM'
       ? 'bg-orange-primary text-white' : 'bg-white/15 text-white/70'
 

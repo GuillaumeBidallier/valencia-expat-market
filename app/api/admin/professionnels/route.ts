@@ -15,7 +15,7 @@ const schema = z.object({
   website:     z.string().url().optional().nullable().or(z.literal('')),
   logo:        z.string().url().optional().nullable().or(z.literal('')),
   photos:      z.array(z.string().url()).optional().default([]),
-  tier:        z.enum(['FREE', 'PREMIUM', 'PREMIUM_PLUS']).default('FREE'),
+  tier:        z.enum(['FREE', 'PREMIUM', 'PREMIUM_PLUS', 'VIP']).default('FREE'),
   verified:    z.boolean().optional().default(false),
   featured:    z.boolean().optional().default(false),
 })

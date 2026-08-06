@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   const rawCity = req.headers.get('x-vercel-ip-city')
   const userCity = rawCity ? decodeURIComponent(rawCity) : undefined
 
-  const tiers = ['PREMIUM', 'PREMIUM_PLUS'] as ('PREMIUM' | 'PREMIUM_PLUS')[]
+  const tiers = ['PREMIUM', 'PREMIUM_PLUS', 'VIP'] as ('PREMIUM' | 'PREMIUM_PLUS' | 'VIP')[]
   const baseOrder = [{ tier: 'desc' as const }, { featured: 'desc' as const }, { name: 'asc' as const }]
   const activeFilter = {
     tier: { in: tiers },

@@ -197,8 +197,9 @@
     "subtitle": "Юристи, бухгалтери, агентства нерухомості, вантажники… по всій Іспанії",
     "see_all": "Переглянути всіх →",
     "recommended": "✓ Рекомендовано",
-    "premium_plus": "⭐ Premium+",
-    "premium": "⭐ Premium"
+    "premium_plus": "⭐ Pro",
+    "premium": "⭐ Smart",
+    "vip": "👑 VIP"
   },
   "PromoBanner": {
     "s1_tag": "100% БЕЗКОШТОВНО",
@@ -310,8 +311,9 @@
     "back": "Назад",
     "edit": "Редагувати",
     "badge_recommended": "Рекомендовано",
-    "badge_premium_plus": "Рекомендовано",
-    "badge_premium": "Premium",
+    "badge_premium_plus": "Pro",
+    "badge_premium": "Smart",
+    "badge_vip": "VIP",
     "badge_verified": "Перевірено",
     "section_about": "Про нас",
     "section_gallery": "Галерея",

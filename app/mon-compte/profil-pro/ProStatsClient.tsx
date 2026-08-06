@@ -51,7 +51,7 @@ export default function ProStatsClient() {
           <p className="font-black text-navy text-sm">Statistiques de clics</p>
           <p className="text-xs text-gray-400">30 derniers jours</p>
         </div>
-        <span className="ml-auto text-xs font-bold bg-indigo-soft text-indigo-primary px-2.5 py-1 rounded-full">Premium+</span>
+        <span className="ml-auto text-xs font-bold bg-indigo-soft text-indigo-primary px-2.5 py-1 rounded-full">Pro / VIP</span>
       </div>
 
       {loading ? (

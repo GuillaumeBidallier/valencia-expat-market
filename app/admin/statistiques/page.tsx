@@ -108,6 +108,7 @@ export default async function AdminStatsPage() {
     totalPros,
     premiumPros,
     plusPros,
+    vipPros,
     totalReports,
     photoUpgradesPaid,
     listingsByCategory,
@@ -128,6 +129,7 @@ export default async function AdminStatsPage() {
     prisma.professional.count({ where: { siteId } }),
     prisma.professional.count({ where: { siteId, tier: 'PREMIUM' } }),
     prisma.professional.count({ where: { siteId, tier: 'PREMIUM_PLUS' } }),
+    prisma.professional.count({ where: { siteId, tier: 'VIP' } }),
     prisma.report.count({ where: { listing: { siteId } } }),
     prisma.photoUpgrade.count({ where: { paid: true } }),
     prisma.listing.groupBy({
@@ -142,7 +144,7 @@ export default async function AdminStatsPage() {
 
   const unresolvedReports = totalReports // no resolvedAt field, show total
   const revenueEstimate  = (photoUpgradesPaid * 7.99).toFixed(2)
-  const freePros         = totalPros - premiumPros - plusPros
+  const freePros         = totalPros - premiumPros - plusPros - vipPros
   const growthPct        = newUsersLastMonth > 0
     ? Math.round(((newUsersMonth - newUsersLastMonth) / newUsersLastMonth) * 100)
     : null
@@ -375,8 +377,9 @@ export default async function AdminStatsPage() {
               <div className="space-y-2">
                 {[
                   { label: 'FREE', value: freePros, pct: totalPros > 0 ? Math.round((freePros / totalPros) * 100) : 0, color: 'bg-gray-200', text: 'text-gray-500' },
-                  { label: 'Premium', value: premiumPros, pct: totalPros > 0 ? Math.round((premiumPros / totalPros) * 100) : 0, color: 'bg-indigo-primary', text: 'text-indigo-primary' },
-                  { label: 'Premium+', value: plusPros, pct: totalPros > 0 ? Math.round((plusPros / totalPros) * 100) : 0, color: 'bg-orange-primary', text: 'text-orange-primary' },
+                  { label: 'Smart', value: premiumPros, pct: totalPros > 0 ? Math.round((premiumPros / totalPros) * 100) : 0, color: 'bg-indigo-primary', text: 'text-indigo-primary' },
+                  { label: 'Pro', value: plusPros, pct: totalPros > 0 ? Math.round((plusPros / totalPros) * 100) : 0, color: 'bg-orange-primary', text: 'text-orange-primary' },
+                  { label: 'VIP', value: vipPros, pct: totalPros > 0 ? Math.round((vipPros / totalPros) * 100) : 0, color: 'bg-navy', text: 'text-navy' },
                 ].map(t => (
                   <div key={t.label}>
                     <div className="flex items-center justify-between mb-1">

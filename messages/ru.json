@@ -197,8 +197,9 @@
     "subtitle": "Юристы, бухгалтеры, агентства недвижимости, грузчики… по всей Испании",
     "see_all": "Посмотреть всех →",
     "recommended": "✓ Рекомендовано",
-    "premium_plus": "⭐ Premium+",
-    "premium": "⭐ Premium"
+    "premium_plus": "⭐ Pro",
+    "premium": "⭐ Smart",
+    "vip": "👑 VIP"
   },
   "PromoBanner": {
     "s1_tag": "100% БЕСПЛАТНО",
@@ -310,8 +311,9 @@
     "back": "Назад",
     "edit": "Редактировать",
     "badge_recommended": "Рекомендовано",
-    "badge_premium_plus": "Рекомендовано",
-    "badge_premium": "Premium",
+    "badge_premium_plus": "Pro",
+    "badge_premium": "Smart",
+    "badge_vip": "VIP",
     "badge_verified": "Проверено",
     "section_about": "О нас",
     "section_gallery": "Галерея",

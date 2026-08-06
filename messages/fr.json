@@ -197,8 +197,9 @@
     "subtitle": "Avocats, comptables, agences immobilières, déménageurs… partout en Espagne",
     "see_all": "Voir tous →",
     "recommended": "✓ Recommandé",
-    "premium_plus": "⭐ Premium+",
-    "premium": "⭐ Premium"
+    "premium_plus": "⭐ Pro",
+    "premium": "⭐ Smart",
+    "vip": "👑 VIP"
   },
   "PromoBanner": {
     "s1_tag": "100% GRATUIT",
@@ -310,8 +311,9 @@
     "back": "Retour",
     "edit": "Modifier",
     "badge_recommended": "Recommandé",
-    "badge_premium_plus": "Recommandé",
-    "badge_premium": "Premium",
+    "badge_premium_plus": "Pro",
+    "badge_premium": "Smart",
+    "badge_vip": "VIP",
     "badge_verified": "Vérifié",
     "section_about": "À propos",
     "section_gallery": "Galerie",

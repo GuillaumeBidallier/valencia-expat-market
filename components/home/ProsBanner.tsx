@@ -28,6 +28,7 @@ export default function ProsBanner({ pros }: { pros: ProWithReco[] }) {
         {pros.map(pro => {
           const cat = proCategories.find(c => c.slug === pro.category)
           const isReco = pro.recommended
+          const isVip = pro.tier === 'VIP'
           const isPlus = pro.tier === 'PREMIUM_PLUS'
 
           return (
@@ -35,7 +36,7 @@ export default function ProsBanner({ pros }: { pros: ProWithReco[] }) {
               key={pro.id}
               href={`/professionnels/${pro.slug}`}
               className={`group bg-white rounded-xl border shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden ${
-                isPlus ? 'border-orange-primary/40' : 'border-indigo-200/60'
+                isVip ? 'border-navy/40' : isPlus ? 'border-orange-primary/40' : 'border-indigo-200/60'
               }`}
             >
               {/* Visuel */}
@@ -44,7 +45,7 @@ export default function ProsBanner({ pros }: { pros: ProWithReco[] }) {
                   <Image src={pro.logo} alt={pro.name} fill className="object-cover" sizes="(max-width: 640px) 50vw, 25vw" />
                 ) : (
                   <div className={`w-full h-full flex items-center justify-center text-4xl ${
-                    isPlus ? 'bg-gradient-to-br from-orange-50 to-orange-100' : 'bg-gradient-to-br from-indigo-50 to-indigo-100'
+                    isVip ? 'bg-gradient-to-br from-navy/10 to-navy/20' : isPlus ? 'bg-gradient-to-br from-orange-50 to-orange-100' : 'bg-gradient-to-br from-indigo-50 to-indigo-100'
                   }`}>
                     {cat?.icon ?? '💼'}
                   </div>
@@ -54,6 +55,10 @@ export default function ProsBanner({ pros }: { pros: ProWithReco[] }) {
                 {isReco ? (
                   <span className="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
                     {t('recommended')}
+                  </span>
+                ) : isVip ? (
+                  <span className="absolute top-2 right-2 bg-navy text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {t('vip')}
                   </span>
                 ) : isPlus ? (
                   <span className="absolute top-2 right-2 bg-orange-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">

@@ -190,6 +190,7 @@ enum ProTier {
   FREE
   PREMIUM
   PREMIUM_PLUS
+  VIP
 }
 
 model ProClick {

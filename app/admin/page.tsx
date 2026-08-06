@@ -21,7 +21,7 @@ export default async function AdminPage() {
   const [
     pendingCount, activeCount, soldCount,
     usersCount, newUsersMonth, premiumUsers, blockedUsers,
-    prosCount, premiumPros, plusPros,
+    prosCount, premiumPros, plusPros, vipPros,
     reportsCount, reportedListingsCount, firewallBlockedCount,
     blogTotal, blogPublished, categoriesCount,
   ] = await Promise.all([
@@ -35,6 +35,7 @@ export default async function AdminPage() {
     prisma.professional.count({ where: { siteId } }),
     prisma.professional.count({ where: { siteId, tier: 'PREMIUM' } }),
     prisma.professional.count({ where: { siteId, tier: 'PREMIUM_PLUS' } }),
+    prisma.professional.count({ where: { siteId, tier: 'VIP' } }),
     prisma.report.count({ where: { listing: { siteId } } }),
     prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' }, siteId } }),
     prisma.listing.count({ where: { blockedReason: { not: null }, siteId } }),
@@ -43,7 +44,7 @@ export default async function AdminPage() {
     prisma.category.count({ where: { siteId } }),
   ])
 
-  const freePros  = prosCount - premiumPros - plusPros
+  const freePros  = prosCount - premiumPros - plusPros - vipPros
   const hasAlerts = pendingCount > 0 || reportedListingsCount > 0 || blockedUsers > 0 || firewallBlockedCount > 0
 
   return (
@@ -169,8 +170,9 @@ export default async function AdminPage() {
                 badgeColor: '',
                 items: [
                   { label: 'FREE', value: freePros, dot: 'bg-gray-300' },
-                  { label: 'Premium', value: premiumPros, dot: 'bg-indigo-400' },
-                  { label: 'Premium+', value: plusPros, dot: 'bg-orange-primary' },
+                  { label: 'Smart', value: premiumPros, dot: 'bg-indigo-400' },
+                  { label: 'Pro', value: plusPros, dot: 'bg-orange-primary' },
+                  { label: 'VIP', value: vipPros, dot: 'bg-navy' },
                 ],
               },
               {
@@ -298,7 +300,7 @@ export default async function AdminPage() {
         <div className="bg-navy rounded-2xl px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-6">
           {[
             { label: 'Utilisateurs Premium', value: `${usersCount > 0 ? Math.round((premiumUsers / usersCount) * 100) : 0}%`, sub: `${premiumUsers} comptes`, icon: <TrendingUp size={14} /> },
-            { label: 'Pros référencés', value: prosCount, sub: `${plusPros} Premium+`, icon: <Star size={14} /> },
+            { label: 'Pros référencés', value: prosCount, sub: `${plusPros + vipPros} Pro/VIP`, icon: <Star size={14} /> },
             { label: 'Nouvelles inscriptions', value: newUsersMonth, sub: 'ce mois', icon: <Users size={14} /> },
             { label: 'Annonces en ligne', value: activeCount, sub: 'statut ACTIVE', icon: <CheckCircle size={14} /> },
           ].map(s => (

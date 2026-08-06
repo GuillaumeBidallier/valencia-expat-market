@@ -101,50 +101,73 @@ const FORMATS: Format[] = [
 
 const TIERS = [
   {
-    name: 'Premium',
-    price: '49,99 €',
+    name: 'Smart',
+    price: '99 €',
     period: '/ an',
     annualPrice: '',
     annualNote: 'Facturation annuelle · résiliable à tout moment',
     color: 'border-orange-primary',
-    badge: 'Populaire',
+    badge: '',
     badgeColor: 'bg-orange-primary text-white',
     features: [
       { ok: true,  label: 'Fiche professionnelle visible' },
       { ok: true,  label: 'Page dédiée sur /professionnels' },
       { ok: true,  label: 'Lien vers votre site web' },
-      { ok: true,  label: 'Affichage dans les encarts pub' },
-      { ok: true,  label: 'Badge "Sponsorisé"' },
-      { ok: true,  label: 'Mise en avant prioritaire' },
+      { ok: false, label: 'Bannière publicitaire sur le côté du site' },
+      { ok: false, label: 'Photos illimitées sur vos annonces' },
+      { ok: false, label: 'Bannière grand format en page d\'accueil' },
       { ok: false, label: 'Badge "Recommandé"' },
       { ok: false, label: 'Statistiques de clics' },
     ],
-    cta: 'Créer ma fiche Premium',
+    cta: 'Créer ma fiche Smart',
     ctaHref: '/mon-compte/profil-pro/create',
     ctaStyle: 'bg-orange-primary hover:bg-orange-dark text-white',
   },
   {
-    name: 'Premium+',
-    price: '99,99 €',
+    name: 'Pro',
+    price: '299 €',
     period: '/ an',
     annualPrice: '',
     annualNote: 'Facturation annuelle · résiliable à tout moment',
     color: 'border-indigo-primary',
-    badge: 'Meilleure visibilité',
+    badge: 'Populaire',
     badgeColor: 'bg-indigo-primary text-white',
     features: [
       { ok: true,  label: 'Fiche professionnelle visible' },
       { ok: true,  label: 'Page dédiée sur /professionnels' },
       { ok: true,  label: 'Lien vers votre site web' },
-      { ok: true,  label: 'Affichage dans les encarts pub' },
-      { ok: true,  label: 'Badge "Sponsorisé"' },
-      { ok: true,  label: 'Mise en avant prioritaire' },
+      { ok: true,  label: 'Bannière publicitaire sur le côté du site' },
+      { ok: false, label: 'Photos illimitées sur vos annonces' },
+      { ok: false, label: 'Bannière grand format en page d\'accueil' },
+      { ok: false, label: 'Badge "Recommandé"' },
+      { ok: false, label: 'Statistiques de clics' },
+    ],
+    cta: 'Créer ma fiche Pro',
+    ctaHref: '/mon-compte/profil-pro/create',
+    ctaStyle: 'bg-indigo-primary hover:bg-indigo-dark text-white',
+  },
+  {
+    name: 'VIP',
+    price: '499 €',
+    period: '/ an',
+    annualPrice: '',
+    annualNote: 'Facturation annuelle · résiliable à tout moment',
+    color: 'border-navy',
+    badge: 'Meilleure visibilité',
+    badgeColor: 'bg-navy text-white',
+    features: [
+      { ok: true,  label: 'Fiche professionnelle visible' },
+      { ok: true,  label: 'Page dédiée sur /professionnels' },
+      { ok: true,  label: 'Lien vers votre site web' },
+      { ok: true,  label: 'Bannière publicitaire sur le côté du site' },
+      { ok: true,  label: 'Photos illimitées sur vos annonces' },
+      { ok: true,  label: 'Bannière grand format en page d\'accueil' },
       { ok: true,  label: 'Badge "Recommandé"' },
       { ok: true,  label: 'Statistiques de clics' },
     ],
-    cta: 'Créer ma fiche Premium+',
+    cta: 'Créer ma fiche VIP',
     ctaHref: '/mon-compte/profil-pro/create',
-    ctaStyle: 'bg-indigo-primary hover:bg-indigo-dark text-white',
+    ctaStyle: 'bg-navy hover:bg-navy/90 text-white',
   },
 ]
 
@@ -388,7 +411,7 @@ export default function PublicitePage() {
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Des offres simples et transparentes</h2>
             <p className="text-gray-500 text-sm">Facturation annuelle — résiliable à tout moment.</p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
             {TIERS.map(tier => (
               <div key={tier.name} className={`bg-white rounded-2xl border-2 ${tier.color} p-6 flex flex-col relative`}>
                 {tier.badge && (

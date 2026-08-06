@@ -197,8 +197,9 @@
     "subtitle": "Anwälte, Buchhalter, Immobilienmakler, Umzugsunternehmen… in ganz Spanien",
     "see_all": "Alle sehen →",
     "recommended": "✓ Empfohlen",
-    "premium_plus": "⭐ Premium+",
-    "premium": "⭐ Premium"
+    "premium_plus": "⭐ Pro",
+    "premium": "⭐ Smart",
+    "vip": "👑 VIP"
   },
   "PromoBanner": {
     "s1_tag": "100% KOSTENLOS",
@@ -310,8 +311,9 @@
     "back": "Zurück",
     "edit": "Bearbeiten",
     "badge_recommended": "Empfohlen",
-    "badge_premium_plus": "Empfohlen",
-    "badge_premium": "Premium",
+    "badge_premium_plus": "Pro",
+    "badge_premium": "Smart",
+    "badge_vip": "VIP",
     "badge_verified": "Verifiziert",
     "section_about": "Über uns",
     "section_gallery": "Galerie",

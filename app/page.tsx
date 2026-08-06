@@ -39,7 +39,7 @@ const getFeaturedPros = unstable_cache(
       where: {
         OR: [
           { recommended: true },
-          { tier: { in: ['PREMIUM', 'PREMIUM_PLUS'] } },
+          { tier: { in: ['PREMIUM', 'PREMIUM_PLUS', 'VIP'] } },
         ],
       },
       orderBy: [{ recommended: 'desc' }, { tier: 'desc' }, { featured: 'desc' }, { name: 'asc' }],

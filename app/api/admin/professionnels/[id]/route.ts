@@ -17,7 +17,7 @@ const updateSchema = z.object({
   website:     z.string().nullable().optional(),
   logo:        z.string().nullable().optional(),
   photos:      z.array(z.string()).optional(),
-  tier:        z.enum(['FREE', 'PREMIUM', 'PREMIUM_PLUS']).optional(),
+  tier:        z.enum(['FREE', 'PREMIUM', 'PREMIUM_PLUS', 'VIP']).optional(),
   verified:    z.boolean().optional(),
   featured:    z.boolean().optional(),
 })

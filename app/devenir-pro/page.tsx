@@ -9,7 +9,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Espace Pro sur 1000Click — Touchez les expatriés en Espagne',
-  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers d\'expatriés francophones installés en Espagne. Premium dès 49 €/mois.',
+  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers d\'expatriés francophones installés en Espagne. Dès 99 €/an.',
 }
 
 /* ─── Animation keyframes ─────────────────────────────────────────────────── */
@@ -188,7 +188,7 @@ const STEPS = [
     n: '03',
     icon: <CreditCard size={22} />,
     title: 'Choisissez votre offre',
-    desc: 'Premium (49,99 €/an) ou Premium+ (99,99 €/an). Facturation annuelle, résiliable à tout moment. Paiement via Stripe.',
+    desc: 'Smart (99 €/an), Pro (299 €/an) ou VIP (499 €/an). Facturation annuelle, résiliable à tout moment. Paiement via Stripe.',
     color: 'bg-orange-soft',
     iconColor: 'text-orange-primary',
   },
@@ -202,20 +202,25 @@ const STEPS = [
   },
 ]
 
-const PREMIUM_FEATURES = [
+const SMART_FEATURES = [
+  'Présence dans l\'annuaire professionnel',
   'Fiche professionnelle dédiée',
-  'Affichage dans tous les encarts pub',
-  'Badge "Sponsorisé"',
-  'Mise en avant prioritaire',
-  'Lien vers votre site web',
   'Page sur /professionnels',
+  'Lien vers votre site web',
 ]
 
-const PREMIUM_PLUS_FEATURES = [
-  'Tout ce qu\'inclut Premium',
+const PRO_FEATURES = [
+  'Tout ce qu\'inclut Smart',
+  'Bannière publicitaire sur le côté du site',
+  'Badge "Sponsorisé"',
+  'Mise en avant prioritaire',
+]
+
+const VIP_FEATURES = [
+  'Tout ce qu\'inclut Pro',
+  'Photos illimitées sur vos annonces',
+  'Bannière publicitaire grand format en page d\'accueil',
   'Badge "Recommandé" exclusif',
-  'Visibilité maximale garantie',
-  'Priorité sur les pros Premium',
   'Statistiques de clics',
   'Support prioritaire',
 ]
@@ -740,26 +745,23 @@ export default function DevenirProPage() {
             <p className="text-gray-500 text-base max-w-sm mx-auto">Facturation annuelle · résiliable à tout moment.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
 
-            {/* Premium */}
+            {/* Smart */}
             <div className="price-card as d2 relative bg-white rounded-3xl border-2 border-orange-primary p-7 flex flex-col">
-              <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-orange-primary text-white text-[11px] font-black px-4 py-1 rounded-full uppercase tracking-wider">
-                Populaire
-              </span>
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-orange-soft flex items-center justify-center">
                   <Zap size={18} className="text-orange-primary" />
                 </div>
-                <span className="font-black text-navy text-lg">Premium</span>
+                <span className="font-black text-navy text-lg">Smart</span>
               </div>
               <div className="mb-1">
-                <span className="text-4xl font-black text-navy">49,99 €</span>
+                <span className="text-4xl font-black text-navy">99 €</span>
                 <span className="text-gray-400 text-sm">/an</span>
               </div>
               <p className="text-emerald-600 text-xs font-semibold mb-6">Facturation annuelle · résiliable à tout moment</p>
               <ul className="space-y-3 flex-1 mb-7">
-                {PREMIUM_FEATURES.map(f => (
+                {SMART_FEATURES.map(f => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-gray-700">
                     <CheckCircle size={15} className="text-emerald-500 shrink-0 mt-0.5" />
                     {f}
@@ -770,30 +772,30 @@ export default function DevenirProPage() {
                 href="/mon-compte/profil-pro/create"
                 className="btn-cta w-full flex items-center justify-center gap-2 text-white font-black py-3.5 rounded-xl text-sm"
               >
-                Commencer avec Premium <ArrowRight size={15} />
+                Commencer avec Smart <ArrowRight size={15} />
               </Link>
             </div>
 
-            {/* Premium+ */}
-            <div className="price-card as d3 relative rounded-3xl border-2 border-indigo-primary p-7 flex flex-col" style={{ background: '#1A1F36' }}>
+            {/* Pro */}
+            <div className="price-card as d3 relative bg-white rounded-3xl border-2 border-indigo-primary p-7 flex flex-col">
               <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-primary text-white text-[11px] font-black px-4 py-1 rounded-full uppercase tracking-wider">
-                Meilleure visibilité
+                Populaire
               </span>
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-indigo-soft flex items-center justify-center">
-                  <Star size={18} className="text-indigo-primary" fill="currentColor" />
+                  <Star size={18} className="text-indigo-primary" />
                 </div>
-                <span className="font-black text-white text-lg">Premium+</span>
+                <span className="font-black text-navy text-lg">Pro</span>
               </div>
               <div className="mb-1">
-                <span className="text-4xl font-black text-white">99,99 €</span>
-                <span className="text-white/50 text-sm">/an</span>
+                <span className="text-4xl font-black text-navy">299 €</span>
+                <span className="text-gray-400 text-sm">/an</span>
               </div>
-              <p className="text-emerald-400 text-xs font-semibold mb-6">Facturation annuelle · résiliable à tout moment</p>
+              <p className="text-emerald-600 text-xs font-semibold mb-6">Facturation annuelle · résiliable à tout moment</p>
               <ul className="space-y-3 flex-1 mb-7">
-                {PREMIUM_PLUS_FEATURES.map(f => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm text-white/80">
-                    <CheckCircle size={15} className="text-indigo-400 shrink-0 mt-0.5" />
+                {PRO_FEATURES.map(f => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-gray-700">
+                    <CheckCircle size={15} className="text-indigo-500 shrink-0 mt-0.5" />
                     {f}
                   </li>
                 ))}
@@ -802,7 +804,39 @@ export default function DevenirProPage() {
                 href="/mon-compte/profil-pro/create"
                 className="w-full flex items-center justify-center gap-2 bg-indigo-primary hover:bg-indigo-dark text-white font-black py-3.5 rounded-xl text-sm transition-colors"
               >
-                Commencer avec Premium+ <ArrowRight size={15} />
+                Commencer avec Pro <ArrowRight size={15} />
+              </Link>
+            </div>
+
+            {/* VIP */}
+            <div className="price-card as d4 relative rounded-3xl border-2 border-navy p-7 flex flex-col" style={{ background: '#1A1F36' }}>
+              <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-navy text-white text-[11px] font-black px-4 py-1 rounded-full uppercase tracking-wider">
+                Meilleure visibilité
+              </span>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <Star size={18} className="text-orange-primary" fill="currentColor" />
+                </div>
+                <span className="font-black text-white text-lg">VIP</span>
+              </div>
+              <div className="mb-1">
+                <span className="text-4xl font-black text-white">499 €</span>
+                <span className="text-white/50 text-sm">/an</span>
+              </div>
+              <p className="text-emerald-400 text-xs font-semibold mb-6">Facturation annuelle · résiliable à tout moment</p>
+              <ul className="space-y-3 flex-1 mb-7">
+                {VIP_FEATURES.map(f => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-white/80">
+                    <CheckCircle size={15} className="text-orange-primary shrink-0 mt-0.5" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/mon-compte/profil-pro/create"
+                className="w-full flex items-center justify-center gap-2 bg-orange-primary hover:bg-orange-dark text-white font-black py-3.5 rounded-xl text-sm transition-colors"
+              >
+                Commencer avec VIP <ArrowRight size={15} />
               </Link>
             </div>
           </div>

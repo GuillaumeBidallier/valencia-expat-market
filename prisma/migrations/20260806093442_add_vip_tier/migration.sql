@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Professional` MODIFY `tier` ENUM('FREE', 'PREMIUM', 'PREMIUM_PLUS', 'VIP') NOT NULL DEFAULT 'FREE';

@@ -10,16 +10,18 @@ import { proCategories } from '@/lib/proCategories'
 // reflects the actual wire shape this component receives and sends.
 type Professional = PrismaProfessional & { photos: string[]; zones: string[] }
 
-const TIER_LABELS: Record<string, string> = { FREE: 'Gratuit', PREMIUM: 'Premium', PREMIUM_PLUS: 'Premium+' }
+const TIER_LABELS: Record<string, string> = { FREE: 'Gratuit', PREMIUM: 'Smart', PREMIUM_PLUS: 'Pro', VIP: 'VIP' }
 const TIER_COLORS: Record<string, string> = {
   FREE:         'bg-gray-100 text-gray-500',
   PREMIUM:      'bg-indigo-100 text-indigo-700',
   PREMIUM_PLUS: 'bg-orange-100 text-orange-700',
+  VIP:          'bg-navy/10 text-navy',
 }
 const TIER_RING: Record<string, string> = {
   FREE:         'border-gray-100',
   PREMIUM:      'border-indigo-200',
   PREMIUM_PLUS: 'border-orange-200',
+  VIP:          'border-navy/30',
 }
 
 const ALL_ZONES = [
@@ -90,6 +92,7 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
     FREE:         pros.filter(p => p.tier === 'FREE').length,
     PREMIUM:      pros.filter(p => p.tier === 'PREMIUM').length,
     PREMIUM_PLUS: pros.filter(p => p.tier === 'PREMIUM_PLUS').length,
+    VIP:          pros.filter(p => p.tier === 'VIP').length,
   }
 
   return (
@@ -122,11 +125,12 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
 
         {/* ── Tier KPIs ───────────────────────────────────────── */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {([
-            { tier: 'FREE',         label: 'Gratuit',  color: 'text-gray-500',    bg: 'bg-white',        dot: 'bg-gray-300' },
-            { tier: 'PREMIUM',      label: 'Premium',  color: 'text-indigo-primary', bg: 'bg-indigo-soft', dot: 'bg-indigo-400' },
-            { tier: 'PREMIUM_PLUS', label: 'Premium+', color: 'text-orange-primary', bg: 'bg-orange-soft', dot: 'bg-orange-primary' },
+            { tier: 'FREE',         label: 'Gratuit', color: 'text-gray-500',       bg: 'bg-white',        dot: 'bg-gray-300' },
+            { tier: 'PREMIUM',      label: 'Smart',   color: 'text-indigo-primary', bg: 'bg-indigo-soft',  dot: 'bg-indigo-400' },
+            { tier: 'PREMIUM_PLUS', label: 'Pro',     color: 'text-orange-primary', bg: 'bg-orange-soft',  dot: 'bg-orange-primary' },
+            { tier: 'VIP',          label: 'VIP',     color: 'text-navy',           bg: 'bg-navy/5',       dot: 'bg-navy' },
           ] as const).map(t => (
             <div key={t.tier} className={`${t.bg} rounded-2xl border border-gray-100 shadow-sm p-5`}>
               <div className="flex items-center gap-2 mb-2">
@@ -165,8 +169,9 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
                 <Field label="Tier">
                   <select value={editing.tier ?? 'FREE'} onChange={e => set('tier', e.target.value)}>
                     <option value="FREE">Gratuit</option>
-                    <option value="PREMIUM">Premium (50€/an)</option>
-                    <option value="PREMIUM_PLUS">Premium+ (100€/an)</option>
+                    <option value="PREMIUM">Smart (99€/an)</option>
+                    <option value="PREMIUM_PLUS">Pro (299€/an)</option>
+                    <option value="VIP">VIP (499€/an)</option>
                   </select>
                 </Field>
               </div>
@@ -308,7 +313,7 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
                       {/* Tier */}
                       <div className="hidden sm:block">
                         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${TIER_COLORS[p.tier]}`}>
-                          {p.tier === 'PREMIUM_PLUS' ? <><Star size={9} className="inline mr-0.5" />Premium+</> : TIER_LABELS[p.tier]}
+                          {p.tier === 'VIP' || p.tier === 'PREMIUM_PLUS' ? <><Star size={9} className="inline mr-0.5" />{TIER_LABELS[p.tier]}</> : TIER_LABELS[p.tier]}
                         </span>
                       </div>
 

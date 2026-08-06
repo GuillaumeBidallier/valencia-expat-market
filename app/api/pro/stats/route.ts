@@ -12,7 +12,7 @@ export async function GET() {
   })
 
   if (!pro) return NextResponse.json({ error: 'No professional profile' }, { status: 404 })
-  if (pro.tier !== 'PREMIUM_PLUS') return NextResponse.json({ error: 'Premium+ required' }, { status: 403 })
+  if (pro.tier !== 'PREMIUM_PLUS' && pro.tier !== 'VIP') return NextResponse.json({ error: 'Pro or VIP required' }, { status: 403 })
 
   const since = new Date()
   since.setDate(since.getDate() - 30)

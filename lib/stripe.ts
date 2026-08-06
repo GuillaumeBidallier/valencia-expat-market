@@ -5,19 +5,18 @@ export const PHOTO_UPGRADE_EXTRA = 9
 export const FREE_MAX_PHOTOS = 3
 export const UPGRADED_MAX_PHOTOS = FREE_MAX_PHOTOS + PHOTO_UPGRADE_EXTRA
 
-export type ProPlan = 'premium_monthly' | 'premium_annual' | 'premium_plus_monthly' | 'premium_plus_annual'
+export type ProPlan = 'smart_annual' | 'pro_annual' | 'vip_annual'
 
 export const PRO_PLANS: Record<ProPlan, {
   priceEnvKey: string
-  tier: 'PREMIUM' | 'PREMIUM_PLUS'
+  tier: 'PREMIUM' | 'PREMIUM_PLUS' | 'VIP'
   period: 'monthly' | 'annual'
   label: string
   amount: number
 }> = {
-  premium_monthly:      { priceEnvKey: 'STRIPE_PRICE_PREMIUM_MONTHLY',     tier: 'PREMIUM',      period: 'monthly', label: 'Premium Mensuel',  amount: 4999  },
-  premium_annual:       { priceEnvKey: 'STRIPE_PRICE_PREMIUM_ANNUAL',       tier: 'PREMIUM',      period: 'annual',  label: 'Premium Annuel',   amount: 4999  },
-  premium_plus_monthly: { priceEnvKey: 'STRIPE_PRICE_PREMIUM_PLUS_MONTHLY', tier: 'PREMIUM_PLUS', period: 'monthly', label: 'Premium+ Mensuel', amount: 9999  },
-  premium_plus_annual:  { priceEnvKey: 'STRIPE_PRICE_PREMIUM_PLUS_ANNUAL',  tier: 'PREMIUM_PLUS', period: 'annual',  label: 'Premium+ Annuel',  amount: 9999  },
+  smart_annual: { priceEnvKey: 'STRIPE_PRICE_SMART_ANNUAL', tier: 'PREMIUM',      period: 'annual', label: 'Smart', amount: 9900  },
+  pro_annual:   { priceEnvKey: 'STRIPE_PRICE_PRO_ANNUAL',   tier: 'PREMIUM_PLUS', period: 'annual', label: 'Pro',   amount: 29900 },
+  vip_annual:   { priceEnvKey: 'STRIPE_PRICE_VIP_ANNUAL',   tier: 'VIP',          period: 'annual', label: 'VIP',   amount: 49900 },
 }
 
 export function getPriceId(plan: ProPlan): string {

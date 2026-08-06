@@ -100,7 +100,7 @@ export async function POST(req: Request) {
       const priceId = sub.items.data[0]?.price.id
       const periodEnd = sub.items.data[0]?.current_period_end
 
-      let tier: 'PREMIUM' | 'PREMIUM_PLUS' | 'FREE' = 'FREE'
+      let tier: 'PREMIUM' | 'PREMIUM_PLUS' | 'VIP' | 'FREE' = 'FREE'
       let period: 'monthly' | 'annual' | null = null
 
       for (const planInfo of Object.values(PRO_PLANS)) {

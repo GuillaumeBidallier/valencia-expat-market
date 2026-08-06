@@ -34,7 +34,7 @@ const createSchema = z.object({
   website:     z.string().url().optional().nullable().or(z.literal('')),
   phoneHidden: z.boolean().optional().default(false),
   zones:       z.array(z.string()).optional().default([]),
-  plan:        z.enum(['premium_monthly', 'premium_annual', 'premium_plus_monthly', 'premium_plus_annual']),
+  plan:        z.enum(['smart_annual', 'pro_annual', 'vip_annual']),
 })
 
 export async function POST(req: NextRequest) {

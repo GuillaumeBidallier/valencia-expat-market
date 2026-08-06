@@ -24,8 +24,9 @@ type Tab = 'apercu' | 'fiche' | 'medias' | 'statistiques' | 'carte' | 'abonnemen
 type Props = { pro: Professional & { businessCard: BusinessCard | null }; cardSuccess?: boolean }
 
 const PLANS: { id: ProPlan; label: string; price: string; period: string; highlight?: boolean }[] = [
-  { id: 'premium_annual',      label: 'Premium',  price: '49,99 €', period: '/an' },
-  { id: 'premium_plus_annual', label: 'Premium+', price: '99,99 €', period: '/an', highlight: true },
+  { id: 'smart_annual', label: 'Smart', price: '99 €',  period: '/an' },
+  { id: 'pro_annual',   label: 'Pro',   price: '299 €', period: '/an', highlight: true },
+  { id: 'vip_annual',   label: 'VIP',   price: '499 €', period: '/an' },
 ]
 
 /* ── Subscription section ──────────────────────────────── */
@@ -65,7 +66,7 @@ function SubscriptionSection({ pro }: { pro: Professional }) {
             <Star size={22} className="text-orange-primary" />
           </div>
           <div>
-            <p className="font-black text-lg">{pro.tier === 'PREMIUM_PLUS' ? 'Premium+' : 'Premium'}</p>
+            <p className="font-black text-lg">{pro.tier === 'VIP' ? 'VIP' : pro.tier === 'PREMIUM_PLUS' ? 'Pro' : 'Smart'}</p>
             <p className="text-white/60 text-sm">
               {pro.subscriptionPeriod === 'annual' ? 'Formule annuelle' : 'Formule mensuelle'}
             </p>
@@ -79,8 +80,12 @@ function SubscriptionSection({ pro }: { pro: Professional }) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         {[
           { label: 'Visibilité renforcée', desc: 'Apparaissez en tête des résultats' },
-          { label: 'Encarts publicitaires', desc: 'Vos annonces promues' },
-          pro.tier === 'PREMIUM_PLUS'
+          pro.tier === 'VIP'
+            ? { label: 'Photos illimitées', desc: 'Sur toutes vos annonces' }
+            : { label: 'Encarts publicitaires', desc: 'Vos annonces promues' },
+          pro.tier === 'VIP'
+            ? { label: 'Bannière grand format', desc: 'Mise en avant page d\'accueil' }
+            : pro.tier === 'PREMIUM_PLUS'
             ? { label: 'Statistiques avancées', desc: 'Clics, vues, conversions' }
             : { label: 'Zones ciblées', desc: 'Ciblez vos secteurs géographiques' },
         ].map(item => (
@@ -131,11 +136,11 @@ function SubscriptionSection({ pro }: { pro: Professional }) {
           <Zap size={18} className="text-orange-primary" />
         </div>
         <div>
-          <p className="font-black text-navy text-sm">Passez à Premium</p>
+          <p className="font-black text-navy text-sm">Passez pro</p>
           <p className="text-xs text-gray-500">Multipliez votre visibilité auprès des expatriés</p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {PLANS.map(plan => (
           <button
             key={plan.id}
@@ -231,12 +236,14 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
     setTimeout(() => setSaved(false), 3000)
   }
 
-  const tierLabel = pro.tier === 'PREMIUM_PLUS' ? 'Premium+' : pro.tier === 'PREMIUM' ? 'Premium' : 'Gratuit'
-  const tierColor = pro.tier === 'PREMIUM_PLUS'
-    ? 'bg-indigo-primary text-white'
-    : pro.tier === 'PREMIUM'
-      ? 'bg-orange-primary text-white'
-      : 'bg-gray-100 text-gray-500'
+  const tierLabel = pro.tier === 'VIP' ? 'VIP' : pro.tier === 'PREMIUM_PLUS' ? 'Pro' : pro.tier === 'PREMIUM' ? 'Smart' : 'Gratuit'
+  const tierColor = pro.tier === 'VIP'
+    ? 'bg-navy text-white'
+    : pro.tier === 'PREMIUM_PLUS'
+      ? 'bg-indigo-primary text-white'
+      : pro.tier === 'PREMIUM'
+        ? 'bg-orange-primary text-white'
+        : 'bg-gray-100 text-gray-500'
 
   return (
     <div className="min-h-screen bg-[#F4F5F7]">
@@ -289,7 +296,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
           {/* ── Tab bar ──────────────────────────────────────── */}
           <div className="flex items-end gap-1 overflow-x-auto scrollbar-none">
             {TABS.map(({ key, label, icon: Icon, premiumOnly }) => {
-              if (premiumOnly && pro.tier !== 'PREMIUM_PLUS') return null
+              if (premiumOnly && pro.tier !== 'PREMIUM_PLUS' && pro.tier !== 'VIP') return null
               const active = tab === key
               return (
                 <button
@@ -670,7 +677,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
         )}
 
         {/* ════ STATISTIQUES ══════════════════════════════════ */}
-        {tab === 'statistiques' && pro.tier === 'PREMIUM_PLUS' && (
+        {tab === 'statistiques' && (pro.tier === 'PREMIUM_PLUS' || pro.tier === 'VIP') && (
           <ProStatsClient />
         )}
 

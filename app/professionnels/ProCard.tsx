@@ -11,14 +11,16 @@ export default function ProCard({ pro }: { pro: Professional }) {
 
   const catIcon  = proCategories.find(c => c.slug === pro.category)?.icon ?? '💼'
   const catLabel = t(`cat_${pro.category}` as Parameters<typeof t>[0]) ?? pro.category
+  const isVip     = pro.tier === 'VIP'
   const isPlus    = pro.tier === 'PREMIUM_PLUS'
-  const isPremium = pro.tier === 'PREMIUM' || isPlus
+  const isPremium = pro.tier !== 'FREE'
   const isReco    = (pro as Professional & { recommended?: boolean }).recommended
 
   return (
     <Link
       href={`/professionnels/${pro.slug}`}
       className={`group bg-white rounded-xl border transition-all hover:shadow-md flex flex-col overflow-hidden ${
+        isVip     ? 'border-navy/60 shadow-sm ring-1 ring-navy/10' :
         isPlus    ? 'border-orange-primary/50 shadow-sm ring-1 ring-orange-primary/10' :
         isPremium ? 'border-indigo-200 shadow-sm' :
                     'border-gray-200'
@@ -30,6 +32,7 @@ export default function ProCard({ pro }: { pro: Professional }) {
           <Image src={pro.logo} alt={pro.name} fill className="object-cover" sizes="(max-width: 640px) 100vw, 320px" />
         ) : (
           <div className={`w-full h-full flex items-center justify-center text-4xl ${
+            isVip ? 'bg-gradient-to-br from-navy/10 to-navy/20' :
             isPlus ? 'bg-gradient-to-br from-orange-50 to-orange-100' :
             isPremium ? 'bg-gradient-to-br from-indigo-50 to-indigo-100' :
             'bg-gray-100'
@@ -38,14 +41,19 @@ export default function ProCard({ pro }: { pro: Professional }) {
           </div>
         )}
 
-        {isPlus && (
-          <span className="absolute top-2 right-2 bg-orange-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
-            ⭐ Premium+
+        {isVip && (
+          <span className="absolute top-2 right-2 bg-navy text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
+            👑 VIP
           </span>
         )}
-        {isPremium && !isPlus && (
+        {isPlus && !isVip && (
+          <span className="absolute top-2 right-2 bg-orange-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
+            ⭐ Pro
+          </span>
+        )}
+        {isPremium && !isPlus && !isVip && (
           <span className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            ⭐ Premium
+            ⭐ Smart
           </span>
         )}
         {isReco && (

@@ -83,12 +83,15 @@ export default async function ProDetailPage({ params }: Props) {
 
   const catLabel = tPros(`cat_${pro.category}` as Parameters<typeof tPros>[0], { defaultValue: pro.category }) ?? pro.category
   const catIcon  = proCategories.find(c => c.slug === pro.category)?.icon ?? '💼'
+  const isVip = pro.tier === 'VIP'
   const isPremiumPlus = pro.tier === 'PREMIUM_PLUS'
-  const isPremium = pro.tier === 'PREMIUM' || isPremiumPlus
+  const isPremium = pro.tier !== 'FREE'
 
-  const accentFrom = isPremiumPlus ? '#E8571A' : isPremium ? '#4338CA' : '#1e2d5e'
-  const accentTo   = isPremiumPlus ? '#f97316' : isPremium ? '#6366F1' : '#334155'
-  const heroGradient = isPremiumPlus
+  const accentFrom = isVip ? '#12122a' : isPremiumPlus ? '#E8571A' : isPremium ? '#4338CA' : '#1e2d5e'
+  const accentTo   = isVip ? '#334155' : isPremiumPlus ? '#f97316' : isPremium ? '#6366F1' : '#334155'
+  const heroGradient = isVip
+    ? 'from-navy to-slate-800'
+    : isPremiumPlus
     ? 'from-orange-700 to-orange-500'
     : isPremium ? 'from-indigo-800 to-indigo-600'
     : 'from-navy to-slate-600'
@@ -195,12 +198,17 @@ export default async function ProDetailPage({ params }: Props) {
               <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white/80 text-[11px] font-medium px-2.5 py-1 rounded-full border border-white/15">
                 <span aria-hidden="true">{catIcon}</span> {catLabel}
               </span>
-              {isPremiumPlus && (
+              {isVip && (
+                <span className="inline-flex items-center gap-1 bg-navy text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
+                  <Star size={10} fill="currentColor" /> {t('badge_vip')}
+                </span>
+              )}
+              {isPremiumPlus && !isVip && (
                 <span className="inline-flex items-center gap-1 bg-orange-primary text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
                   <Star size={10} fill="currentColor" /> {t('badge_premium_plus')}
                 </span>
               )}
-              {isPremium && !isPremiumPlus && (
+              {isPremium && !isPremiumPlus && !isVip && (
                 <span className="inline-flex items-center gap-1 bg-indigo-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
                   <Star size={10} fill="currentColor" /> {t('badge_premium')}
                 </span>

@@ -47,22 +47,31 @@ const STEPS = [
 
 const PLANS: { id: ProPlan; name: string; price: string; annual: string; color: string; badge: string; features: string[] }[] = [
   {
-    id: 'premium_annual',
-    name: 'Premium',
-    price: '49,99 €/an',
+    id: 'smart_annual',
+    name: 'Smart',
+    price: '99 €/an',
     annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'orange',
-    badge: 'Populaire',
-    features: ['Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Affichage dans les encarts pub', 'Badge "Sponsorisé"', 'Mise en avant prioritaire'],
+    badge: 'Essentiel',
+    features: ['Présence dans l\'annuaire professionnel', 'Fiche professionnelle visible', 'Page dédiée sur /professionnels'],
   },
   {
-    id: 'premium_plus_annual',
-    name: 'Premium+',
-    price: '99,99 €/an',
+    id: 'pro_annual',
+    name: 'Pro',
+    price: '299 €/an',
     annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'indigo',
+    badge: 'Populaire',
+    features: ['Présence dans l\'annuaire professionnel', 'Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Bannière publicitaire sur le côté du site'],
+  },
+  {
+    id: 'vip_annual',
+    name: 'VIP',
+    price: '499 €/an',
+    annual: 'Facturation annuelle · résiliable à tout moment',
+    color: 'navy',
     badge: 'Meilleure visibilité',
-    features: ['Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Affichage dans les encarts pub', 'Badge "Sponsorisé"', 'Mise en avant prioritaire', 'Badge "Recommandé"', 'Statistiques de clics'],
+    features: ['Présence dans l\'annuaire professionnel', 'Fiche professionnelle visible', 'Page dédiée sur /professionnels', 'Photos illimitées sur vos annonces', 'Bannière publicitaire grand format en page d\'accueil'],
   },
 ]
 
@@ -311,7 +320,11 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
     <div className="space-y-4">
       <p className="text-sm text-gray-500 text-center mb-6">Votre fiche sera visible immédiatement après paiement.</p>
       {PLANS.map(plan => {
-        const isOrange = plan.color === 'orange'
+        const c = plan.color === 'orange'
+          ? { border: 'border-orange-primary', bg: 'bg-orange-soft', solid: 'bg-orange-primary', dot: 'bg-orange-primary' }
+          : plan.color === 'navy'
+          ? { border: 'border-navy', bg: 'bg-navy/5', solid: 'bg-navy', dot: 'bg-navy' }
+          : { border: 'border-indigo-primary', bg: 'bg-indigo-soft', solid: 'bg-indigo-primary', dot: 'bg-indigo-primary' }
         const isSelected = data.plan === plan.id
         return (
           <button
@@ -319,24 +332,20 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
             type="button"
             onClick={() => onChange('plan', plan.id)}
             className={`w-full text-left border-2 rounded-2xl p-5 transition-all duration-200 ${
-              isSelected
-                ? isOrange ? 'border-orange-primary bg-orange-soft' : 'border-indigo-primary bg-indigo-soft'
-                : 'border-gray-200 bg-white hover:border-gray-300'
+              isSelected ? `${c.border} ${c.bg}` : 'border-gray-200 bg-white hover:border-gray-300'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-black text-navy text-base">{plan.name}</span>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isOrange ? 'bg-orange-primary text-white' : 'bg-indigo-primary text-white'}`}>{plan.badge}</span>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full text-white ${c.solid}`}>{plan.badge}</span>
                 </div>
                 <p className="text-2xl font-black text-navy">{plan.price}</p>
                 <p className="text-xs text-emerald-600 font-semibold mt-0.5">{plan.annual}</p>
               </div>
               <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1 transition-colors ${
-                isSelected
-                  ? isOrange ? 'border-orange-primary bg-orange-primary' : 'border-indigo-primary bg-indigo-primary'
-                  : 'border-gray-300'
+                isSelected ? `${c.border} ${c.solid}` : 'border-gray-300'
               }`}>
                 {isSelected && <CheckCircle size={12} className="text-white" />}
               </div>
@@ -344,7 +353,7 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
             <ul className="space-y-1.5">
               {plan.features.map(f => (
                 <li key={f} className="flex items-center gap-2 text-xs text-gray-600">
-                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isOrange ? 'bg-orange-primary' : 'bg-indigo-primary'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${c.dot}`} />
                   {f}
                 </li>
               ))}
