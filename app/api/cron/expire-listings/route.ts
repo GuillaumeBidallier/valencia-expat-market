@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   // All listings older than 90 days → permanently deleted, regardless of status (sold or not)
   const deleteCutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
 
-  const [expiredPending, expiredActive, deletedOld] = await Promise.all([
+  const [expiredPending, expiredActive, deletedOld, revertedGiftedTiers] = await Promise.all([
     prisma.listing.updateMany({
       where: { status: 'PENDING', publishedAt: { lt: pendingCutoff } },
       data: { status: 'EXPIRED' },
@@ -30,6 +30,12 @@ export async function GET(req: NextRequest) {
     prisma.listing.deleteMany({
       where: { publishedAt: { lt: deleteCutoff } },
     }),
+    // Admin-gifted tiers (commercial gesture) revert to FREE once expired — unless a real
+    // Stripe subscription is independently keeping the account active.
+    prisma.professional.updateMany({
+      where: { giftTierExpiresAt: { lt: now }, NOT: { subscriptionStatus: 'active' } },
+      data: { tier: 'FREE', giftTierExpiresAt: null },
+    }),
   ])
 
   return NextResponse.json({
@@ -37,6 +43,7 @@ export async function GET(req: NextRequest) {
     expiredPending: expiredPending.count,
     expiredActive: expiredActive.count,
     deletedOld: deletedOld.count,
+    revertedGiftedTiers: revertedGiftedTiers.count,
     ranAt: now.toISOString(),
   })
 }

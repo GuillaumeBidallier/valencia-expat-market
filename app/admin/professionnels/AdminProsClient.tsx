@@ -174,7 +174,19 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
                     <option value="VIP">VIP (499€/an)</option>
                   </select>
                 </Field>
+                <Field label="Offert jusqu'au (geste commercial)">
+                  <input
+                    type="date"
+                    value={editing.giftTierExpiresAt ? String(editing.giftTierExpiresAt).slice(0, 10) : ''}
+                    onChange={e => set('giftTierExpiresAt', e.target.value || null)}
+                  />
+                </Field>
               </div>
+              {editing.giftTierExpiresAt && (
+                <p className="text-xs text-indigo-600 font-medium mt-1.5">
+                  ⏳ Palier offert temporairement — repasse automatiquement en Gratuit le {new Date(editing.giftTierExpiresAt).toLocaleDateString('fr-FR')} (sauf abonnement Stripe actif).
+                </p>
+              )}
 
               {/* Checkboxes */}
               <div className="flex flex-wrap gap-4 mt-4 p-4 bg-gray-50 rounded-xl">
@@ -311,10 +323,15 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
                       </div>
 
                       {/* Tier */}
-                      <div className="hidden sm:block">
+                      <div className="hidden sm:flex flex-col items-end gap-1">
                         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${TIER_COLORS[p.tier]}`}>
                           {p.tier === 'VIP' || p.tier === 'PREMIUM_PLUS' ? <><Star size={9} className="inline mr-0.5" />{TIER_LABELS[p.tier]}</> : TIER_LABELS[p.tier]}
                         </span>
+                        {p.giftTierExpiresAt && (
+                          <span className="text-[10px] text-indigo-500 font-medium whitespace-nowrap">
+                            ⏳ jusqu&apos;au {new Date(p.giftTierExpiresAt).toLocaleDateString('fr-FR')}
+                          </span>
+                        )}
                       </div>
 
                       {/* Actions */}

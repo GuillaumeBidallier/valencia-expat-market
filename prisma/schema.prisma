@@ -147,6 +147,7 @@ model Professional {
   banner      String?  @db.Text
   photos      ProfessionalPhoto[]
   tier        ProTier  @default(FREE)
+  giftTierExpiresAt DateTime?
   verified    Boolean  @default(false)
   featured    Boolean  @default(false)
   recommended Boolean  @default(false)

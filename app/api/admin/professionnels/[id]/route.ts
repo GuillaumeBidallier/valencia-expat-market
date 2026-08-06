@@ -20,6 +20,7 @@ const updateSchema = z.object({
   tier:        z.enum(['FREE', 'PREMIUM', 'PREMIUM_PLUS', 'VIP']).optional(),
   verified:    z.boolean().optional(),
   featured:    z.boolean().optional(),
+  giftTierExpiresAt: z.string().nullable().optional(),
 })
 
 async function requireAdmin() {
@@ -39,7 +40,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   const target = await prisma.professional.findUnique({ where: { id } })
   if (!target || target.siteId !== siteId) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
 
-  const { photos, ...rest } = parsed.data
+  const { photos, giftTierExpiresAt, ...rest } = parsed.data
   if (photos) {
     await prisma.professionalPhoto.deleteMany({ where: { professionalId: id } })
     if (photos.length > 0) {
@@ -51,7 +52,12 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
 
   const pro = await prisma.professional.update({
     where: { id },
-    data: rest,
+    data: {
+      ...rest,
+      ...(giftTierExpiresAt !== undefined && {
+        giftTierExpiresAt: giftTierExpiresAt ? new Date(giftTierExpiresAt) : null,
+      }),
+    },
     include: { photos: { orderBy: { order: 'asc' } }, zones: true },
   })
   return NextResponse.json({ ...pro, photos: pro.photos.map(p => p.url), zones: pro.zones.map(z => z.zone) })

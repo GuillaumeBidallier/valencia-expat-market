@@ -18,6 +18,7 @@ const schema = z.object({
   tier:        z.enum(['FREE', 'PREMIUM', 'PREMIUM_PLUS', 'VIP']).default('FREE'),
   verified:    z.boolean().optional().default(false),
   featured:    z.boolean().optional().default(false),
+  giftTierExpiresAt: z.string().nullable().optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -30,10 +31,15 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
 
-  const { photos, ...rest } = parsed.data
+  const { photos, giftTierExpiresAt, ...rest } = parsed.data
   const siteId = await getAdminSiteId()
   const pro = await prisma.professional.create({
-    data: { ...rest, siteId, photos: { create: photos.map((url, order) => ({ url, order })) } },
+    data: {
+      ...rest,
+      siteId,
+      giftTierExpiresAt: giftTierExpiresAt ? new Date(giftTierExpiresAt) : null,
+      photos: { create: photos.map((url, order) => ({ url, order })) },
+    },
   })
   return NextResponse.json(pro, { status: 201 })
 }
