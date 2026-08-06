@@ -5,9 +5,6 @@ export const PHOTO_UPGRADE_EXTRA = 9
 export const FREE_MAX_PHOTOS = 3
 export const UPGRADED_MAX_PHOTOS = FREE_MAX_PHOTOS + PHOTO_UPGRADE_EXTRA
 
-export const LISTING_BOOST_PRICE_CENTS = 299
-export const LISTING_BOOST_DAYS = 7
-
 export type ProPlan = 'premium_monthly' | 'premium_annual' | 'premium_plus_monthly' | 'premium_plus_annual'
 
 export const PRO_PLANS: Record<ProPlan, {

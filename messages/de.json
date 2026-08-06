@@ -105,12 +105,6 @@
     "upgrade_title": "Limit von 3 Fotos erreicht",
     "upgrade_desc": "Füge 9 weitere Fotos für diese Anzeige hinzu — Einmalzahlung, kein Abo.",
     "upgrade_btn": "9 zusätzliche Fotos — 7,99€",
-    "boost_verifying": "Zahlung wird überprüft…",
-    "boost_ok": "\"Dringend\"-Boost aktiviert ✓ — wird bei Veröffentlichung auf diese Anzeige angewendet.",
-    "boost_will_apply": "Ihre Anzeige wird bei der Veröffentlichung als \"dringend\" markiert.",
-    "boost_title": "Diese Anzeige hervorheben",
-    "boost_desc": "Zeigen Sie \"Dringend\" an und erhalten Sie 7 Tage lang mehr Sichtbarkeit — einmalige Zahlung, kein Abo.",
-    "boost_btn": "Als dringend markieren — 2,99€",
     "blocked": "Anzeige gesperrt — {category}",
     "blocked_hint": "Falls du denkst, dass dies ein Fehler ist, bearbeite Titel oder Beschreibung und versuche es erneut.",
     "location_ok": "✓ {name} — Standort gespeichert"
@@ -172,7 +166,6 @@
     "sellers_title": "Verkäufertyp",
     "sellers_individual": "Privatpersonen",
     "sellers_pro": "Profis",
-    "urgent_only": "Nur dringende Anzeigen",
     "clear_filters": "Filter löschen ({count})",
     "listing_count": "{count} Anzeige",
     "listing_count_plural": "{count} Anzeigen"

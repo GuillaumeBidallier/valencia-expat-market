@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   // ACTIVE listings older than 60 days → EXPIRED
   const activeCutoff = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000)
 
-  const [expiredPending, expiredActive, expiredBoosts] = await Promise.all([
+  const [expiredPending, expiredActive] = await Promise.all([
     prisma.listing.updateMany({
       where: { status: 'PENDING', publishedAt: { lt: pendingCutoff } },
       data: { status: 'EXPIRED' },
@@ -24,18 +24,12 @@ export async function GET(req: NextRequest) {
       where: { status: 'ACTIVE', publishedAt: { lt: activeCutoff } },
       data: { status: 'EXPIRED' },
     }),
-    // Clear the "urgent" flag once its boost window has passed
-    prisma.listing.updateMany({
-      where: { isPremium: true, boostExpiresAt: { lt: now } },
-      data: { isPremium: false },
-    }),
   ])
 
   return NextResponse.json({
     ok: true,
     expiredPending: expiredPending.count,
     expiredActive: expiredActive.count,
-    expiredBoosts: expiredBoosts.count,
     ranAt: now.toISOString(),
   })
 }

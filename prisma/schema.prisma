@@ -286,15 +286,6 @@ model PhotoUpgrade {
   createdAt       DateTime @default(now())
 }
 
-model ListingBoost {
-  id              String   @id @default(cuid())
-  userId          String
-  stripeSessionId String   @unique
-  paid            Boolean  @default(false)
-  used            Boolean  @default(false)
-  createdAt       DateTime @default(now())
-}
-
 model BlogPost {
   id          String    @id @default(cuid())
   slug        String    @unique

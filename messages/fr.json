@@ -105,12 +105,6 @@
     "upgrade_title": "Limite de 3 photos atteinte",
     "upgrade_desc": "Ajoutez 9 photos supplémentaires pour cette annonce — paiement unique, sans abonnement.",
     "upgrade_btn": "9 photos supplémentaires — 7,99€",
-    "boost_verifying": "Vérification du paiement…",
-    "boost_ok": "Boost \"urgent\" activé ✓ — appliqué à cette annonce dès sa publication.",
-    "boost_will_apply": "Votre annonce sera marquée \"urgente\" dès sa publication.",
-    "boost_title": "Mettre en avant cette annonce",
-    "boost_desc": "Affichez \"Urgent\" et gagnez en visibilité pendant 7 jours — paiement unique, sans abonnement.",
-    "boost_btn": "Marquer comme urgente — 2,99€",
     "blocked": "Annonce bloquée — {category}",
     "blocked_hint": "Si vous pensez qu'il s'agit d'une erreur, modifiez votre titre ou description et réessayez.",
     "location_ok": "✓ {name} — position enregistrée"
@@ -172,7 +166,6 @@
     "sellers_title": "Type de vendeurs",
     "sellers_individual": "Particuliers",
     "sellers_pro": "Professionnels",
-    "urgent_only": "Annonces urgentes uniquement",
     "clear_filters": "Effacer les filtres ({count})",
     "listing_count": "{count} annonce",
     "listing_count_plural": "{count} annonces"

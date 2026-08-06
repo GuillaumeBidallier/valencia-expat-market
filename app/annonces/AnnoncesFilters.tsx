@@ -186,10 +186,9 @@ export default function AnnoncesFilters() {
   const brand    = searchParams.get('attr_brand') ?? ''
 
   const seller  = searchParams.get('seller') ?? ''
-  const urgent  = searchParams.get('urgent') ?? ''
 
   const hasLocation = Boolean(lat && lng)
-  const activeCount = [cat, ville, priceMin, priceMax, seller, urgent, hasLocation ? 'loc' : ''].filter(Boolean).length
+  const activeCount = [cat, ville, priceMin, priceMax, seller, hasLocation ? 'loc' : ''].filter(Boolean).length
 
   const update = useCallback((key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -356,7 +355,6 @@ export default function AnnoncesFilters() {
     const next = sellerTypes.includes(v) ? sellerTypes.filter(s => s !== v) : [...sellerTypes, v]
     update('seller', next.join(','))
   }
-  const urgentOnly = urgent === '1'
 
   const sellerPanel = (
     <div className="space-y-4">
@@ -378,17 +376,6 @@ export default function AnnoncesFilters() {
             </label>
           ))}
         </div>
-      </div>
-      <div>
-        <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={urgentOnly}
-            onChange={e => update('urgent', e.target.checked ? '1' : '')}
-            className="w-4 h-4 rounded border-gray-300 text-orange-primary focus:ring-orange-primary"
-          />
-          {t('urgent_only')}
-        </label>
       </div>
     </div>
   )
@@ -424,7 +411,7 @@ export default function AnnoncesFilters() {
           {sortPanel}
         </FilterDropdown>
 
-        <FilterDropdown label={t('sellers_title')} badge={sellerTypes.length + (urgentOnly ? 1 : 0)} align="right">
+        <FilterDropdown label={t('sellers_title')} badge={sellerTypes.length} align="right">
           {sellerPanel}
         </FilterDropdown>
 
