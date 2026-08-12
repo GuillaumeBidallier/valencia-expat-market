@@ -201,7 +201,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
     <div className="space-y-6">
 
       {/* ── Images Hero ─────────────────────────────────────── */}
-      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-indigo-soft flex items-center justify-center">
             <ImageIcon size={18} className="text-indigo-primary" />
@@ -315,7 +315,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       </section>
 
       {/* ── Bannière d'annonce ──────────────────────────────── */}
-      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
@@ -346,7 +346,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       </section>
 
       {/* ── Publication auto ────────────────────────────────── */}
-      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
@@ -366,7 +366,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       </section>
 
       {/* ── Email de contact ─────────────────────────────────── */}
-      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
             <Mail size={18} className="text-blue-500" />
@@ -388,7 +388,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       </section>
 
       {/* ── Mode maintenance ─────────────────────────────────── */}
-      <section id="maintenance" className={`bg-white rounded-2xl border shadow-sm overflow-hidden scroll-mt-6 ${maintenanceMode ? 'border-red-200' : 'border-gray-100'}`}>
+      <section id="maintenance" className={`bg-white rounded-xl border shadow-sm overflow-hidden scroll-mt-6 ${maintenanceMode ? 'border-red-200' : 'border-gray-100'}`}>
         <div className="px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${maintenanceMode ? 'bg-red-50' : 'bg-gray-50'}`}>
@@ -419,7 +419,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       </section>
 
       {/* ── Outils base de données ───────────────────────────── */}
-      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-gray-50 flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center">
             <Database size={18} className="text-gray-400" />

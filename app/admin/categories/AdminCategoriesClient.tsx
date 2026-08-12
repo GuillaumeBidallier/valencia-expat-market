@@ -1,7 +1,6 @@
 'use client'
-import { useState } from 'react'
-import Link from 'next/link'
-import { ArrowLeft, Plus, Pencil, Trash2, X, ChevronUp, ChevronDown, ChevronRight } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Plus, Pencil, Trash2, X, ChevronUp, ChevronDown, ChevronRight, Layers, FolderTree, FileText } from 'lucide-react'
 
 type TreeRow = {
   id: string; slug: string; label: string; icon: string
@@ -26,6 +25,10 @@ function slugify(str: string): string {
 
 function countDescendantListings(row: TreeRow): number {
   return row.listingCount + row.children.reduce((s, c) => s + countDescendantListings(c), 0)
+}
+
+function countAllNodes(row: TreeRow): number {
+  return 1 + row.children.reduce((s, c) => s + countAllNodes(c), 0)
 }
 
 export default function AdminCategoriesClient({ initialTree }: { initialTree: TreeRow[] }) {
@@ -237,33 +240,57 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Tr
   const newSubParentLabel = newSubParentId ? findInTree(tree, newSubParentId)?.label : null
   const isSubForm = newSubParentId !== null
 
+  const totalNodes    = useMemo(() => tree.reduce((s, r) => s + countAllNodes(r), 0), [tree])
+  const subCount      = totalNodes - tree.length
+  const listingsTotal = useMemo(() => tree.reduce((s, r) => s + countDescendantListings(r), 0), [tree])
+
   return (
-    <div className="min-h-screen bg-[#F4F5F7]">
-      <div className="bg-navy text-white">
-        <div className="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link href="/admin" className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-              <ArrowLeft size={16} />
-            </Link>
-            <div>
-              <h1 className="text-lg font-black tracking-tight">Catégories d&apos;annonces</h1>
-              <p className="text-xs text-white/40">{tree.length} catégorie{tree.length !== 1 ? 's' : ''} racine{tree.length !== 1 ? 's' : ''}</p>
-            </div>
+    <div className="max-w-[1500px] mx-auto px-6 py-6 space-y-5">
+
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-black text-navy tracking-tight">Catégories d&apos;annonces</h1>
+          <p className="text-sm text-gray-400 mt-0.5">Organisez l&apos;arborescence des catégories du site.</p>
+        </div>
+        <button onClick={openNewRoot}
+          className="flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-sm">
+          <Plus size={15} /> Ajouter
+        </button>
+      </div>
+
+      {/* ── Stat cards ──────────────────────────────────────── */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 bg-navy/5">
+            <Layers size={17} className="text-navy" />
           </div>
-          <button onClick={openNewRoot}
-            className="flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white px-4 py-2 rounded-xl font-bold text-sm transition-colors">
-            <Plus size={15} /> Ajouter
-          </button>
+          <p className="text-xl font-black text-navy leading-none">{tree.length}</p>
+          <p className="text-xs text-gray-400 mt-1.5">Catégories racines</p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 bg-indigo-soft">
+            <FolderTree size={17} className="text-indigo-primary" />
+          </div>
+          <p className="text-xl font-black text-navy leading-none">{subCount}</p>
+          <p className="text-xs text-gray-400 mt-1.5">Sous-catégories</p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 bg-orange-soft">
+            <FileText size={17} className="text-orange-primary" />
+          </div>
+          <p className="text-xl font-black text-navy leading-none">{listingsTotal}</p>
+          <p className="text-xs text-gray-400 mt-1.5">Annonces classées</p>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-4">
+      <div className="space-y-4">
         {error && !isEditing && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</p>
         )}
 
         {isEditing && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-black text-navy">
                 {isNewRoot ? 'Nouvelle catégorie racine'
@@ -336,7 +363,7 @@ export default function AdminCategoriesClient({ initialTree }: { initialTree: Tr
           </div>
         )}
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
           {tree.length === 0 ? (
             <div className="px-5 py-12 text-center text-gray-400 text-sm">Aucune catégorie. Cliquez sur « Ajouter » pour commencer.</div>
           ) : renderRows(tree, 0, null)}

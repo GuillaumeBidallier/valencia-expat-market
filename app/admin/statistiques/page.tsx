@@ -4,9 +4,9 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { getAdminSiteId } from '@/lib/site'
 import {
-  ArrowLeft, Users, FileText, Star, TrendingUp, TrendingDown,
-  ShoppingCart, AlertTriangle, CheckCircle, Clock, CreditCard,
-  BarChart2, Minus, UserCheck, Ban, Package,
+  ArrowRight, Users, FileText, Star, TrendingUp, TrendingDown,
+  AlertTriangle, CheckCircle, Clock, CreditCard,
+  BarChart2, Minus, Package,
 } from 'lucide-react'
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -26,21 +26,19 @@ function KpiCard({
   const trendColor = trend == null ? 'text-gray-400' : trend >= 0 ? 'text-emerald-500' : 'text-red-400'
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-3 shadow-sm">
-      <div className="flex items-start justify-between">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${bg}`}>
-          <span className={color}>{icon}</span>
-        </div>
-        {trendLabel && (
-          <div className={`flex items-center gap-1 text-xs font-semibold ${trendColor}`}>
-            <TrendIcon size={12} />
-            <span>{trendLabel}</span>
-          </div>
-        )}
+    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+      <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 ${bg}`}>
+        <span className={color}>{icon}</span>
       </div>
-      <div>
-        <p className="text-3xl font-black text-navy leading-none mb-1">{value}</p>
-        <p className="text-sm text-gray-500 font-medium">{label}</p>
+      <p className="text-xl font-black text-navy leading-none">{value}</p>
+      <div className="flex items-center gap-2 mt-1.5">
+        <p className="text-xs text-gray-400">{label}</p>
+        {trendLabel && (
+          <span className={`flex items-center gap-0.5 text-[10px] font-semibold ${trendColor}`}>
+            <TrendIcon size={9} />
+            {trendLabel}
+          </span>
+        )}
       </div>
     </div>
   )
@@ -166,33 +164,23 @@ export default async function AdminStatsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7]">
+    <div className="max-w-[1500px] mx-auto px-6 py-6 space-y-5">
 
-      {/* ── Top header band ───────────────────────────────────────── */}
-      <div className="bg-navy text-white">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin"
-              className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            >
-              <ArrowLeft size={16} />
-            </Link>
-            <div>
-              <h1 className="text-lg font-black tracking-tight">Statistiques</h1>
-              <p className="text-xs text-white/50">Données en temps réel · {monthLabel}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-white/40">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Live
-          </div>
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-black text-navy tracking-tight">Statistiques</h1>
+          <p className="text-sm text-gray-400 mt-0.5">Données en temps réel · {monthLabel}</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-gray-400 font-medium">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          Live
         </div>
       </div>
 
       {/* ── Hero KPI row ───────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-6 pt-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           <KpiCard
             label="Utilisateurs"
             value={totalUsers}
@@ -237,7 +225,7 @@ export default async function AdminStatsPage() {
       </div>
 
       {/* ── Main content ──────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* ── Col LEFT (2/3) ─────────────────────────── */}
         <div className="lg:col-span-2 flex flex-col gap-6">
@@ -462,7 +450,7 @@ export default async function AdminStatsPage() {
                         {item.badge}
                       </span>
                     )}
-                    <ArrowLeft size={12} className="rotate-180 text-gray-300 group-hover:text-gray-400 transition-colors" />
+                    <ArrowRight size={12} className="text-gray-300 group-hover:text-gray-400 transition-colors" />
                   </div>
                 </Link>
               ))}

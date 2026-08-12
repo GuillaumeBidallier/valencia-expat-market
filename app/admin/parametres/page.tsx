@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import Link from 'next/link'
-import { ChevronLeft, Settings2 } from 'lucide-react'
 import SettingsClient from './SettingsClient'
 
 export const dynamic = 'force-dynamic'
@@ -24,32 +22,16 @@ export default async function AdminParametresPage() {
   })
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7]">
+    <div className="max-w-[1500px] mx-auto px-6 py-6 space-y-5">
 
-      {/* Header */}
-      <div className="bg-navy text-white">
-        <div className="max-w-5xl mx-auto px-6 py-6">
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-1.5 text-white/50 hover:text-white text-sm mb-4 transition-colors"
-          >
-            <ChevronLeft size={16} />
-            Tableau de bord
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-              <Settings2 size={20} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tight">Paramètres du site</h1>
-              <p className="text-sm text-white/40 mt-0.5">Gérez le contenu et la configuration de 1000Click</p>
-            </div>
-          </div>
-        </div>
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div>
+        <h1 className="text-2xl font-black text-navy tracking-tight">Paramètres du site</h1>
+        <p className="text-sm text-gray-400 mt-0.5">Gérez le contenu et la configuration de 1000Click.</p>
       </div>
 
-      {/* Content */}
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      {/* ── Content ─────────────────────────────────────────── */}
+      <div className="max-w-3xl">
         <SettingsClient
           initialSettings={{
             autoPublish: settings.autoPublish,
