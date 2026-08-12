@@ -7,6 +7,7 @@ import { ListingsProvider } from '@/context/ListingsContext'
 import { PageThemeProvider } from '@/context/PageThemeContext'
 import ConditionalNavbar from '@/components/layout/ConditionalNavbar'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
+import ConditionalMain from '@/components/layout/ConditionalMain'
 import { LocaleProvider, type SupportedLocale } from '@/components/providers/LocaleProvider'
 import CookieBanner from '@/components/CookieBanner'
 import ConsentScripts from '@/components/ConsentScripts'
@@ -62,7 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <ListingsProvider>
                 <PageThemeProvider>
                   <ConditionalNavbar />
-                  <main id="main-content" className="pt-[104px]">{children}</main>
+                  <ConditionalMain>{children}</ConditionalMain>
                   <ConditionalFooter />
                 </PageThemeProvider>
               </ListingsProvider>

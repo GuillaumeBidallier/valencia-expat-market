@@ -5,5 +5,6 @@ import Navbar from './Navbar'
 export default function ConditionalNavbar() {
   const pathname = usePathname()
   if (pathname.startsWith('/carte/')) return null
+  if (pathname.startsWith('/admin')) return null
   return <Navbar />
 }

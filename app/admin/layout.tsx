@@ -1,8 +1,8 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
+import { prisma } from '@/lib/prisma'
 import { getAdminSiteId, listActiveSites } from '@/lib/site'
-import AdminSiteSelector from '@/components/admin/AdminSiteSelector'
+import AdminShell from '@/components/admin/AdminShell'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -10,24 +10,24 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/')
   }
 
-  const [sites, currentSiteId] = await Promise.all([listActiveSites(), getAdminSiteId()])
+  const [sites, siteId] = await Promise.all([listActiveSites(), getAdminSiteId()])
+
+  const [pendingCount, reportedListingsCount, firewallBlockedCount] = await Promise.all([
+    prisma.listing.count({ where: { status: 'PENDING', siteId } }),
+    prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' }, siteId } }),
+    prisma.listing.count({ where: { blockedReason: { not: null }, siteId } }),
+  ])
+
+  const adminName = (session.user as { name?: string }).name ?? 'Admin'
 
   return (
-    <div>
-      <div className="bg-navy text-white">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
-          <Link href="/admin" className="font-black text-sm tracking-tight hover:text-white/80 transition-colors">
-            1000Click Admin
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/admin/sites" className="text-xs font-semibold text-white/60 hover:text-white transition-colors">
-              Sites &amp; Pays
-            </Link>
-            <AdminSiteSelector sites={sites} currentSiteId={currentSiteId} />
-          </div>
-        </div>
-      </div>
+    <AdminShell
+      adminName={adminName}
+      notificationCount={pendingCount + reportedListingsCount + firewallBlockedCount}
+      sites={sites}
+      currentSiteId={siteId}
+    >
       {children}
-    </div>
+    </AdminShell>
   )
 }

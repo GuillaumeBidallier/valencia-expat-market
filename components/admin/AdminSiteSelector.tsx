@@ -22,13 +22,13 @@ export default function AdminSiteSelector({ sites, currentSiteId }: { sites: Sit
   }
 
   return (
-    <div className="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2">
-      <Globe size={16} className="text-white/60" />
+    <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5">
+      <Globe size={15} className="text-gray-400" />
       <select
         value={currentSiteId}
         onChange={e => handleChange(e.target.value)}
         disabled={switching}
-        className="bg-transparent text-white text-sm font-medium outline-none cursor-pointer disabled:opacity-50"
+        className="bg-transparent text-navy text-sm font-medium outline-none cursor-pointer disabled:opacity-50"
       >
         {sites.map(site => (
           <option key={site.id} value={site.id} className="text-navy">

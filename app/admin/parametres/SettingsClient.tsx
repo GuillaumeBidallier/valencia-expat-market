@@ -388,7 +388,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       </section>
 
       {/* ── Mode maintenance ─────────────────────────────────── */}
-      <section className={`bg-white rounded-2xl border shadow-sm overflow-hidden ${maintenanceMode ? 'border-red-200' : 'border-gray-100'}`}>
+      <section id="maintenance" className={`bg-white rounded-2xl border shadow-sm overflow-hidden scroll-mt-6 ${maintenanceMode ? 'border-red-200' : 'border-gray-100'}`}>
         <div className="px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${maintenanceMode ? 'bg-red-50' : 'bg-gray-50'}`}>
