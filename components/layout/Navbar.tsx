@@ -151,8 +151,16 @@ export default function Navbar() {
 
           {/* Logo + nav links — collés ensemble à gauche */}
           <div className="flex items-center gap-6">
-            <Link href="/" className="shrink-0" aria-label="1000Click — Accueil">
+            <Link href="/" className="relative shrink-0" aria-label="1000Click — Accueil">
               <VendoLogo size="lg" theme={light ? 'light' : 'dark'} />
+              {vehiculesTheme && (
+                <span
+                  aria-hidden="true"
+                  className="absolute top-1/2 -translate-y-1/2 -right-4 rotate-[-8deg] bg-red-600 text-white text-[9px] font-black uppercase tracking-wide px-1.5 py-0.5 rounded-md shadow-sm ring-1 ring-white/20 z-10"
+                >
+                  Auto
+                </span>
+              )}
             </Link>
 
             <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
