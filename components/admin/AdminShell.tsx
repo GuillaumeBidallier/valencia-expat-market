@@ -21,16 +21,16 @@ export default function AdminShell({
   const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <div className="min-h-screen flex bg-[#F4F5F7]">
+    <div className="h-screen flex bg-[#F4F5F7] overflow-hidden">
       <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(v => !v)} />
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 flex flex-col h-screen">
         <AdminTopBar
           adminName={adminName}
           notificationCount={notificationCount}
           sites={sites}
           currentSiteId={currentSiteId}
         />
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
       </div>
     </div>
   )
