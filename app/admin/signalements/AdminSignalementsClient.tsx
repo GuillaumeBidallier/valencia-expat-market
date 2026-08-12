@@ -1,10 +1,9 @@
 'use client'
 import { useState, useMemo } from 'react'
 import {
-  ArrowLeft, Flag, Eye, XCircle, CheckCircle,
+  Flag, Eye, XCircle, CheckCircle,
   ShieldOff, ShieldCheck, Trash2, AlertTriangle, Search,
 } from 'lucide-react'
-import Link from 'next/link'
 import { useCategories } from '@/hooks/useCategories'
 
 interface ReportRow {
@@ -59,6 +58,12 @@ export default function AdminSignalementsClient({ initialListings }: { initialLi
   const blockedAuthors   = new Set(listings.filter(l => l.user.blocked).map(l => l.user.id)).size
   const highPriority     = listings.filter(l => l.reportCount >= 3).length
 
+  const reasonBreakdown = useMemo(() => {
+    const acc: Record<string, number> = {}
+    for (const l of listings) for (const r of l.reports) acc[r.reason] = (acc[r.reason] ?? 0) + 1
+    return Object.entries(acc).sort((a, b) => b[1] - a[1])
+  }, [listings])
+
   // Moderate listing status
   const moderate = async (id: string, status: 'ACTIVE' | 'REJECTED') => {
     setLoadingId(id)
@@ -92,85 +97,85 @@ export default function AdminSignalementsClient({ initialListings }: { initialLi
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7]">
+    <div className="max-w-[1500px] mx-auto px-6 py-6 space-y-5">
 
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className="bg-navy text-white">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin"
-              className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            >
-              <ArrowLeft size={16} />
-            </Link>
-            <div>
-              <h1 className="text-lg font-black tracking-tight">Signalements</h1>
-              <p className="text-xs text-white/40">{listings.length} annonce{listings.length !== 1 ? 's' : ''} signalée{listings.length !== 1 ? 's' : ''} · {totalReports} signalement{totalReports !== 1 ? 's' : ''} total</p>
-            </div>
-          </div>
-          {listings.length > 0 && (
-            <div className="flex items-center gap-2 bg-red-500/20 rounded-xl px-3 py-2 text-sm text-red-300 font-semibold">
-              <AlertTriangle size={14} />
-              {listings.length} à traiter
-            </div>
-          )}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-black text-navy tracking-tight">Signalements</h1>
+          <p className="text-sm text-gray-400 mt-0.5">
+            {listings.length} annonce{listings.length !== 1 ? 's' : ''} signalée{listings.length !== 1 ? 's' : ''} · {totalReports} signalement{totalReports !== 1 ? 's' : ''} au total
+          </p>
         </div>
+        {listings.length > 0 && (
+          <div className="flex items-center gap-2 bg-red-50 text-red-600 rounded-xl px-3 py-2 text-sm font-semibold">
+            <AlertTriangle size={14} />
+            {listings.length} à traiter
+          </div>
+        )}
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
-
-        {/* ── KPI cards ───────────────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {[
-            {
-              label: 'Annonces signalées',
-              value: listings.length,
-              icon: <Flag size={18} />,
-              color: listings.length > 0 ? 'text-red-500' : 'text-gray-400',
-              bg: listings.length > 0 ? 'bg-red-50' : 'bg-gray-50',
-              sub: 'À traiter',
-            },
-            {
-              label: 'Signalements totaux',
-              value: totalReports,
-              icon: <AlertTriangle size={18} />,
-              color: 'text-amber-600',
-              bg: 'bg-amber-50',
-              sub: 'Tous motifs confondus',
-            },
-            {
-              label: 'Haute priorité',
-              value: highPriority,
-              icon: <XCircle size={18} />,
-              color: highPriority > 0 ? 'text-red-600' : 'text-gray-300',
-              bg: highPriority > 0 ? 'bg-red-50' : 'bg-gray-50',
-              sub: '≥ 3 signalements',
-            },
-            {
-              label: 'Auteurs bloqués',
-              value: blockedAuthors,
-              icon: <ShieldOff size={18} />,
-              color: blockedAuthors > 0 ? 'text-gray-600' : 'text-gray-300',
-              bg: 'bg-gray-50',
-              sub: 'Parmi les signalés',
-            },
-          ].map(k => (
-            <div key={k.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${k.bg}`}>
-                <span className={k.color}>{k.icon}</span>
-              </div>
-              <div>
-                <p className="text-3xl font-black text-navy leading-none mb-1">{k.value}</p>
-                <p className="text-sm text-gray-500 font-medium">{k.label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{k.sub}</p>
-              </div>
+      {/* ── KPI cards ───────────────────────────────────────── */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          {
+            label: 'Annonces signalées',
+            value: listings.length,
+            icon: <Flag size={17} />,
+            color: listings.length > 0 ? 'text-red-500' : 'text-gray-400',
+            bg: listings.length > 0 ? 'bg-red-50' : 'bg-gray-100',
+          },
+          {
+            label: 'Signalements totaux',
+            value: totalReports,
+            icon: <AlertTriangle size={17} />,
+            color: 'text-amber-600',
+            bg: 'bg-amber-50',
+          },
+          {
+            label: 'Haute priorité (≥3)',
+            value: highPriority,
+            icon: <XCircle size={17} />,
+            color: highPriority > 0 ? 'text-red-600' : 'text-gray-300',
+            bg: highPriority > 0 ? 'bg-red-50' : 'bg-gray-100',
+          },
+          {
+            label: 'Auteurs bloqués',
+            value: blockedAuthors,
+            icon: <ShieldOff size={17} />,
+            color: blockedAuthors > 0 ? 'text-gray-600' : 'text-gray-300',
+            bg: 'bg-gray-100',
+          },
+        ].map(k => (
+          <div key={k.label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 ${k.bg}`}>
+              <span className={k.color}>{k.icon}</span>
             </div>
-          ))}
-        </div>
+            <p className="text-xl font-black text-navy leading-none">{k.value}</p>
+            <p className="text-xs text-gray-400 mt-1.5">{k.label}</p>
+          </div>
+        ))}
+      </div>
 
-        {/* ── Liste ─────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      {/* ── Répartition par motif ─────────────────────────────── */}
+      {reasonBreakdown.length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4">
+          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-3">Répartition par motif</p>
+          <div className="flex flex-wrap gap-2">
+            {reasonBreakdown.map(([reason, count]) => (
+              <span
+                key={reason}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border ${REASON_COLORS[reason] ?? 'bg-gray-50 text-gray-500 border-gray-200'}`}
+              >
+                {reason} · {count}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Liste ─────────────────────────────────────────────── */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
 
           {/* Toolbar */}
           <div className="px-5 py-4 border-b border-gray-50 flex items-center gap-3">
@@ -343,10 +348,10 @@ export default function AdminSignalementsClient({ initialListings }: { initialLi
           )}
         </div>
 
-        {/* ── Legend ─────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4">
-          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-3">Légende des actions</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {/* ── Legend ─────────────────────────────────────────────── */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4">
+        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-3">Légende des actions</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { icon: <Eye size={12} />, label: 'Voir', desc: "Ouvre l'annonce publique dans un nouvel onglet" },
               { icon: <XCircle size={12} />, label: 'Retirer', desc: "Passe l'annonce en statut REJECTED — plus visible" },
@@ -366,7 +371,6 @@ export default function AdminSignalementsClient({ initialListings }: { initialLi
           </div>
         </div>
 
-      </div>
     </div>
   )
 }

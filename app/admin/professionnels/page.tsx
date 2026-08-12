@@ -14,9 +14,18 @@ export default async function AdminProsPage() {
   const proRows = await prisma.professional.findMany({
     where: { siteId },
     orderBy: [{ tier: 'desc' }, { name: 'asc' }],
-    include: { photos: { orderBy: { order: 'asc' } }, zones: true },
+    include: {
+      photos: { orderBy: { order: 'asc' } },
+      zones: true,
+      _count: { select: { clicks: true } },
+    },
   })
-  const pros = proRows.map(row => ({ ...row, photos: row.photos.map(p => p.url), zones: row.zones.map(z => z.zone) }))
+  const pros = proRows.map(row => ({
+    ...row,
+    photos: row.photos.map(p => p.url),
+    zones: row.zones.map(z => z.zone),
+    clickCount: row._count.clicks,
+  }))
 
   return <AdminProsClient initialPros={pros} />
 }
