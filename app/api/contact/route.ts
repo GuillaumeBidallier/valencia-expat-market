@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   const safeMessage = message.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
   if (resend) {
-    await resend.emails.send({
+    const notifyResult = await resend.emails.send({
       from: FROM,
       to: CONTACT_EMAIL,
       replyTo: email,
@@ -76,9 +76,10 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`,
     })
+    if (notifyResult.error) console.error('[contact] admin notification email failed:', notifyResult.error)
 
     // Auto-reply to sender
-    await resend.emails.send({
+    const replyResult = await resend.emails.send({
       from: FROM,
       to: email,
       subject: 'Nous avons bien reçu votre message — 1000Click',
@@ -119,6 +120,7 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`,
     })
+    if (replyResult.error) console.error('[contact] auto-reply email failed:', replyResult.error)
   }
 
   return NextResponse.json({ ok: true })

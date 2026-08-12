@@ -5,11 +5,20 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 const FROM = process.env.RESEND_FROM_EMAIL ?? '1000Click <onboarding@resend.dev>'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app'
 
+// The Resend SDK resolves (doesn't throw) on API-level failures like an unverified
+// sending domain — it returns { data: null, error }. Every caller fires these functions
+// with `.catch(() => {})`, so without logging here a failed send is completely invisible.
+type ResendSendResult = Awaited<ReturnType<Resend['emails']['send']>>
+function logIfError(context: string, result: ResendSendResult) {
+  if (result.error) console.error(`[email] ${context} failed:`, result.error)
+  return result
+}
+
 // ── Welcome email ──────────────────────────────────────────
 export async function sendWelcomeEmail({ to, name }: { to: string; name: string }) {
   if (!resend) return
   const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  await resend.emails.send({
+  logIfError('sendWelcomeEmail', await resend.emails.send({
     from: FROM,
     to,
     subject: 'Bienvenue sur 1000Click ! 🎉',
@@ -42,7 +51,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
           </p>
         </td></tr>
       </table>
@@ -50,14 +59,14 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
   </table>
 </body>
 </html>`,
-  })
+  }))
 }
 
 // ── Password reset email ───────────────────────────────────
 export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: string; name: string; resetUrl: string }) {
   if (!resend) return
   const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  await resend.emails.send({
+  logIfError('sendPasswordResetEmail', await resend.emails.send({
     from: FROM,
     to,
     subject: 'Réinitialisation de votre mot de passe 1000Click',
@@ -89,7 +98,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
             Si vous n'avez pas demandé cette réinitialisation, ignorez cet email. Votre mot de passe restera inchangé.
           </p>
           <p style="margin:32px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
           </p>
         </td></tr>
       </table>
@@ -97,7 +106,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
   </table>
 </body>
 </html>`,
-  })
+  }))
 }
 
 // ── Admin new listing notification ────────────────────────
@@ -114,7 +123,7 @@ export async function sendAdminNewListingEmail({
   const safeName  = userName.replace(/</g, '&lt;').replace(/>/g, '&gt;')
   const safeEmail = userEmail.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-  await resend.emails.send({
+  logIfError('sendAdminNewListingEmail', await resend.emails.send({
     from: FROM,
     to: adminEmail,
     subject: `🆕 Nouvelle annonce en attente : "${listingTitle}"`,
@@ -149,7 +158,7 @@ export async function sendAdminNewListingEmail({
   </table>
 </body>
 </html>`,
-  })
+  }))
 }
 
 // ── Listing approved/rejected emails ──────────────────────
@@ -161,7 +170,7 @@ export async function sendListingApprovedEmail({
   if (!resend) return
   const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
   const safeTitle = listingTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  await resend.emails.send({
+  logIfError('sendListingApprovedEmail', await resend.emails.send({
     from: FROM,
     to,
     subject: `✅ Votre annonce "${listingTitle}" est en ligne !`,
@@ -190,7 +199,7 @@ export async function sendListingApprovedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
           </p>
         </td></tr>
       </table>
@@ -198,7 +207,7 @@ export async function sendListingApprovedEmail({
   </table>
 </body>
 </html>`,
-  })
+  }))
 }
 
 export async function sendListingRejectedEmail({
@@ -210,7 +219,7 @@ export async function sendListingRejectedEmail({
   const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
   const safeTitle = listingTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;')
   const safeReason = reason ? reason.replace(/</g, '&lt;').replace(/>/g, '&gt;') : ''
-  await resend.emails.send({
+  logIfError('sendListingRejectedEmail', await resend.emails.send({
     from: FROM,
     to,
     subject: `Votre annonce "${listingTitle}" n'a pas été publiée`,
@@ -243,7 +252,7 @@ export async function sendListingRejectedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">vendo.es</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
           </p>
         </td></tr>
       </table>
@@ -251,7 +260,7 @@ export async function sendListingRejectedEmail({
   </table>
 </body>
 </html>`,
-  })
+  }))
 }
 
 function emailHtml({
@@ -346,10 +355,10 @@ export async function sendMessageNotification({
   const preview = messageBody.length > 300 ? messageBody.slice(0, 300) + '…' : messageBody
   const conversationUrl = `${APP_URL}/messages/${conversationId}`
 
-  await resend.emails.send({
+  logIfError('sendMessageNotification', await resend.emails.send({
     from: FROM,
     to,
     subject: `${fromName} vous a envoyé un message sur 1000Click`,
     html: emailHtml({ toName, fromName, listingTitle, preview, conversationUrl }),
-  })
+  }))
 }
