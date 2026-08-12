@@ -1,6 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic'
-import { CATEGORY_ATTRIBUTES } from '@/lib/categoryAttributes'
+import { CATEGORY_ATTRIBUTES, type AttrFieldDef } from '@/lib/categoryAttributes'
 
 const BrandModelPicker = dynamic(() => import('@/components/ui/BrandModelPicker'), { ssr: false })
 
@@ -14,6 +14,10 @@ interface Props {
   onUpdate: (key: string, value: string) => void
   /** 'brand' renders only the marque/modèle field, 'rest' renders everything else, 'all' renders both (default). */
   mode?: 'all' | 'brand' | 'rest'
+  /** Restrict rendering to these field keys only (checked against each field's own key, or brandKey for brand-model fields). */
+  only?: string[]
+  /** Exclude these field keys from rendering. */
+  exclude?: string[]
 }
 
 export function hasBrandModelField(cat: string): boolean {
@@ -32,12 +36,13 @@ function parseStepperRange(raw: string): { min: number | null; max: number | nul
 }
 
 /** Count of populated non-brand attribute filters, for a "Filtres (n)" badge. */
-export function countActiveVehicleFilters(cat: string, searchParams: SearchParamsLike): number {
+export function countActiveVehicleFilters(cat: string, searchParams: SearchParamsLike, exclude?: string[]): number {
   const fields = CATEGORY_ATTRIBUTES[cat]
   if (!fields) return 0
   let count = 0
   for (const field of fields) {
     if (field.type === 'brand-model') continue
+    if (exclude?.includes(field.key)) continue
     if (field.type === 'select') {
       if ((searchParams.get(`attr_${field.key}`) ?? '').split(',').filter(Boolean).length > 0) count++
     } else if (field.type === 'stepper') {
@@ -50,13 +55,18 @@ export function countActiveVehicleFilters(cat: string, searchParams: SearchParam
   return count
 }
 
-export default function VehicleAttributesFilters({ cat, searchParams, onUpdate, mode = 'all' }: Props) {
+function fieldKey(f: AttrFieldDef): string {
+  return f.type === 'brand-model' ? f.brandKey : f.key
+}
+
+export default function VehicleAttributesFilters({ cat, searchParams, onUpdate, mode = 'all', only, exclude }: Props) {
   const allFields = CATEGORY_ATTRIBUTES[cat]
   if (!allFields || allFields.length === 0) return null
 
-  const fields = allFields.filter(f =>
-    mode === 'all' ? true : mode === 'brand' ? f.type === 'brand-model' : f.type !== 'brand-model'
-  )
+  const fields = allFields
+    .filter(f => mode === 'all' ? true : mode === 'brand' ? f.type === 'brand-model' : f.type !== 'brand-model')
+    .filter(f => !only || only.includes(fieldKey(f)))
+    .filter(f => !exclude || !exclude.includes(fieldKey(f)))
   if (fields.length === 0) return null
 
   const toggleMulti = (key: string, value: string) => {

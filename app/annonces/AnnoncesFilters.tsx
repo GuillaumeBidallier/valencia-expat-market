@@ -1,13 +1,14 @@
 'use client'
 import { useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { X, LocateFixed, Loader2, ChevronRight } from 'lucide-react'
+import { X, LocateFixed, Loader2, ChevronRight, SlidersHorizontal } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { neighborhoods } from '@/lib/neighborhoods'
 import { useCategories } from '@/hooks/useCategories'
 import type { CategoryTree } from '@/types'
 import FilterDropdown from '@/components/ui/FilterDropdown'
 import VehicleAttributesFilters, { hasBrandModelField, countActiveVehicleFilters } from '@/components/listings/VehicleAttributesFilters'
+import { CATEGORY_ATTRIBUTES } from '@/lib/categoryAttributes'
 
 const RADII = [
   { label: '5 km',  value: '5'  },
@@ -167,7 +168,9 @@ function CategoryPickerPanel({
   )
 }
 
-export default function AnnoncesFilters() {
+const IMMOBILIER_OWN_KEYS = ['type_bien', 'surface_habitable', 'surface_terrain', 'pieces']
+
+export default function AnnoncesFilters({ dark, immobilier }: { dark?: boolean; immobilier?: boolean }) {
   const t = useTranslations('Filters')
   const categories = useCategories()
   const router = useRouter()
@@ -243,6 +246,7 @@ export default function AnnoncesFilters() {
 
   const categoryLabel = cat ? (findCategoryLabel(categories, cat) ?? cat) : t('all_categories')
   const locationLabel = hasLocation ? t('position_active') : ville || t('my_position')
+  const immobilierLocationLabel = hasLocation ? t('position_active') : ville || t('location')
   const priceLabel = priceMin || priceMax
     ? `${priceMin || '0'}€ - ${priceMax || '∞'}€`
     : t('price')
@@ -255,6 +259,13 @@ export default function AnnoncesFilters() {
 
   const showBrandButton = cat && hasBrandModelField(cat)
   const vehicleFilterCount = cat ? countActiveVehicleFilters(cat, searchParams) : 0
+  const immobilierFilterCount = cat && immobilier ? countActiveVehicleFilters(cat, searchParams, IMMOBILIER_OWN_KEYS) : 0
+  const hasSurfaceField = cat ? (CATEGORY_ATTRIBUTES[cat] ?? []).some(f => f.type !== 'brand-model' && (f.key === 'surface_habitable' || f.key === 'surface_terrain')) : false
+  const hasPiecesField = cat ? (CATEGORY_ATTRIBUTES[cat] ?? []).some(f => f.type !== 'brand-model' && f.key === 'pieces') : false
+  const hasTypeBienField = cat ? (CATEGORY_ATTRIBUTES[cat] ?? []).some(f => f.type !== 'brand-model' && f.key === 'type_bien') : false
+  const typeBienValue = searchParams.get('attr_type_bien') ?? ''
+  const surfaceActive = Boolean(searchParams.get('attr_surface_habitable_min') || searchParams.get('attr_surface_habitable_max') || searchParams.get('attr_surface_terrain_min') || searchParams.get('attr_surface_terrain_max'))
+  const piecesActive = Boolean(searchParams.get('attr_pieces'))
 
   const locationPanel = (
     <div className="space-y-4">
@@ -381,46 +392,88 @@ export default function AnnoncesFilters() {
   )
 
   return (
-    <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-3">
+    <div className={dark ? 'bg-[#121218] border border-white/10 rounded-xl shadow-sm p-3' : 'bg-white border border-gray-100 rounded-xl shadow-sm p-3'}>
       <div className="flex flex-wrap items-center gap-2">
-        <FilterDropdown label={categoryLabel} active={Boolean(cat)}>
+        <FilterDropdown label={categoryLabel} active={Boolean(cat)} dark={dark}>
           <CategoryPickerPanel cat={cat} categories={categories} onUpdate={update} />
         </FilterDropdown>
 
-        <FilterDropdown label={locationLabel} active={Boolean(ville || hasLocation)}>
-          {locationPanel}
-        </FilterDropdown>
+        {!immobilier && (
+          <FilterDropdown label={locationLabel} active={Boolean(ville || hasLocation)} dark={dark}>
+            {locationPanel}
+          </FilterDropdown>
+        )}
 
-        <FilterDropdown label={priceLabel} active={Boolean(priceMin || priceMax)}>
+        {immobilier && hasTypeBienField && (
+          <FilterDropdown label={t('property_type')} active={Boolean(typeBienValue)} panelClassName="w-72">
+            <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} only={['type_bien']} />
+          </FilterDropdown>
+        )}
+
+        <FilterDropdown label={priceLabel} active={Boolean(priceMin || priceMax)} dark={dark}>
           {pricePanel}
         </FilterDropdown>
 
-        {showBrandButton && (
-          <FilterDropdown label={brand ? brand.replace(/-/g, ' ') : t('brand')} active={Boolean(brand)} panelClassName="w-[28rem]">
+        {immobilier && (
+          <FilterDropdown label={immobilierLocationLabel} active={Boolean(ville || hasLocation)}>
+            {locationPanel}
+          </FilterDropdown>
+        )}
+
+        {immobilier && hasSurfaceField && (
+          <FilterDropdown label={t('surface')} active={surfaceActive} panelClassName="w-72">
+            <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} only={['surface_habitable', 'surface_terrain']} />
+          </FilterDropdown>
+        )}
+
+        {immobilier && hasPiecesField && (
+          <FilterDropdown label={t('rooms')} active={piecesActive} panelClassName="w-72">
+            <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} only={['pieces']} />
+          </FilterDropdown>
+        )}
+
+        {showBrandButton && !immobilier && (
+          <FilterDropdown label={brand ? brand.replace(/-/g, ' ') : t('brand')} active={Boolean(brand)} panelClassName="w-[28rem]" dark={dark}>
             <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} mode="brand" />
           </FilterDropdown>
         )}
 
-        {cat && (
-          <FilterDropdown label={t('title')} badge={vehicleFilterCount} align="right" panelClassName="w-80">
+        {cat && immobilier && (
+          <FilterDropdown label={t('more_filters')} icon={SlidersHorizontal} badge={immobilierFilterCount} align="right" panelClassName="w-80">
+            <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} exclude={IMMOBILIER_OWN_KEYS} />
+          </FilterDropdown>
+        )}
+
+        {cat && !immobilier && (
+          <FilterDropdown label={t('title')} badge={vehicleFilterCount} align="right" panelClassName="w-80" dark={dark}>
             <VehicleAttributesFilters cat={cat} searchParams={searchParams} onUpdate={update} mode="rest" />
           </FilterDropdown>
         )}
 
-        <FilterDropdown label={sortLabel} active={Boolean(sort)} align="right">
-          {sortPanel}
-        </FilterDropdown>
+        {!immobilier && (
+          <FilterDropdown label={sortLabel} active={Boolean(sort)} align="right" dark={dark}>
+            {sortPanel}
+          </FilterDropdown>
+        )}
 
-        <FilterDropdown label={t('sellers_title')} badge={sellerTypes.length} align="right">
-          {sellerPanel}
-        </FilterDropdown>
+        {!immobilier && (
+          <FilterDropdown label={t('sellers_title')} badge={sellerTypes.length} align="right" dark={dark}>
+            {sellerPanel}
+          </FilterDropdown>
+        )}
 
         {activeCount > 0 && (
           <button
             onClick={clearAll}
-            className="flex items-center gap-1.5 text-xs text-red-500 font-semibold px-3 py-2 rounded-full border border-red-200 hover:bg-red-50 transition-colors ml-auto"
+            className={
+              immobilier
+                ? 'flex items-center gap-1.5 text-sm font-semibold px-3.5 py-2 rounded-full border border-gray-200 bg-white text-navy hover:border-orange-primary/40 transition-colors'
+                : dark
+                ? 'flex items-center gap-1.5 text-xs text-white/70 font-semibold px-3 py-2 rounded-full border border-white/15 hover:bg-red-600/15 hover:text-red-400 hover:border-red-600/40 transition-colors ml-auto'
+                : 'flex items-center gap-1.5 text-xs text-red-500 font-semibold px-3 py-2 rounded-full border border-red-200 hover:bg-red-50 transition-colors ml-auto'
+            }
           >
-            <X size={12} /> {t('clear_filters', { count: activeCount })}
+            {immobilier ? <SlidersHorizontal size={13} className="text-gray-400" /> : <X size={12} />} {immobilier ? t('clear_filters_plain') : t('clear_filters', { count: activeCount })}
           </button>
         )}
       </div>

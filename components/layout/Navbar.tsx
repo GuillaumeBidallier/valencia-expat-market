@@ -1,14 +1,38 @@
 'use client'
 import Link from 'next/link'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
 import { Menu, X, ChevronDown, Plus, MessageSquare, ShieldCheck, Search } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
 import CategoryNavBar from '@/components/layout/CategoryNavBar'
 import { useUnreadCount } from '@/hooks/useUnreadCount'
 import { useTranslations } from 'next-intl'
 import { useLocale, type SupportedLocale } from '@/components/providers/LocaleProvider'
+import { useCategories } from '@/hooks/useCategories'
+import { usePageTheme } from '@/context/PageThemeContext'
+import type { CategoryTree } from '@/types'
+
+function isUnderVehicules(categories: CategoryTree[], slug: string): boolean {
+  if (!slug) return false
+  if (slug === 'vehicules') return true
+  const root = categories.find(c => c.slug === 'vehicules')
+  if (!root) return false
+  const walk = (nodes: CategoryTree[]): boolean => nodes.some(n => n.slug === slug || walk(n.children))
+  return walk(root.children)
+}
+
+// Isolated in its own Suspense boundary — useSearchParams() would otherwise force
+// the whole (globally-mounted) Navbar subtree to opt out of static rendering.
+function VehiculesThemeWatcher({ onChange }: { onChange: (v: boolean) => void }) {
+  const searchParams = useSearchParams()
+  const categories = useCategories()
+  const cat = searchParams.get('cat') ?? ''
+  useEffect(() => {
+    onChange(isUnderVehicules(categories, cat))
+  }, [cat, categories, onChange])
+  return null
+}
 
 const LANGUAGES = [
   { code: 'fr', label: 'Français',  flag: '🇫🇷' },
@@ -87,8 +111,15 @@ export default function Navbar() {
   const pathname = usePathname()
   const { locale, setLocale: switchLocale } = useLocale()
   const isHome = pathname === '/'
+  const isAnnonces = pathname === '/annonces'
   const unreadCount = useUnreadCount(isAuthenticated)
   const t = useTranslations('Nav')
+  const [rawVehiculesTheme, setRawVehiculesTheme] = useState(false)
+  const onVehiculesThemeChange = useCallback((v: boolean) => setRawVehiculesTheme(v), [])
+  const { vehiculesPage } = usePageTheme()
+  // Ignore any stale watcher value once the user has navigated off /annonces.
+  // vehiculesPage covers routes with no `cat` query param to watch (e.g. listing detail pages).
+  const vehiculesTheme = (isAnnonces && rawVehiculesTheme) || vehiculesPage
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -98,20 +129,30 @@ export default function Navbar() {
   }, [])
 
   const transparent = isHome && !scrolled && !menuOpen
+  // Light text everywhere the background is dark — either the transient home-hero
+  // overlay, or the permanent dark theme on the Véhicules section.
+  const light = transparent || vehiculesTheme
 
   return (
     <header role="banner" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      transparent
+      vehiculesTheme
+        ? 'bg-[#0a0a0f] border-b border-white/10'
+        : transparent
         ? 'bg-transparent border-transparent'
         : 'bg-white border-b border-gray-100 shadow-sm'
     }`}>
+      {isAnnonces && (
+        <Suspense fallback={null}>
+          <VehiculesThemeWatcher onChange={onVehiculesThemeChange} />
+        </Suspense>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo + nav links — collés ensemble à gauche */}
           <div className="flex items-center gap-6">
             <Link href="/" className="shrink-0" aria-label="1000Click — Accueil">
-              <VendoLogo size="lg" theme={transparent ? 'light' : 'dark'} />
+              <VendoLogo size="lg" theme={light ? 'light' : 'dark'} />
             </Link>
 
             <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
@@ -124,7 +165,7 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   className={`text-sm font-medium transition-colors ${
-                    transparent ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
+                    light ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
                   }`}
                 >
                   {label}
@@ -140,7 +181,7 @@ export default function Navbar() {
               aria-label={t('listings')}
               title={t('listings')}
               className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
+                light ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               <Search size={17} aria-hidden="true" />
@@ -149,7 +190,7 @@ export default function Navbar() {
               <>
                 <Link
                   href="/deposer-annonce"
-                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
+                  className={`flex items-center gap-1.5 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
                 >
                   <Plus size={15} />
                   {t('postAd')}
@@ -157,7 +198,7 @@ export default function Navbar() {
                 <Link
                   href="/messages"
                   className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                    transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
+                    light ? 'text-white/90 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   aria-label={unreadCount > 0 ? `${t('messages')} — ${unreadCount} non lu${unreadCount > 1 ? 's' : ''}` : t('messages')}
                 >
@@ -172,7 +213,7 @@ export default function Navbar() {
                   <Link
                     href="/admin"
                     className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                      transparent ? 'text-white/90 hover:bg-white/10' : 'text-gray-500 hover:bg-gray-100'
+                      light ? 'text-white/90 hover:bg-white/10' : 'text-gray-500 hover:bg-gray-100'
                     }`}
                     title="Admin"
                   >
@@ -191,7 +232,7 @@ export default function Navbar() {
               <>
                 <Link
                   href="/inscription"
-                  className="flex items-center gap-1.5 bg-orange-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-dark transition-colors"
+                  className={`flex items-center gap-1.5 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
                 >
                   <Plus size={15} />
                   {t('postAd')}
@@ -199,7 +240,7 @@ export default function Navbar() {
                 <Link
                   href="/connexion"
                   className={`text-sm font-normal transition-colors px-2.5 py-1.5 ${
-                    transparent ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-navy'
+                    light ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-navy'
                   }`}
                 >
                   {t('login')}
@@ -208,7 +249,7 @@ export default function Navbar() {
             )}
             {/* Language picker */}
             <div className="ml-1 border-l pl-3 border-white/20">
-              <LanguagePicker transparent={transparent} />
+              <LanguagePicker transparent={light} />
             </div>
           </div>
 
@@ -218,20 +259,20 @@ export default function Navbar() {
               href="/annonces"
               aria-label={t('listings')}
               className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0 ${
-                transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'
+                light ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'
               }`}
             >
               <Search size={17} aria-hidden="true" />
             </Link>
             <Link
               href="/deposer-annonce"
-              className="flex items-center gap-1 bg-orange-primary text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-orange-dark transition-colors whitespace-nowrap"
+              className={`flex items-center gap-1 text-white px-3 py-1.5 rounded-lg font-bold text-xs transition-colors whitespace-nowrap ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
             >
               <Plus size={13} aria-hidden="true" />
               {t('postAd')}
             </Link>
             <button
-              className={`p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
+              className={`p-2 rounded-lg transition-colors ${light ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
               onClick={() => setMenuOpen(o => !o)}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
@@ -243,7 +284,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <CategoryNavBar transparent={transparent} />
+      <CategoryNavBar transparent={transparent} dark={vehiculesTheme} />
 
       {/* Mobile menu — always solid */}
       {menuOpen && (
@@ -268,13 +309,13 @@ export default function Navbar() {
                   <ShieldCheck size={15} /> {t('admin')}
                 </Link>
               )}
-              <Link href="/deposer-annonce" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center">{t('postAd')}</Link>
+              <Link href="/deposer-annonce" onClick={() => setMenuOpen(false)} className={`text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center ${vehiculesTheme ? "bg-red-600" : "bg-orange-primary"}`}>{t('postAd')}</Link>
             </>
           ) : (
             <>
               <Link href="/devenir-pro" onClick={() => setMenuOpen(false)} className="text-sm font-semibold text-orange-primary">Espace Pro</Link>
               <Link href="/connexion" onClick={() => setMenuOpen(false)} className="border border-gray-300 text-navy px-4 py-2.5 rounded-lg font-semibold text-sm text-center">{t('login')}</Link>
-              <Link href="/inscription" onClick={() => setMenuOpen(false)} className="bg-orange-primary text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center flex items-center justify-center gap-2">
+              <Link href="/inscription" onClick={() => setMenuOpen(false)} className={`text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center flex items-center justify-center gap-2 ${vehiculesTheme ? "bg-red-600" : "bg-orange-primary"}`}>
                 <Plus size={15} />
                 {t('postAd')}
               </Link>

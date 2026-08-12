@@ -9,7 +9,7 @@ const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(
 
 export const metadata: Metadata = {
   title: 'Blog — 1000Click',
-  description: 'Guides pratiques, conseils et actualités pour les expatriés francophones en Espagne.',
+  description: 'Guides pratiques, conseils et actualités pour les francophones en Belgique.',
   alternates: { canonical: `${BASE}/blog` },
 }
 
@@ -44,8 +44,8 @@ export default async function BlogPage({ searchParams }: PageProps) {
       {/* Header */}
       <div className="relative overflow-hidden min-h-[300px] sm:min-h-[360px]">
         <Image
-          src="/valencia-hero.jpg"
-          alt="Blog 1000Click — expatriés en Espagne"
+          src="/brussels-hero.png"
+          alt="Blog 1000Click — vivre en Belgique"
           fill
           sizes="100vw"
           className="object-cover object-center"

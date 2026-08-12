@@ -9,7 +9,7 @@ const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(
 
 export const metadata: Metadata = {
   title: 'Contact — 1000Click',
-  description: 'Contactez l\'équipe 1000Click. Nous sommes là pour vous aider avec vos questions sur la plateforme, vos annonces ou votre vie d\'expatrié en Espagne.',
+  description: 'Contactez l\'équipe 1000Click. Nous sommes là pour vous aider avec vos questions sur la plateforme, vos annonces ou votre vie en Belgique.',
   alternates: { canonical: `${BASE}/contact` },
 }
 
@@ -32,7 +32,7 @@ const FAQ = [
   },
   {
     q: "Je suis professionnel. Comment référencer mon activité ?",
-    a: "Rendez-vous dans « Mon compte » > « Profil professionnel » pour créer votre fiche. Nos offres Premium et Premium+ offrent une visibilité maximale auprès des expatriés."
+    a: "Rendez-vous dans « Mon compte » > « Profil professionnel » pour créer votre fiche. Nos offres Premium et Premium+ offrent une visibilité maximale auprès de la communauté francophone."
   },
   {
     q: "Comment fonctionne la messagerie 1000Click ?",
@@ -48,7 +48,7 @@ export default async function ContactPage() {
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[280px] sm:min-h-[320px]">
         <Image
-          src="/valencia-hero.jpg"
+          src="/brussels-hero.png"
           alt="Contact 1000Click"
           fill
           sizes="100vw"
@@ -60,7 +60,7 @@ export default async function ContactPage() {
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-14 sm:py-20 flex flex-col justify-center min-h-[280px] sm:min-h-[320px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">1000Click</p>
           <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight mb-4">Contactez-nous</h1>
-          <p className="text-white/70 text-base sm:text-lg max-w-xl">Notre équipe répond à toutes vos questions sur la plateforme et la vie d&apos;expatrié en Espagne.</p>
+          <p className="text-white/70 text-base sm:text-lg max-w-xl">Notre équipe répond à toutes vos questions sur la plateforme et votre vie en Belgique.</p>
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export default async function ContactPage() {
               </div>
               <div>
                 <p className="font-black text-navy text-sm mb-1">WhatsApp</p>
-                <a href="https://wa.me/34600000000" target="_blank" rel="noopener noreferrer" className="text-[#25D366] text-sm hover:underline font-medium">+34 600 000 000</a>
+                <a href="https://wa.me/32470000000" target="_blank" rel="noopener noreferrer" className="text-[#25D366] text-sm hover:underline font-medium">+32 470 00 00 00</a>
                 <p className="text-xs text-gray-400 mt-1">Disponible lun–ven 9h–18h (CET)</p>
               </div>
             </div>
@@ -98,7 +98,7 @@ export default async function ContactPage() {
               <div>
                 <p className="font-black text-navy text-sm mb-1">Horaires de support</p>
                 <p className="text-sm text-gray-500">Lundi – Vendredi</p>
-                <p className="text-sm text-gray-500">9h00 – 18h00 (heure de Valencia)</p>
+                <p className="text-sm text-gray-500">9h00 – 18h00 (heure de Bruxelles)</p>
               </div>
             </div>
 
@@ -108,8 +108,8 @@ export default async function ContactPage() {
               </div>
               <div>
                 <p className="font-black text-navy text-sm mb-1">Communauté basée à</p>
-                <p className="text-sm text-gray-500">Valencia, España</p>
-                <p className="text-xs text-gray-400 mt-1">Présence dans toute l&apos;Espagne</p>
+                <p className="text-sm text-gray-500">Bruxelles, Belgique</p>
+                <p className="text-xs text-gray-400 mt-1">Présence dans toute la Belgique</p>
               </div>
             </div>
 

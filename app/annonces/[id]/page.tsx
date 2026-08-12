@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const rawDesc = listing.description?.trim() ?? ''
   const description = rawDesc.length > 0
     ? rawDesc.slice(0, 155) + (rawDesc.length > 155 ? '…' : '')
-    : `${listing.title} disponible sur 1000Click, petites annonces entre expatriés en Espagne.`
+    : `${listing.title} disponible sur 1000Click, petites annonces en Belgique.`
   const image = listing.images[0]?.url
   const url = `${BASE}/annonces/${id}`
 
@@ -56,7 +56,7 @@ export default async function ListingDetailPage({ params }: Props) {
       where: { id, status: { not: 'DELETED' } },
       include: {
         images: { orderBy: { order: 'asc' } },
-        user: { select: { name: true, showPhone: true, showWhatsapp: true } },
+        user: { select: { name: true, showPhone: true, showWhatsapp: true, professional: { select: { verified: true } } } },
       },
     }),
     session?.user?.id
@@ -71,8 +71,18 @@ export default async function ListingDetailPage({ params }: Props) {
   const siteId = await getCurrentSiteId()
   const categoryRecord = await prisma.category.findUnique({
     where: { siteId_slug: { siteId, slug: raw.categorySlug } },
-    include: { parent: { select: { slug: true, label: true, icon: true } } },
+    include: {
+      parent: {
+        select: {
+          slug: true, label: true, icon: true,
+          parent: { select: { slug: true, label: true, icon: true } },
+        },
+      },
+    },
   })
+  // Top-level ancestor (e.g. "Immobilier" for a leaf 3 levels deep like Immobilier > Vente > Maisons) —
+  // used for both theming and the breadcrumb, which skips intermediate levels.
+  const rootCategory = categoryRecord?.parent?.parent ?? categoryRecord?.parent ?? categoryRecord ?? null
 
   const listing = {
     ...raw,
@@ -83,6 +93,10 @@ export default async function ListingDetailPage({ params }: Props) {
     updatedAt: raw.updatedAt.toISOString(),
     attributes: raw.attributes as Record<string, string | number | string[]> | null,
   }
+
+  const isVehicules = categoryRecord?.slug === 'vehicules' || rootCategory?.slug === 'vehicules'
+  const isImmobilier = categoryRecord?.slug === 'immobilier' || rootCategory?.slug === 'immobilier'
+  const sellerVerified = raw.user?.professional?.verified ?? false
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -106,13 +120,13 @@ export default async function ListingDetailPage({ params }: Props) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Accueil', item: BASE },
       { '@type': 'ListItem', position: 2, name: 'Annonces', item: `${BASE}/annonces` },
-      ...(categoryRecord?.parent ? [
-        { '@type': 'ListItem', position: 3, name: categoryRecord.parent.label, item: `${BASE}/annonces?cat=${categoryRecord.parent.slug}` },
+      ...(categoryRecord && rootCategory && rootCategory.slug !== categoryRecord.slug ? [
+        { '@type': 'ListItem', position: 3, name: rootCategory.label, item: `${BASE}/annonces?cat=${rootCategory.slug}` },
         { '@type': 'ListItem', position: 4, name: categoryRecord.label, item: `${BASE}/annonces?cat=${categoryRecord.slug}` },
       ] : categoryRecord ? [
         { '@type': 'ListItem', position: 3, name: categoryRecord.label, item: `${BASE}/annonces?cat=${categoryRecord.slug}` },
       ] : []),
-      { '@type': 'ListItem', position: categoryRecord ? (categoryRecord.parent ? 5 : 4) : 3, name: listing.title, item: `${BASE}/annonces/${id}` },
+      { '@type': 'ListItem', position: categoryRecord ? (rootCategory && rootCategory.slug !== categoryRecord.slug ? 5 : 4) : 3, name: listing.title, item: `${BASE}/annonces/${id}` },
     ],
   }
 
@@ -133,8 +147,13 @@ export default async function ListingDetailPage({ params }: Props) {
           label: categoryRecord.label,
           slug: categoryRecord.slug,
           icon: categoryRecord.icon,
-          parent: categoryRecord.parent ?? null,
+          parent: rootCategory && rootCategory.slug !== categoryRecord.slug
+            ? { slug: rootCategory.slug, label: rootCategory.label, icon: rootCategory.icon }
+            : null,
         } : null}
+        vehicules={isVehicules}
+        immobilier={isImmobilier}
+        sellerVerified={sellerVerified}
       />
     </>
   )

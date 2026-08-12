@@ -6,45 +6,93 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import AdUnit from '@/components/ads/AdUnit'
-import { MapPin, Calendar, ChevronRight, Phone, Flag, ShieldCheck, MessageSquare, X, Share2, Copy, Check } from 'lucide-react'
+import {
+  MapPin, Calendar, ChevronRight, ChevronLeft, Phone, Flag, ShieldCheck, MessageSquare, X, Share2, Copy, Check,
+  Gauge, Fuel, Settings2, Disc, Tag, Package, IdCard, Zap, BadgeCheck,
+  Home, Ruler, Building, CheckCircle2, Clock3, Flame, BedDouble, Bath, DoorOpen, Trees, Warehouse, type LucideIcon,
+} from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/listings/FavoriteButton'
 import { Listing } from '@/types'
 import { useAuth } from '@/context/AuthContext'
+import { useVehiculesPageTheme } from '@/context/PageThemeContext'
 import { CATEGORY_ATTRIBUTES } from '@/lib/categoryAttributes'
 
-function formatVehicleAttributes(categorySlug: string, attributes: Record<string, string | number | string[]> | null | undefined): string[] {
+const ATTRIBUTE_ICONS: Record<string, LucideIcon> = {
+  brand: Tag,
+  model: Package,
+  cubic_capacity: Disc,
+  regdate: Calendar,
+  mileage: Gauge,
+  fuel: Fuel,
+  gearbox: Settings2,
+  cycle_licence: IdCard,
+  horse_power_din: Zap,
+  horsepower: Zap,
+  type_bien: Home,
+  annee_construction: Calendar,
+  surface_habitable: Ruler,
+  surface_terrain: Trees,
+  nb_facades: Building,
+  etat_bien: CheckCircle2,
+  disponibilite: Clock3,
+  classe_energie: Zap,
+  type_chauffage: Flame,
+  pieces: DoorOpen,
+  chambres: BedDouble,
+  salles_bain: Bath,
+}
+const DEFAULT_ATTR_ICON = Tag
+
+// Quick-spec chips for Immobilier — curated subset + order, matching the mockup.
+const IMMOBILIER_CHIP_KEYS = ['surface_habitable', 'chambres', 'salles_bain', 'surface_terrain', 'classe_energie']
+// Caractéristiques grid for Immobilier — curated subset + order, matching the mockup.
+const IMMOBILIER_CARACTERISTIQUES_KEYS = [
+  'type_bien', 'annee_construction', 'surface_habitable',
+  'nb_facades', 'etat_bien', 'surface_terrain',
+  'disponibilite', 'classe_energie', 'type_chauffage',
+]
+
+interface AttrPair { key: string; label: string; value: string; icon: LucideIcon }
+
+function getVehicleAttributePairs(categorySlug: string, attributes: Record<string, string | number | string[]> | null | undefined): AttrPair[] {
   const fields = CATEGORY_ATTRIBUTES[categorySlug]
   if (!fields || !attributes) return []
 
-  const parts: string[] = []
+  const pairs: AttrPair[] = []
   for (const field of fields) {
     if (field.type === 'brand-model') {
       const brand = attributes[field.brandKey]
       const model = attributes[field.modelKey]
-      if (brand) parts.push([brand, model].filter(Boolean).join(' '))
+      if (brand) pairs.push({ key: field.brandKey, label: 'Marque', value: String(brand), icon: ATTRIBUTE_ICONS.brand })
+      if (model) pairs.push({ key: field.modelKey, label: 'Modèle', value: String(model), icon: ATTRIBUTE_ICONS.model })
     } else if (field.type === 'select' && field.multi) {
       const raw = attributes[field.key]
       const values = Array.isArray(raw) ? raw : []
       const labels = values
         .map(v => field.options.find(o => o.value === v)?.label)
         .filter((l): l is string => Boolean(l))
-      if (labels.length > 0) parts.push(labels.join(', '))
+      if (labels.length > 0) pairs.push({ key: field.key, label: field.label, value: labels.join(', '), icon: ATTRIBUTE_ICONS[field.key] ?? DEFAULT_ATTR_ICON })
     } else if (field.type === 'select') {
       const raw = attributes[field.key]
       if (raw !== undefined && raw !== '') {
         const opt = field.options.find(o => o.value === String(raw))
-        if (opt) parts.push(field.key === 'critair' ? `Crit'air ${opt.label}` : opt.label)
+        if (opt) pairs.push({ key: field.key, label: field.key === 'critair' ? "Crit'air" : field.label, value: opt.label, icon: ATTRIBUTE_ICONS[field.key] ?? DEFAULT_ATTR_ICON })
       }
     } else {
       const raw = attributes[field.key]
       if (raw !== undefined && raw !== '') {
-        parts.push(field.unit ? `${raw} ${field.unit}` : String(raw))
+        pairs.push({ key: field.key, label: field.label, value: field.unit ? `${raw} ${field.unit}` : String(raw), icon: ATTRIBUTE_ICONS[field.key] ?? DEFAULT_ATTR_ICON })
       }
     }
   }
-  return parts
+  return pairs
+}
+
+/** Filters + reorders pairs to an explicit key list (used to curate the Immobilier chip row / Caractéristiques grid). */
+function pickPairs(pairs: AttrPair[], keys: string[]): AttrPair[] {
+  return keys.map(k => pairs.find(p => p.key === k)).filter((p): p is AttrPair => Boolean(p))
 }
 
 const ListingMap = dynamic(() => import('@/components/listings/ListingMap'), { ssr: false })
@@ -58,9 +106,13 @@ interface Props {
     icon: string
     parent: { slug: string; label: string; icon: string } | null
   } | null
+  vehicules?: boolean
+  immobilier?: boolean
+  sellerVerified?: boolean
 }
 
-export default function ListingDetailClient({ listing, isFavorited, categoryInfo }: Props) {
+export default function ListingDetailClient({ listing, isFavorited, categoryInfo, vehicules, immobilier, sellerVerified }: Props) {
+  const enhanced = !!(vehicules || immobilier)
   const t = useTranslations('ListingDetail')
   const tShare = useTranslations('Share')
   const { isAuthenticated, user } = useAuth()
@@ -79,6 +131,8 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
   const [shareOpen, setShareOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const shareRef = useRef<HTMLDivElement>(null)
+
+  useVehiculesPageTheme(!!vehicules)
 
   // Track view — fire-and-forget
   useEffect(() => {
@@ -176,24 +230,90 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
         {/* Left: Gallery + info */}
         <div className="lg:col-span-2">
           {/* Main image */}
-          <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 mb-3">
-            {listing.images.length > 0 ? (
-              <Image src={listing.images[activeImg]?.url ?? ''} alt={listing.title} fill priority sizes="(max-width: 1024px) 100vw, 66vw" className="object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm">{t('no_photo')}</div>
+          <div className={`relative rounded-xl overflow-hidden ${vehicules ? 'bg-[#0a0a0f] mb-6' : enhanced ? 'bg-gray-100 mb-6' : 'bg-gray-100 mb-3'}`}>
+            <div className={`relative ${enhanced ? 'aspect-[16/9]' : 'aspect-[16/10]'}`}>
+              {listing.images.length > 0 ? (
+                <Image src={listing.images[activeImg]?.url ?? ''} alt={listing.title} fill priority sizes="(max-width: 1024px) 100vw, 66vw" className="object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm">{t('no_photo')}</div>
+              )}
+
+              {enhanced && listing.images.length > 1 && (
+                <>
+                  <span className="absolute top-3 left-3 bg-black/60 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                    {activeImg + 1} / {listing.images.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveImg(i => (i - 1 + listing.images.length) % listing.images.length)}
+                    aria-label="Image précédente"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
+                  >
+                    <ChevronLeft size={18} className="text-navy" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveImg(i => (i + 1) % listing.images.length)}
+                    aria-label="Image suivante"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
+                  >
+                    <ChevronRight size={18} className="text-navy" />
+                  </button>
+                </>
+              )}
+
+              <div className="absolute top-3 right-3 flex items-center gap-2">
+                <FavoriteButton
+                  listingId={listing.id}
+                  initialFavorited={isFavorited}
+                  iconSize={16}
+                  className="w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:scale-110 flex items-center justify-center"
+                />
+                {enhanced && (
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    aria-label={tShare('share_btn')}
+                    className="w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
+                  >
+                    <Share2 size={15} className="text-navy" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Thumbnails — attached filmstrip on Véhicules/Immobilier, matching the mockup */}
+            {enhanced && listing.images.length > 1 && (
+              <div className={vehicules ? 'bg-[#0a0a0f] px-3 py-2.5' : 'bg-white px-3 py-2.5'}>
+                <div className="flex gap-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+                  {listing.images.map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveImg(i)}
+                      className={`relative w-20 h-14 shrink-0 rounded-md overflow-hidden border-2 transition-colors ${
+                        activeImg === i
+                          ? (vehicules ? 'border-red-600' : 'border-orange-primary')
+                          : (vehicules ? 'border-white/10' : 'border-gray-200')
+                      }`}
+                    >
+                      <Image src={img.url} alt="" fill sizes="80px" className="object-cover" />
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
-            <FavoriteButton
-              listingId={listing.id}
-              initialFavorited={isFavorited}
-              iconSize={16}
-              className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:scale-110"
-            />
           </div>
-          {/* Thumbnails */}
-          {listing.images.length > 1 && (
+          {/* Thumbnails — non-enhanced layout unchanged */}
+          {!enhanced && listing.images.length > 1 && (
             <div className="flex gap-2 mb-6">
               {listing.images.map((img, i) => (
-                <button key={i} onClick={() => setActiveImg(i)} className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${activeImg === i ? 'border-orange-primary' : 'border-transparent'}`}>
+                <button
+                  key={i}
+                  onClick={() => setActiveImg(i)}
+                  className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                    activeImg === i ? 'border-orange-primary' : 'border-transparent'
+                  }`}
+                >
                   <Image src={img.url} alt="" fill sizes="64px" className="object-cover" />
                 </button>
               ))}
@@ -201,14 +321,19 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
           )}
 
           {/* Details */}
-          <div className="bg-white rounded-xl border border-gray-100 p-6">
+          <div className="bg-white rounded-xl border border-gray-100 p-6 mb-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <Badge className="mb-2">{categoryInfo?.label ?? listing.category ?? listing.categorySlug}</Badge>
+                <Badge className={vehicules ? 'mb-2 bg-red-600' : 'mb-2'}>{categoryInfo?.label ?? listing.category ?? listing.categorySlug}</Badge>
                 <h1 className="text-2xl font-bold text-navy">{listing.title}</h1>
               </div>
-              <div className="text-2xl font-extrabold text-navy shrink-0">
-                {listing.price !== null ? `${listing.price} €` : <span className="text-green-600 text-xl">{t('free')}</span>}
+              <div className="text-right shrink-0">
+                <div className="text-2xl font-extrabold text-navy">
+                  {listing.price !== null ? `${listing.price.toLocaleString('fr-FR')} €` : <span className="text-green-600 text-xl">{t('free')}</span>}
+                </div>
+                {enhanced && listing.price !== null && (
+                  <p className="text-xs text-gray-400 mt-0.5">{vehicules ? 'Prix fixe' : 'Prix demandé'}</p>
+                )}
               </div>
             </div>
             <div className="flex flex-wrap gap-4 text-sm text-gray-400 mb-6">
@@ -217,14 +342,49 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
             </div>
 
             {(() => {
-              const attrs = formatVehicleAttributes(listing.categorySlug, listing.attributes)
-              return attrs.length > 0 ? (
+              const allPairs = getVehicleAttributePairs(listing.categorySlug, listing.attributes)
+
+              if (immobilier) {
+                const pairs = pickPairs(allPairs, IMMOBILIER_CHIP_KEYS)
+                const caracteristiques = listing.attributes?.caracteristiques
+                if (Array.isArray(caracteristiques) && caracteristiques.includes('parking_garage')) {
+                  pairs.push({ key: 'garage', label: 'Équipement', value: 'Garage', icon: Warehouse })
+                }
+                if (pairs.length === 0) return null
+                return (
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {pairs.map(p => (
+                      <div key={p.key} className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg">
+                        <p.icon size={16} className="text-gray-400 shrink-0" />
+                        <div className="leading-tight">
+                          <p className="text-xs font-bold text-navy">{p.value}</p>
+                          <p className="text-[10px] text-gray-400">{p.label}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
+
+              if (allPairs.length === 0) return null
+              // Brand/model are already shown in the title — leave them out of the quick-spec chips.
+              const pairs = vehicules ? allPairs.filter(p => p.key !== 'brand' && p.key !== 'model') : allPairs
+              if (pairs.length === 0) return null
+              return vehicules ? (
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {attrs.map((a, i) => (
-                    <span key={i} className="text-xs font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-lg">{a}</span>
+                  {pairs.map(p => (
+                    <span key={p.key} className="flex items-center gap-1.5 text-xs font-semibold text-navy bg-gray-100 px-2.5 py-1.5 rounded-lg">
+                      <p.icon size={13} className="text-gray-400" /> {p.value}
+                    </span>
                   ))}
                 </div>
-              ) : null
+              ) : (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {pairs.map(p => (
+                    <span key={p.key} className="text-xs font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-lg">{p.value}</span>
+                  ))}
+                </div>
+              )
             })()}
 
             <div>
@@ -232,6 +392,31 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
               <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">{listing.description}</p>
             </div>
           </div>
+
+          {/* Caractéristiques */}
+          {enhanced && (() => {
+            const allPairs = getVehicleAttributePairs(listing.categorySlug, listing.attributes)
+            const pairs = immobilier ? pickPairs(allPairs, IMMOBILIER_CARACTERISTIQUES_KEYS) : allPairs
+            if (pairs.length === 0) return null
+            return (
+              <div className="bg-white rounded-xl border border-gray-100 p-6 mb-6">
+                <h2 className="font-semibold text-navy mb-4">Caractéristiques</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
+                  {pairs.map(p => (
+                    <div key={p.key} className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${vehicules ? 'bg-red-50' : 'bg-orange-soft'}`}>
+                        <p.icon size={15} className={vehicules ? 'text-red-600' : 'text-orange-primary'} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-400">{p.label}</p>
+                        <p className="text-sm font-semibold text-navy">{p.value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
 
           {/* Map */}
           {listing.lat != null && listing.lng != null && (
@@ -248,13 +433,19 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
         <div className="flex flex-col gap-4 self-start sticky top-20">
           <div className="bg-white rounded-xl border border-gray-100 p-5">
             <h2 className="font-semibold text-navy mb-1">{t('contact_seller')}</h2>
-            <p className="text-xs text-gray-400 mb-4">{t('published_by')} {listing.userName ?? listing.user?.name ?? 'Vendeur'}</p>
+            <p className="text-xs text-gray-400 mb-4 flex items-center gap-1">
+              {t('published_by')} {listing.userName ?? listing.user?.name ?? 'Vendeur'}
+              {enhanced && sellerVerified && <BadgeCheck size={13} className={vehicules ? 'text-red-600' : 'text-orange-primary'} aria-label="Vendeur vérifié" />}
+            </p>
 
             {isOwner ? (
               <p className="text-xs text-gray-400 italic bg-gray-50 rounded-lg px-3 py-2">{t('owner_notice')}</p>
             ) : (
               <>
-                <Button className="w-full text-sm mb-3" onClick={openMessageModal}>
+                <Button
+                  className={vehicules ? 'w-full text-sm mb-3 bg-red-600 hover:bg-red-700' : 'w-full text-sm mb-3'}
+                  onClick={openMessageModal}
+                >
                   <MessageSquare size={15} /> {t('send_message')}
                 </Button>
 
@@ -273,12 +464,16 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
 
                     {sellerShowsPhone && (
                       !showPhone ? (
-                        <Button variant="outline" className="w-full text-sm" onClick={() => setShowPhone(true)}>
+                        <Button
+                          variant="outline"
+                          className={vehicules ? 'w-full text-sm border-red-600 text-red-600 hover:bg-red-50' : 'w-full text-sm'}
+                          onClick={() => setShowPhone(true)}
+                        >
                           <Phone size={15} /> {t('show_phone')}
                         </Button>
                       ) : (
                         <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-4 py-2.5 text-sm font-semibold text-navy">
-                          <Phone size={15} className="text-orange-primary" />
+                          <Phone size={15} className={vehicules ? 'text-red-600' : 'text-orange-primary'} />
                           {listing.phone}
                         </div>
                       )
@@ -300,8 +495,8 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
             )}
 
             {/* Security notice */}
-            <div className="mt-4 bg-orange-soft rounded-lg p-3 flex gap-2">
-              <ShieldCheck size={16} className="text-orange-primary shrink-0 mt-0.5" />
+            <div className={vehicules ? 'mt-4 bg-red-50 rounded-lg p-3 flex gap-2' : 'mt-4 bg-orange-soft rounded-lg p-3 flex gap-2'}>
+              <ShieldCheck size={16} className={vehicules ? 'text-red-600 shrink-0 mt-0.5' : 'text-orange-primary shrink-0 mt-0.5'} />
               <p className="text-xs text-gray-600 leading-relaxed">{t('security_notice')}</p>
             </div>
 
@@ -344,6 +539,27 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
               <Flag size={12} aria-hidden="true" /> {t('report')}
             </button>
           </div>
+
+          {/* Trust badges */}
+          {enhanced && (
+            <div className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col gap-4">
+              {[
+                { icon: ShieldCheck, title: 'Paiement sécurisé', desc: 'Paiement en main propre uniquement' },
+                { icon: BadgeCheck, title: 'Vendeur vérifié', desc: 'Annonce publiée par un vendeur vérifié' },
+                { icon: MessageSquare, title: 'Réponse rapide', desc: 'Répond en moyenne en moins de 2h' },
+              ].map(item => (
+                <div key={item.title} className="flex items-start gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${vehicules ? 'bg-red-50' : 'bg-orange-soft'}`}>
+                    <item.icon size={15} className={vehicules ? 'text-red-600' : 'text-orange-primary'} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-navy">{item.title}</p>
+                    <p className="text-xs text-gray-400">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Ads in sidebar */}
           <AdUnit size="rectangle" seed={1} category={listing.categorySlug} neighborhood={listing.neighborhood} />

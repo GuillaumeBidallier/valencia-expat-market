@@ -1,18 +1,20 @@
 export const neighborhoods = [
-  'Valencia', 'Ruzafa', 'Benimaclet', 'Campanar',
-  'Paterna', 'Alboraya', 'El Carmen', 'Eixample', 'La Malva-rosa',
+  'Bruxelles-Ville', 'Ixelles', 'Schaerbeek', 'Uccle',
+  'Anderlecht', 'Etterbeek', 'Woluwe-Saint-Pierre', 'Saint-Gilles', 'Molenbeek-Saint-Jean',
+  'Lasne',
 ]
 
 export const neighborhoodCoords: Record<string, { lat: number; lng: number }> = {
-  'Valencia':      { lat: 39.4699, lng: -0.3763 },
-  'Ruzafa':        { lat: 39.4622, lng: -0.3772 },
-  'Benimaclet':    { lat: 39.4820, lng: -0.3630 },
-  'Campanar':      { lat: 39.4810, lng: -0.4000 },
-  'Paterna':       { lat: 39.5037, lng: -0.4400 },
-  'Alboraya':      { lat: 39.5087, lng: -0.3540 },
-  'El Carmen':     { lat: 39.4750, lng: -0.3780 },
-  'Eixample':      { lat: 39.4643, lng: -0.3783 },
-  'La Malva-rosa': { lat: 39.4780, lng: -0.3340 },
+  'Bruxelles-Ville':      { lat: 50.8503, lng: 4.3517 },
+  'Ixelles':              { lat: 50.8333, lng: 4.3667 },
+  'Schaerbeek':           { lat: 50.8676, lng: 4.3737 },
+  'Uccle':                { lat: 50.8014, lng: 4.3378 },
+  'Anderlecht':           { lat: 50.8379, lng: 4.3080 },
+  'Etterbeek':            { lat: 50.8371, lng: 4.3897 },
+  'Woluwe-Saint-Pierre':  { lat: 50.8298, lng: 4.4331 },
+  'Saint-Gilles':         { lat: 50.8263, lng: 4.3459 },
+  'Molenbeek-Saint-Jean': { lat: 50.8547, lng: 4.3272 },
+  'Lasne':                { lat: 50.6667, lng: 4.4333 },
 }
 
 export function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {

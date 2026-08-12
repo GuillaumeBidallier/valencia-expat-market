@@ -39,6 +39,9 @@ yarn-error.log*
 # git worktrees (scratch, per-session)
 /.worktrees
 
+# local database backups
+/db-backups
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

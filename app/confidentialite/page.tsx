@@ -24,12 +24,12 @@ export default function ConfidentialitePage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="Politique de confidentialité 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/brussels-hero.png" alt="Politique de confidentialité 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal · RGPD</p>
           <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight">Politique de confidentialité</h1>
-          <p className="text-white/60 text-sm mt-2">Dernière mise à jour : juin 2026 — Conforme RGPD (UE 2016/679) & LOPDGDD</p>
+          <p className="text-white/60 text-sm mt-2">Dernière mise à jour : juin 2026 — Conforme RGPD (UE 2016/679) & loi belge du 30 juillet 2018</p>
         </div>
       </div>
 
@@ -77,9 +77,9 @@ export default function ConfidentialitePage() {
               <div className="bg-gray-50 rounded-xl p-4 space-y-1.5 text-sm">
                 <p><strong className="text-navy">Nom :</strong> 1000Click</p>
                 <p><strong className="text-navy">Statut :</strong> Plateforme communautaire de petites annonces</p>
-                <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Espagne (Comunitat Valenciana)</p>
+                <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Belgique</p>
                 <p><strong className="text-navy">Contact DPO :</strong> <a href="mailto:privacy@1000clic.fr" className="text-orange-primary hover:underline">privacy@1000clic.fr</a></p>
-                <p><strong className="text-navy">Autorité de contrôle espagnole :</strong> AEPD — <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-orange-primary hover:underline">aepd.es</a></p>
+                <p><strong className="text-navy">Autorité de contrôle belge :</strong> APD (Autorité de protection des données) — <a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener noreferrer" className="text-orange-primary hover:underline">autoriteprotectiondonnees.be</a></p>
                 <p><strong className="text-navy">Autorité française :</strong> CNIL — <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-orange-primary hover:underline">cnil.fr</a></p>
               </div>
             </section>
@@ -182,7 +182,7 @@ export default function ConfidentialitePage() {
                 <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center"><UserCog size={16} className="text-emerald-600" /></div>
                 <h2 className="text-lg font-black text-navy">Vos droits (RGPD)</h2>
               </div>
-              <p className="text-sm text-gray-600 mb-4">Conformément au RGPD et à la LOPDGDD espagnole, vous disposez des droits suivants :</p>
+              <p className="text-sm text-gray-600 mb-4">Conformément au RGPD et à la loi belge du 30 juillet 2018, vous disposez des droits suivants :</p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
                   { right: 'Droit d\'accès', desc: 'Obtenir une copie de toutes vos données personnelles détenues par 1000Click.', art: 'Art. 15' },
@@ -204,7 +204,7 @@ export default function ConfidentialitePage() {
               <div className="mt-4 bg-orange-soft rounded-xl p-4 text-sm">
                 <p className="font-medium text-navy mb-1">Comment exercer vos droits ?</p>
                 <p className="text-gray-600 text-xs leading-relaxed">
-                  Envoyez votre demande à <a href="mailto:privacy@1000clic.fr" className="text-orange-primary hover:underline font-medium">privacy@1000clic.fr</a> en précisant votre identité et le droit que vous souhaitez exercer. Réponse garantie sous 30 jours calendaires. En cas de non-réponse satisfaisante, vous pouvez saisir l&apos;AEPD (Espagne) ou la CNIL (France).
+                  Envoyez votre demande à <a href="mailto:privacy@1000clic.fr" className="text-orange-primary hover:underline font-medium">privacy@1000clic.fr</a> en précisant votre identité et le droit que vous souhaitez exercer. Réponse garantie sous 30 jours calendaires. En cas de non-réponse satisfaisante, vous pouvez saisir l&apos;APD (Belgique) ou la CNIL (France).
                 </p>
               </div>
             </section>

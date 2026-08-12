@@ -97,7 +97,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
   if (!card?.active) {
     const previewName     = pro.name ?? 'Votre Nom'
     const previewInitial  = previewName.charAt(0).toUpperCase()
-    const previewCity     = pro.city ?? 'Valencia'
+    const previewCity     = pro.city ?? 'Bruxelles'
     const previewCategory = pro.category ?? 'Votre activité'
 
     return (
@@ -281,7 +281,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
                     <p className="text-sm font-bold mt-1" style={{ color: '#4F46E5' }}>{previewCategory}</p>
                     <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1.5">
                       <MapPin size={12} className="text-gray-300" />
-                      {previewCity}, Espagne
+                      {previewCity}, Belgique
                     </p>
 
                     <div className="border-t border-gray-100 my-4" />
@@ -463,7 +463,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
               <input
                 value={tagline}
                 onChange={e => setTagline(e.target.value)}
-                placeholder="Intervention rapide à Valencia et environs..."
+                placeholder="Intervention rapide à Bruxelles et environs..."
                 className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
               />
             </div>

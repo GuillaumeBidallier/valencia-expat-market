@@ -21,7 +21,7 @@ interface Props {
   placeholder?: string
 }
 
-export default function CityAutocomplete({ value, onChange, error, placeholder = 'Ex : Ruzafa, Valencia…' }: Props) {
+export default function CityAutocomplete({ value, onChange, error, placeholder = 'Ex : Ixelles, Bruxelles…' }: Props) {
   const [input, setInput]           = useState(value)
   const [results, setResults]       = useState<Result[]>([])
   const [loading, setLoading]       = useState(false)
@@ -34,7 +34,7 @@ export default function CityAutocomplete({ value, onChange, error, placeholder =
     setLoading(true)
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q + ', España')}&format=json&limit=5&accept-language=fr`,
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q + ', Belgique')}&format=json&limit=5&accept-language=fr`,
         { headers: { 'User-Agent': '1000ClickExpat/1.0' } }
       )
       setResults(await res.json())

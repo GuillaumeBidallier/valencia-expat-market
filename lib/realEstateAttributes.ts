@@ -88,6 +88,7 @@ const CARACTERISTIQUES_TERRAIN: AttrOption[] = [
 
 const ETAT_BIEN: AttrOption[] = [
   { value: 'neuf', label: 'Neuf' },
+  { value: 'excellent', label: 'Excellent état' },
   { value: 'bon_etat', label: 'Bon état' },
   { value: 'a_rafraichir', label: 'À rafraîchir' },
   { value: 'a_renover', label: 'À rénover' },
@@ -102,11 +103,37 @@ const CLASSE_ENERGIE: AttrOption[] = [
   { value: 'E', label: 'E' },
   { value: 'F', label: 'F' },
   { value: 'G', label: 'G' },
-  { value: 'vierge', label: 'Vierge (non soumis au DPE)' },
+  { value: 'vierge', label: 'Vierge (non soumis au PEB)' },
 ]
 
-const pieces    = (): AttrFieldDef => ({ type: 'stepper', key: 'pieces',    label: 'Pièces',   unit: 'pièces',   options: stepperUpTo(8) })
-const chambres  = (): AttrFieldDef => ({ type: 'stepper', key: 'chambres', label: 'Chambres', unit: 'chambres', options: stepperUpTo(8) })
+const NB_FACADES: AttrOption[] = [
+  { value: '2', label: '2 façades' },
+  { value: '3', label: '3 façades' },
+  { value: '4', label: '4 façades' },
+]
+
+const DISPONIBILITE: AttrOption[] = [
+  { value: 'acte', label: "À l'acte" },
+  { value: 'libre', label: 'Libre de suite' },
+  { value: 'bail', label: 'Avec bail en cours' },
+]
+
+const TYPE_CHAUFFAGE: AttrOption[] = [
+  { value: 'gaz', label: 'Gaz' },
+  { value: 'electrique', label: 'Électrique' },
+  { value: 'pompe_chaleur', label: 'Pompe à chaleur' },
+  { value: 'mazout', label: 'Mazout' },
+  { value: 'collectif', label: 'Collectif' },
+  { value: 'bois', label: 'Bois / Pellets' },
+]
+
+const pieces      = (): AttrFieldDef => ({ type: 'stepper', key: 'pieces',      label: 'Pièces',       unit: 'pièces',      options: stepperUpTo(8) })
+const chambres    = (): AttrFieldDef => ({ type: 'stepper', key: 'chambres',    label: 'Chambres',     unit: 'chambres',    options: stepperUpTo(8) })
+const sallesBain  = (): AttrFieldDef => ({ type: 'stepper', key: 'salles_bain', label: 'Salles de bain', unit: 'salles de bain', options: stepperUpTo(4) })
+const anneeConstruction = (): AttrFieldDef => ({ type: 'range', key: 'annee_construction', label: 'Année de construction' })
+const nbFacades   = (): AttrFieldDef => ({ type: 'select', key: 'nb_facades', label: 'Nombre de façades', options: NB_FACADES })
+const disponibilite = (): AttrFieldDef => ({ type: 'select', key: 'disponibilite', label: 'Disponibilité', options: DISPONIBILITE })
+const typeChauffage = (): AttrFieldDef => ({ type: 'select', key: 'type_chauffage', label: 'Type de chauffage', options: TYPE_CHAUFFAGE })
 
 const typeBien = (options: AttrOption[] = TYPE_BIEN): AttrFieldDef =>
   ({ type: 'select', key: 'type_bien', label: 'Type de bien', options, multi: true })
@@ -115,17 +142,21 @@ const typeBien = (options: AttrOption[] = TYPE_BIEN): AttrFieldDef =>
 function residentialAppart(withTypeVente: boolean): AttrFieldDef[] {
   return [
     typeBien(),
+    anneeConstruction(),
     { type: 'range', key: 'surface_habitable', label: 'Surface habitable', unit: 'm²' },
+    { type: 'select', key: 'etat_bien', label: 'État du bien', options: ETAT_BIEN },
+    disponibilite(),
+    { type: 'select', key: 'classe_energie', label: 'PEB', options: CLASSE_ENERGIE },
+    typeChauffage(),
     ...(withTypeVente ? [{ type: 'select', key: 'type_vente', label: 'Type de vente', options: TYPE_VENTE } as AttrFieldDef] : []),
     pieces(),
     chambres(),
+    sallesBain(),
     { type: 'select', key: 'etage', label: "Étage de l'appartement", options: ETAGE },
     { type: 'select', key: 'ascenseur', label: 'Avec ascenseur', options: OUI_NON },
     { type: 'select', key: 'exterieur', label: 'Extérieur', options: EXTERIEUR, multi: true },
     { type: 'select', key: 'exposition', label: 'Exposition', options: EXPOSITION, multi: true },
     { type: 'select', key: 'caracteristiques', label: 'Caractéristiques', options: CARACTERISTIQUES, multi: true },
-    { type: 'select', key: 'etat_bien', label: 'État du bien', options: ETAT_BIEN },
-    { type: 'select', key: 'classe_energie', label: 'Classe énergie (DPE)', options: CLASSE_ENERGIE },
   ]
 }
 
@@ -133,16 +164,21 @@ function residentialAppart(withTypeVente: boolean): AttrFieldDef[] {
 function residentialMaison(withTypeVente: boolean): AttrFieldDef[] {
   return [
     typeBien(),
+    anneeConstruction(),
     { type: 'range', key: 'surface_habitable', label: 'Surface habitable', unit: 'm²' },
+    nbFacades(),
+    { type: 'select', key: 'etat_bien', label: 'État du bien', options: ETAT_BIEN },
+    { type: 'range', key: 'surface_terrain', label: 'Surface du terrain', unit: 'ares' },
+    disponibilite(),
+    { type: 'select', key: 'classe_energie', label: 'PEB', options: CLASSE_ENERGIE },
+    typeChauffage(),
     ...(withTypeVente ? [{ type: 'select', key: 'type_vente', label: 'Type de vente', options: TYPE_VENTE } as AttrFieldDef] : []),
-    { type: 'range', key: 'surface_terrain', label: 'Surface du terrain', unit: 'm²' },
     pieces(),
     chambres(),
+    sallesBain(),
     { type: 'select', key: 'exterieur', label: 'Extérieur', options: EXTERIEUR, multi: true },
     { type: 'select', key: 'exposition', label: 'Exposition', options: EXPOSITION, multi: true },
     { type: 'select', key: 'caracteristiques', label: 'Caractéristiques', options: CARACTERISTIQUES, multi: true },
-    { type: 'select', key: 'etat_bien', label: 'État du bien', options: ETAT_BIEN },
-    { type: 'select', key: 'classe_energie', label: 'Classe énergie (DPE)', options: CLASSE_ENERGIE },
   ]
 }
 
@@ -163,9 +199,34 @@ function commerce(withTypeVente: boolean): AttrFieldDef[] {
 
 const terrain: AttrFieldDef[] = [
   typeBien([{ value: 'terrain', label: 'Terrain' }]),
-  { type: 'range', key: 'surface_terrain', label: 'Surface du terrain', unit: 'm²' },
+  { type: 'range', key: 'surface_terrain', label: 'Surface du terrain', unit: 'ares' },
   { type: 'select', key: 'type_vente', label: 'Type de vente', options: TYPE_VENTE },
   { type: 'select', key: 'caracteristiques', label: 'Caractéristiques', options: CARACTERISTIQUES_TERRAIN, multi: true },
+]
+
+const immeubleDeRapport: AttrFieldDef[] = [
+  typeBien([{ value: 'immeuble_de_rapport', label: 'Immeuble de rapport' }]),
+  { type: 'range', key: 'surface_habitable', label: 'Surface totale', unit: 'm²' },
+  { type: 'select', key: 'type_vente', label: 'Type de vente', options: TYPE_VENTE },
+  { type: 'range', key: 'nb_lots', label: 'Nombre de lots' },
+  { type: 'select', key: 'etat_bien', label: 'État du bien', options: ETAT_BIEN },
+  { type: 'select', key: 'caracteristiques', label: 'Caractéristiques', options: CARACTERISTIQUES, multi: true },
+]
+
+const parkingGarage: AttrFieldDef[] = [
+  typeBien([
+    { value: 'parking', label: 'Parking' },
+    { value: 'garage', label: 'Garage' },
+    { value: 'box', label: 'Box fermé' },
+  ]),
+  { type: 'range', key: 'surface_habitable', label: 'Surface', unit: 'm²' },
+  { type: 'select', key: 'type_vente', label: 'Type de vente', options: TYPE_VENTE },
+  { type: 'select', key: 'caracteristiques', label: 'Caractéristiques', options: [
+    { value: 'ferme', label: 'Fermé' },
+    { value: 'exterieur', label: 'Extérieur' },
+    { value: 'interphone_digicode', label: 'Interphone / Digicode' },
+    { value: 'acces_handicape', label: 'Accès handicapé' },
+  ], multi: true },
 ]
 
 const colocation: AttrFieldDef[] = [
@@ -211,6 +272,8 @@ export const REAL_ESTATE_ATTRIBUTES: Record<string, AttrFieldDef[]> = {
   'vente-maisons': residentialMaison(true),
   'vente-terrains': terrain,
   'vente-commerces': commerce(true),
+  'immeubles-de-rapport': immeubleDeRapport,
+  'parkings-garages': parkingGarage,
 
   'location-appartements': residentialAppart(false),
   'location-maisons': residentialMaison(false),

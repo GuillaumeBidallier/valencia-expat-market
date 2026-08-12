@@ -11,10 +11,8 @@ export interface HeroSlide {
 }
 
 const DEFAULT_SLIDES: HeroSlide[] = [
-  { src: '/valencia-hero.jpg', alt: 'Valencia — Cité des Arts et des Sciences' },
-  { src: 'https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=1920&q=80', alt: 'Madrid — skyline du centre-ville' },
-  { src: 'https://images.unsplash.com/photo-1578095172812-dcc191c5aed8?w=1920&q=80', alt: 'Barcelone — Sagrada Família' },
-  { src: 'https://images.unsplash.com/photo-1559386081-325882507af7?w=1920&q=80', alt: 'Séville — Plaza de España' },
+  { src: '/brussels-hero.png', alt: 'Bruxelles — Grand-Place au coucher du soleil' },
+  { src: '/bruges-hero.png', alt: 'Bruges — le Beffroi et les canaux' },
 ]
 
 const SLIDE_DURATION = 6000

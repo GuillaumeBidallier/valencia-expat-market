@@ -53,7 +53,7 @@ export function stepperUpTo(max: number): StepperOption[] {
   }))
 }
 
-const FUEL: AttrOption[] = [
+export const FUEL: AttrOption[] = [
   { value: '1', label: 'Essence' },
   { value: '2', label: 'Diesel' },
   { value: '6', label: 'Hybride' },
@@ -62,7 +62,7 @@ const FUEL: AttrOption[] = [
   { value: '5', label: 'Autre' },
 ]
 
-const GEARBOX: AttrOption[] = [
+export const GEARBOX: AttrOption[] = [
   { value: '1', label: 'Manuelle' },
   { value: '2', label: 'Automatique' },
 ]
@@ -181,6 +181,8 @@ export const VEHICLE_ATTRIBUTES: Record<string, AttrFieldDef[]> = {
     { type: 'range', key: 'regdate', label: 'Année' },
     { type: 'select', key: 'moto_type', label: 'Type', options: MOTO_TYPE },
     { type: 'range', key: 'mileage', label: 'Kilométrage', unit: 'km' },
+    { type: 'select', key: 'fuel', label: 'Carburant', options: FUEL },
+    { type: 'select', key: 'gearbox', label: 'Boîte de vitesses', options: GEARBOX },
     { type: 'select', key: 'vehicule_color', label: 'Couleur', options: VEHICULE_COLOR },
     { type: 'select', key: 'cycle_licence', label: 'Permis', options: CYCLE_LICENCE },
     { type: 'select', key: 'critair', label: "Crit'air", options: CRITAIR },

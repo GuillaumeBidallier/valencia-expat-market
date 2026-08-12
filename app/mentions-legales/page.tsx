@@ -25,7 +25,7 @@ export default async function MentionsLegalesPage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="Mentions légales 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/brussels-hero.png" alt="Mentions légales 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal</p>
@@ -72,10 +72,10 @@ export default async function MentionsLegalesPage() {
                 <p>Le site <strong className="text-navy">1000Click</strong> (<span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">1000clic.fr</span>) est édité par :</p>
                 <div className="bg-gray-50 rounded-xl p-4 space-y-1.5">
                   <p><strong className="text-navy">Dénomination :</strong> 1000Click</p>
-                  <p><strong className="text-navy">Nature :</strong> Plateforme communautaire de petites annonces entre expatriés francophones en Espagne</p>
+                  <p><strong className="text-navy">Nature :</strong> Plateforme communautaire de petites annonces entre particuliers francophones en Belgique</p>
                   <p><strong className="text-navy">Directeur de la publication :</strong> Équipe 1000Click</p>
                   <p><strong className="text-navy">Email :</strong> <a href={`mailto:${contactEmail}`} className="text-orange-primary hover:underline">{contactEmail}</a></p>
-                  <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Espagne (Comunitat Valenciana)</p>
+                  <p><strong className="text-navy">Pays d&apos;exploitation :</strong> Belgique</p>
                 </div>
               </div>
             </section>
@@ -152,7 +152,7 @@ export default async function MentionsLegalesPage() {
                 <h2 className="text-lg font-black text-navy">Données personnelles & cookies</h2>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                Le traitement des données personnelles collectées via 1000Click est effectué dans le respect du Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et de la Loi Organique Espagnole 3/2018 de Protection des Données (LOPDGDD).
+                Le traitement des données personnelles collectées via 1000Click est effectué dans le respect du Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et de la loi belge du 30 juillet 2018 relative à la protection des personnes physiques à l&apos;égard des traitements de données à caractère personnel.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/confidentialite" className="flex-1 bg-orange-soft hover:bg-orange-100 text-orange-primary font-bold text-sm text-center px-4 py-3 rounded-xl transition-colors">

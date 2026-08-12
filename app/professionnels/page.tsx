@@ -8,7 +8,7 @@ import ProfessionnelsHeader from './ProfessionnelsHeader'
 
 export const metadata: Metadata = {
   title: 'Professionnels',
-  description: 'Trouvez des professionnels francophones en Espagne : immobilier, juridique, comptabilité, déménagement, santé et plus.',
+  description: 'Trouvez des professionnels francophones en Belgique : immobilier, juridique, comptabilité, déménagement, santé et plus.',
   alternates: { canonical: '/professionnels' },
 }
 

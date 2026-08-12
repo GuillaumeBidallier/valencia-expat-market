@@ -6,7 +6,7 @@ import OnboardingWizard from './OnboardingWizard'
 
 export const metadata: Metadata = {
   title: 'Créer ma fiche professionnelle — 1000Click',
-  description: 'Créez votre fiche professionnelle et choisissez votre abonnement Premium pour apparaître devant la communauté des expatriés en Espagne.',
+  description: 'Créez votre fiche professionnelle et choisissez votre abonnement Premium pour apparaître devant la communauté francophone en Belgique.',
 }
 
 export default async function CreateProPage() {

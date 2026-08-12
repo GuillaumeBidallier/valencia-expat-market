@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 
 export const metadata: Metadata = {
   title: 'Annonces',
-  description: 'Parcourez les petites annonces entre expatriés francophones en Espagne : meubles, électronique, voitures, services et plus.',
+  description: 'Parcourez les petites annonces entre particuliers francophones en Belgique : meubles, électronique, voitures, services et plus.',
   alternates: { canonical: '/annonces' },
 }
 import { auth } from '@/auth'
@@ -14,6 +14,9 @@ import type { GeoState } from '@/components/listings/GeoModal'
 import AnnoncesFilters from './AnnoncesFilters'
 import AdUnit from '@/components/ads/AdUnit'
 import AnnoncesUI from '@/components/annonces/AnnoncesUI'
+import VipBanner from '@/components/home/VipBanner'
+import VehiculesHero from '@/components/annonces/VehiculesHero'
+import ImmobilierHero from '@/components/annonces/ImmobilierHero'
 import { getCategoriesServer } from '@/lib/categories'
 import { haversineKm, boundingBox } from '@/lib/neighborhoods'
 import { buildVehicleAttributeClauses } from '@/lib/vehicleAttributesQuery'
@@ -179,17 +182,79 @@ async function AnnoncesContent({ searchParams }: Props) {
   const categories = allCategories
   const activeCat = categories.find(c => c.slug === cat)
 
+  const isVehiculesTheme = (() => {
+    if (!cat) return false
+    if (cat === 'vehicules') return true
+    let current = allCategories.find(c => c.slug === cat)
+    while (current?.parentSlug) {
+      if (current.parentSlug === 'vehicules') return true
+      current = allCategories.find(c => c.slug === current!.parentSlug)
+    }
+    return false
+  })()
+
+  const vehiculeSubcategories = isVehiculesTheme
+    ? await Promise.all(
+        allCategories
+          .filter(c => c.parentSlug === 'vehicules')
+          .map(async sub => ({
+            slug: sub.slug,
+            label: sub.label,
+            count: await prisma.listing.count({ where: { categorySlug: sub.slug, status: 'ACTIVE' } }),
+          }))
+      )
+    : []
+
+  const isImmobilierTheme = (() => {
+    if (!cat) return false
+    if (cat === 'immobilier') return true
+    let current = allCategories.find(c => c.slug === cat)
+    while (current?.parentSlug) {
+      if (current.parentSlug === 'immobilier') return true
+      current = allCategories.find(c => c.slug === current!.parentSlug)
+    }
+    return false
+  })()
+
+  const IMMOBILIER_SUBCATEGORY_SLUGS = ['vente-maisons', 'vente-appartements', 'vente-terrains', 'vente-commerces', 'immeubles-de-rapport', 'parkings-garages', 'location-immo', 'colocations']
+  const immobilierSubcategories = isImmobilierTheme
+    ? await Promise.all(
+        IMMOBILIER_SUBCATEGORY_SLUGS
+          .map(slug => allCategories.find(c => c.slug === slug))
+          .filter((c): c is NonNullable<typeof c> => Boolean(c))
+          .map(async sub => {
+            const descendantSlugs = sub.slug === 'location-immo'
+              ? allCategories.filter(c => c.parentSlug === 'location-immo').map(c => c.slug)
+              : [sub.slug]
+            return {
+              slug: sub.slug,
+              label: sub.label,
+              count: await prisma.listing.count({ where: { categorySlug: { in: descendantSlugs }, status: 'ACTIVE' } }),
+            }
+          })
+      )
+    : []
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <SearchBar defaultQuery={q} defaultCategory={cat} defaultGeo={defaultGeo} />
-        </div>
-      </div>
+    <div className={isVehiculesTheme ? 'min-h-screen bg-[#08080c]' : 'min-h-screen bg-gray-50'}>
+      {isVehiculesTheme ? (
+        <VehiculesHero subcategories={vehiculeSubcategories} currentCat={cat} />
+      ) : isImmobilierTheme ? (
+        <ImmobilierHero subcategories={immobilierSubcategories} currentCat={cat} />
+      ) : (
+        <>
+          <div className="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+              <SearchBar defaultQuery={q} defaultCategory={cat} defaultGeo={defaultGeo} />
+            </div>
+          </div>
+          <VipBanner />
+        </>
+      )}
 
       <div className="max-w-screen-2xl mx-auto px-3 lg:px-6 py-5">
         <Suspense fallback={null}>
-          <AnnoncesFilters />
+          <AnnoncesFilters dark={isVehiculesTheme} immobilier={isImmobilierTheme} />
         </Suspense>
 
         <div className="flex flex-col lg:flex-row gap-4 items-start mt-4">
@@ -213,11 +278,15 @@ async function AnnoncesContent({ searchParams }: Props) {
             priceMax={priceMax}
             lat={userLat}
             lng={userLng}
+            dark={isVehiculesTheme}
+            immobilier={isImmobilierTheme}
           />
 
-          <div className="hidden xl:block shrink-0 sticky top-32">
-            <AdUnit size="skyscraper" seed={3} category={cat || undefined} neighborhood={geoLabel !== 'Ma position' ? geoLabel : undefined} />
-          </div>
+          {!isVehiculesTheme && (
+            <div className="hidden xl:block shrink-0 sticky top-32">
+              <AdUnit size="skyscraper" seed={3} category={cat || undefined} neighborhood={geoLabel !== 'Ma position' ? geoLabel : undefined} />
+            </div>
+          )}
         </div>
       </div>
     </div>

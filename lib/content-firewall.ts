@@ -1,5 +1,5 @@
 // Content firewall — automatically blocks prohibited listings before publication.
-// Rules cover French, English and Spanish since the platform is used by expats in Spain.
+// Rules cover French, English and Spanish since the platform is used by expats in Belgium.
 
 export interface FirewallResult {
   blocked: boolean

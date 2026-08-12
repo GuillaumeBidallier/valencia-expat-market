@@ -28,7 +28,7 @@ export default async function ProDashboardPage({ searchParams }: Props) {
         <p className="text-5xl mb-4">🏢</p>
         <h1 className="text-2xl font-black text-navy mb-3">Créez votre vitrine professionnelle</h1>
         <p className="text-gray-500 text-sm mb-6">
-          Rejoignez les professionnels visibles par la communauté des expatriés en Espagne.<br />
+          Rejoignez les professionnels visibles par la communauté francophone en Belgique.<br />
           Moins de 5 minutes pour être en ligne.
         </p>
         <Link

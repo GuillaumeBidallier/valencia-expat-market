@@ -21,10 +21,11 @@ const COUNTS: Record<AdSize, number> = { skyscraper: 4, inline: 2, banner: 1, re
 
 /* ─── Fallback mock (affiché pendant le chargement) ──────── */
 const MOCK = [
-  { id: 'm1', emoji: '🏠', title: 'Immo Valencia Francophone',  desc: 'Location & vente pour expatriés.', url: 'immovalencia.es',    color: '#1A5FA0', cta: 'Voir les biens'  },
-  { id: 'm2', emoji: '🚚', title: 'Trans-Expat Déménagements',   desc: 'France ↔ Espagne. Devis en 24h.',  url: 'transexpat.com',     color: '#E8571A', cta: 'Devis gratuit'   },
-  { id: 'm3', emoji: '📚', title: 'École Française Valencia',    desc: 'Homologuée AEFE. Inscriptions.', url: 'ecolevfr.es',        color: '#0D7C3A', cta: 'En savoir plus'  },
-  { id: 'm4', emoji: '🩺', title: 'AssurExpat — Santé',         desc: 'Mutuelle expatriés. Assistance 24h.', url: 'assurexpat.com', color: '#7C3AED', cta: 'Mon devis'       },
+  { id: 'm1', emoji: '🏠', title: 'Immo Bruxelles Francophone',  desc: 'Location & vente en Belgique.', url: 'immobruxelles.be',    color: '#1A5FA0', cta: 'Voir les biens'  },
+  { id: 'm2', emoji: '🚚', title: 'Trans-Expat Déménagements',   desc: 'France ↔ Belgique. Devis en 24h.',  url: 'transexpat.com',     color: '#E8571A', cta: 'Devis gratuit'   },
+  { id: 'm3', emoji: '📚', title: 'École Française Bruxelles',    desc: 'Homologuée AEFE. Inscriptions.', url: 'ecolevfr.be',        color: '#0D7C3A', cta: 'En savoir plus'  },
+  { id: 'm4', emoji: '🩺', title: 'AssurSanté BE',              desc: 'Mutuelle santé. Assistance 24h.', url: 'assursante.be', color: '#7C3AED', cta: 'Mon devis'       },
+  { id: 'm5', emoji: '🏦', title: 'Pretto',                     desc: 'Simulation gratuite en 2 min. Estimation de prêt immobilier.', url: 'pretto.be', color: '#5B3DF5', cta: 'Simuler mon prêt' },
 ]
 
 /* ─── AdSense slot ───────────────────────────────────────── */

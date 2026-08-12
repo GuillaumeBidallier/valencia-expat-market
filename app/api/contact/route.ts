@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#1A1F36;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
           <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
-          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces entre expatriés</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces en Belgique</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
           <p style="margin:0 0 16px;font-size:22px;font-weight:900;color:#1A1F36;">Merci, ${safeName} !</p>
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
             <p style="margin:0;font-size:13px;color:#6B7280;">📧 Une copie de votre message a été enregistrée. Si votre demande est urgente, vous pouvez également nous écrire directement à <a href="mailto:${CONTACT_EMAIL}" style="color:#E8571A;text-decoration:none;">${CONTACT_EMAIL}</a>.</p>
           </div>
           <p style="margin:0 0 32px;font-size:14px;color:#6B7280;line-height:1.7;">
-            En attendant, n'hésitez pas à explorer les annonces de notre communauté ou à consulter notre blog pour des conseils pratiques sur la vie en Espagne.
+            En attendant, n'hésitez pas à explorer les annonces de notre communauté ou à consulter notre blog pour des conseils pratiques sur la vie en Belgique.
           </p>
           <div style="text-align:center;">
             <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr'}" style="display:inline-block;background:#E8571A;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 36px;border-radius:12px;">

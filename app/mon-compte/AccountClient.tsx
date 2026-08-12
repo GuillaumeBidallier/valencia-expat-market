@@ -547,7 +547,7 @@ export default function AccountClient({ user, initialListings, initialFavorites,
                   className="block bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-5 hover:border-orange-primary transition-colors group">
                   <p className="text-xs font-black text-orange-primary uppercase tracking-widest mb-1">Devenez Pro</p>
                   <p className="text-sm font-bold text-navy">Créer ma fiche professionnelle</p>
-                  <p className="text-xs text-gray-500 mt-1 mb-3">Visibilité renforcée auprès des expatriés</p>
+                  <p className="text-xs text-gray-500 mt-1 mb-3">Visibilité renforcée auprès de la communauté francophone</p>
                   <span className="text-xs font-bold text-orange-primary group-hover:underline flex items-center gap-1">
                     Commencer <ChevronRight size={12} />
                   </span>

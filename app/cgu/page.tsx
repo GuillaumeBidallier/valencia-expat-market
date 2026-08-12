@@ -5,7 +5,7 @@ import { UserCheck, ClipboardList, CreditCard, MessageSquare, Clock, Ban, Rotate
 
 export const metadata: Metadata = {
   title: "Conditions générales d'utilisation — 1000Click",
-  description: "CGU de 1000Click. Règles d'utilisation de la plateforme de petites annonces pour expatriés francophones en Espagne.",
+  description: "CGU de 1000Click. Règles d'utilisation de la plateforme de petites annonces pour francophones en Belgique.",
 }
 
 const SECTIONS = [
@@ -27,7 +27,7 @@ export default function CguPage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="CGU 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/brussels-hero.png" alt="CGU 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal</p>
@@ -67,8 +67,8 @@ export default function CguPage() {
                 Objet
               </h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme <strong className="text-navy">1000Click</strong>, service de petites annonces entre particuliers expatriés en Espagne, accessible à l&apos;adresse <span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">1000clic.fr</span>.</p>
-                <p>1000Click est une plateforme de mise en relation entre particuliers permettant de publier, consulter et répondre à des annonces de vente, location ou échange de biens et services. Elle est destinée principalement à la communauté des expatriés francophones résidant en Espagne.</p>
+                <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme <strong className="text-navy">1000Click</strong>, service de petites annonces entre particuliers en Belgique, accessible à l&apos;adresse <span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">1000clic.fr</span>.</p>
+                <p>1000Click est une plateforme de mise en relation entre particuliers permettant de publier, consulter et répondre à des annonces de vente, location ou échange de biens et services. Elle est destinée principalement à la communauté francophone résidant en Belgique.</p>
                 <p>L&apos;utilisation de 1000Click implique l&apos;acceptation pleine et entière des présentes CGU. 1000Click se réserve le droit de les modifier à tout moment.</p>
               </div>
             </section>
@@ -280,8 +280,8 @@ export default function CguPage() {
                 Droit applicable et litiges
               </h2>
               <div className="text-sm text-white/70 leading-relaxed space-y-3">
-                <p>Les présentes CGU sont soumises au droit espagnol et au droit de l&apos;Union Européenne. En cas de litige, les parties s&apos;efforceront de trouver une solution amiable avant tout recours judiciaire.</p>
-                <p>À défaut d&apos;accord amiable, tout litige relatif à l&apos;interprétation ou à l&apos;exécution des présentes CGU sera soumis aux tribunaux compétents de la Communauté Valencienne (Espagne), sauf disposition légale contraire applicable aux consommateurs.</p>
+                <p>Les présentes CGU sont soumises au droit belge et au droit de l&apos;Union Européenne. En cas de litige, les parties s&apos;efforceront de trouver une solution amiable avant tout recours judiciaire.</p>
+                <p>À défaut d&apos;accord amiable, tout litige relatif à l&apos;interprétation ou à l&apos;exécution des présentes CGU sera soumis aux tribunaux compétents de l&apos;arrondissement judiciaire de Bruxelles (Belgique), sauf disposition légale contraire applicable aux consommateurs.</p>
                 <p className="text-white/50 text-xs">Pour les résidents français : conformément aux articles L.611-1 et suivants du Code de la consommation, vous pouvez recourir gratuitement à un médiateur de la consommation.</p>
               </div>
             </section>

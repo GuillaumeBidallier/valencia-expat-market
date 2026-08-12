@@ -44,6 +44,8 @@ const CATEGORIES: Cat1[] = [
           { slug: 'vente-maisons', label: 'Maisons & Villas', t: { en: 'Houses & Villas', es: 'Casas y Villas', de: 'Häuser & Villen', nl: "Huizen & Villa's", uk: 'Будинки та вілли', ru: 'Дома и виллы' } },
           { slug: 'vente-terrains', label: 'Terrains', t: { en: 'Land & Plots', es: 'Terrenos', de: 'Grundstücke', nl: 'Grond & Percelen', uk: 'Земельні ділянки', ru: 'Земельные участки' } },
           { slug: 'vente-commerces', label: 'Locaux commerciaux', t: { en: 'Commercial Properties', es: 'Locales comerciales', de: 'Gewerbeimmobilien', nl: 'Bedrijfspanden', uk: 'Комерційна нерухомість', ru: 'Коммерческая недвижимость' } },
+          { slug: 'immeubles-de-rapport', label: 'Immeubles de rapport', t: { en: 'Investment Buildings', es: 'Edificios de inversión', de: 'Renditeobjekte', nl: 'Rendementspanden', uk: 'Прибуткові будинки', ru: 'Доходные дома' } },
+          { slug: 'parkings-garages', label: 'Parkings & Garages', t: { en: 'Parking & Garages', es: 'Aparcamientos y Garajes', de: 'Parkplätze & Garagen', nl: 'Parkeerplaatsen & Garages', uk: 'Паркінги та гаражі', ru: 'Парковки и гаражи' } },
         ],
       },
       {

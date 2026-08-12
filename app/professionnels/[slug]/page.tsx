@@ -12,29 +12,29 @@ import ProMapClient from './ProMapClient'
 import ContactCardClient from './ContactCardClient'
 
 const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
-  'valencia':  { lat: 39.4699, lng: -0.3763 },
-  'madrid':    { lat: 40.4168, lng: -3.7038 },
-  'barcelona': { lat: 41.3874, lng:  2.1686 },
-  'alicante':  { lat: 38.3452, lng: -0.4815 },
-  'benidorm':  { lat: 38.5400, lng: -0.1300 },
-  'torrevieja':{ lat: 37.9783, lng: -0.6826 },
+  'bruxelles': { lat: 50.8503, lng: 4.3517 },
+  'anvers':    { lat: 51.2194, lng: 4.4025 },
+  'gand':      { lat: 51.0543, lng: 3.7174 },
+  'liege':     { lat: 50.6326, lng: 5.5797 },
+  'bruges':    { lat: 51.2093, lng: 3.2247 },
+  'namur':     { lat: 50.4674, lng: 4.8720 },
 }
 
 async function geocodeCity(city: string): Promise<{ lat: number; lng: number } | null> {
   const key = city.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
   if (CITY_COORDS[key]) return CITY_COORDS[key]
   try {
-    const q = encodeURIComponent(`${city}, Spain`)
+    const q = encodeURIComponent(`${city}, Belgium`)
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`,
       { headers: { 'User-Agent': '1000ClickValencia/1.0 contact@1000clic.fr' }, next: { revalidate: 86400 } }
     )
-    if (!res.ok) return CITY_COORDS['valencia']
+    if (!res.ok) return CITY_COORDS['bruxelles']
     const data = await res.json()
-    if (!data[0]) return CITY_COORDS['valencia']
+    if (!data[0]) return CITY_COORDS['bruxelles']
     return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) }
   } catch {
-    return CITY_COORDS['valencia']
+    return CITY_COORDS['bruxelles']
   }
 }
 

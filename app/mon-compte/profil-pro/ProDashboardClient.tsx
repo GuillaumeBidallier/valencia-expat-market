@@ -137,7 +137,7 @@ function SubscriptionSection({ pro }: { pro: Professional }) {
         </div>
         <div>
           <p className="font-black text-navy text-sm">Passez pro</p>
-          <p className="text-xs text-gray-500">Multipliez votre visibilité auprès des expatriés</p>
+          <p className="text-xs text-gray-500">Multipliez votre visibilité auprès de la communauté francophone</p>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-3">

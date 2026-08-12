@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (r.type === 'ville') {
     const v = r.data
     title = `Petites annonces ${v.labelFr} — 1000Click`
-    description = `Annonces de particuliers et expatriés francophones à ${v.labelFr}. Immobilier, véhicules, mobilier, électronique et plus entre particuliers.`
+    description = `Annonces de particuliers francophones à ${v.labelFr}. Immobilier, véhicules, mobilier, électronique et plus entre particuliers.`
     url = `${BASE}/petites-annonces-${v.slug}`
   } else {
     const c = r.data
@@ -269,7 +269,7 @@ export default async function SeoPage({ params, searchParams }: Props) {
           {r.type === 'categorie' && (
             <section className="mt-10 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
               <h2 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wide">
-                Explorer d'autres catégories en Espagne
+                Explorer d'autres catégories en Belgique
               </h2>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES_SEO.filter(c => c.seoSlug !== r.data.seoSlug).map(c => (
@@ -289,7 +289,7 @@ export default async function SeoPage({ params, searchParams }: Props) {
           {r.type === 'ville' && (
             <section className="mt-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
               <h2 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wide">
-                Catégories populaires en Espagne
+                Catégories populaires en Belgique
               </h2>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES_SEO.map(c => (

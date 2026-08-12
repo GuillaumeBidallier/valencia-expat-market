@@ -8,7 +8,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Publicité & visibilité professionnelle — 1000Click',
-  description: 'Touchez la communauté des expatriés francophones en Espagne. Formats display, annonces sponsorisées, fiche professionnelle — solutions sur mesure pour les pros.',
+  description: 'Touchez la communauté francophone en Belgique. Formats display, annonces sponsorisées, fiche professionnelle — solutions sur mesure pour les pros.',
 }
 
 type Format = {
@@ -174,7 +174,7 @@ const TIERS = [
 const STATS = [
   { value: 'Croissante', label: 'Audience qualifiée', icon: <Users size={20} />, color: 'text-orange-primary' },
   { value: '7 langues', label: 'Langues couvertes', icon: <Languages size={20} />, color: 'text-indigo-primary' },
-  { value: 'Valencia', label: 'Communauté locale', icon: <MapPin size={20} />, color: 'text-emerald-600' },
+  { value: 'Bruxelles', label: 'Communauté locale', icon: <MapPin size={20} />, color: 'text-emerald-600' },
   { value: 'Multi-origines', label: 'Communauté internationale', icon: <Target size={20} />, color: 'text-purple-600' },
 ]
 
@@ -194,7 +194,7 @@ const CATEGORIES = [
 const FAQ = [
   {
     q: 'Qui voit mes publicités ?',
-    a: 'La communauté 1000Click : expatriés de toutes nationalités installés en Espagne, principalement en Comunitat Valenciana. Une audience qualifiée qui cherche activement des services locaux.'
+    a: 'La communauté 1000Click : francophones installés en Belgique, principalement à Bruxelles et en Wallonie. Une audience qualifiée qui cherche activement des services locaux.'
   },
   {
     q: 'Comment fonctionne le système d\'affichage ?',
@@ -228,16 +228,16 @@ export default function PublicitePage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[300px] sm:min-h-[380px]">
-        <Image src="/valencia-hero.jpg" alt="Publicité 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/brussels-hero.png" alt="Publicité 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/92 via-hero-dark/65 to-hero-dark/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/40 via-transparent to-hero-dark/60" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-24 flex flex-col justify-center min-h-[300px] sm:min-h-[380px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Professionnels</p>
           <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight mb-4 max-w-2xl">
-            Touchez les expatriés<br />là où ils cherchent
+            Touchez votre audience<br />là où elle cherche
           </h1>
           <p className="text-white/70 text-base sm:text-lg max-w-xl mb-8">
-            1000Click est la plateforme de référence pour la communauté internationale des expatriés en Espagne. Affichez votre activité devant une audience qualifiée et en pleine croissance.
+            1000Click est la plateforme de référence pour la communauté francophone en Belgique. Affichez votre activité devant une audience qualifiée et en pleine croissance.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link href="/mon-compte/profil-pro/create" className="inline-flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white font-black px-6 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-primary/30">
@@ -273,7 +273,7 @@ export default function PublicitePage() {
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">L&apos;audience</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Une communauté unique et qualifiée</h2>
             <p className="text-gray-500 text-sm max-w-xl mx-auto">
-              Les visiteurs 1000Click sont des expatriés actifs avec un fort pouvoir d&apos;achat, qui ont besoin de services locaux de confiance.
+              Les visiteurs 1000Click sont des francophones actifs avec un fort pouvoir d&apos;achat, qui ont besoin de services locaux de confiance.
             </p>
           </div>
           <div className="grid sm:grid-cols-3 gap-5">
@@ -281,7 +281,7 @@ export default function PublicitePage() {
               {
                 icon: <Target size={22} className="text-orange-primary" />,
                 title: 'Audience ultra-ciblée',
-                desc: 'Expatriés de toutes nationalités en Espagne — pas de trafic générique. Uniquement des personnes qui vivent ou s\'installent en Espagne et cherchent des services locaux.',
+                desc: 'Francophones de toutes nationalités en Belgique — pas de trafic générique. Uniquement des personnes qui vivent ou s\'installent en Belgique et cherchent des services locaux.',
               },
               {
                 icon: <Globe size={22} className="text-indigo-primary" />,
@@ -291,7 +291,7 @@ export default function PublicitePage() {
               {
                 icon: <TrendingUp size={22} className="text-emerald-600" />,
                 title: 'En pleine croissance',
-                desc: 'La communauté des expatriés en Espagne est l\'une des plus dynamiques d\'Europe. 1000Click grandit avec elle, mois après mois.',
+                desc: 'La communauté francophone en Belgique est l\'une des plus dynamiques d\'Europe. 1000Click grandit avec elle, mois après mois.',
               },
             ].map(item => (
               <div key={item.title} className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -308,7 +308,7 @@ export default function PublicitePage() {
           <div className="text-center mb-8">
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Secteurs</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Qui peut annoncer sur 1000Click ?</h2>
-            <p className="text-gray-500 text-sm">Toute activité professionnelle utile à la vie des expatriés.</p>
+            <p className="text-gray-500 text-sm">Toute activité professionnelle utile à la vie en Belgique.</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {CATEGORIES.map(cat => (
@@ -475,7 +475,7 @@ export default function PublicitePage() {
               icon: <BarChart3 size={20} className="text-indigo-primary" />,
               bg: 'bg-indigo-soft',
               title: 'Trafic qualifié',
-              desc: 'Contrairement aux plateformes généralistes, chaque visiteur 1000Click est un expatrié en Espagne — exactement votre cible.',
+              desc: 'Contrairement aux plateformes généralistes, chaque visiteur 1000Click est francophone en Belgique — exactement votre cible.',
             },
             {
               icon: <Star size={20} className="text-amber-500" />,
@@ -487,7 +487,7 @@ export default function PublicitePage() {
               icon: <Globe size={20} className="text-emerald-600" />,
               bg: 'bg-emerald-50',
               title: 'Portée internationale',
-              desc: '1000Click est disponible en 7 langues. Votre fiche est visible par tous les expatriés, quelle que soit leur nationalité.',
+              desc: '1000Click est disponible en 7 langues. Votre fiche est visible par toute la communauté, quelle que soit sa nationalité.',
             },
           ].map(item => (
             <div key={item.title} className="bg-white border border-gray-100 rounded-2xl p-6 flex gap-4">
@@ -526,7 +526,7 @@ export default function PublicitePage() {
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Prêt ?</p>
           <h2 className="text-2xl sm:text-3xl font-black text-white mb-4">Devenez visible dès aujourd&apos;hui</h2>
           <p className="text-white/60 text-sm max-w-lg mx-auto mb-8">
-            Rejoignez les professionnels qui font confiance à 1000Click pour toucher la communauté internationale des expatriés en Espagne.
+            Rejoignez les professionnels qui font confiance à 1000Click pour toucher la communauté francophone en Belgique.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

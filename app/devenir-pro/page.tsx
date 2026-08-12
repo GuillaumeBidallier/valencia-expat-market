@@ -8,8 +8,8 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Espace Pro sur 1000Click — Touchez les expatriés en Espagne',
-  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers d\'expatriés francophones installés en Espagne. Dès 99 €/an.',
+  title: 'Espace Pro sur 1000Click — Touchez la communauté francophone en Belgique',
+  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers de francophones installés en Belgique. Dès 99 €/an.',
 }
 
 /* ─── Animation keyframes ─────────────────────────────────────────────────── */
@@ -228,9 +228,9 @@ const VIP_FEATURES = [
 const TRUST = [
   { icon: <Shield size={18} />, label: 'Paiement sécurisé', sub: 'via Stripe' },
   { icon: <TrendingUp size={18} />, label: 'Sans engagement', sub: 'résiliable à tout moment' },
-  { icon: <Users size={18} />, label: 'Communauté active', sub: 'expatriés qualifiés' },
+  { icon: <Users size={18} />, label: 'Communauté active', sub: 'audience qualifiée' },
   { icon: <Globe size={18} />, label: '7 langues', sub: 'audience internationale' },
-  { icon: <MapPin size={18} />, label: 'Valencia & España', sub: 'marché ciblé' },
+  { icon: <MapPin size={18} />, label: 'Bruxelles & Belgique', sub: 'marché ciblé' },
 ]
 
 /* ─── Page ────────────────────────────────────────────────────────────────── */
@@ -286,7 +286,7 @@ export default function DevenirProPage() {
 
           {/* Subtext */}
           <p className="au d3 text-white/60 text-lg max-w-xl mb-10 leading-relaxed">
-            1000Click connecte les professionnels avec une communauté de milliers d&apos;expatriés francophones installés en Espagne — une audience qualifiée qui cherche activement vos services.
+            1000Click connecte les professionnels avec une communauté de milliers de francophones installés en Belgique — une audience qualifiée qui cherche activement vos services.
           </p>
 
           {/* CTAs */}
@@ -331,7 +331,7 @@ export default function DevenirProPage() {
             {[
               { icon: <Users size={20} className="text-orange-primary" />, val: 'Croissante', label: 'Audience qualifiée' },
               { icon: <Globe size={20} className="text-indigo-primary" />, val: '7 langues', label: 'Communauté multilingue' },
-              { icon: <MapPin size={20} className="text-orange-primary" />, val: 'Valencia', label: 'Cœur de marché' },
+              { icon: <MapPin size={20} className="text-orange-primary" />, val: 'Bruxelles', label: 'Cœur de marché' },
               { icon: <TrendingUp size={20} className="text-indigo-primary" />, val: 'Rapide', label: 'Croissance mois après mois' },
             ].map((s, i) => (
               <div key={s.label} className={`as d${i + 1} flex flex-col items-center text-center gap-2`}>
@@ -417,7 +417,7 @@ export default function DevenirProPage() {
             {/* Left — CSS map visual */}
             <div className="as d2 relative flex items-center justify-center" style={{ minHeight: 340 }}>
 
-              {/* Background map shape — Communitat Valenciana abstraction */}
+              {/* Background map shape — Belgique abstraction */}
               <div className="relative w-72 h-80">
 
                 {/* Region blobs */}
@@ -425,12 +425,12 @@ export default function DevenirProPage() {
 
                 {/* City dots + labels */}
                 {[
-                  { name: 'Valencia',   top: '30%', left: '52%', size: 14, primary: true  },
-                  { name: 'Alicante',   top: '68%', left: '62%', size: 10, primary: false },
-                  { name: 'Castellón',  top: '10%', left: '58%', size: 9,  primary: false },
-                  { name: 'Benidorm',   top: '58%', left: '68%', size: 8,  primary: false },
-                  { name: 'Gandia',     top: '48%', left: '60%', size: 8,  primary: false },
-                  { name: 'Torrevieja', top: '82%', left: '66%', size: 7,  primary: false },
+                  { name: 'Bruxelles',  top: '30%', left: '52%', size: 14, primary: true  },
+                  { name: 'Anvers',     top: '10%', left: '58%', size: 10, primary: false },
+                  { name: 'Gand',       top: '18%', left: '38%', size: 9,  primary: false },
+                  { name: 'Liège',      top: '48%', left: '68%', size: 8,  primary: false },
+                  { name: 'Namur',      top: '58%', left: '55%', size: 8,  primary: false },
+                  { name: 'Bruges',     top: '12%', left: '25%', size: 7,  primary: false },
                 ].map(city => (
                   <div key={city.name} className="absolute" style={{ top: city.top, left: city.left, transform: 'translate(-50%,-50%)' }}>
                     <div
@@ -443,13 +443,13 @@ export default function DevenirProPage() {
                   </div>
                 ))}
 
-                {/* Zone coverage ring around Valencia */}
+                {/* Zone coverage ring around Bruxelles */}
                 <div className="absolute rounded-full border-2 border-orange-primary/30 bg-orange-primary/5"
                   style={{ width: 140, height: 140, top: '30%', left: '52%', transform: 'translate(-50%,-50%)', animation: 'pulseRing 3s ease-out infinite' }} />
                 <div className="absolute rounded-full border border-orange-primary/15 bg-orange-primary/5"
                   style={{ width: 200, height: 200, top: '30%', left: '52%', transform: 'translate(-50%,-50%)' }} />
 
-                {/* Pro card floating over Valencia */}
+                {/* Pro card floating over Bruxelles */}
                 <div className="card-float absolute bg-white rounded-xl shadow-xl border border-gray-100 px-3 py-2.5 text-[11px]"
                   style={{ top: '5%', left: '-10%', minWidth: 130 }}>
                   <div className="flex items-center gap-1.5 mb-1">
@@ -458,7 +458,7 @@ export default function DevenirProPage() {
                   </div>
                   <div className="flex items-center gap-1 text-orange-primary">
                     <MapPin size={8} />
-                    <span className="text-[9px] font-semibold">Valencia · Alicante</span>
+                    <span className="text-[9px] font-semibold">Bruxelles · Anvers</span>
                   </div>
                   <div className="mt-1 inline-block bg-orange-soft text-orange-primary text-[8px] font-black px-1.5 py-0.5 rounded-full">Sponsorisé</div>
                 </div>
@@ -466,7 +466,7 @@ export default function DevenirProPage() {
                 {/* User card */}
                 <div className="card-float-2 absolute bg-white rounded-xl shadow-xl border border-gray-100 px-3 py-2.5 text-[11px]"
                   style={{ bottom: '8%', right: '-12%', minWidth: 130 }}>
-                  <p className="text-[9px] text-gray-400 mb-1">Utilisateur à Valencia :</p>
+                  <p className="text-[9px] text-gray-400 mb-1">Utilisateur à Bruxelles :</p>
                   <div className="flex items-center gap-1 text-indigo-primary text-[9px] font-semibold mb-1">
                     <MapPin size={8} />
                     <span>Détecté par IP</span>
@@ -486,14 +486,14 @@ export default function DevenirProPage() {
                   icon: <MapPin size={20} />,
                   color: 'bg-orange-soft text-orange-primary',
                   title: 'Vos zones d\'intervention',
-                  desc: 'Lors de la création de votre fiche, vous listez les villes et régions que vous couvrez — Valencia, Alicante, toute la Comunitat, ou toute l\'Espagne. Modifiable à tout moment depuis votre tableau de bord.',
+                  desc: 'Lors de la création de votre fiche, vous listez les villes et régions que vous couvrez — Bruxelles, Anvers, toute la Wallonie, ou toute la Belgique. Modifiable à tout moment depuis votre tableau de bord.',
                   delay: 'd2',
                 },
                 {
                   icon: <TrendingUp size={20} />,
                   color: 'bg-indigo-soft text-indigo-primary',
                   title: 'Ciblage par annonce consultée',
-                  desc: 'Quand un utilisateur consulte une annonce à Valencia, 1000Click affiche en priorité les pros qui couvrent Valencia. Le déclencheur est la ville de l\'annonce vue — priorité numéro 1.',
+                  desc: 'Quand un utilisateur consulte une annonce à Bruxelles, 1000Click affiche en priorité les pros qui couvrent Bruxelles. Le déclencheur est la ville de l\'annonce vue — priorité numéro 1.',
                   delay: 'd3',
                 },
                 {
@@ -682,7 +682,7 @@ export default function DevenirProPage() {
                     <p className="text-sm font-bold mt-1" style={{ color: '#4F46E5' }}>Architecte · Rénovation</p>
                     <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1.5">
                       <MapPin size={12} className="text-gray-300" />
-                      Valencia, Espagne
+                      Bruxelles, Belgique
                     </p>
 
                     <div className="border-t border-gray-100 my-4" />
@@ -883,7 +883,7 @@ export default function DevenirProPage() {
             Lancez-vous en<br /><span className="gradient-text">4 minutes</span>
           </h2>
           <p className="au d2 text-white/50 text-base mb-10 max-w-lg mx-auto">
-            Rejoignez les professionnels qui font confiance à 1000Click pour toucher la communauté internationale des expatriés en Espagne.
+            Rejoignez les professionnels qui font confiance à 1000Click pour toucher la communauté francophone en Belgique.
           </p>
           <div className="au d3">
             <Link

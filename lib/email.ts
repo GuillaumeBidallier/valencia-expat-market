@@ -22,12 +22,12 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#E8571A;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
           <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
-          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Petites annonces entre expatriés</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Petites annonces en Belgique</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
           <p style="margin:0 0 16px;font-size:22px;font-weight:900;color:#1A1F36;">Bienvenue, ${safeName} ! 🎉</p>
           <p style="margin:0 0 20px;font-size:15px;color:#6B7280;line-height:1.7;">
-            Votre compte 1000Click a bien été créé. Vous faites maintenant partie de la communauté des expatriés francophones en Espagne.
+            Votre compte 1000Click a bien été créé. Vous faites maintenant partie de la communauté francophone en Belgique.
           </p>
           <p style="margin:0 0 12px;font-size:14px;font-weight:700;color:#1A1F36;">Ce que vous pouvez faire :</p>
           <ul style="margin:0 0 32px;padding-left:20px;color:#6B7280;font-size:14px;line-height:2;">
@@ -174,7 +174,7 @@ export async function sendListingApprovedEmail({
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#16A34A;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
           <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
-          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Petites annonces entre expatriés</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Petites annonces en Belgique</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
           <p style="margin:0 0 8px;font-size:22px;font-weight:900;color:#1A1F36;">Bonne nouvelle, ${safeName} ! ✅</p>
@@ -223,7 +223,7 @@ export async function sendListingRejectedEmail({
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
         <tr><td style="background:#1A1F36;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
           <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
-          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces entre expatriés</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces en Belgique</p>
         </td></tr>
         <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
           <p style="margin:0 0 8px;font-size:18px;font-weight:900;color:#1A1F36;">Bonjour ${safeName},</p>
@@ -277,7 +277,7 @@ function emailHtml({
         <!-- Header -->
         <tr><td style="background:#E8571A;border-radius:16px 16px 0 0;padding:28px 32px;text-align:center;">
           <p style="margin:0;font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.5px;">1000Click</p>
-          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.7);">Petites annonces entre expatriés</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.7);">Petites annonces en Belgique</p>
         </td></tr>
 
         <!-- Body -->
