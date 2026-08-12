@@ -11,7 +11,11 @@ export default async function AdminAnnoncesPage() {
   }
 
   const siteId = await getAdminSiteId()
-  const [pendingListings, settings] = await Promise.all([
+
+  const [
+    pendingListings, settings,
+    pendingCount, activeCount, rejectedCount, soldCount, expiredCount, reportedCount, totalCount,
+  ] = await Promise.all([
     prisma.listing.findMany({
       where: { status: 'PENDING', siteId },
       include: {
@@ -19,12 +23,20 @@ export default async function AdminAnnoncesPage() {
         user: { select: { id: true, name: true, email: true, blocked: true } },
       },
       orderBy: { publishedAt: 'desc' },
+      take: 20,
     }),
     prisma.siteSettings.upsert({
       where: { id: 'default' },
       create: { id: 'default', autoPublish: true },
       update: {},
     }),
+    prisma.listing.count({ where: { status: 'PENDING', siteId } }),
+    prisma.listing.count({ where: { status: 'ACTIVE', siteId } }),
+    prisma.listing.count({ where: { status: 'REJECTED', siteId } }),
+    prisma.listing.count({ where: { status: 'SOLD', siteId } }),
+    prisma.listing.count({ where: { status: 'EXPIRED', siteId } }),
+    prisma.listing.count({ where: { reports: { some: {} }, status: { not: 'DELETED' }, siteId } }),
+    prisma.listing.count({ where: { status: { not: 'DELETED' }, siteId } }),
   ])
 
   const serialized = pendingListings.map(l => ({
@@ -39,5 +51,20 @@ export default async function AdminAnnoncesPage() {
     user: { id: l.user.id, name: l.user.name, email: l.user.email, blocked: l.user.blocked },
   }))
 
-  return <AdminAnnoncesClient initialListings={serialized} autoPublish={settings.autoPublish} />
+  return (
+    <AdminAnnoncesClient
+      initialListings={serialized}
+      initialTotal={pendingCount}
+      autoPublish={settings.autoPublish}
+      counts={{
+        TOTAL: totalCount,
+        PENDING: pendingCount,
+        ACTIVE: activeCount,
+        REJECTED: rejectedCount,
+        SOLD: soldCount,
+        EXPIRED: expiredCount,
+        REPORTED: reportedCount,
+      }}
+    />
+  )
 }
