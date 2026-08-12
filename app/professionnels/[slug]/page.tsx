@@ -27,7 +27,7 @@ async function geocodeCity(city: string): Promise<{ lat: number; lng: number } |
     const q = encodeURIComponent(`${city}, Belgium`)
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`,
-      { headers: { 'User-Agent': '1000ClickValencia/1.0 contact@1000clic.fr' }, next: { revalidate: 86400 } }
+      { headers: { 'User-Agent': '1000ClickBelgique/1.0 contact@1000clic.fr' }, next: { revalidate: 86400 } }
     )
     if (!res.ok) return CITY_COORDS['bruxelles']
     const data = await res.json()

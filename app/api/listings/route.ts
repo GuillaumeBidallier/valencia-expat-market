@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
   const settings = await prisma.siteSettings.findUnique({ where: { id: 'default' } })
   const autoPublish = settings?.autoPublish ?? true
 
-  const fallback = neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']
+  const fallback = neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Bruxelles-Ville']
   const lat = parsed.data.lat ?? fallback.lat
   const lng = parsed.data.lng ?? fallback.lng
 

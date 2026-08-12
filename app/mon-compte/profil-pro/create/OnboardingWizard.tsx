@@ -149,7 +149,7 @@ function Step1({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
           type="text"
           value={data.city}
           onChange={e => onChange('city', e.target.value)}
-          placeholder="Valencia"
+          placeholder="Bruxelles"
           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-primary transition-colors"
           required
         />
@@ -163,7 +163,7 @@ function Step1({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
             value={zoneInput}
             onChange={e => setZoneInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addZone() } }}
-            placeholder="Ex : Alicante, Murcie…"
+            placeholder="Ex : Liège, Namur…"
             className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-primary transition-colors"
           />
           <button type="button" onClick={addZone} className="px-4 py-3 bg-orange-soft text-orange-primary rounded-xl text-sm font-bold hover:bg-orange-primary hover:text-white transition-colors">

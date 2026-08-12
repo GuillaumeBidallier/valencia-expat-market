@@ -58,7 +58,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   }
 
   const coords = parsed.data.neighborhood
-    ? neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Valencia']
+    ? neighborhoodCoords[parsed.data.neighborhood] ?? neighborhoodCoords['Bruxelles-Ville']
     : undefined
   const { attributes, ...rest } = parsed.data
   const updated = await prisma.listing.update({

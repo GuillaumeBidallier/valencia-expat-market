@@ -518,7 +518,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
                     id="pro-zones"
                     value={form.zones}
                     onChange={e => setForm(f => ({ ...f, zones: e.target.value }))}
-                    placeholder="Valencia, Barcelone, Alicante..."
+                    placeholder="Bruxelles, Liège, Anvers..."
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 focus:border-orange-primary transition-all"
                   />
                 </div>
