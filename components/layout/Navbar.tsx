@@ -13,23 +13,31 @@ import { useCategories } from '@/hooks/useCategories'
 import { usePageTheme } from '@/context/PageThemeContext'
 import type { CategoryTree } from '@/types'
 
-function isUnderVehicules(categories: CategoryTree[], slug: string): boolean {
+function isUnderCategoryRoot(categories: CategoryTree[], slug: string, rootSlug: string): boolean {
   if (!slug) return false
-  if (slug === 'vehicules') return true
-  const root = categories.find(c => c.slug === 'vehicules')
+  if (slug === rootSlug) return true
+  const root = categories.find(c => c.slug === rootSlug)
   if (!root) return false
   const walk = (nodes: CategoryTree[]): boolean => nodes.some(n => n.slug === slug || walk(n.children))
   return walk(root.children)
 }
 
+interface CategoryThemeFlags {
+  vehicules: boolean
+  immobilier: boolean
+}
+
 // Isolated in its own Suspense boundary — useSearchParams() would otherwise force
 // the whole (globally-mounted) Navbar subtree to opt out of static rendering.
-function VehiculesThemeWatcher({ onChange }: { onChange: (v: boolean) => void }) {
+function CategoryThemeWatcher({ onChange }: { onChange: (v: CategoryThemeFlags) => void }) {
   const searchParams = useSearchParams()
   const categories = useCategories()
   const cat = searchParams.get('cat') ?? ''
   useEffect(() => {
-    onChange(isUnderVehicules(categories, cat))
+    onChange({
+      vehicules: isUnderCategoryRoot(categories, cat, 'vehicules'),
+      immobilier: isUnderCategoryRoot(categories, cat, 'immobilier'),
+    })
   }, [cat, categories, onChange])
   return null
 }
@@ -114,12 +122,13 @@ export default function Navbar() {
   const isAnnonces = pathname === '/annonces'
   const unreadCount = useUnreadCount(isAuthenticated)
   const t = useTranslations('Nav')
-  const [rawVehiculesTheme, setRawVehiculesTheme] = useState(false)
-  const onVehiculesThemeChange = useCallback((v: boolean) => setRawVehiculesTheme(v), [])
+  const [rawCategoryTheme, setRawCategoryTheme] = useState<CategoryThemeFlags>({ vehicules: false, immobilier: false })
+  const onCategoryThemeChange = useCallback((v: CategoryThemeFlags) => setRawCategoryTheme(v), [])
   const { vehiculesPage } = usePageTheme()
   // Ignore any stale watcher value once the user has navigated off /annonces.
   // vehiculesPage covers routes with no `cat` query param to watch (e.g. listing detail pages).
-  const vehiculesTheme = (isAnnonces && rawVehiculesTheme) || vehiculesPage
+  const vehiculesTheme = (isAnnonces && rawCategoryTheme.vehicules) || vehiculesPage
+  const immoTheme = isAnnonces && rawCategoryTheme.immobilier
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -143,7 +152,7 @@ export default function Navbar() {
     }`}>
       {isAnnonces && (
         <Suspense fallback={null}>
-          <VehiculesThemeWatcher onChange={onVehiculesThemeChange} />
+          <CategoryThemeWatcher onChange={onCategoryThemeChange} />
         </Suspense>
       )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -159,6 +168,14 @@ export default function Navbar() {
                   className="absolute top-1/2 -translate-y-1/2 -right-4 rotate-[-8deg] bg-red-600 text-white text-[9px] font-black uppercase tracking-wide px-1.5 py-0.5 rounded-md shadow-sm ring-1 ring-white/20 z-10"
                 >
                   Auto
+                </span>
+              )}
+              {immoTheme && (
+                <span
+                  aria-hidden="true"
+                  className="absolute top-1/2 -translate-y-1/2 -right-4 rotate-[-8deg] bg-orange-primary text-white text-[9px] font-black uppercase tracking-wide px-1.5 py-0.5 rounded-md shadow-sm ring-1 ring-white/20 z-10"
+                >
+                  Immo
                 </span>
               )}
             </Link>
