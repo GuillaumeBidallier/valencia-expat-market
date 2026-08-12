@@ -1,12 +1,11 @@
 'use client'
-import { useState, useRef, useTransition } from 'react'
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import {
   Image as ImageIcon, Plus, Trash2, GripVertical, Save,
   Megaphone, Mail, ShieldAlert, CheckCircle2, AlertTriangle,
-  Loader2, Upload, ExternalLink, ToggleLeft, ToggleRight,
-  Database, RotateCcw, Download,
+  Loader2, Upload, ExternalLink, Database, RotateCcw, Download,
+  Settings2, X, Info,
 } from 'lucide-react'
-import Image from 'next/image'
 
 interface HeroSlide { src: string; alt: string }
 
@@ -26,7 +25,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-primary ${checked ? 'bg-indigo-primary' : 'bg-gray-200'}`}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-primary shrink-0 ${checked ? 'bg-indigo-primary' : 'bg-gray-200'}`}
     >
       <span
         className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`}
@@ -35,13 +34,52 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
   )
 }
 
+function SectionCard({
+  icon, iconBg, iconColor, title, sub, right, children,
+}: {
+  icon: React.ReactNode; iconBg: string; iconColor: string; title: string; sub: string
+  right?: React.ReactNode; children?: React.ReactNode
+}) {
+  return (
+    <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${iconBg}`}>
+            <span className={iconColor}>{icon}</span>
+          </div>
+          <div className="min-w-0">
+            <h2 className="font-black text-navy text-sm">{title}</h2>
+            <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+          </div>
+        </div>
+        {right}
+      </div>
+      {children && <div className="p-6">{children}</div>}
+    </section>
+  )
+}
+
+const TABS = [
+  { key: 'general',     label: 'Général',          icon: <Settings2 size={16} /> },
+  { key: 'apparence',   label: 'Apparence',         icon: <ImageIcon size={16} /> },
+  { key: 'annonce',     label: 'Bannière du site',  icon: <Megaphone size={16} /> },
+  { key: 'maintenance', label: 'Maintenance',       icon: <ShieldAlert size={16} /> },
+  { key: 'database',    label: 'Base de données',   icon: <Database size={16} /> },
+] as const
+
+type TabKey = typeof TABS[number]['key']
+
 export default function SettingsClient({ initialSettings }: { initialSettings: InitialSettings }) {
+  const [activeTab, setActiveTab] = useState<TabKey>('general')
+
   const [autoPublish, setAutoPublish]             = useState(initialSettings.autoPublish)
   const [heroImages, setHeroImages]               = useState<HeroSlide[]>(initialSettings.heroImages)
   const [announcementText, setAnnouncementText]   = useState(initialSettings.announcementText)
   const [announcementEnabled, setAnnouncementEnabled] = useState(initialSettings.announcementEnabled)
   const [contactEmail, setContactEmail]           = useState(initialSettings.contactEmail)
   const [maintenanceMode, setMaintenanceMode]     = useState(initialSettings.maintenanceMode)
+
+  const [savedSettings, setSavedSettings] = useState(initialSettings)
 
   const [newSrc, setNewSrc]   = useState('')
   const [newAlt, setNewAlt]   = useState('')
@@ -64,6 +102,19 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
   const [resettingListings, setResettingListings]     = useState(false)
   const [resetListingsResult, setResetListingsResult] = useState<{ count: number } | null>(null)
   const [resetListingsError, setResetListingsError]   = useState('')
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (window.location.hash === '#maintenance') setActiveTab('maintenance')
+    }, 0)
+    return () => clearTimeout(t)
+  }, [])
+
+  const current = useMemo(
+    () => ({ autoPublish, heroImages, announcementText, announcementEnabled, contactEmail, maintenanceMode }),
+    [autoPublish, heroImages, announcementText, announcementEnabled, contactEmail, maintenanceMode],
+  )
+  const isDirty = useMemo(() => JSON.stringify(current) !== JSON.stringify(savedSettings), [current, savedSettings])
 
   async function handleExport() {
     setExporting(true)
@@ -176,19 +227,13 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
         const res = await fetch('/api/admin/settings', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            autoPublish,
-            heroImages,
-            announcementText,
-            announcementEnabled,
-            contactEmail,
-            maintenanceMode,
-          }),
+          body: JSON.stringify(current),
         })
         if (!res.ok) {
           const j = await res.json()
           throw new Error(j.error ?? 'Erreur')
         }
+        setSavedSettings(current)
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
       } catch (err) {
@@ -198,389 +243,395 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col sm:flex-row gap-6">
 
-      {/* ── Images Hero ─────────────────────────────────────── */}
-      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-indigo-soft flex items-center justify-center">
-            <ImageIcon size={18} className="text-indigo-primary" />
-          </div>
-          <div>
-            <h2 className="font-black text-navy text-sm">Images du carrousel hero</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Glissez pour réordonner. Ces images s&apos;affichent sur la page d&apos;accueil.</p>
-          </div>
-        </div>
+      {/* ── Tab nav ─────────────────────────────────────────── */}
+      <nav className="flex sm:flex-col gap-1 sm:w-56 shrink-0 overflow-x-auto sm:overflow-visible pb-1 sm:pb-0 sm:sticky sm:top-6 sm:self-start">
+        {TABS.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors shrink-0 sm:shrink ${
+              activeTab === tab.key
+                ? 'bg-navy text-white shadow-sm'
+                : 'text-gray-500 hover:bg-white hover:text-navy'
+            }`}
+          >
+            {tab.icon}
+            {tab.label}
+            {tab.key === 'maintenance' && maintenanceMode && (
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+            )}
+          </button>
+        ))}
+      </nav>
 
-        <div className="p-6 space-y-3">
-          {heroImages.length === 0 && (
-            <p className="text-sm text-gray-400 italic py-4 text-center border-2 border-dashed border-gray-100 rounded-xl">
-              Aucune image — les images par défaut seront utilisées.
+      {/* ── Content ─────────────────────────────────────────── */}
+      <div className="flex-1 min-w-0 space-y-5">
+
+        {/* Save bar */}
+        <div className="flex items-center justify-end gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3">
+          {saveError && <p className="text-sm text-red-500">{saveError}</p>}
+          {saved && (
+            <p className="text-sm text-emerald-600 flex items-center gap-1.5 font-medium">
+              <CheckCircle2 size={15} /> Paramètres sauvegardés
             </p>
           )}
-
-          {heroImages.map((slide, i) => (
-            <div
-              key={`${slide.src}-${i}`}
-              draggable
-              onDragStart={() => onDragStart(i)}
-              onDragOver={e => onDragOver(e, i)}
-              onDragEnd={onDragEnd}
-              className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 group cursor-grab active:cursor-grabbing"
-            >
-              <GripVertical size={16} className="text-gray-300 shrink-0" />
-              <div className="relative w-16 h-10 rounded-lg overflow-hidden shrink-0 bg-gray-200">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={slide.src} alt={slide.alt} className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-navy truncate">{slide.alt || 'Sans titre'}</p>
-                <p className="text-[10px] text-gray-400 truncate">{slide.src}</p>
-              </div>
-              <a
-                href={slide.src}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-indigo-primary transition-colors shrink-0"
-                title="Voir l'image"
-              >
-                <ExternalLink size={14} />
-              </a>
-              <button
-                onClick={() => removeSlide(i)}
-                className="text-gray-300 hover:text-red-500 transition-colors shrink-0"
-                title="Supprimer"
-              >
-                <Trash2 size={14} />
-              </button>
-            </div>
-          ))}
-
-          {/* Add by URL */}
-          <div className="border-t border-gray-100 pt-4 mt-4 space-y-3">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Ajouter une image</p>
-            <div className="flex gap-2">
-              <input
-                type="url"
-                placeholder="https://... (URL de l'image)"
-                value={newSrc}
-                onChange={e => setNewSrc(e.target.value)}
-                className="flex-1 text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
-              />
-              <input
-                type="text"
-                placeholder="Texte alternatif"
-                value={newAlt}
-                onChange={e => setNewAlt(e.target.value)}
-                className="w-48 text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
-              />
-              <button
-                onClick={addSlide}
-                disabled={!newSrc.trim()}
-                className="flex items-center gap-1.5 bg-indigo-primary text-white text-sm font-semibold px-4 rounded-xl hover:bg-indigo-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <Plus size={15} />
-                Ajouter
-              </button>
-            </div>
-
-            {/* Upload from computer */}
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-gray-100" />
-              <span className="text-xs text-gray-400">ou</span>
-              <div className="h-px flex-1 bg-gray-100" />
-            </div>
-            <div>
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/avif"
-                className="hidden"
-                onChange={handleFileUpload}
-              />
-              <button
-                onClick={() => fileRef.current?.click()}
-                disabled={uploading}
-                className="flex items-center gap-2 border border-dashed border-gray-300 text-sm text-gray-500 font-medium px-4 py-2.5 rounded-xl hover:border-indigo-primary hover:text-indigo-primary transition-colors disabled:opacity-50"
-              >
-                {uploading ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
-                {uploading ? 'Upload en cours...' : 'Télécharger depuis votre ordinateur'}
-              </button>
-              {uploadError && (
-                <p className="text-xs text-red-500 mt-1">{uploadError}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Bannière d'annonce ──────────────────────────────── */}
-      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
-              <Megaphone size={18} className="text-amber-500" />
-            </div>
-            <div>
-              <h2 className="font-black text-navy text-sm">Bannière d&apos;annonce</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Message affiché en haut du site pour tous les visiteurs.</p>
-            </div>
-          </div>
-          <Toggle checked={announcementEnabled} onChange={setAnnouncementEnabled} />
-        </div>
-        <div className="p-6">
-          <textarea
-            rows={2}
-            placeholder="Ex : Le site sera en maintenance samedi de 22h à 23h. Merci de votre compréhension."
-            value={announcementText}
-            onChange={e => setAnnouncementText(e.target.value)}
-            disabled={!announcementEnabled}
-            className="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 disabled:opacity-40 disabled:bg-gray-50"
-          />
-          {announcementEnabled && (
-            <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
-              <strong>Aperçu :</strong> {announcementText || '(vide)'}
-            </div>
+          {!saved && !saveError && isDirty && (
+            <p className="text-sm text-amber-600 flex items-center gap-1.5 font-medium">
+              <Info size={15} /> Modifications non enregistrées
+            </p>
           )}
-        </div>
-      </section>
-
-      {/* ── Publication auto ────────────────────────────────── */}
-      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <CheckCircle2 size={18} className="text-emerald-500" />
-            </div>
-            <div>
-              <h2 className="font-black text-navy text-sm">Publication automatique</h2>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {autoPublish
-                  ? 'Les nouvelles annonces sont publiées immédiatement.'
-                  : 'Les nouvelles annonces passent en modération avant publication.'}
-              </p>
-            </div>
-          </div>
-          <Toggle checked={autoPublish} onChange={setAutoPublish} />
-        </div>
-      </section>
-
-      {/* ── Email de contact ─────────────────────────────────── */}
-      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
-            <Mail size={18} className="text-blue-500" />
-          </div>
-          <div>
-            <h2 className="font-black text-navy text-sm">Email de contact</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Adresse affichée sur les pages légales et contact.</p>
-          </div>
-        </div>
-        <div className="p-6">
-          <input
-            type="email"
-            placeholder="contact@1000click.es"
-            value={contactEmail}
-            onChange={e => setContactEmail(e.target.value)}
-            className="w-full max-w-md text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
-          />
-        </div>
-      </section>
-
-      {/* ── Mode maintenance ─────────────────────────────────── */}
-      <section id="maintenance" className={`bg-white rounded-xl border shadow-sm overflow-hidden scroll-mt-6 ${maintenanceMode ? 'border-red-200' : 'border-gray-100'}`}>
-        <div className="px-6 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${maintenanceMode ? 'bg-red-50' : 'bg-gray-50'}`}>
-              <ShieldAlert size={18} className={maintenanceMode ? 'text-red-500' : 'text-gray-400'} />
-            </div>
-            <div>
-              <h2 className="font-black text-navy text-sm">Mode maintenance</h2>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {maintenanceMode
-                  ? 'Le site affiche une page de maintenance pour les visiteurs.'
-                  : 'Le site est accessible normalement.'}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {maintenanceMode && (
-              <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">ACTIF</span>
-            )}
-            <Toggle checked={maintenanceMode} onChange={setMaintenanceMode} />
-          </div>
-        </div>
-        {maintenanceMode && (
-          <div className="mx-6 mb-5 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700 flex items-center gap-2">
-            <AlertTriangle size={15} className="shrink-0" />
-            Attention : le site sera inaccessible aux visiteurs tant que ce mode est activé.
-          </div>
-        )}
-      </section>
-
-      {/* ── Outils base de données ───────────────────────────── */}
-      <section className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-gray-50 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center">
-            <Database size={18} className="text-gray-400" />
-          </div>
-          <div>
-            <h2 className="font-black text-navy text-sm">Outils base de données</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Export et réinitialisation des données — actions irréversibles</p>
-          </div>
+          <button
+            onClick={save}
+            disabled={saving || !isDirty}
+            className="flex items-center gap-2 bg-orange-primary text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-orange-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
+            {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+          </button>
         </div>
 
-        <div className="px-6 py-5 flex flex-col gap-4">
-
-          {/* Export */}
-          <div className="flex items-center justify-between gap-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
-            <div>
-              <p className="text-sm font-bold text-navy">Exporter la base de données</p>
-              <p className="text-xs text-gray-400 mt-0.5">Télécharge un fichier JSON complet (utilisateurs sans mot de passe, annonces, pros, messages…)</p>
-            </div>
-            <button
-              onClick={handleExport}
-              disabled={exporting}
-              className="flex items-center gap-2 shrink-0 bg-navy text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-navy/90 transition-colors disabled:opacity-60"
+        {/* ── Général ─────────────────────────────────────────── */}
+        {activeTab === 'general' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <SectionCard
+              icon={<CheckCircle2 size={18} />} iconBg="bg-emerald-50" iconColor="text-emerald-500"
+              title="Publication automatique"
+              sub={autoPublish ? 'Les nouvelles annonces sont publiées immédiatement.' : 'Les nouvelles annonces passent en modération avant publication.'}
+              right={<Toggle checked={autoPublish} onChange={setAutoPublish} />}
+            />
+            <SectionCard
+              icon={<Mail size={18} />} iconBg="bg-blue-50" iconColor="text-blue-500"
+              title="Email de contact"
+              sub="Adresse affichée sur les pages légales et contact."
             >
-              {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-              {exporting ? 'Export…' : 'Exporter'}
-            </button>
+              <input
+                type="email"
+                placeholder="contact@1000click.com"
+                value={contactEmail}
+                onChange={e => setContactEmail(e.target.value)}
+                className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
+              />
+            </SectionCard>
           </div>
+        )}
 
-          {/* Reset professionals */}
-          <div className={`rounded-xl border px-4 py-3 ${resetStep === 'confirm' ? 'border-red-200 bg-red-50' : 'border-gray-100 bg-gray-50'}`}>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-bold text-navy">Réinitialiser les comptes professionnels</p>
-                <p className="text-xs text-gray-400 mt-0.5">Supprime <strong>tous</strong> les profils Pro, leurs clics et cartes de visite. Les comptes utilisateurs associés sont conservés.</p>
-              </div>
-              {resetStep === 'idle' ? (
-                <button
-                  onClick={() => { setResetStep('confirm'); setResetResult(null); setResetError('') }}
-                  disabled={resetting}
-                  className="flex items-center gap-2 shrink-0 bg-red-500 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60"
-                >
-                  <RotateCcw size={14} />
-                  Réinitialiser
-                </button>
-              ) : (
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => setResetStep('idle')}
-                    className="text-xs font-bold text-gray-500 px-3 py-2 rounded-xl border border-gray-200 hover:bg-white transition-colors"
+        {/* ── Apparence (hero carousel) ─────────────────────────── */}
+        {activeTab === 'apparence' && (
+          <SectionCard
+            icon={<ImageIcon size={18} />} iconBg="bg-indigo-soft" iconColor="text-indigo-primary"
+            title="Images du carrousel hero"
+            sub="Glissez pour réordonner. Ces images s'affichent sur la page d'accueil."
+          >
+            {heroImages.length === 0 ? (
+              <p className="text-sm text-gray-400 italic py-8 text-center border-2 border-dashed border-gray-100 rounded-xl mb-5">
+                Aucune image — les images par défaut seront utilisées.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+                {heroImages.map((slide, i) => (
+                  <div
+                    key={`${slide.src}-${i}`}
+                    draggable
+                    onDragStart={() => onDragStart(i)}
+                    onDragOver={e => onDragOver(e, i)}
+                    onDragEnd={onDragEnd}
+                    className="group relative rounded-xl overflow-hidden bg-gray-100 border border-gray-100 cursor-grab active:cursor-grabbing"
                   >
-                    Annuler
-                  </button>
+                    <div className="aspect-video w-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={slide.src} alt={slide.alt} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
+                    <div className="absolute top-2 left-2 w-6 h-6 rounded-lg bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <GripVertical size={13} className="text-gray-500" />
+                    </div>
+                    <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <a
+                        href={slide.src} target="_blank" rel="noopener noreferrer"
+                        className="w-6 h-6 rounded-lg bg-white/90 hover:bg-white flex items-center justify-center text-gray-600"
+                        title="Voir l'image"
+                      >
+                        <ExternalLink size={12} />
+                      </a>
+                      <button
+                        onClick={() => removeSlide(i)}
+                        className="w-6 h-6 rounded-lg bg-white/90 hover:bg-red-500 hover:text-white flex items-center justify-center text-red-500"
+                        title="Supprimer"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                    <p className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent text-white text-[11px] font-medium px-2 py-1.5 truncate">
+                      {slide.alt || 'Sans titre'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="border-t border-gray-100 pt-5 space-y-3">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Ajouter une image</p>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="url"
+                  placeholder="https://... (URL de l'image)"
+                  value={newSrc}
+                  onChange={e => setNewSrc(e.target.value)}
+                  className="flex-1 text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
+                />
+                <input
+                  type="text"
+                  placeholder="Texte alternatif"
+                  value={newAlt}
+                  onChange={e => setNewAlt(e.target.value)}
+                  className="sm:w-56 text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
+                />
+                <button
+                  onClick={addSlide}
+                  disabled={!newSrc.trim()}
+                  className="flex items-center justify-center gap-1.5 bg-indigo-primary text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-indigo-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Plus size={15} />
+                  Ajouter
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3 pt-1">
+                <div className="h-px flex-1 bg-gray-100" />
+                <span className="text-xs text-gray-400">ou</span>
+                <div className="h-px flex-1 bg-gray-100" />
+              </div>
+
+              <div>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                  className="w-full flex items-center justify-center gap-2 border border-dashed border-gray-300 text-sm text-gray-500 font-medium px-4 py-3 rounded-xl hover:border-indigo-primary hover:text-indigo-primary transition-colors disabled:opacity-50"
+                >
+                  {uploading ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
+                  {uploading ? 'Upload en cours...' : 'Télécharger depuis votre ordinateur'}
+                </button>
+                {uploadError && <p className="text-xs text-red-500 mt-1">{uploadError}</p>}
+              </div>
+            </div>
+          </SectionCard>
+        )}
+
+        {/* ── Bannière d'annonce ─────────────────────────────────── */}
+        {activeTab === 'annonce' && (
+          <SectionCard
+            icon={<Megaphone size={18} />} iconBg="bg-amber-50" iconColor="text-amber-500"
+            title="Bannière d'annonce"
+            sub="Message affiché en haut du site pour tous les visiteurs."
+            right={<Toggle checked={announcementEnabled} onChange={setAnnouncementEnabled} />}
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Message</label>
+                <textarea
+                  rows={5}
+                  placeholder="Ex : Le site sera en maintenance samedi de 22h à 23h. Merci de votre compréhension."
+                  value={announcementText}
+                  onChange={e => setAnnouncementText(e.target.value)}
+                  disabled={!announcementEnabled}
+                  className="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 disabled:opacity-40 disabled:bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Aperçu</label>
+                <div className={`rounded-xl border overflow-hidden ${announcementEnabled ? 'border-amber-200' : 'border-gray-100 opacity-50'}`}>
+                  <div className="bg-amber-400 text-navy text-sm font-semibold px-4 py-2.5 flex items-center justify-between gap-3">
+                    <span className="truncate">{announcementText || 'Votre message apparaîtra ici…'}</span>
+                    <X size={14} className="shrink-0" />
+                  </div>
+                  <div className="bg-white px-4 py-6 text-center text-xs text-gray-300">Reste du site…</div>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">
+                  {announcementEnabled ? 'Cette bannière est actuellement visible sur le site.' : 'La bannière est désactivée — activez-la pour la publier.'}
+                </p>
+              </div>
+            </div>
+          </SectionCard>
+        )}
+
+        {/* ── Maintenance ─────────────────────────────────────────── */}
+        {activeTab === 'maintenance' && (
+          <div id="maintenance" className="scroll-mt-6">
+            <SectionCard
+              icon={<ShieldAlert size={18} />}
+              iconBg={maintenanceMode ? 'bg-red-50' : 'bg-gray-50'}
+              iconColor={maintenanceMode ? 'text-red-500' : 'text-gray-400'}
+              title="Mode maintenance"
+              sub={maintenanceMode ? 'Le site affiche une page de maintenance pour les visiteurs.' : 'Le site est accessible normalement.'}
+              right={
+                <div className="flex items-center gap-3">
+                  {maintenanceMode && (
+                    <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">ACTIF</span>
+                  )}
+                  <Toggle checked={maintenanceMode} onChange={setMaintenanceMode} />
+                </div>
+              }
+            >
+              <div className={`rounded-xl border px-4 py-3 text-sm flex items-center gap-2.5 ${
+                maintenanceMode ? 'bg-red-50 border-red-200 text-red-700' : 'bg-gray-50 border-gray-100 text-gray-400'
+              }`}>
+                <AlertTriangle size={15} className="shrink-0" />
+                {maintenanceMode
+                  ? 'Attention : le site est actuellement inaccessible aux visiteurs.'
+                  : 'Activer ce mode rendra le site inaccessible aux visiteurs jusqu\'à désactivation.'}
+              </div>
+            </SectionCard>
+          </div>
+        )}
+
+        {/* ── Base de données ─────────────────────────────────────── */}
+        {activeTab === 'database' && (
+          <SectionCard
+            icon={<Database size={18} />} iconBg="bg-gray-50" iconColor="text-gray-400"
+            title="Outils base de données"
+            sub="Export et réinitialisation des données — actions irréversibles."
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+              {/* Export */}
+              <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 flex flex-col gap-3">
+                <div className="w-9 h-9 rounded-xl bg-navy/5 flex items-center justify-center">
+                  <Download size={16} className="text-navy" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-navy">Exporter la base de données</p>
+                  <p className="text-xs text-gray-400 mt-1">Télécharge un fichier JSON complet (utilisateurs sans mot de passe, annonces, pros, messages…)</p>
+                </div>
+                <button
+                  onClick={handleExport}
+                  disabled={exporting}
+                  className="mt-auto flex items-center justify-center gap-2 bg-navy text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-navy/90 transition-colors disabled:opacity-60"
+                >
+                  {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+                  {exporting ? 'Export…' : 'Exporter'}
+                </button>
+              </div>
+
+              {/* Reset professionals */}
+              <div className={`rounded-xl border p-4 flex flex-col gap-3 ${resetStep === 'confirm' ? 'border-red-200 bg-red-50' : 'border-red-100 bg-red-50/40'}`}>
+                <div className="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center">
+                  <RotateCcw size={16} className="text-red-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-navy">Réinitialiser les professionnels</p>
+                  <p className="text-xs text-gray-400 mt-1">Supprime <strong>tous</strong> les profils Pro, leurs clics et cartes de visite. Comptes utilisateurs conservés.</p>
+                </div>
+                {resetStep === 'idle' ? (
                   <button
-                    onClick={handleReset}
+                    onClick={() => { setResetStep('confirm'); setResetResult(null); setResetError('') }}
                     disabled={resetting}
-                    className="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-700 transition-colors disabled:opacity-60"
+                    className="mt-auto flex items-center justify-center gap-2 bg-red-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60"
                   >
-                    {resetting ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
-                    {resetting ? 'Suppression…' : 'Confirmer la suppression'}
+                    <RotateCcw size={14} />
+                    Réinitialiser
                   </button>
-                </div>
-              )}
-            </div>
-
-            {resetStep === 'confirm' && (
-              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
-                <AlertTriangle size={13} className="shrink-0" />
-                Cette action est irréversible. Tous les profils professionnels seront définitivement supprimés.
-              </p>
-            )}
-            {resetResult && (
-              <p className="mt-3 text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="shrink-0" />
-                {resetResult.count} profil{resetResult.count !== 1 ? 's' : ''} professionnel{resetResult.count !== 1 ? 's' : ''} supprimé{resetResult.count !== 1 ? 's' : ''} avec succès.
-              </p>
-            )}
-            {resetError && (
-              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
-                <AlertTriangle size={13} className="shrink-0" />
-                {resetError}
-              </p>
-            )}
-          </div>
-
-          {/* Reset listings */}
-          <div className={`rounded-xl border px-4 py-3 ${resetListingsStep === 'confirm' ? 'border-red-200 bg-red-50' : 'border-gray-100 bg-gray-50'}`}>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-bold text-navy">Réinitialiser les annonces</p>
-                <p className="text-xs text-gray-400 mt-0.5">Supprime <strong>toutes</strong> les annonces, leurs images, favoris, messages et signalements. Les comptes utilisateurs associés sont conservés.</p>
+                ) : (
+                  <div className="mt-auto space-y-2">
+                    <p className="text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                      <AlertTriangle size={12} className="shrink-0" /> Action irréversible.
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setResetStep('idle')}
+                        className="flex-1 text-xs font-bold text-gray-500 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+                      >
+                        Annuler
+                      </button>
+                      <button
+                        onClick={handleReset}
+                        disabled={resetting}
+                        className="flex-1 flex items-center justify-center gap-1.5 bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-700 transition-colors disabled:opacity-60"
+                      >
+                        {resetting ? <Loader2 size={13} className="animate-spin" /> : <AlertTriangle size={13} />}
+                        Confirmer
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {resetResult && (
+                  <p className="text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
+                    <CheckCircle2 size={13} className="shrink-0" />
+                    {resetResult.count} profil{resetResult.count !== 1 ? 's' : ''} supprimé{resetResult.count !== 1 ? 's' : ''}.
+                  </p>
+                )}
+                {resetError && (
+                  <p className="text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                    <AlertTriangle size={13} className="shrink-0" /> {resetError}
+                  </p>
+                )}
               </div>
-              {resetListingsStep === 'idle' ? (
-                <button
-                  onClick={() => { setResetListingsStep('confirm'); setResetListingsResult(null); setResetListingsError('') }}
-                  disabled={resettingListings}
-                  className="flex items-center gap-2 shrink-0 bg-red-500 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60"
-                >
-                  <RotateCcw size={14} />
-                  Réinitialiser
-                </button>
-              ) : (
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => setResetListingsStep('idle')}
-                    className="text-xs font-bold text-gray-500 px-3 py-2 rounded-xl border border-gray-200 hover:bg-white transition-colors"
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    onClick={handleResetListings}
-                    disabled={resettingListings}
-                    className="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-700 transition-colors disabled:opacity-60"
-                  >
-                    {resettingListings ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
-                    {resettingListings ? 'Suppression…' : 'Confirmer la suppression'}
-                  </button>
+
+              {/* Reset listings */}
+              <div className={`rounded-xl border p-4 flex flex-col gap-3 ${resetListingsStep === 'confirm' ? 'border-red-200 bg-red-50' : 'border-red-100 bg-red-50/40'}`}>
+                <div className="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center">
+                  <RotateCcw size={16} className="text-red-500" />
                 </div>
-              )}
+                <div>
+                  <p className="text-sm font-bold text-navy">Réinitialiser les annonces</p>
+                  <p className="text-xs text-gray-400 mt-1">Supprime <strong>toutes</strong> les annonces, images, favoris, messages et signalements. Comptes utilisateurs conservés.</p>
+                </div>
+                {resetListingsStep === 'idle' ? (
+                  <button
+                    onClick={() => { setResetListingsStep('confirm'); setResetListingsResult(null); setResetListingsError('') }}
+                    disabled={resettingListings}
+                    className="mt-auto flex items-center justify-center gap-2 bg-red-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60"
+                  >
+                    <RotateCcw size={14} />
+                    Réinitialiser
+                  </button>
+                ) : (
+                  <div className="mt-auto space-y-2">
+                    <p className="text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                      <AlertTriangle size={12} className="shrink-0" /> Action irréversible.
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setResetListingsStep('idle')}
+                        className="flex-1 text-xs font-bold text-gray-500 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+                      >
+                        Annuler
+                      </button>
+                      <button
+                        onClick={handleResetListings}
+                        disabled={resettingListings}
+                        className="flex-1 flex items-center justify-center gap-1.5 bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-700 transition-colors disabled:opacity-60"
+                      >
+                        {resettingListings ? <Loader2 size={13} className="animate-spin" /> : <AlertTriangle size={13} />}
+                        Confirmer
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {resetListingsResult && (
+                  <p className="text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
+                    <CheckCircle2 size={13} className="shrink-0" />
+                    {resetListingsResult.count} annonce{resetListingsResult.count !== 1 ? 's' : ''} supprimée{resetListingsResult.count !== 1 ? 's' : ''}.
+                  </p>
+                )}
+                {resetListingsError && (
+                  <p className="text-xs font-semibold text-red-600 flex items-center gap-1.5">
+                    <AlertTriangle size={13} className="shrink-0" /> {resetListingsError}
+                  </p>
+                )}
+              </div>
             </div>
-
-            {resetListingsStep === 'confirm' && (
-              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
-                <AlertTriangle size={13} className="shrink-0" />
-                Cette action est irréversible. Toutes les annonces seront définitivement supprimées.
-              </p>
-            )}
-            {resetListingsResult && (
-              <p className="mt-3 text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="shrink-0" />
-                {resetListingsResult.count} annonce{resetListingsResult.count !== 1 ? 's' : ''} supprimée{resetListingsResult.count !== 1 ? 's' : ''} avec succès.
-              </p>
-            )}
-            {resetListingsError && (
-              <p className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1.5">
-                <AlertTriangle size={13} className="shrink-0" />
-                {resetListingsError}
-              </p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Save button ──────────────────────────────────────── */}
-      <div className="flex items-center justify-end gap-3 pb-8">
-        {saveError && (
-          <p className="text-sm text-red-500">{saveError}</p>
+          </SectionCard>
         )}
-        {saved && (
-          <p className="text-sm text-emerald-600 flex items-center gap-1.5 font-medium">
-            <CheckCircle2 size={15} />
-            Paramètres sauvegardés
-          </p>
-        )}
-        <button
-          onClick={save}
-          disabled={saving}
-          className="flex items-center gap-2 bg-navy text-white text-sm font-bold px-6 py-3 rounded-xl hover:bg-navy/90 transition-colors disabled:opacity-60"
-        >
-          {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
-          {saving ? 'Sauvegarde...' : 'Sauvegarder les paramètres'}
-        </button>
+
       </div>
     </div>
   )

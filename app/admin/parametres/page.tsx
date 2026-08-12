@@ -31,20 +31,18 @@ export default async function AdminParametresPage() {
       </div>
 
       {/* ── Content ─────────────────────────────────────────── */}
-      <div className="max-w-3xl">
-        <SettingsClient
-          initialSettings={{
-            autoPublish: settings.autoPublish,
-            heroImages: Array.isArray(settings.heroImages)
-              ? (settings.heroImages as Array<{ src: string; alt: string }>)
-              : [],
-            announcementText: settings.announcementText ?? '',
-            announcementEnabled: settings.announcementEnabled,
-            contactEmail: settings.contactEmail ?? '',
-            maintenanceMode: settings.maintenanceMode,
-          }}
-        />
-      </div>
+      <SettingsClient
+        initialSettings={{
+          autoPublish: settings.autoPublish,
+          heroImages: Array.isArray(settings.heroImages)
+            ? (settings.heroImages as Array<{ src: string; alt: string }>)
+            : [],
+          announcementText: settings.announcementText ?? '',
+          announcementEnabled: settings.announcementEnabled,
+          contactEmail: settings.contactEmail ?? '',
+          maintenanceMode: settings.maintenanceMode,
+        }}
+      />
     </div>
   )
 }
