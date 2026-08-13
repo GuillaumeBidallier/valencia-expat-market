@@ -25,7 +25,7 @@ async function isMaintenanceModeOn(): Promise<boolean> {
   }
 }
 
-const DEFAULT_DOMAIN = '1000clic.fr'
+const DEFAULT_DOMAIN = '1000click.com'
 const SITE_CACHE_TTL_MS = 60_000
 let siteCache: { domains: Map<string, string>; expiresAt: number } | null = null
 

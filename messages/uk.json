@@ -48,7 +48,7 @@
   },
   "Auth": {
     "login_title": "Увійти",
-    "demo_hint": "Демо акаунт: demo@1000clic.fr / demo1234",
+    "demo_hint": "Демо акаунт: demo@1000click.com / demo1234",
     "email": "Електронна пошта",
     "password": "Пароль",
     "forgot": "Забули пароль?",

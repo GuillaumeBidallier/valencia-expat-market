@@ -48,7 +48,7 @@
   },
   "Auth": {
     "login_title": "Se connecter",
-    "demo_hint": "Compte démo : demo@1000clic.fr / demo1234",
+    "demo_hint": "Compte démo : demo@1000click.com / demo1234",
     "email": "Adresse e-mail",
     "password": "Mot de passe",
     "forgot": "Mot de passe oublié ?",

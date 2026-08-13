@@ -17,8 +17,8 @@ export async function POST(req: Request) {
         currency: 'eur',
         unit_amount: PHOTO_UPGRADE_PRICE_CENTS,
         product_data: {
-          name: '3 photos supplémentaires',
-          description: 'Ajoutez jusqu\'à 3 photos de plus à votre annonce (6 au total)',
+          name: '9 photos supplémentaires',
+          description: 'Ajoutez jusqu\'à 9 photos de plus à votre annonce (12 au total)',
         },
       },
       quantity: 1,

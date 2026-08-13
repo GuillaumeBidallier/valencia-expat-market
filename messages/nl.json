@@ -48,7 +48,7 @@
   },
   "Auth": {
     "login_title": "Inloggen",
-    "demo_hint": "Demo-account: demo@1000clic.fr / demo1234",
+    "demo_hint": "Demo-account: demo@1000click.com / demo1234",
     "email": "E-mailadres",
     "password": "Wachtwoord",
     "forgot": "Wachtwoord vergeten?",
