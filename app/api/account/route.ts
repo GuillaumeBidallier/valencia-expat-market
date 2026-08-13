@@ -30,7 +30,7 @@ export async function DELETE() {
     where: { id: userId },
     data: {
       name: 'Utilisateur supprimé',
-      email: `deleted-${userId}@deleted.1000clic.fr`,
+      email: `deleted-${userId}@deleted.1000click.com`,
       passwordHash: `deleted-${Math.random().toString(36).slice(2)}`,
       blocked: true,
     },

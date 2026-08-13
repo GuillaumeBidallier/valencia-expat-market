@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 
-const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
 
 export default function robots(): MetadataRoute.Robots {
   return {

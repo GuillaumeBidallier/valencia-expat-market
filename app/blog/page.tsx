@@ -5,7 +5,7 @@ import { getTranslations, getLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { Clock, ArrowRight } from 'lucide-react'
 
-const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
 
 export const metadata: Metadata = {
   title: 'Blog — 1000Click',

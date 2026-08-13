@@ -4,7 +4,7 @@ import { auth } from '@/auth'
 import { z } from 'zod'
 import { neighborhoodCoords } from '@/lib/neighborhoods'
 import { checkFirewall } from '@/lib/content-firewall'
-import { sendAdminNewListingEmail } from '@/lib/email'
+import { sendAdminNewListingEmail, sendListingApprovedEmail, sendListingSubmittedEmail } from '@/lib/email'
 import { getCurrentSiteId } from '@/lib/site'
 
 export async function GET(req: NextRequest) {
@@ -109,6 +109,23 @@ export async function POST(req: NextRequest) {
       userName: submitter.name,
       userEmail: submitter.email,
     }).catch(() => {})
+
+    // Confirm to the submitter: either it's live already (auto-publish) or it's pending review
+    if (autoPublish) {
+      const APP_URL = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
+      sendListingApprovedEmail({
+        to: submitter.email,
+        name: submitter.name,
+        listingTitle: listing.title,
+        listingUrl: `${APP_URL}/annonces/${listing.id}`,
+      }).catch(() => {})
+    } else {
+      sendListingSubmittedEmail({
+        to: submitter.email,
+        name: submitter.name,
+        listingTitle: listing.title,
+      }).catch(() => {})
+    }
   }
 
   return NextResponse.json({ ...listing, pendingReview: !autoPublish }, { status: 201 })

@@ -69,7 +69,7 @@ export default async function MentionsLegalesPage() {
                 <h2 className="text-lg font-black text-navy">Éditeur du site</h2>
               </div>
               <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
-                <p>Le site <strong className="text-navy">1000Click</strong> (<span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">1000clic.fr</span>) est édité par :</p>
+                <p>Le site <strong className="text-navy">1000Click</strong> (<span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">1000click.com</span>) est édité par :</p>
                 <div className="bg-gray-50 rounded-xl p-4 space-y-1.5">
                   <p><strong className="text-navy">Dénomination :</strong> 1000Click</p>
                   <p><strong className="text-navy">Nature :</strong> Plateforme communautaire de petites annonces entre particuliers francophones en Belgique</p>

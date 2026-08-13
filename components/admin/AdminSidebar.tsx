@@ -82,7 +82,7 @@ export default function AdminSidebar({ collapsed, onToggle }: { collapsed: boole
               Notre équipe est disponible pour vous accompagner.
             </p>
             <a
-              href="mailto:contact@1000clic.fr"
+              href="mailto:contact@1000click.com"
               className="block bg-white border border-gray-200 rounded-lg py-2 text-xs font-semibold text-navy hover:border-orange-primary hover:text-orange-primary transition-colors"
             >
               Contacter le support

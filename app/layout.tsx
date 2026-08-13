@@ -20,7 +20,7 @@ const nunito = Nunito({
   variable: '--font-nunito',
 })
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com'
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 
-const FALLBACK = process.env.ADMIN_EMAIL ?? 'contact@1000clic.fr'
+const FALLBACK = process.env.ADMIN_EMAIL ?? 'contact@1000click.com'
 
 /**
  * Returns the platform contact email from SiteSettings.

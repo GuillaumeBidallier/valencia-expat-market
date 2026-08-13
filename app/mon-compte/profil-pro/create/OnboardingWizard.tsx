@@ -124,7 +124,7 @@ function Step1({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
         />
         {slug && (
           <p className="text-xs text-gray-400 mt-1.5">
-            <span className="text-gray-300">1000clic.fr/professionnels/</span>
+            <span className="text-gray-300">1000click.com/professionnels/</span>
             <span className="text-navy font-medium">{slug}</span>
           </p>
         )}

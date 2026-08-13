@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 const FROM = process.env.RESEND_FROM_EMAIL ?? '1000Click <onboarding@resend.dev>'
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://valencia-expat-market.vercel.app'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com'
 
 // The Resend SDK resolves (doesn't throw) on API-level failures like an unverified
 // sending domain — it returns { data: null, error }. Every caller fires these functions
@@ -51,7 +51,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string; name: string 
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000click.com</a>
           </p>
         </td></tr>
       </table>
@@ -98,7 +98,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: { to: strin
             Si vous n'avez pas demandé cette réinitialisation, ignorez cet email. Votre mot de passe restera inchangé.
           </p>
           <p style="margin:32px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000click.com</a>
           </p>
         </td></tr>
       </table>
@@ -199,7 +199,7 @@ export async function sendListingApprovedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000click.com</a>
           </p>
         </td></tr>
       </table>
@@ -252,7 +252,54 @@ export async function sendListingRejectedEmail({
             </a>
           </div>
           <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
-            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000clic.fr</a>
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000click.com</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  }))
+}
+
+// ── Listing submitted (pending moderation) confirmation ────
+export async function sendListingSubmittedEmail({
+  to, name, listingTitle,
+}: {
+  to: string; name: string; listingTitle: string
+}) {
+  if (!resend) return
+  const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const safeTitle = listingTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  logIfError('sendListingSubmittedEmail', await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Votre annonce "${listingTitle}" a bien été reçue`,
+    html: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+        <tr><td style="background:#1A1F36;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
+          <p style="margin:0;font-size:26px;font-weight:900;color:#fff;">1000Click</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Petites annonces en Belgique</p>
+        </td></tr>
+        <tr><td style="background:#fff;padding:40px 36px;border-radius:0 0 16px 16px;">
+          <p style="margin:0 0 8px;font-size:18px;font-weight:900;color:#1A1F36;">Bonjour ${safeName},</p>
+          <p style="margin:0 0 20px;font-size:15px;color:#6B7280;line-height:1.7;">
+            Nous avons bien reçu votre annonce. Elle est en cours de vérification par notre équipe avant sa mise en ligne.
+          </p>
+          <div style="background:#FFF9EE;border-radius:12px;padding:16px 20px;margin-bottom:24px;border-left:3px solid #F59E0B;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#1A1F36;">${safeTitle}</p>
+          </div>
+          <p style="margin:0;font-size:13px;color:#9CA3AF;line-height:1.7;">
+            ⏰ La modération prend généralement moins de 24h. Vous recevrez un email dès que votre annonce sera publiée.
+          </p>
+          <p style="margin:36px 0 0;font-size:12px;color:#9CA3AF;text-align:center;">
+            1000Click · <a href="${APP_URL}" style="color:#E8571A;text-decoration:none;">1000click.com</a>
           </p>
         </td></tr>
       </table>

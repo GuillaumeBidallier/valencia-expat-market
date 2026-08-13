@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
             En attendant, n'hésitez pas à explorer les annonces de notre communauté ou à consulter notre blog pour des conseils pratiques sur la vie en Belgique.
           </p>
           <div style="text-align:center;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr'}" style="display:inline-block;background:#E8571A;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 36px;border-radius:12px;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com'}" style="display:inline-block;background:#E8571A;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 36px;border-radius:12px;">
               Retour sur 1000Click →
             </a>
           </div>

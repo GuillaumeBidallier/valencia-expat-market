@@ -5,7 +5,7 @@ import { auth } from '@/auth'
 import { getCurrentSiteId } from '@/lib/site'
 import ListingDetailClient from './ListingDetailClient'
 
-const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
 
 type Props = { params: Promise<{ id: string }> }
 

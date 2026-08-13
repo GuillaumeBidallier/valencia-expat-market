@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma'
 import { Clock, Calendar, User, ArrowLeft } from 'lucide-react'
 import BlogContent from './BlogContent'
 
-const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
 
 type Props = { params: Promise<{ slug: string }> }
 

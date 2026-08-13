@@ -47,7 +47,7 @@ export default function ConnexionPage() {
         {error && <div className="bg-red-50 text-red-600 text-sm rounded-lg px-4 py-2.5 mb-4">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input id="email" label={t('email')} type="email" placeholder="demo@1000clic.fr" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
+          <Input id="email" label={t('email')} type="email" placeholder="demo@1000click.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
           <Input id="password" label={t('password')} type="password" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
           <div className="text-right">
             <Link href="/mot-de-passe-oublie" className="text-xs text-orange-primary hover:underline">{t('forgot')}</Link>

@@ -5,7 +5,7 @@ import { Mail, MessageCircle, Clock, MapPin, ChevronDown } from 'lucide-react'
 import ContactForm from './ContactForm'
 import { getContactEmail } from '@/lib/get-contact-email'
 
-const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
 
 export const metadata: Metadata = {
   title: 'Contact — 1000Click',

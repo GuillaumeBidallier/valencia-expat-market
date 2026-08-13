@@ -67,7 +67,7 @@ export default function CguPage() {
                 Objet
               </h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme <strong className="text-navy">1000Click</strong>, service de petites annonces entre particuliers en Belgique, accessible à l&apos;adresse <span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">1000clic.fr</span>.</p>
+                <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme <strong className="text-navy">1000Click</strong>, service de petites annonces entre particuliers en Belgique, accessible à l&apos;adresse <span className="font-mono text-xs bg-gray-50 px-1.5 py-0.5 rounded">1000click.com</span>.</p>
                 <p>1000Click est une plateforme de mise en relation entre particuliers permettant de publier, consulter et répondre à des annonces de vente, location ou échange de biens et services. Elle est destinée principalement à la communauté francophone résidant en Belgique.</p>
                 <p>L&apos;utilisation de 1000Click implique l&apos;acceptation pleine et entière des présentes CGU. 1000Click se réserve le droit de les modifier à tout moment.</p>
               </div>

@@ -10,7 +10,7 @@ import type { Prisma } from '@prisma/client'
 export const revalidate = 3600
 export const dynamicParams = false
 
-const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000clic.fr').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
 const PER_PAGE = 20
 
 type Props = {
