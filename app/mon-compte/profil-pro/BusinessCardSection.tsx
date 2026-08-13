@@ -289,7 +289,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
                     {/* Contact rows */}
                     <div className="space-y-2 mb-4">
                       {[
-                        { icon: <Phone size={14} className="text-indigo-primary" />, label: pro.phone ?? '+34 6XX XXX XXX', bg: '#EEF2FF', color: '#4F46E5' },
+                        { icon: <Phone size={14} className="text-indigo-primary" />, label: pro.phone ?? '+32 4XX XX XX XX', bg: '#EEF2FF', color: '#4F46E5' },
                         { icon: <MessageCircle size={14} className="text-green-500" />, label: pro.whatsapp ?? 'WhatsApp', bg: '#F0FDF4', color: '#16a34a' },
                         { icon: <Globe size={14} className="text-blue-500" />, label: pro.website ?? 'www.monsite.es', bg: '#EFF6FF', color: '#2563eb' },
                       ].map((row, i) => (

@@ -481,7 +481,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
                       id="pro-phone"
                       value={form.phone}
                       onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                      placeholder="+34 6xx xxx xxx"
+                      placeholder="+32 4xx xx xx xx"
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 focus:border-orange-primary transition-all"
                     />
                     <button
@@ -504,7 +504,7 @@ export default function ProDashboardClient({ pro: initial, cardSuccess }: Props)
                       id="pro-wa"
                       value={form.whatsapp}
                       onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))}
-                      placeholder="+34 6xx xxx xxx"
+                      placeholder="+32 4xx xx xx xx"
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary/30 focus:border-orange-primary transition-all"
                     />
                   </div>

@@ -289,7 +289,7 @@ export default function EditListingClient({ listing }: Props) {
               type="tel"
               value={form.phone}
               onChange={set('phone')}
-              placeholder="+34 6XX XXX XXX"
+              placeholder="+32 4XX XX XX XX"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition-all"
             />
           </div>

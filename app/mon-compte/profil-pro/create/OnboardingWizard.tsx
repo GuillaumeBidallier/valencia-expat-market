@@ -208,11 +208,11 @@ function Step2({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-bold text-navy mb-1.5">Téléphone</label>
-          <input type="tel" value={data.phone} onChange={e => onChange('phone', e.target.value)} placeholder="+34 612 345 678" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-primary transition-colors" />
+          <input type="tel" value={data.phone} onChange={e => onChange('phone', e.target.value)} placeholder="+32 470 12 34 56" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-primary transition-colors" />
         </div>
         <div>
           <label className="block text-sm font-bold text-navy mb-1.5">WhatsApp</label>
-          <input type="tel" value={data.whatsapp} onChange={e => onChange('whatsapp', e.target.value)} placeholder="+34 612 345 678" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-primary transition-colors" />
+          <input type="tel" value={data.whatsapp} onChange={e => onChange('whatsapp', e.target.value)} placeholder="+32 470 12 34 56" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-primary transition-colors" />
         </div>
       </div>
 

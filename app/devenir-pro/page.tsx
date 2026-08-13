@@ -690,7 +690,7 @@ export default function DevenirProPage() {
                     {/* Contact rows */}
                     <div className="space-y-2 mb-4">
                       {[
-                        { icon: <Phone size={14} style={{ color: '#4F46E5' }} />, label: '+34 612 345 678', bg: '#EEF2FF', color: '#4F46E5' },
+                        { icon: <Phone size={14} style={{ color: '#4F46E5' }} />, label: '+32 470 12 34 56', bg: '#EEF2FF', color: '#4F46E5' },
                         { icon: <MessageCircle size={14} className="text-green-500" />, label: 'WhatsApp', bg: '#F0FDF4', color: '#16a34a' },
                         { icon: <Globe size={14} className="text-blue-500" />, label: 'www.pauldupont.es', bg: '#EFF6FF', color: '#2563eb' },
                       ].map((row, i) => (
