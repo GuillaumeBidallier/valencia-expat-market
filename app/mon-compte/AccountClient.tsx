@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import {
   Plus, ExternalLink, Trash2, CheckCircle2, RefreshCcw, HeartOff,
   LogOut, LayoutList, Heart, User, MessageSquare, ChevronRight,
-  Pencil, Eye, Settings, Phone, MessageCircle, Save,
+  Pencil, Eye, EyeOff, Settings, Phone, MessageCircle, Save,
   Loader2, KeyRound, ShieldAlert, Star, Mail, Calendar,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
@@ -86,6 +86,7 @@ export default function AccountClient({ user, initialListings, initialFavorites,
 
   // Password form
   const [pwdForm, setPwdForm] = useState({ current: '', next: '', confirm: '' })
+  const [revealedPwdFields, setRevealedPwdFields] = useState<Record<string, boolean>>({})
   const [pwdError, setPwdError] = useState('')
   const [pwdSaved, setPwdSaved] = useState(false)
   const [savingPwd, setSavingPwd] = useState(false)
@@ -476,13 +477,24 @@ export default function AccountClient({ user, initialListings, initialFavorites,
                       <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
                         {i === 0 ? 'Mot de passe actuel' : i === 1 ? 'Nouveau mot de passe' : 'Confirmer le nouveau'}
                       </label>
-                      <input
-                        type="password"
-                        placeholder="••••••••"
-                        value={pwdForm[field as keyof typeof pwdForm]}
-                        onChange={e => { setPwdForm(f => ({ ...f, [field]: e.target.value })); setPwdError(''); setPwdSaved(false) }}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 transition-all"
-                      />
+                      <div className="relative">
+                        <input
+                          type={revealedPwdFields[field] ? 'text' : 'password'}
+                          placeholder="••••••••"
+                          value={pwdForm[field as keyof typeof pwdForm]}
+                          onChange={e => { setPwdForm(f => ({ ...f, [field]: e.target.value })); setPwdError(''); setPwdSaved(false) }}
+                          className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 transition-all"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setRevealedPwdFields(r => ({ ...r, [field]: !r[field] }))}
+                          tabIndex={-1}
+                          aria-label={revealedPwdFields[field] ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                        >
+                          {revealedPwdFields[field] ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
+                      </div>
                     </div>
                   ))}
                   {pwdError && <p className="text-xs text-red-500 font-medium">{pwdError}</p>}

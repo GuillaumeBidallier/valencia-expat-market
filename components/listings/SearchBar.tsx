@@ -60,7 +60,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
       params.set('radius', String(geo.radius))
       params.set('geoLabel', geo.city)
     }
-    router.push(`/annonces?${params.toString()}`)
+    router.push(`/annonces?${params.toString()}`, { scroll: false })
   }
 
   const handleSearch = () => doSearch(query)

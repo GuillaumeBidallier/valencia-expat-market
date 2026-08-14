@@ -47,29 +47,20 @@ export default function AnnoncesUI({
   geoLabel,
   activeCatIcon,
   activeCatLabel,
-  q,
   sort,
-  priceMin,
-  priceMax,
-  lat,
-  lng,
   dark,
   immobilier,
 }: Props) {
   const router = useRouter()
+  // Start from the actual current URL (not a hardcoded list of props) so attribute
+  // filters (attr_type_bien, attr_surface_habitable_*, attr_pieces, seller...) survive
+  // sort changes and pagination instead of being silently dropped — this component's
+  // props never carried those, so rebuilding from scratch here used to wipe them out.
   const buildUrl = (p: number, sortOverride?: string) => {
-    const sp = new URLSearchParams()
-    if (q)                   sp.set('q',        q)
-    if (cat)                 sp.set('cat',      cat)
-    if (ville)               sp.set('ville',    ville)
-    if (priceMin !== undefined) sp.set('priceMin', String(priceMin))
-    if (priceMax !== undefined) sp.set('priceMax', String(priceMax))
+    const sp = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
     const sortValue = sortOverride !== undefined ? sortOverride : sort
-    if (sortValue)           sp.set('sort',     sortValue)
-    if (lat !== undefined)   sp.set('lat',      String(lat))
-    if (lng !== undefined)   sp.set('lng',      String(lng))
-    if (hasLocation) { sp.set('radius', String(radius)); sp.set('geoLabel', geoLabel) }
-    if (p > 1)               sp.set('page',     String(p))
+    if (sortValue) sp.set('sort', sortValue); else sp.delete('sort')
+    if (p > 1) sp.set('page', String(p)); else sp.delete('page')
     return `/annonces?${sp.toString()}`
   }
   const t = useTranslations('Annonces')
@@ -99,7 +90,7 @@ export default function AnnoncesUI({
             {tf('sort_by')} :
             <select
               value={sort}
-              onChange={e => router.push(buildUrl(1, e.target.value))}
+              onChange={e => router.push(buildUrl(1, e.target.value), { scroll: false })}
               className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-orange-primary/50 transition-all"
             >
               <option value="">{tf('sort_pertinence')}</option>

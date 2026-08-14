@@ -193,28 +193,33 @@ export default function AnnoncesFilters({ dark, immobilier }: { dark?: boolean; 
   const hasLocation = Boolean(lat && lng)
   const activeCount = [cat, ville, priceMin, priceMax, seller, hasLocation ? 'loc' : ''].filter(Boolean).length
 
+  // Reads from window.location.search (always current) rather than the `searchParams`
+  // hook value (only refreshes once the previous navigation's re-render lands). Filters
+  // fire several router.push() calls in a row (e.g. brand + model together, or several
+  // dropdowns clicked quickly) — basing each one on the hook's possibly-stale snapshot
+  // caused later calls to overwrite earlier ones, silently dropping filters.
   const update = useCallback((key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(window.location.search)
     value ? params.set(key, value) : params.delete(key)
     params.delete('page')
-    router.push(`/annonces?${params.toString()}`)
-  }, [router, searchParams])
+    router.push(`/annonces?${params.toString()}`, { scroll: false })
+  }, [router])
 
   const applyPrice = (min: string, max: string) => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(window.location.search)
     min ? params.set('priceMin', min) : params.delete('priceMin')
     max ? params.set('priceMax', max) : params.delete('priceMax')
     params.delete('page')
-    router.push(`/annonces?${params.toString()}`)
+    router.push(`/annonces?${params.toString()}`, { scroll: false })
   }
 
   const clearLocation = () => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(window.location.search)
     params.delete('lat')
     params.delete('lng')
     params.delete('radius')
     params.delete('page')
-    router.push(`/annonces?${params.toString()}`)
+    router.push(`/annonces?${params.toString()}`, { scroll: false })
   }
 
   const useMyLocation = () => {
@@ -223,13 +228,13 @@ export default function AnnoncesFilters({ dark, immobilier }: { dark?: boolean; 
     setGeoError('')
     navigator.geolocation.getCurrentPosition(
       pos => {
-        const params = new URLSearchParams(searchParams.toString())
+        const params = new URLSearchParams(window.location.search)
         params.set('lat', pos.coords.latitude.toFixed(5))
         params.set('lng', pos.coords.longitude.toFixed(5))
         params.set('radius', radius || '10')
         params.set('geoLabel', t('my_position'))
         params.delete('page')
-        router.push(`/annonces?${params.toString()}`)
+        router.push(`/annonces?${params.toString()}`, { scroll: false })
         setGeoLoading(false)
       },
       () => {
@@ -241,7 +246,7 @@ export default function AnnoncesFilters({ dark, immobilier }: { dark?: boolean; 
 
   const clearAll = () => {
     const q = searchParams.get('q')
-    router.push(q ? `/annonces?q=${encodeURIComponent(q)}` : '/annonces')
+    router.push(q ? `/annonces?q=${encodeURIComponent(q)}` : '/annonces', { scroll: false })
   }
 
   const categoryLabel = cat ? (findCategoryLabel(categories, cat) ?? cat) : t('all_categories')
