@@ -9,7 +9,7 @@ import AdUnit from '@/components/ads/AdUnit'
 import {
   MapPin, Calendar, ChevronRight, ChevronLeft, Phone, Flag, ShieldCheck, MessageSquare, X, Share2, Copy, Check,
   Gauge, Fuel, Settings2, Disc, Tag, Package, IdCard, Zap, BadgeCheck,
-  Home, Ruler, Building, CheckCircle2, Clock3, Flame, BedDouble, Bath, DoorOpen, Trees, Warehouse, type LucideIcon,
+  Home, Ruler, Building, CheckCircle2, Clock3, Flame, BedDouble, Bath, DoorOpen, Trees, Warehouse, FileText, type LucideIcon,
 } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
@@ -96,6 +96,7 @@ function pickPairs(pairs: AttrPair[], keys: string[]): AttrPair[] {
 }
 
 const ListingMap = dynamic(() => import('@/components/listings/ListingMap'), { ssr: false })
+const RentalApplicationModal = dynamic(() => import('./RentalApplicationModal'), { ssr: false })
 
 interface Props {
   listing: Listing & { neighborhood: string }
@@ -109,12 +110,14 @@ interface Props {
   vehicules?: boolean
   immobilier?: boolean
   sellerVerified?: boolean
+  professional?: { slug: string; name: string; logo: string | null } | null
 }
 
-export default function ListingDetailClient({ listing, isFavorited, categoryInfo, vehicules, immobilier, sellerVerified }: Props) {
+export default function ListingDetailClient({ listing, isFavorited, categoryInfo, vehicules, immobilier, sellerVerified, professional }: Props) {
   const enhanced = !!(vehicules || immobilier)
   const t = useTranslations('ListingDetail')
   const tShare = useTranslations('Share')
+  const tListings = useTranslations('Listings')
   const { isAuthenticated, user } = useAuth()
   const router = useRouter()
   const [activeImg, setActiveImg] = useState(0)
@@ -126,6 +129,7 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
   const [reportSent, setReportSent] = useState(false)
   const [reportSending, setReportSending] = useState(false)
   const [messageOpen, setMessageOpen] = useState(false)
+  const [applicationOpen, setApplicationOpen] = useState(false)
   const [messageBody, setMessageBody] = useState('')
   const [messageSending, setMessageSending] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
@@ -177,6 +181,11 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
   const openMessageModal = () => {
     if (!isAuthenticated) { router.push('/connexion'); return }
     setMessageOpen(true)
+  }
+
+  const openApplicationModal = () => {
+    if (!isAuthenticated) { router.push('/connexion'); return }
+    setApplicationOpen(true)
   }
 
   const sendMessage = async (e: React.FormEvent) => {
@@ -324,7 +333,19 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
           <div className="bg-white rounded-xl border border-gray-100 p-6 mb-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <Badge className={vehicules ? 'mb-2 bg-red-600' : 'mb-2'}>{categoryInfo?.label ?? listing.category ?? listing.categorySlug}</Badge>
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge className={vehicules ? 'bg-red-600' : ''}>{categoryInfo?.label ?? listing.category ?? listing.categorySlug}</Badge>
+                  {professional && (
+                    <span className="inline-flex items-center gap-1 bg-navy/5 text-navy text-xs font-semibold px-2.5 py-1 rounded-full border border-navy/10">
+                      {professional.logo && (
+                        <span className="relative w-3.5 h-3.5 rounded-full overflow-hidden shrink-0">
+                          <Image src={professional.logo} alt="" fill className="object-cover" />
+                        </span>
+                      )}
+                      {tListings('pro_badge')}
+                    </span>
+                  )}
+                </div>
                 <h1 className="text-2xl font-bold text-navy">{listing.title}</h1>
               </div>
               <div className="text-right shrink-0">
@@ -432,11 +453,33 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
         {/* Right: Contact + security + ads */}
         <div className="flex flex-col gap-4 self-start sticky top-20">
           <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <h2 className="font-semibold text-navy mb-1">{t('contact_seller')}</h2>
-            <p className="text-xs text-gray-400 mb-4 flex items-center gap-1">
-              {t('published_by')} {listing.userName ?? listing.user?.name ?? 'Vendeur'}
-              {enhanced && sellerVerified && <BadgeCheck size={13} className={vehicules ? 'text-red-600' : 'text-orange-primary'} aria-label="Vendeur vérifié" />}
-            </p>
+            {professional ? (
+              <Link
+                href={`/professionnels/${professional.slug}`}
+                className="flex items-center justify-between gap-3 mb-4 -mx-1 px-1 py-1 rounded-lg hover:bg-gray-50 transition-colors group"
+              >
+                <div>
+                  <h2 className="font-semibold text-navy group-hover:text-orange-primary transition-colors">{t('contact_seller')}</h2>
+                  <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                    {t('published_by')} {professional.name}
+                    {enhanced && sellerVerified && <BadgeCheck size={13} className={vehicules ? 'text-red-600' : 'text-orange-primary'} aria-label="Vendeur vérifié" />}
+                  </p>
+                </div>
+                {professional.logo && (
+                  <span className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-gray-100 bg-white">
+                    <Image src={professional.logo} alt={professional.name} fill className="object-cover" />
+                  </span>
+                )}
+              </Link>
+            ) : (
+              <>
+                <h2 className="font-semibold text-navy mb-1">{t('contact_seller')}</h2>
+                <p className="text-xs text-gray-400 mb-4 flex items-center gap-1">
+                  {t('published_by')} {listing.userName ?? listing.user?.name ?? 'Vendeur'}
+                  {enhanced && sellerVerified && <BadgeCheck size={13} className={vehicules ? 'text-red-600' : 'text-orange-primary'} aria-label="Vendeur vérifié" />}
+                </p>
+              </>
+            )}
 
             {isOwner ? (
               <p className="text-xs text-gray-400 italic bg-gray-50 rounded-lg px-3 py-2">{t('owner_notice')}</p>
@@ -448,6 +491,16 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
                 >
                   <MessageSquare size={15} /> {t('send_message')}
                 </Button>
+
+                {immobilier && (
+                  <Button
+                    variant="outline"
+                    className="w-full text-sm mb-3"
+                    onClick={openApplicationModal}
+                  >
+                    <FileText size={15} /> {t('app_cta')}
+                  </Button>
+                )}
 
                 {listing.phone && (sellerShowsPhone || sellerShowsWhatsapp) && (
                   <>
@@ -614,6 +667,17 @@ export default function ListingDetailClient({ listing, isFavorited, categoryInfo
             </form>
           </div>
         </div>
+      )}
+
+      {/* Rental application modal */}
+      {applicationOpen && (
+        <RentalApplicationModal
+          listingId={listing.id}
+          defaultType={listing.categorySlug.includes('location') || listing.categorySlug.includes('coloc') ? 'LOCATION' : 'ACHAT'}
+          defaultName={user?.name}
+          defaultEmail={user?.email}
+          onClose={() => setApplicationOpen(false)}
+        />
       )}
 
       {/* Report modal */}

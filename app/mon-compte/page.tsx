@@ -17,7 +17,7 @@ export default async function MonComptePage() {
       where: { userId, status: { not: 'DELETED' } },
       include: {
         images: { take: 1, orderBy: { order: 'asc' } },
-        _count: { select: { favorites: true } },
+        _count: { select: { favorites: true, applications: true } },
       },
       orderBy: { publishedAt: 'desc' },
     }),
@@ -74,6 +74,7 @@ export default async function MonComptePage() {
         image: l.images[0]?.url ?? null,
         views: l.views,
         favoritesCount: l._count.favorites,
+        applicationsCount: l._count.applications,
       }))}
       initialFavorites={favorites
         .filter(f => f.listing.status !== 'DELETED')

@@ -56,7 +56,7 @@ export default async function ListingDetailPage({ params }: Props) {
       where: { id, status: { not: 'DELETED' } },
       include: {
         images: { orderBy: { order: 'asc' } },
-        user: { select: { name: true, showPhone: true, showWhatsapp: true, professional: { select: { verified: true } } } },
+        user: { select: { name: true, showPhone: true, showWhatsapp: true, professional: { select: { slug: true, name: true, logo: true, verified: true } } } },
       },
     }),
     session?.user?.id
@@ -97,6 +97,9 @@ export default async function ListingDetailPage({ params }: Props) {
   const isVehicules = categoryRecord?.slug === 'vehicules' || rootCategory?.slug === 'vehicules'
   const isImmobilier = categoryRecord?.slug === 'immobilier' || rootCategory?.slug === 'immobilier'
   const sellerVerified = raw.user?.professional?.verified ?? false
+  const professional = raw.user?.professional
+    ? { slug: raw.user.professional.slug, name: raw.user.professional.name, logo: raw.user.professional.logo }
+    : null
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -154,6 +157,7 @@ export default async function ListingDetailPage({ params }: Props) {
         vehicules={isVehicules}
         immobilier={isImmobilier}
         sellerVerified={sellerVerified}
+        professional={professional}
       />
     </>
   )

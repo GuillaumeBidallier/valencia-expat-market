@@ -24,7 +24,10 @@ import { buildVehicleAttributeClauses } from '@/lib/vehicleAttributesQuery'
 const PER_PAGE = 20
 
 type RawListing = Awaited<ReturnType<typeof prisma.listing.findMany<{
-  include: { images: { orderBy: { order: 'asc' }; take: 1 } }
+  include: {
+    images: { orderBy: { order: 'asc' }; take: 1 }
+    user: { select: { professional: { select: { slug: true; name: true; logo: true } } } }
+  }
 }>>>[number]
 
 type ListingWithDist = Listing & { distanceKm?: number }
@@ -60,15 +63,19 @@ async function AnnoncesContent({ searchParams }: Props) {
   const priceMax = params.priceMax ? Number(params.priceMax) : undefined
   const sort     = params.sort     ?? ''
   const seller   = (params.seller  ?? '').split(',').filter(Boolean)
+  const proSlug  = params.pro      ?? ''
   const page     = Math.max(1, parseInt(params.page ?? '1'))
   const userLat  = params.lat    ? Number(params.lat)    : undefined
   const userLng  = params.lng    ? Number(params.lng)    : undefined
   const radius   = params.radius ? Number(params.radius) : 10
   const geoLabel = params.geoLabel ?? 'Ma position'
 
-  const [session, allCategories] = await Promise.all([
+  const [session, allCategories, proFilter] = await Promise.all([
     auth(),
     getCategoriesServer(),
+    proSlug
+      ? prisma.professional.findUnique({ where: { slug: proSlug }, select: { userId: true, name: true } })
+      : Promise.resolve(null),
   ])
   const hasLocation = userLat !== undefined && userLng !== undefined
   const defaultGeo: GeoState | null = hasLocation
@@ -120,6 +127,7 @@ async function AnnoncesContent({ searchParams }: Props) {
     ...(seller.length === 1 && {
       user: { professional: seller[0] === 'pro' ? { isNot: null } : { is: null } },
     }),
+    ...(proFilter?.userId && { userId: proFilter.userId }),
   }
 
   const vehicleClauses = cat ? buildVehicleAttributeClauses(cat, params) : []
@@ -140,7 +148,10 @@ async function AnnoncesContent({ searchParams }: Props) {
   const [rawListings, total, favRows] = await Promise.all([
     prisma.listing.findMany({
       where: whereWithAttrs,
-      include: { images: { orderBy: { order: 'asc' }, take: 1 } },
+      include: {
+        images: { orderBy: { order: 'asc' }, take: 1 },
+        user: { select: { professional: { select: { slug: true, name: true, logo: true } } } },
+      },
       orderBy: fetchAll ? undefined : orderByDb,
       skip: fetchAll ? undefined : (page - 1) * PER_PAGE,
       take: fetchAll ? undefined : PER_PAGE,
@@ -267,6 +278,7 @@ async function AnnoncesContent({ searchParams }: Props) {
             pages={pages}
             cat={cat}
             ville={ville}
+            proName={proFilter?.name}
             hasLocation={hasLocation}
             radius={radius}
             geoLabel={geoLabel}

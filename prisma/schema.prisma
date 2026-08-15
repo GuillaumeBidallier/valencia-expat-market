@@ -20,29 +20,31 @@ model Site {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  categories    Category[]
-  listings      Listing[]
-  professionals Professional[]
-  users         User[]
+  categories         Category[]
+  listings           Listing[]
+  professionals      Professional[]
+  users              User[]
+  rentalApplications RentalApplication[]
 }
 
 model User {
-  id               String        @id @default(cuid())
-  siteId           String
-  site             Site          @relation(fields: [siteId], references: [id])
-  name             String
-  email            String
-  passwordHash     String
-  role             Role          @default(USER)
-  blocked          Boolean       @default(false)
-  createdAt        DateTime      @default(now())
-  showPhone        Boolean       @default(true)
-  showWhatsapp     Boolean       @default(true)
-  listings         Listing[]
-  favorites        Favorite[]
-  sentMessages     Message[]     @relation("Sender")
-  receivedMessages Message[]     @relation("Receiver")
-  professional     Professional?
+  id                 String              @id @default(cuid())
+  siteId             String
+  site               Site                @relation(fields: [siteId], references: [id])
+  name               String
+  email              String
+  passwordHash       String
+  role               Role                @default(USER)
+  blocked            Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  showPhone          Boolean             @default(true)
+  showWhatsapp       Boolean             @default(true)
+  listings           Listing[]
+  favorites          Favorite[]
+  sentMessages       Message[]           @relation("Sender")
+  receivedMessages   Message[]           @relation("Receiver")
+  professional       Professional?
+  rentalApplications RentalApplication[]
 
   @@unique([siteId, email])
 }
@@ -54,33 +56,34 @@ enum Role {
 }
 
 model Listing {
-  id             String         @id @default(cuid())
+  id             String              @id @default(cuid())
   siteId         String
-  site           Site           @relation(fields: [siteId], references: [id])
+  site           Site                @relation(fields: [siteId], references: [id])
   title          String
-  description    String         @db.Text
+  description    String              @db.Text
   price          Float?
   categorySlug   String
   city           String
   neighborhood   String
-  status         ListingStatus  @default(ACTIVE)
+  status         ListingStatus       @default(ACTIVE)
   userId         String
-  user           User           @relation(fields: [userId], references: [id])
+  user           User                @relation(fields: [userId], references: [id])
   images         ListingImage[]
   favorites      Favorite[]
   messages       Message[]
   reports        Report[]
   phone          String?
-  views          Int            @default(0)
-  isPremium      Boolean        @default(false)
+  views          Int                 @default(0)
+  isPremium      Boolean             @default(false)
   boostExpiresAt DateTime?
   featuredAt     DateTime?
-  publishedAt    DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  publishedAt    DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
   lat            Float?
   lng            Float?
   blockedReason  String?
   attributes     Json?
+  applications   RentalApplication[]
 
   @@index([siteId])
 }
@@ -132,38 +135,38 @@ model Favorite {
 }
 
 model Professional {
-  id          String   @id @default(cuid())
-  siteId      String
-  site        Site     @relation(fields: [siteId], references: [id])
-  slug        String   @unique
-  name        String
-  category    String
-  city        String
-  description String?  @db.Text
-  phone       String?
-  whatsapp    String?
-  website     String?  @db.Text
-  logo        String?  @db.Text
-  banner      String?  @db.Text
-  photos      ProfessionalPhoto[]
-  tier        ProTier  @default(FREE)
-  giftTierExpiresAt DateTime?
-  verified    Boolean  @default(false)
-  featured    Boolean  @default(false)
-  recommended Boolean  @default(false)
-  zones       ProfessionalZone[]
-  phoneHidden Boolean  @default(false)
-  userId      String?  @unique
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id                           String              @id @default(cuid())
+  siteId                       String
+  site                         Site                @relation(fields: [siteId], references: [id])
+  slug                         String              @unique
+  name                         String
+  category                     String
+  city                         String
+  description                  String?             @db.Text
+  phone                        String?
+  whatsapp                     String?
+  website                      String?             @db.Text
+  logo                         String?             @db.Text
+  banner                       String?             @db.Text
+  photos                       ProfessionalPhoto[]
+  tier                         ProTier             @default(FREE)
+  giftTierExpiresAt            DateTime?
+  verified                     Boolean             @default(false)
+  featured                     Boolean             @default(false)
+  recommended                  Boolean             @default(false)
+  zones                        ProfessionalZone[]
+  phoneHidden                  Boolean             @default(false)
+  userId                       String?             @unique
+  user                         User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
   stripeCustomerId             String?
   stripeSubscriptionId         String?
   subscriptionStatus           String?
   subscriptionPeriod           String?
   subscriptionCurrentPeriodEnd DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  clicks        ProClick[]
-  businessCard  BusinessCard?
+  createdAt                    DateTime            @default(now())
+  updatedAt                    DateTime            @updatedAt
+  clicks                       ProClick[]
+  businessCard                 BusinessCard?
 
   @@index([siteId])
 }
@@ -198,7 +201,7 @@ model ProClick {
   id             String       @id @default(cuid())
   professionalId String
   professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
-  type           String       // 'ad_click' | 'phone' | 'whatsapp' | 'website' | 'profile_view'
+  type           String // 'ad_click' | 'phone' | 'whatsapp' | 'website' | 'profile_view'
   createdAt      DateTime     @default(now())
 
   @@index([professionalId, createdAt])
@@ -218,7 +221,7 @@ model BusinessCard {
   showWebsite                  Boolean      @default(true)
   email                        String?
   // Payment & status
-  plan                         String?      // 'one_shot' | 'monthly'
+  plan                         String? // 'one_shot' | 'monthly'
   active                       Boolean      @default(false)
   stripeSessionId              String?
   stripeSubscriptionId         String?
@@ -316,4 +319,55 @@ model Message {
   body       String    @db.Text
   readAt     DateTime?
   createdAt  DateTime  @default(now())
+}
+
+model RentalApplication {
+  id              String                      @id @default(cuid())
+  siteId          String
+  site            Site                        @relation(fields: [siteId], references: [id])
+  listingId       String
+  listing         Listing                     @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            RentalApplicationType
+  fullName        String
+  email           String
+  phone           String
+  situation       String?                     @db.Text
+  income          String?                     @db.Text
+  hasGuarantor    Boolean                     @default(false)
+  guarantorInfo   String?                     @db.Text
+  hasPets         Boolean                     @default(false)
+  petsDetails     String?                     @db.Text
+  desiredDuration String?
+  message         String?                     @db.Text
+  status          RentalApplicationStatus     @default(PENDING)
+  createdAt       DateTime                    @default(now())
+  documents       RentalApplicationDocument[]
+
+  @@index([listingId])
+  @@index([userId])
+  @@index([siteId])
+}
+
+model RentalApplicationDocument {
+  id            String            @id @default(cuid())
+  applicationId String
+  application   RentalApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  type          String
+  url           String            @db.Text
+
+  @@index([applicationId])
+}
+
+enum RentalApplicationType {
+  LOCATION
+  ACHAT
+}
+
+enum RentalApplicationStatus {
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
 }

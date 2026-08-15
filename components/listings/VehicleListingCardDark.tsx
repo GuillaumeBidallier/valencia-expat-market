@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { MapPin, Clock } from 'lucide-react'
 import { Listing } from '@/types'
 import FavoriteButton from './FavoriteButton'
+import ProBadge from './ProBadge'
 import { FUEL, GEARBOX } from '@/lib/vehicleAttributes'
 
 function timeAgo(dateStr: string): string {
@@ -63,6 +64,7 @@ export default function VehicleListingCardDark({
           iconSize={13}
           className="absolute top-2 right-2 w-7 h-7 bg-black/50 border border-white/20 rounded-full hover:scale-110 flex items-center justify-center"
         />
+        {listing.user?.professional && <ProBadge logo={listing.user.professional.logo} dark />}
       </div>
 
       <div className="flex flex-col justify-between flex-1 min-w-0 py-0.5">

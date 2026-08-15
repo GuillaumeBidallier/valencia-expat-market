@@ -131,7 +131,10 @@ export default async function SeoPage({ params, searchParams }: Props) {
   const [rawListings, total] = await Promise.all([
     prisma.listing.findMany({
       where,
-      include: { images: { orderBy: { order: 'asc' }, take: 1 } },
+      include: {
+        images: { orderBy: { order: 'asc' }, take: 1 },
+        user: { select: { professional: { select: { slug: true, name: true, logo: true } } } },
+      },
       orderBy: [{ featuredAt: 'desc' }, { publishedAt: 'desc' }],
       skip: (page - 1) * PER_PAGE,
       take: PER_PAGE,

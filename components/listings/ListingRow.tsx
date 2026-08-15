@@ -5,6 +5,7 @@ import { MapPin, Clock, Navigation } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Listing } from '@/types'
 import FavoriteButton from './FavoriteButton'
+import ProBadge from './ProBadge'
 
 export default function ListingRow({ listing, distanceKm, isFavorited }: { listing: Listing; distanceKm?: number; isFavorited?: boolean }) {
   const t = useTranslations('Listings')
@@ -39,6 +40,7 @@ export default function ListingRow({ listing, distanceKm, isFavorited }: { listi
           className="object-cover"
           sizes="(max-width: 640px) 112px, (max-width: 768px) 176px, 224px"
         />
+        {listing.user?.professional && <ProBadge logo={listing.user.professional.logo} />}
       </div>
 
       {/* Content */}

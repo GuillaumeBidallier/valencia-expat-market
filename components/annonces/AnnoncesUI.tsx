@@ -19,6 +19,7 @@ interface Props {
   pages: number
   cat: string
   ville: string
+  proName?: string
   hasLocation: boolean
   radius: number
   geoLabel: string
@@ -42,6 +43,7 @@ export default function AnnoncesUI({
   pages,
   cat,
   ville,
+  proName,
   hasLocation,
   radius,
   geoLabel,
@@ -78,6 +80,7 @@ export default function AnnoncesUI({
             </span>
           )}
           {ville && <span className={`ml-1 text-xs px-2 py-0.5 rounded-full ${dark ? 'bg-white/10 text-white/60' : 'bg-gray-100 text-gray-600'}`}>{ville}</span>}
+          {proName && <span className={`ml-1 text-xs px-2 py-0.5 rounded-full ${dark ? 'bg-white/10 text-white/60' : 'bg-gray-100 text-gray-600'}`}>{proName}</span>}
           {hasLocation && (
             <span className={`ml-1 text-xs px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${dark ? 'bg-red-600/15 text-red-400' : 'bg-blue-50 text-blue-600'}`}>
               <MapPin size={10} /> {t('radius_around', { radius })}

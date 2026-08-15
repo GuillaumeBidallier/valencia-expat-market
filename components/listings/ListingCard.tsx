@@ -5,6 +5,7 @@ import { MapPin } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Listing } from '@/types'
 import FavoriteButton from './FavoriteButton'
+import ProBadge from './ProBadge'
 
 interface ListingCardProps {
   listing: Listing
@@ -39,6 +40,7 @@ export default function ListingCard({ listing, badge, isFavorited }: ListingCard
           iconSize={13}
           className="absolute top-2.5 right-2.5 w-7 h-7 bg-white/90 rounded-full shadow hover:scale-110 flex items-center justify-center"
         />
+        {listing.user?.professional && <ProBadge logo={listing.user.professional.logo} />}
       </div>
 
       <div className="p-3.5 flex flex-col gap-1 flex-1">

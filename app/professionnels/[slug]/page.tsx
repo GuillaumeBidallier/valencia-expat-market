@@ -3,13 +3,16 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
-import { MapPin, Phone, Globe, ArrowLeft, CheckCircle, Star, ExternalLink, Pencil } from 'lucide-react'
+import { MapPin, Phone, Globe, ArrowLeft, CheckCircle, Star, ExternalLink, Pencil, Briefcase } from 'lucide-react'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { proCategories } from '@/lib/proCategories'
+import ListingCard from '@/components/listings/ListingCard'
+import type { Listing } from '@/types'
 import ProGallery from './ProGallery'
 import ProMapClient from './ProMapClient'
 import ContactCardClient from './ContactCardClient'
+import AutoContactForm from './AutoContactForm'
 
 const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
   'bruxelles': { lat: 50.8503, lng: 4.3517 },
@@ -72,12 +75,30 @@ export default async function ProDetailPage({ params }: Props) {
   if (!proRow) notFound()
   const pro = { ...proRow, photos: proRow.photos.map(p => p.url), zones: proRow.zones.map(z => z.zone) }
 
-  const [session, geoCoords, t] = await Promise.all([
+  const [session, geoCoords, t, rawListings] = await Promise.all([
     auth(),
     pro.city ? geocodeCity(pro.city) : null,
     getTranslations('ProDetail'),
+    pro.userId
+      ? prisma.listing.findMany({
+          where: { userId: pro.userId, status: 'ACTIVE' },
+          include: { images: { orderBy: { order: 'asc' }, take: 1 } },
+          orderBy: [{ featuredAt: 'desc' }, { publishedAt: 'desc' }],
+          take: 4,
+        })
+      : Promise.resolve([]),
   ])
   const tPros = await getTranslations('Pros')
+
+  const showcaseListings: Listing[] = rawListings.map(l => ({
+    ...l,
+    price: l.price ?? null,
+    boostExpiresAt: l.boostExpiresAt?.toISOString() ?? null,
+    featuredAt: l.featuredAt?.toISOString() ?? null,
+    publishedAt: l.publishedAt.toISOString(),
+    updatedAt: l.updatedAt.toISOString(),
+    attributes: l.attributes as Record<string, string | number | string[]> | null,
+  }))
 
   const isOwner = !!(session?.user?.id && pro.userId === session.user.id)
 
@@ -108,6 +129,28 @@ export default async function ProDetailPage({ params }: Props) {
     verified_badge: t('verified_badge'),
     visit_website:  t('visit_website'),
     mention_vendo:  t('mention_vendo'),
+  }
+
+  const isAutomobile = pro.category === 'automobiles'
+  const acStrings = {
+    title: t('ac_title'),
+    contact_method: t('ac_contact_method'),
+    by_email: t('ac_by_email'),
+    by_phone: t('ac_by_phone'),
+    name: t('ac_name'),
+    email: t('ac_email'),
+    phone: t('ac_phone'),
+    reason_label: t('ac_reason_label'),
+    reason_achat: t('ac_reason_achat'),
+    reason_essai: t('ac_reason_essai'),
+    reason_reprise: t('ac_reason_reprise'),
+    message: t('ac_message'),
+    message_optional: t('ac_message_optional'),
+    send: t('ac_send'),
+    sending: t('ac_sending'),
+    sent_title: t('ac_sent_title'),
+    sent_body: t('ac_sent_body'),
+    error_generic: t('ac_error_generic'),
   }
 
   const BASE = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com').replace(/\/$/, '')
@@ -197,6 +240,9 @@ export default async function ProDetailPage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white/80 text-[11px] font-medium px-2.5 py-1 rounded-full border border-white/15">
                 <span aria-hidden="true">{catIcon}</span> {catLabel}
+              </span>
+              <span className="inline-flex items-center gap-1 bg-white/90 text-navy text-[11px] font-semibold px-2.5 py-1 rounded-full shadow">
+                <Briefcase size={10} /> {t('badge_pro')}
               </span>
               {isVip && (
                 <span className="inline-flex items-center gap-1 bg-navy text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
@@ -311,6 +357,26 @@ export default async function ProDetailPage({ params }: Props) {
               </section>
             )}
 
+            {/* Listings showcase */}
+            {showcaseListings.length > 0 && (
+              <section>
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[11px] font-bold text-orange-primary uppercase tracking-widest">{t('section_listings')}</p>
+                  <Link
+                    href={`/annonces?pro=${pro.slug}`}
+                    className="text-sm font-semibold text-orange-primary hover:underline shrink-0"
+                  >
+                    {t('see_all_listings')}
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {showcaseListings.map(listing => (
+                    <ListingCard key={listing.id} listing={listing} />
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* Gallery */}
             {pro.photos.length > 0 && (
               <section>
@@ -360,11 +426,16 @@ export default async function ProDetailPage({ params }: Props) {
                 accentTo={accentTo}
                 strings={ccStrings}
               />
+              {isAutomobile && (
+                <div className="mt-4">
+                  <AutoContactForm proId={pro.id} strings={acStrings} />
+                </div>
+              )}
             </div>
           </div>
 
           {/* ── Right: sticky contact ── */}
-          <aside className="hidden lg:block self-start sticky top-24 pb-10">
+          <aside className="hidden lg:block self-start sticky top-24 pb-10 flex flex-col gap-4">
             <ContactCardClient
               proId={pro.id}
               name={pro.name}
@@ -379,6 +450,11 @@ export default async function ProDetailPage({ params }: Props) {
               accentTo={accentTo}
               strings={ccStrings}
             />
+            {isAutomobile && (
+              <div className="mt-4">
+                <AutoContactForm proId={pro.id} strings={acStrings} />
+              </div>
+            )}
           </aside>
         </div>
       </div>

@@ -8,7 +8,12 @@ export interface Listing {
   neighborhood: string
   status: 'ACTIVE' | 'SOLD' | 'EXPIRED' | 'DELETED' | 'PENDING' | 'REJECTED'
   userId: string
-  user?: { name: string; showPhone?: boolean; showWhatsapp?: boolean }
+  user?: {
+    name?: string
+    showPhone?: boolean
+    showWhatsapp?: boolean
+    professional?: { slug: string; name: string; logo: string | null } | null
+  }
   images: { id: string; url: string; order: number }[]
   isPremium: boolean
   boostExpiresAt: string | null

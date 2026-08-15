@@ -7,7 +7,7 @@ import {
   Plus, ExternalLink, Trash2, CheckCircle2, RefreshCcw, HeartOff,
   LogOut, LayoutList, Heart, User, MessageSquare, ChevronRight,
   Pencil, Eye, EyeOff, Settings, Phone, MessageCircle, Save,
-  Loader2, KeyRound, ShieldAlert, Star, Mail, Calendar,
+  Loader2, KeyRound, ShieldAlert, Star, Mail, Calendar, FileText,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
@@ -16,7 +16,7 @@ type ListingItem = {
   id: string; title: string; price: number | null
   city: string; status: 'ACTIVE' | 'SOLD' | 'EXPIRED'
   publishedAt: string; image: string | null
-  views: number; favoritesCount: number
+  views: number; favoritesCount: number; applicationsCount: number
 }
 type FavoriteItem = {
   id: string; listingId: string
@@ -227,6 +227,12 @@ export default function AccountClient({ user, initialListings, initialFavorites,
                 <Heart size={11} className="text-red-300" />
                 {listing.favoritesCount} favori{listing.favoritesCount !== 1 ? 's' : ''}
               </span>
+              {listing.applicationsCount > 0 && (
+                <Link href={`/annonces/${listing.id}/candidatures`} className="flex items-center gap-1 text-[11px] text-orange-primary font-semibold hover:underline">
+                  <FileText size={11} />
+                  {listing.applicationsCount} dossier{listing.applicationsCount !== 1 ? 's' : ''} reçu{listing.applicationsCount !== 1 ? 's' : ''}
+                </Link>
+              )}
             </div>
           </div>
         </div>
