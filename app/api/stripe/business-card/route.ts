@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { getStripe } from '@/lib/stripe'
 
 export const BUSINESS_CARD_PLANS = {
-  monthly: { amount: 399, label: 'Carte de visite numérique — 3,99 €/mois', mode: 'subscription' as const },
+  monthly: { amount: 399, label: 'Carte de visite numérique — 3,99 € HT/mois', mode: 'subscription' as const },
 }
 
 export type BusinessCardPlan = keyof typeof BUSINESS_CARD_PLANS

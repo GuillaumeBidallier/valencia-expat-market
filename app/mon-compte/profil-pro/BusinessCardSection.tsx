@@ -141,7 +141,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
                 <div>
                   <div className="flex items-baseline gap-1.5">
                     <p className="font-black text-navy text-4xl">3,99 €</p>
-                    <p className="text-sm text-gray-500">/mois</p>
+                    <p className="text-sm text-gray-500">HT /mois</p>
                   </div>
                   <p className="text-xs text-gray-400 mt-1">Sans engagement — résiliable en 1 clic</p>
                 </div>
@@ -348,7 +348,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
               <p className="font-black text-navy text-sm">Carte de visite numérique</p>
               <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Active</span>
               <span className="text-[10px] font-bold bg-orange-soft text-orange-primary px-2 py-0.5 rounded-full flex items-center gap-1">
-                <Zap size={9} /> 3,99 €/mois
+                <Zap size={9} /> 3,99 € HT/mois
               </span>
             </div>
             <p className="text-xs text-gray-400 mt-0.5">

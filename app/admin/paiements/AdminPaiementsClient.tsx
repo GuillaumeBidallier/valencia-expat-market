@@ -91,7 +91,7 @@ export default function AdminPaiementsClient({
           <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 bg-emerald-50">
             <TrendingUp size={17} className="text-emerald-600" />
           </div>
-          <p className="text-xl font-black text-navy leading-none">{arr.toLocaleString('fr-FR')} €</p>
+          <p className="text-xl font-black text-navy leading-none">{arr.toLocaleString('fr-FR')} € HT</p>
           <p className="text-xs text-gray-400 mt-1.5">Revenu annuel estimé (ARR)</p>
         </div>
       </div>

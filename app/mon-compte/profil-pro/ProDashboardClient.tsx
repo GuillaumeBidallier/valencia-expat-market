@@ -24,9 +24,9 @@ type Tab = 'apercu' | 'fiche' | 'medias' | 'statistiques' | 'carte' | 'abonnemen
 type Props = { pro: Professional & { businessCard: BusinessCard | null }; cardSuccess?: boolean }
 
 const PLANS: { id: ProPlan; label: string; price: string; period: string; highlight?: boolean }[] = [
-  { id: 'smart_annual', label: 'Smart', price: '99 €',  period: '/an' },
-  { id: 'pro_annual',   label: 'Pro',   price: '299 €', period: '/an', highlight: true },
-  { id: 'vip_annual',   label: 'VIP',   price: '499 €', period: '/an' },
+  { id: 'smart_annual', label: 'Smart', price: '99 €',  period: 'HT /an' },
+  { id: 'pro_annual',   label: 'Pro',   price: '299 €', period: 'HT /an', highlight: true },
+  { id: 'vip_annual',   label: 'VIP',   price: '499 €', period: 'HT /an' },
 ]
 
 /* ── Subscription section ──────────────────────────────── */

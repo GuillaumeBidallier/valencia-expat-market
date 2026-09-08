@@ -103,7 +103,7 @@ const TIERS = [
   {
     name: 'Smart',
     price: '99 €',
-    period: '/ an',
+    period: 'HT / an',
     annualPrice: '',
     annualNote: 'Facturation annuelle · résiliable à tout moment',
     color: 'border-orange-primary',
@@ -126,7 +126,7 @@ const TIERS = [
   {
     name: 'Pro',
     price: '299 €',
-    period: '/ an',
+    period: 'HT / an',
     annualPrice: '',
     annualNote: 'Facturation annuelle · résiliable à tout moment',
     color: 'border-indigo-primary',
@@ -149,7 +149,7 @@ const TIERS = [
   {
     name: 'VIP',
     price: '499 €',
-    period: '/ an',
+    period: 'HT / an',
     annualPrice: '',
     annualNote: 'Facturation annuelle · résiliable à tout moment',
     color: 'border-navy',
@@ -385,7 +385,7 @@ export default function PublicitePage() {
               {
                 n: '3',
                 title: 'Choisissez votre offre',
-                desc: 'Premium (49,99 €/an) ou Premium+ (99,99 €/an). Facturation annuelle, résiliable à tout moment. Paiement direct en ligne via Stripe.'
+                desc: 'Smart (99 € HT/an), Pro (299 € HT/an) ou VIP (499 € HT/an). Facturation annuelle, résiliable à tout moment. Paiement direct en ligne via Stripe.'
               },
               {
                 n: '4',
@@ -409,7 +409,7 @@ export default function PublicitePage() {
           <div className="text-center mb-8">
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Tarifs</p>
             <h2 className="text-2xl sm:text-3xl font-black text-navy mb-3">Des offres simples et transparentes</h2>
-            <p className="text-gray-500 text-sm">Facturation annuelle — résiliable à tout moment.</p>
+            <p className="text-gray-500 text-sm">Facturation annuelle — résiliable à tout moment. Tarifs hors taxes (HT).</p>
           </div>
           <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
             {TIERS.map(tier => (

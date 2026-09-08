@@ -49,7 +49,7 @@ const PLANS: { id: ProPlan; name: string; price: string; annual: string; color: 
   {
     id: 'smart_annual',
     name: 'Smart',
-    price: '99 €/an',
+    price: '99 € HT/an',
     annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'orange',
     badge: 'Essentiel',
@@ -58,7 +58,7 @@ const PLANS: { id: ProPlan; name: string; price: string; annual: string; color: 
   {
     id: 'pro_annual',
     name: 'Pro',
-    price: '299 €/an',
+    price: '299 € HT/an',
     annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'indigo',
     badge: 'Populaire',
@@ -67,7 +67,7 @@ const PLANS: { id: ProPlan; name: string; price: string; annual: string; color: 
   {
     id: 'vip_annual',
     name: 'VIP',
-    price: '499 €/an',
+    price: '499 € HT/an',
     annual: 'Facturation annuelle · résiliable à tout moment',
     color: 'navy',
     badge: 'Meilleure visibilité',

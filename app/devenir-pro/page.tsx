@@ -9,7 +9,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Espace Pro sur 1000Click — Touchez la communauté francophone en Belgique',
-  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers de francophones installés en Belgique. Dès 99 €/an.',
+  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers de francophones installés en Belgique. Dès 99 € HT/an.',
 }
 
 /* ─── Animation keyframes ─────────────────────────────────────────────────── */
@@ -188,7 +188,7 @@ const STEPS = [
     n: '03',
     icon: <CreditCard size={22} />,
     title: 'Choisissez votre offre',
-    desc: 'Smart (99 €/an), Pro (299 €/an) ou VIP (499 €/an). Facturation annuelle, résiliable à tout moment. Paiement via Stripe.',
+    desc: 'Smart (99 € HT/an), Pro (299 € HT/an) ou VIP (499 € HT/an). Facturation annuelle, résiliable à tout moment. Paiement via Stripe.',
     color: 'bg-orange-soft',
     iconColor: 'text-orange-primary',
   },
@@ -308,7 +308,7 @@ export default function DevenirProPage() {
           {/* Quick stats */}
           <div className="au d5 flex flex-wrap gap-6 mt-14">
             {[
-              { val: '49,99 €', label: 'dès /an' },
+              { val: '99 €', label: 'HT · dès /an' },
               { val: '4 min', label: 'pour créer votre fiche' },
               { val: '0', label: 'engagement requis' },
             ].map(s => (
@@ -593,7 +593,7 @@ export default function DevenirProPage() {
                 <div>
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-3xl font-black text-white">3,99 €</span>
-                    <span className="text-white/50 text-sm">/mois</span>
+                    <span className="text-white/50 text-sm">&nbsp;HT/mois</span>
                   </div>
                   <p className="text-xs text-white/40 mt-0.5">En option sur votre abonnement Pro · sans engagement</p>
                 </div>
@@ -725,7 +725,7 @@ export default function DevenirProPage() {
                   className="absolute -top-2 -right-3 bg-orange-primary text-white text-[11px] font-black px-3 py-1.5 rounded-full rotate-6"
                   style={{ boxShadow: '0 4px 14px rgba(232,87,26,0.45)' }}
                 >
-                  3,99 €/mois
+                  3,99 € HT/mois
                 </div>
               </div>
             </div>
@@ -742,7 +742,7 @@ export default function DevenirProPage() {
           <div className="text-center mb-14">
             <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-3">Tarifs</p>
             <h2 className="text-3xl sm:text-4xl font-black text-navy mb-4">Simple et transparent</h2>
-            <p className="text-gray-500 text-base max-w-sm mx-auto">Facturation annuelle · résiliable à tout moment.</p>
+            <p className="text-gray-500 text-base max-w-sm mx-auto">Facturation annuelle · résiliable à tout moment. Tarifs hors taxes (HT).</p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -757,7 +757,7 @@ export default function DevenirProPage() {
               </div>
               <div className="mb-1">
                 <span className="text-4xl font-black text-navy">99 €</span>
-                <span className="text-gray-400 text-sm">/an</span>
+                <span className="text-gray-400 text-sm">&nbsp;HT/an</span>
               </div>
               <p className="text-emerald-600 text-xs font-semibold mb-6">Facturation annuelle · résiliable à tout moment</p>
               <ul className="space-y-3 flex-1 mb-7">
@@ -789,7 +789,7 @@ export default function DevenirProPage() {
               </div>
               <div className="mb-1">
                 <span className="text-4xl font-black text-navy">299 €</span>
-                <span className="text-gray-400 text-sm">/an</span>
+                <span className="text-gray-400 text-sm">&nbsp;HT/an</span>
               </div>
               <p className="text-emerald-600 text-xs font-semibold mb-6">Facturation annuelle · résiliable à tout moment</p>
               <ul className="space-y-3 flex-1 mb-7">
@@ -821,7 +821,7 @@ export default function DevenirProPage() {
               </div>
               <div className="mb-1">
                 <span className="text-4xl font-black text-white">499 €</span>
-                <span className="text-white/50 text-sm">/an</span>
+                <span className="text-white/50 text-sm">&nbsp;HT/an</span>
               </div>
               <p className="text-emerald-400 text-xs font-semibold mb-6">Facturation annuelle · résiliable à tout moment</p>
               <ul className="space-y-3 flex-1 mb-7">

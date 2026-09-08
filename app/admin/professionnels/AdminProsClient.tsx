@@ -180,9 +180,9 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
               <Field label="Tier">
                 <select value={editing.tier ?? 'FREE'} onChange={e => set('tier', e.target.value)}>
                   <option value="FREE">Gratuit</option>
-                  <option value="PREMIUM">Smart (99€/an)</option>
-                  <option value="PREMIUM_PLUS">Pro (299€/an)</option>
-                  <option value="VIP">VIP (499€/an)</option>
+                  <option value="PREMIUM">Smart (99 € HT/an)</option>
+                  <option value="PREMIUM_PLUS">Pro (299 € HT/an)</option>
+                  <option value="VIP">VIP (499 € HT/an)</option>
                 </select>
               </Field>
               <Field label="Offert jusqu'au (geste commercial)">
