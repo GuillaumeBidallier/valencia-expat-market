@@ -11,6 +11,7 @@ import {
 import FavoriteButton from '@/components/listings/FavoriteButton'
 import VipBanner from '@/components/home/VipBanner'
 import { useCategories } from '@/hooks/useCategories'
+import { DEFAULT_HERO_SLIDES, type HeroSlide } from '@/lib/hero-slides'
 import { isVehicleCategory, FUEL } from '@/lib/vehicleAttributes'
 import { isRealEstateCategory } from '@/lib/realEstateAttributes'
 import type { Listing } from '@/types'
@@ -259,24 +260,57 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   autres: LayoutGrid,
 }
 
-export default function LandingHome() {
+const HERO_SLIDE_DURATION = 6000
+
+export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }) {
   const allCategories = useCategories()
   const categoryItems = allCategories.filter(c => !c.parentId)
+
+  const slides = heroSlides && heroSlides.length > 0 ? heroSlides : DEFAULT_HERO_SLIDES
+  const [slideTick, setSlideTick] = useState(0)
+  // Clamped at render rather than reset in an effect, so a change in slide
+  // count can never leave the index out of range (blank hero).
+  const activeSlide = slideTick % slides.length
+
+  useEffect(() => {
+    if (slides.length < 2) return
+    const id = setInterval(() => setSlideTick(i => i + 1), HERO_SLIDE_DURATION)
+    return () => clearInterval(id)
+  }, [slides.length])
 
   return (
     <div className="min-h-screen bg-white">
 
-      {/* ── Hero : image unique véhicule + immobilier ──────────────── */}
+      {/* ── Hero : carrousel d'images configuré dans /admin/parametres ── */}
       <section className="relative -mt-[104px] min-h-[540px] sm:min-h-[580px] overflow-hidden">
-        <Image
-          src="/landing-test/hero-vehicules-immobilier.png"
-          alt="Véhicules et biens immobiliers"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
+        {slides.map((slide, i) => (
+          <Image
+            key={slide.src}
+            src={slide.src}
+            alt={slide.alt}
+            fill
+            priority={i === 0}
+            sizes="100vw"
+            className={`object-cover object-center transition-opacity duration-1000 ${i === activeSlide ? 'opacity-100' : 'opacity-0'}`}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/25" />
+
+        {/* Puces de navigation — remontées au-dessus de la rangée d'icônes
+            catégories, qui chevauche le bas du hero de 52 px. */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-[68px] left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+            {slides.map((slide, i) => (
+              <button
+                key={slide.src}
+                onClick={() => setSlideTick(i)}
+                aria-label={`Diapositive ${i + 1} : ${slide.alt}`}
+                aria-current={i === activeSlide}
+                className={`h-1.5 rounded-full transition-all ${i === activeSlide ? 'w-6 bg-white' : 'w-1.5 bg-white/50 hover:bg-white/80'}`}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Callout gauche — Véhicules */}
         <div className="hidden lg:flex absolute left-8 xl:left-14 top-1/2 -translate-y-1/2 flex-col items-start z-10 max-w-[220px]">

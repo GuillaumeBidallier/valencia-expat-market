@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { SITE_SETTINGS_TAG } from '@/lib/hero-slides'
 
 const DEFAULT_SETTINGS = {
   id: 'default',
@@ -54,6 +56,10 @@ export async function PUT(req: NextRequest) {
     create: { ...DEFAULT_SETTINGS, ...data },
     update: data,
   })
+
+  // Expire immediately: an admin saving here expects to see the change on the
+  // site right away, not after the 60s revalidate window.
+  revalidateTag(SITE_SETTINGS_TAG, { expire: 0 })
 
   return NextResponse.json(settings)
 }

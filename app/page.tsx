@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { preload } from 'react-dom'
 import LandingHome from '@/components/home/LandingHome'
+import { DEFAULT_HERO_SLIDES } from '@/lib/hero-slides'
+import { getHeroSlides } from '@/lib/hero-slides.server'
 
 export const metadata: Metadata = {
   title: '1000Click — Petites annonces francophones en Belgique',
@@ -8,8 +10,11 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 }
 
-export default function HomePage() {
-  preload('/landing-test/hero-vehicules-immobilier.png', { as: 'image', fetchPriority: 'high' })
+export default async function HomePage() {
+  const heroSlides = await getHeroSlides()
+  const first = (heroSlides[0] ?? DEFAULT_HERO_SLIDES[0]).src
 
-  return <LandingHome />
+  preload(first, { as: 'image', fetchPriority: 'high' })
+
+  return <LandingHome heroSlides={heroSlides} />
 }
