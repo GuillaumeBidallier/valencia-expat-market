@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @page { size: A4; margin: 0; }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    background:#fff;
+    font-family:'Inter',Arial,sans-serif;
+    font-size:9.5pt;
+    color:#1a1a1a;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 16mm 17mm 0 17mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    break-after: page;
+    page-break-after: always;
+    background: #fff;
+  }
+
+  .page-body { flex: 1; }
+
+  .pf {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7pt;
+    color: #bbb;
+    border-top: 1px solid #eee;
+    padding: 3px 0 8mm 0;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .n {
+    position: absolute;
+    top: 0; right: 0;
+    width: 34px; height: 34px;
+    background: #12122a;
+    color: #fff;
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  h1 { font-size:26pt; font-weight:800; letter-spacing:-0.5px; margin-bottom:3px; }
+  .h1sub { font-size:8.5pt; color:#888; margin-bottom:18px; }
+  .stitle { font-size:11pt; font-weight:700; margin:14px 0 8px; }
+
+  .parties {
+    display:grid; grid-template-columns:1fr 1fr;
+    border:1px solid #e2e2e2; margin-bottom:16px;
+  }
+  .party { padding:12px 14px; }
+  .party+.party { border-left:1px solid #e2e2e2; }
+  .plabel { font-size:7pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#999; margin-bottom:8px; }
+  .prow { display:grid; grid-template-columns:78px 1fr; font-size:8pt; gap:1.5px 6px; margin-bottom:1.5px; }
+  .prow .k { color:#aaa; }
+  .prow .v { font-weight:600; }
+
+  .objet {
+    border-left:3px solid #12122a;
+    padding:7px 11px; margin-bottom:16px; font-size:8.5pt;
+  }
+  .objet b { font-size:7.5pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#666; margin-right:6px; }
+
+  .stack { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #e2e2e2; margin-bottom:18px; }
+  .sc { padding:10px 12px; border-right:1px solid #e2e2e2; }
+  .sc:last-child { border-right:none; }
+  .stag { display:inline-block; background:#12122a; color:#fff; font-size:7pt; font-weight:700; padding:2px 7px; margin-bottom:6px; }
+  .sc p { font-size:7.5pt; color:#555; line-height:1.9; }
+
+  table { width:100%; border-collapse:collapse; font-size:8.5pt; }
+  thead tr { background:#12122a; color:#fff; }
+  th { padding:7px 9px; font-weight:600; font-size:7.5pt; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  th.r { text-align:right; } th.c { text-align:center; }
+  tbody tr { border-bottom:1px solid #f0f0f0; }
+  tbody tr:nth-child(even) { background:#fafafa; }
+  td { padding:8px 9px; vertical-align:top; }
+  td.num  { width:20px; color:#aaa; font-size:7.5pt; font-weight:600; }
+  td.dur  { width:62px; text-align:center; color:#666; }
+  td.prix { width:74px; text-align:right; font-weight:700; }
+  td.desc strong { display:block; font-weight:700; margin-bottom:2px; }
+  td.desc p { font-size:7.5pt; color:#555; line-height:1.55; }
+
+  .subtotal-row { background:#f4f4f4 !important; border-bottom: 1px solid #e0e0e0 !important; }
+  .subtotal-row td { padding:7px 9px; font-weight:600; font-size:8pt; }
+  .subtotal-row .tl { text-align:right; color:#555; letter-spacing:.05em; }
+  .subtotal-row .tv { text-align:right; }
+
+  .discount-row { background:#fff8f5 !important; border-bottom: 1px solid #fde8dd !important; }
+  .discount-row td { padding:7px 9px; }
+  .discount-row .tl { text-align:right; font-size:7.5pt; color:#c0392b; font-weight:700; letter-spacing:.05em; }
+  .discount-row .tv { text-align:right; font-weight:800; color:#c0392b; font-size:9.5pt; }
+
+  .trow { background:#12122a !important; color:#fff; border:none !important; }
+  .trow td { padding:9px 9px; font-weight:700; }
+  .trow .tl { text-align:right; font-size:8pt; letter-spacing:.07em; }
+  .trow .tv { text-align:right; font-size:11pt; }
+  .tva { font-size:7pt; color:#aaa; text-align:right; margin-top:4px; }
+
+  .pt { width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:16px; }
+  .pt thead tr { background:#12122a; color:#fff; }
+  .pt th { padding:7px 9px; font-size:7.5pt; font-weight:600; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  .pt th.r { text-align:right; }
+  .pt tbody tr { border-bottom:1px solid #f0f0f0; }
+  .pt tbody tr:nth-child(even) { background:#fafafa; }
+  .pt td { padding:7px 9px; }
+  .pt td.r { text-align:right; font-weight:600; }
+  .pt td.strike { text-align:right; color:#aaa; text-decoration:line-through; }
+  .pt .dark { background:#12122a !important; color:#fff; }
+  .pt .dark td { padding:8px 9px; font-weight:700; }
+  .pt .dark .r { text-align:right; }
+  .pt .disc { background:#fff8f5 !important; }
+  .pt .disc td { color:#c0392b; font-weight:700; }
+  .pt .disc .r { text-align:right; }
+
+  .cgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+  .cbox { border:1px solid #e2e2e2; padding:11px 13px; font-size:8pt; }
+  .cbox h4 { font-size:8pt; font-weight:700; margin-bottom:9px; }
+  .crow { display:flex; align-items:center; gap:9px; margin-bottom:7px; }
+  .pct { background:#12122a; color:#fff; font-weight:700; font-size:8.5pt; padding:3px 7px; min-width:34px; text-align:center; }
+  .crow .cd { flex:1; font-size:7.5pt; color:#555; }
+  .crow .cm { font-weight:700; font-size:8.5pt; }
+  .vnote { font-size:7pt; color:#aaa; margin-top:5px; }
+  .ibadge { display:inline-block; background:#12122a; color:#fff; font-size:7.5pt; font-weight:700; padding:3px 9px; margin-top:7px; }
+  .cstack { display:flex; flex-direction:column; gap:12px; }
+
+  .sgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+  .sbox { border:1px solid #e2e2e2; padding:11px 13px; min-height:72px; }
+  .sbox h4 { font-size:7pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:7px; }
+  .sbox p { font-size:8pt; color:#555; }
+  .dline { font-size:8pt; color:#aaa; margin-top:10px; }
+
+  .cgv h2 { font-size:11pt; font-weight:700; margin-bottom:14px; }
+  .ci { margin-bottom:10px; break-inside:avoid; page-break-inside:avoid; }
+  .ci h4 { font-size:8.5pt; font-weight:700; margin-bottom:3px; }
+  .ci p { font-size:7.5pt; color:#444; line-height:1.65; text-align:justify; }
+
+  .note-box {
+    border:1px solid #e2e2e2;
+    background:#fafafa;
+    padding:10px 13px;
+    font-size:7.5pt;
+    color:#555;
+    line-height:1.65;
+    margin-bottom:16px;
+  }
+  .note-box strong { color:#12122a; }
+
+  .excl-box {
+    border:1px solid #f0e0e0;
+    background:#fff8f8;
+    padding:10px 13px;
+    font-size:7.5pt;
+    color:#555;
+    line-height:1.7;
+    margin-bottom:16px;
+  }
+  .excl-box strong { color:#c0392b; }
+  .excl-box ul { margin-left:14px; margin-top:4px; }
+
+  .option-box {
+    border:2px solid #12122a;
+    background:#f8f8fc;
+    padding:11px 13px;
+    font-size:7.5pt;
+    color:#333;
+    line-height:1.7;
+    margin-bottom:16px;
+    position:relative;
+  }
+  .option-tag {
+    position:absolute;
+    top:-10px; left:13px;
+    background:#12122a;
+    color:#fff;
+    font-size:7pt;
+    font-weight:800;
+    padding:2px 10px;
+    letter-spacing:.06em;
+  }
+  .option-box .opt-header {
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  .option-box .opt-title { font-weight:800; font-size:8.5pt; color:#12122a; }
+  .option-box .opt-price { font-weight:800; font-size:10pt; color:#12122a; }
+  .option-box .opt-total { font-size:7pt; color:#888; margin-left:6px; font-weight:500; }
+  .option-box ul { margin-left:14px; }
+  .option-box li { margin-bottom:2px; }
+
+  @media print {
+    html, body { background: #fff; }
+    .page {
+      margin: 0 !important;
+      height: 297mm !important;
+      min-height: unset !important;
+      overflow: hidden !important;
+      page-break-after: always;
+      break-after: page;
+      padding-top: 6mm !important;
+    }
+    .h1sub { margin-bottom: 7px !important; }
+    .parties { margin-bottom: 8px !important; }
+    .party { padding: 6px 10px !important; }
+    .objet { margin-bottom: 8px !important; padding: 5px 10px !important; }
+    .note-box { padding: 6px 10px !important; margin-bottom: 8px !important; }
+    .excl-box { padding: 6px 10px !important; margin-bottom: 8px !important; }
+    .stitle { margin: 5px 0 4px !important; }
+    .stack { margin-bottom: 8px !important; }
+    .sc { padding: 5px 8px !important; }
+    table thead th { padding: 4px 7px !important; }
+    table tbody td { padding: 4px 7px !important; }
+    .subtotal-row td { padding: 4px 7px !important; }
+    .discount-row td { padding: 4px 7px !important; }
+    .trow td { padding: 5px 7px !important; }
+    .tva { margin-top: 2px !important; margin-bottom: 4px !important; }
+    .pt { margin-bottom: 8px !important; }
+    .pt thead th { padding: 5px 7px !important; }
+    .pt tbody td { padding: 5px 7px !important; }
+    .cgrid { gap: 8px !important; margin-bottom: 10px !important; }
+    .cbox { padding: 7px 10px !important; }
+    .cbox h4 { margin-bottom: 6px !important; }
+    .cstack { gap: 8px !important; }
+    .crow { margin-bottom: 5px !important; }
+    .sgrid { margin-top: 8px !important; gap: 8px !important; }
+    .sbox { padding: 8px 10px !important; min-height: 60px !important; }
+    .dline { margin-top: 20px !important; }
+    .pf { margin-top: 4px !important; padding-bottom: 6mm !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1>Devis MSD-2026-006</h1>
+    <p class="h1sub">14 juillet 2026 &nbsp;·&nbsp; Valide 30 jours &nbsp;·&nbsp; Module additionnel à MSD-2026-003</p>
+
+    <div class="parties">
+      <div class="party">
+        <div class="plabel">Émetteur</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">NovaTeck Studio || MYLOSTACK DEVELOPMENT</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Guillaume Bidallier</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">14 chemin de la prée, 17380 Saint Loup</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">France</span></div>
+        <div class="prow"><span class="k">N° entreprise :</span><span class="v">92421320000018</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">06 23 49 09 53</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">bidallierguillaume@gmail.com</span></div>
+        <div class="prow"><span class="k">Site :</span><span class="v">novateckstudio.com</span></div>
+      </div>
+      <div class="party">
+        <div class="plabel">Destinataire</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Dufour Christina</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">Belgique</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">+32 471 49 08 03</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">Agence1991@gmail.com</span></div>
+        <div class="prow"><span class="k">N° TVA :</span><span class="v">—</span></div>
+      </div>
+    </div>
+
+    <div class="objet">
+      <b>Objet :</b> Module additionnel — Section Emploi complète pour la plateforme 1000clic.fr (annonces d'offres d'emploi, filtres dédiés, formulaire de dépôt, fiche offre)
+    </div>
+
+    <div class="note-box">
+      <strong>Contexte :</strong> Ce devis couvre le développement d'un module Emploi autonome intégré à la plateforme 1000clic.fr. Contrairement à une simple catégorie d'annonces, la section Emploi constitue un type de publication distinct avec ses propres champs (type de contrat, salaire, mode de travail, secteur d'activité, expérience requise…), son propre formulaire de dépôt, sa propre page de liste avec filtres dédiés et ses propres fiches offre. <strong>Une remise exceptionnelle de fidélité est appliquée.</strong>
+    </div>
+
+    <div class="stitle" style="margin-top:0;">Stack technique</div>
+    <div class="stack">
+      <div class="sc"><div class="stag">Frontend</div><p>Next.js 15<br/>TypeScript<br/>Tailwind CSS</p></div>
+      <div class="sc"><div class="stag">Backend</div><p>Prisma / PostgreSQL<br/>API Routes Next.js<br/>Zod validation</p></div>
+      <div class="sc"><div class="stag">Données</div><p>Nouveau modèle<br/>JobListing (Prisma)<br/>Migration Neon</p></div>
+      <div class="sc"><div class="stag">Déploiement</div><p>Vercel (existant)<br/>CI/CD automatique<br/>1000clic.fr</p></div>
+    </div>
+
+    <div class="stitle">Prestations détaillées</div>
+
+    <table>
+      <thead><tr>
+        <th>#</th><th>Composant &amp; Description</th><th class="c">Durée</th><th class="r">Tarif catalogue</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td class="desc">
+            <strong>Modélisation &amp; Architecture</strong>
+            <p>Conception du modèle <em>JobListing</em> (type de contrat, salaire min/max, mode de travail, secteur, expérience requise, niveau d'études, nom entreprise, mode de candidature) · migration Prisma sur Neon · intégration au système d'authentification existant</p>
+          </td>
+          <td class="dur">1,5 jour</td><td class="prix">150 €</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="desc">
+            <strong>Backend &amp; API Routes</strong>
+            <p>API CRUD complète pour les offres d'emploi · filtrage multi-critères côté serveur (contrat, ville, secteur, salaire, temps de travail) · gestion des statuts (PENDING / ACTIVE / EXPIRED) · expiration automatique après 60 jours · modération admin intégrée</p>
+          </td>
+          <td class="dur">3 jours</td><td class="prix">300 €</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="desc">
+            <strong>Page liste <em>/emploi</em> + filtres dédiés</strong>
+            <p>Page dédiée aux offres d'emploi · sidebar de filtres spécifiques (type de contrat, ville, secteur d'activité, fourchette de salaire, temps plein/partiel, présentiel/télétravail/hybride) · cards d'offres avec logo entreprise, titre du poste, badge contrat, salaire, ville · pagination · tri par date et pertinence</p>
+          </td>
+          <td class="dur">2 jours</td><td class="prix">200 €</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="desc">
+            <strong>Formulaire de dépôt d'offre d'emploi</strong>
+            <p>Formulaire multi-étapes accessible depuis l'espace utilisateur · champs spécifiques emploi (poste, contrat, entreprise, salaire, mode de travail, secteur, expérience, description, mode de candidature : email ou lien externe) · validation Zod · prévisualisation avant publication</p>
+          </td>
+          <td class="dur">2 jours</td><td class="prix">200 €</td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="desc">
+            <strong>Fiche offre d'emploi <em>/emploi/[slug]</em></strong>
+            <p>Page détail de l'offre · présentation complète de tous les champs · bouton "Postuler" (redirection email ou lien externe selon le choix de l'annonceur) · offres similaires en bas de page · SEO (metadata, OpenGraph, structured data JobPosting)</p>
+          </td>
+          <td class="dur">2 jours</td><td class="prix">200 €</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="desc">
+            <strong>Modération admin &amp; Tests / Déploiement</strong>
+            <p>Interface d'administration pour valider, refuser ou supprimer les offres d'emploi · intégration dans le panneau admin existant · tests fonctionnels complets du flux de bout en bout · déploiement sur Vercel et recette finale</p>
+          </td>
+          <td class="dur">1,5 jour</td><td class="prix">150 €</td>
+        </tr>
+
+        <!-- Subtotal -->
+        <tr class="subtotal-row">
+          <td colspan="3" class="tl">TOTAL TARIF CATALOGUE HT</td>
+          <td class="tv">1 200 €</td>
+        </tr>
+
+        <!-- Discount -->
+        <tr class="discount-row">
+          <td colspan="3" class="tl">REMISE EXCEPTIONNELLE CLIENT FIDÈLE &nbsp;—&nbsp; 67 %</td>
+          <td class="tv">− 800 €</td>
+        </tr>
+
+        <!-- Total -->
+        <tr class="trow">
+          <td colspan="3" class="tl">TOTAL NET À PAYER HT</td>
+          <td class="tv">400 €</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tva">Prestataire non assujetti à la TVA — article 293 B du CGI · Prix exprimés en euros HT</p>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-006 — Module Emploi — 1000clic.fr</span>
+    <span>NovaTeck Studio || MYLOSTACK DEVELOPMENT · Guillaume Bidallier · 06 23 49 09 53</span>
+    <span>Page 1/2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1 style="font-size:18pt;margin-bottom:2px;">Récapitulatif &amp; Conditions</h1>
+    <p class="h1sub">Devis MSD-2026-006 &nbsp;·&nbsp; 14 juillet 2026</p>
+
+    <!-- Récapitulatif financier -->
+    <div class="stitle" style="margin-top:0;">Récapitulatif financier</div>
+    <table class="pt">
+      <thead><tr>
+        <th>Désignation</th>
+        <th class="r">Tarif catalogue</th>
+        <th class="r">Remise</th>
+        <th class="r">Net HT</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>Module Emploi — 12 jours de développement (6 composants)</td>
+          <td class="strike">1 200 €</td>
+          <td class="r" style="color:#c0392b;font-weight:700;">− 800 €</td>
+          <td class="r">400 €</td>
+        </tr>
+        <tr style="background:#f8f8fc !important;border:1.5px solid #12122a !important;">
+          <td style="font-size:7.5pt;font-weight:700;color:#12122a;">⊕ &nbsp;OPTION — Pack Emploi Complet (CVthèque, candidature intégrée, alertes email, monétisation)</td>
+          <td class="strike">—</td>
+          <td class="r" style="font-weight:700;color:#12122a;font-size:8pt;">au choix</td>
+          <td class="r" style="font-weight:800;color:#12122a;font-size:9pt;">+ 250 €</td>
+        </tr>
+        <tr style="background:#eeeef6 !important;">
+          <td style="font-size:7.5pt;color:#555;">→ Total avec option Pack Complet</td>
+          <td class="r" style="color:#aaa;font-size:7.5pt;text-decoration:line-through;">1 200 €</td>
+          <td class="r" style="color:#555;font-size:7.5pt;">−&thinsp;46 %</td>
+          <td class="r" style="font-weight:700;font-size:8.5pt;">650 €</td>
+        </tr>
+        <tr class="dark">
+          <td><strong>TOTAL NET À RÉGLER (sans option)</strong></td>
+          <td class="r">—</td>
+          <td class="r">−&thinsp;67 %</td>
+          <td class="r"><strong>400 €</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Planning -->
+    <div class="stitle">Planning &amp; Livrables</div>
+    <div class="cgrid">
+      <div class="cbox">
+        <h4>Jalons de livraison</h4>
+        <div class="crow"><div class="pct">J1–2</div><div class="cd">Architecture BDD, migration Prisma, API de base</div></div>
+        <div class="crow"><div class="pct">J3–5</div><div class="cd">Backend complet, filtres, gestion statuts</div></div>
+        <div class="crow"><div class="pct">J6–7</div><div class="cd">Page liste <em>/emploi</em> + sidebar filtres</div></div>
+        <div class="crow"><div class="pct">J8–9</div><div class="cd">Formulaire de dépôt d'offre</div></div>
+        <div class="crow"><div class="pct">J10–11</div><div class="cd">Fiche offre <em>/emploi/[slug]</em> + SEO</div></div>
+        <div class="crow"><div class="pct">J12</div><div class="cd">Admin, tests, déploiement &amp; recette</div></div>
+        <div class="vnote">Durée totale estimée : 2 à 3 semaines selon disponibilités</div>
+      </div>
+      <div class="cstack">
+        <div class="cbox">
+          <h4>Livrables inclus</h4>
+          <div class="crow"><div class="cd">✓ &nbsp;Code source versionné sur GitHub</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Module déployé sur 1000clic.fr</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Migration base de données appliquée</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Documentation fonctionnelle des champs</div></div>
+          <div class="crow"><div class="cd">✓ &nbsp;Recette fonctionnelle complète</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option Premium -->
+    <div class="option-box">
+      <div class="option-tag">OPTION — AU CHOIX</div>
+      <div class="opt-header">
+        <span class="opt-title">Pack Emploi Complet — fonctionnalités avancées</span>
+        <span><span class="opt-price">+ 250 €</span><span class="opt-total">&nbsp;(soit 650 € au total au lieu de 1 200 €)</span></span>
+      </div>
+      <p style="color:#555;margin-bottom:5px;">En ajoutant cette option, les 4 fonctionnalités suivantes sont entièrement développées et intégrées au module :</p>
+      <ul>
+        <li><strong>CVthèque / Espace candidat</strong> — profil "Je cherche un emploi" avec CV, compétences et secteur recherché</li>
+        <li><strong>Candidature intégrée</strong> — formulaire de candidature directement sur la fiche offre, sans quitter la plateforme</li>
+        <li><strong>Alertes email automatiques</strong> — notification dès qu'une offre correspond aux critères du candidat (secteur, ville, contrat)</li>
+        <li><strong>Monétisation des offres</strong> — mise en avant payante et offres sponsorisées via Stripe pour les recruteurs</li>
+      </ul>
+    </div>
+
+    <!-- Conditions -->
+    <div class="stitle">Conditions générales</div>
+    <div class="cgv">
+      <div class="ci">
+        <h4>1. Acceptation</h4>
+        <p>Ce devis est valable 30 jours à compter de sa date d'émission. L'acceptation se matérialise par le retour du devis signé ou par un accord écrit par email. Toute modification du périmètre après acceptation fera l'objet d'un avenant.</p>
+      </div>
+      <div class="ci">
+        <h4>2. Modalités de paiement</h4>
+        <p>50 % à la commande (200 € HT), 50 % à la livraison finale (200 € HT). Paiement par virement bancaire ou Stripe. Tout retard de paiement entraîne la suspension des travaux et une pénalité de 1,5 % par mois de retard.</p>
+      </div>
+      <div class="ci">
+        <h4>3. Propriété intellectuelle</h4>
+        <p>Le code source développé dans le cadre de ce devis est cédé au client à la réception du solde. NovaTeck Studio se réserve le droit de mentionner la réalisation dans ses références commerciales.</p>
+      </div>
+      <div class="ci">
+        <h4>4. Garantie</h4>
+        <p>Une garantie de correction des bugs imputable au développement est assurée pendant 30 jours après livraison, sans facturation supplémentaire. Les évolutions fonctionnelles ou nouvelles demandes sont facturées séparément.</p>
+      </div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="sgrid">
+      <div class="sbox">
+        <h4>Bon pour accord — Prestataire</h4>
+        <p>NovaTeck Studio || MYLOSTACK DEVELOPMENT<br/>Guillaume Bidallier</p>
+        <div class="dline">Signature : ___________________________</div>
+      </div>
+      <div class="sbox">
+        <h4>Bon pour accord — Client</h4>
+        <p>Dufour Christina<br/>Date : ___________________________</p>
+        <div class="dline">Signature : ___________________________</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-006 — Module Emploi — 1000clic.fr</span>
+    <span>NovaTeck Studio || MYLOSTACK DEVELOPMENT · Guillaume Bidallier · 06 23 49 09 53</span>
+    <span>Page 2/2</span>
+  </div>
+</div>
+
+</body>
+</html>

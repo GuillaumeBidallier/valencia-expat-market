@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @page { size: A4; margin: 0; }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    background:#fff;
+    font-family:'Inter',Arial,sans-serif;
+    font-size:9.5pt;
+    color:#1a1a1a;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 16mm 17mm 0 17mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    break-after: page;
+    page-break-after: always;
+    background: #fff;
+  }
+
+  .page-body { flex: 1; }
+
+  .pf {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7pt;
+    color: #bbb;
+    border-top: 1px solid #eee;
+    padding: 3px 0 8mm 0;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .n {
+    position: absolute;
+    top: 0; right: 0;
+    width: 34px; height: 34px;
+    background: #12122a;
+    color: #fff;
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  h1 { font-size:26pt; font-weight:800; letter-spacing:-0.5px; margin-bottom:3px; }
+  .h1sub { font-size:8.5pt; color:#888; margin-bottom:18px; }
+  .stitle { font-size:11pt; font-weight:700; margin:14px 0 8px; }
+
+  .parties {
+    display:grid; grid-template-columns:1fr 1fr;
+    border:1px solid #e2e2e2; margin-bottom:16px;
+  }
+  .party { padding:12px 14px; }
+  .party+.party { border-left:1px solid #e2e2e2; }
+  .plabel { font-size:7pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#999; margin-bottom:8px; }
+  .prow { display:grid; grid-template-columns:78px 1fr; font-size:8pt; gap:1.5px 6px; margin-bottom:1.5px; }
+  .prow .k { color:#aaa; }
+  .prow .v { font-weight:600; }
+
+  .objet {
+    border-left:3px solid #12122a;
+    padding:7px 11px; margin-bottom:16px; font-size:8.5pt;
+  }
+  .objet b { font-size:7.5pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#666; margin-right:6px; }
+
+  /* Périmètre banner */
+  .perimetre {
+    display:grid; grid-template-columns:repeat(5,1fr);
+    border:1px solid #e2e2e2; margin-bottom:18px;
+  }
+  .pc { padding:10px 12px; border-right:1px solid #e2e2e2; }
+  .pc:last-child { border-right:none; }
+  .ptag { display:inline-block; background:#12122a; color:#fff; font-size:7pt; font-weight:700; padding:2px 7px; margin-bottom:6px; }
+  .pc p { font-size:7.5pt; color:#555; line-height:1.9; }
+
+  /* Services table */
+  table { width:100%; border-collapse:collapse; font-size:8.5pt; }
+  thead tr { background:#12122a; color:#fff; }
+  th { padding:7px 9px; font-weight:600; font-size:7.5pt; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  th.r { text-align:right; }
+  tbody tr { border-bottom:1px solid #f0f0f0; }
+  tbody tr:nth-child(even) { background:#fafafa; }
+  td { padding:8px 9px; vertical-align:top; }
+  td.num { width:20px; color:#aaa; font-size:7.5pt; font-weight:600; }
+  td.prix { width:74px; text-align:right; font-weight:700; }
+  td.desc strong { display:block; font-weight:700; margin-bottom:4px; }
+  td.desc ul { list-style:none; display:flex; flex-direction:column; gap:2px; margin-top:4px; }
+  td.desc ul li { font-size:7.5pt; color:#555; display:flex; gap:6px; }
+  td.desc ul li::before { content:"✓"; color:#12122a; font-weight:700; flex-shrink:0; }
+
+  .subtotal-row { background:#f4f4f4 !important; border-bottom:1px solid #e0e0e0 !important; }
+  .subtotal-row td { padding:7px 9px; font-weight:600; font-size:8pt; }
+  .subtotal-row .tl { text-align:right; color:#555; letter-spacing:.05em; }
+  .subtotal-row .tv { text-align:right; }
+
+  .trow { background:#12122a !important; color:#fff; border:none !important; }
+  .trow td { padding:9px 9px; font-weight:700; }
+  .trow .tl { text-align:right; font-size:8pt; letter-spacing:.07em; }
+  .trow .tv { text-align:right; font-size:11pt; }
+  .tva { font-size:7pt; color:#aaa; text-align:right; margin-top:4px; }
+
+  .highlight-box {
+    border:1.5px solid #e8571a;
+    background:#fff8f4;
+    border-radius:2px;
+    padding:10px 13px;
+    font-size:8pt;
+    color:#555;
+    line-height:1.65;
+    margin-bottom:16px;
+  }
+  .highlight-box .badge {
+    display:inline-block;
+    background:#e8571a;
+    color:#fff;
+    font-size:6.5pt;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    padding:2px 9px;
+    margin-bottom:7px;
+  }
+  .highlight-box strong { color:#12122a; }
+
+  .excluded-box {
+    border:1px dashed #ddd;
+    background:#fafafa;
+    padding:10px 13px;
+    font-size:8pt;
+    color:#777;
+    line-height:1.65;
+    margin-bottom:16px;
+  }
+  .excluded-box b { font-size:7.5pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#aaa; display:block; margin-bottom:4px; }
+
+  .note-box {
+    border:1px solid #e2e2e2;
+    background:#fafafa;
+    padding:10px 13px;
+    font-size:7.5pt;
+    color:#555;
+    line-height:1.65;
+    margin-bottom:16px;
+  }
+  .note-box strong { color:#12122a; }
+
+  /* Conditions */
+  .cgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+  .cbox { border:1px solid #e2e2e2; padding:11px 13px; font-size:8pt; }
+  .cbox h4 { font-size:8pt; font-weight:700; margin-bottom:9px; }
+  .crow { display:flex; align-items:center; gap:9px; margin-bottom:7px; }
+  .pct { background:#12122a; color:#fff; font-weight:700; font-size:8.5pt; padding:3px 7px; min-width:34px; text-align:center; }
+  .crow .cd { flex:1; font-size:7.5pt; color:#555; }
+  .crow .cm { font-weight:700; font-size:8.5pt; }
+  .vnote { font-size:7pt; color:#aaa; margin-top:5px; line-height:1.6; }
+  .cstack { display:flex; flex-direction:column; gap:12px; }
+
+  /* Signatures */
+  .sgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+  .sbox { border:1px solid #e2e2e2; padding:11px 13px; min-height:72px; }
+  .sbox h4 { font-size:7pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:7px; }
+  .sbox p { font-size:8pt; color:#555; }
+  .dline { font-size:8pt; color:#aaa; margin-top:10px; }
+
+  /* Renewal banner */
+  .renewal {
+    background:#12122a;
+    color:#fff;
+    padding:12px 16px;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .renewal p { font-size:8pt; color:rgba(255,255,255,.6); line-height:1.6; }
+  .renewal strong { color:#fff; }
+  .renewal .price-pill {
+    flex-shrink:0;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    padding:8px 16px;
+    text-align:center;
+    white-space:nowrap;
+  }
+  .renewal .price-pill span { display:block; font-size:14pt; font-weight:800; color:#fff; }
+  .renewal .price-pill small { font-size:7pt; color:rgba(255,255,255,.4); }
+
+  @media print {
+    html, body { background:#fff; }
+    .page {
+      margin: 0 !important;
+      height: 297mm !important;
+      min-height: unset !important;
+      overflow: hidden !important;
+      page-break-after: always;
+      break-after: page;
+      padding-top: 11mm !important;
+    }
+    .h1sub { margin-bottom: 10px !important; }
+    .parties { margin-bottom: 10px !important; }
+    .party { padding: 8px 11px !important; }
+    .objet { margin-bottom: 10px !important; padding: 6px 10px !important; }
+    .note-box, .highlight-box, .excluded-box { padding: 7px 11px !important; margin-bottom: 10px !important; }
+    .stitle { margin: 7px 0 5px !important; }
+    .perimetre { margin-bottom: 10px !important; }
+    .pc { padding: 7px 10px !important; }
+    table thead th { padding: 5px 7px !important; }
+    table tbody td { padding: 5px 7px !important; }
+    .subtotal-row td { padding: 5px 7px !important; }
+    .trow td { padding: 6px 7px !important; }
+    .tva { margin-top: 3px !important; margin-bottom: 6px !important; }
+    .cgrid { gap: 8px !important; margin-bottom: 10px !important; }
+    .cbox { padding: 7px 10px !important; }
+    .cbox h4 { margin-bottom: 6px !important; }
+    .cstack { gap: 8px !important; }
+    .crow { margin-bottom: 5px !important; }
+    .sgrid { margin-top: 8px !important; gap: 8px !important; }
+    .sbox { padding: 8px 10px !important; min-height: 60px !important; }
+    .dline { margin-top: 20px !important; }
+    .renewal { margin-bottom: 10px !important; padding: 9px 13px !important; }
+    .pf { margin-top: 4px !important; padding-bottom: 6mm !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1>Devis MSD-2026-005</h1>
+    <p class="h1sub">4 juillet 2026 &nbsp;·&nbsp; Valide 30 jours &nbsp;·&nbsp; Contrat annuel de maintenance — Valencia Expat Market (1000click.es)</p>
+
+    <div class="parties">
+      <div class="party">
+        <div class="plabel">Émetteur</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">NovaTeck Studio || MYLOSTACK DEVELOPMENT</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Guillaume Bidallier</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">14 chemin de la prée, 17380 Saint Loup</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">France</span></div>
+        <div class="prow"><span class="k">N° entreprise :</span><span class="v">92421320000018</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">06 23 49 09 53</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">bidallierguillaume@gmail.com</span></div>
+        <div class="prow"><span class="k">Site :</span><span class="v">novateckstudio.com</span></div>
+      </div>
+      <div class="party">
+        <div class="plabel">Destinataire</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Dufour Christina</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">Belgique</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">+32 471 49 08 03</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">Agence1991@gmail.com</span></div>
+        <div class="prow"><span class="k">N° TVA :</span><span class="v">—</span></div>
+      </div>
+    </div>
+
+    <div class="objet">
+      <b>Objet :</b> Formule Sérénité — Contrat annuel de maintenance technique, support réactif et évolution continue de la plateforme Valencia Expat Market (1000click.es)
+    </div>
+
+    <div class="stitle" style="margin-top:0;">Périmètre technique couvert</div>
+    <div class="perimetre">
+      <div class="pc"><div class="ptag">Plateforme</div><p>1000click.es<br/>Valencia Expat Market</p></div>
+      <div class="pc"><div class="ptag">Framework</div><p>Next.js 16<br/>TypeScript</p></div>
+      <div class="pc"><div class="ptag">Base de données</div><p>MySQL<br/>OVH</p></div>
+      <div class="pc"><div class="ptag">Déploiement</div><p>Vercel<br/>CI/CD GitHub</p></div>
+      <div class="pc"><div class="ptag">Domaine</div><p>À charge du client<br/>(hors contrat)</p></div>
+    </div>
+
+    <div class="stitle">Prestations incluses</div>
+
+    <table>
+      <thead><tr>
+        <th>#</th><th>Prestation</th><th class="r" style="width:80px;">Tarif</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td class="desc">
+            <strong>Maintenance technique</strong>
+            <ul>
+              <li>Mises à jour de sécurité et de dépendances (packages, framework, runtime)</li>
+              <li>Surveillance continue du bon fonctionnement du site</li>
+              <li>Sauvegardes régulières et intégrité des données</li>
+              <li>Correction de tous les bugs signalés, sans limite</li>
+              <li>Hébergement géré — infrastructure Vercel + base de données OVH</li>
+            </ul>
+          </td>
+          <td class="prix">inclus</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="desc">
+            <strong>Support réactif</strong>
+            <ul>
+              <li>Réponse sous 48h ouvrées à toute demande, sans exception</li>
+              <li>Petits ajustements continus inclus — aucune facturation au cas par cas</li>
+              <li>Modifications de textes, visuels, réglages mineurs de l'interface</li>
+              <li>Aucune limite de nombre de demandes sur l'année</li>
+            </ul>
+          </td>
+          <td class="prix">inclus</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="desc">
+            <strong>Évolution annuelle — 1 module ou fonctionnalité complet(e) au choix</strong>
+            <ul>
+              <li>Nouveau type de page, système de notifications, nouvelle langue avec adaptation complète</li>
+              <li>Tableau de bord supplémentaire, intégration avec un service tiers</li>
+              <li>Nouvelle catégorie d'annonces avec ses propres filtres, ou tout besoin équivalent</li>
+              <li>Pour les projets de très grande ampleur, un devis dédié est proposé — 90&nbsp;% des besoins courants sont couverts par cette formule</li>
+            </ul>
+          </td>
+          <td class="prix">inclus</td>
+        </tr>
+
+        <tr class="subtotal-row">
+          <td colspan="2" class="tl">TOTAL HT — FORMULE SÉRÉNITÉ</td>
+          <td class="tv prix">500 €</td>
+        </tr>
+        <tr class="trow">
+          <td colspan="2" class="tl">MONTANT NET HT À RÉGLER</td>
+          <td class="tv">500 € / an</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tva">TVA non applicable, art. 293 B du CGI</p>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-005 &nbsp;·&nbsp; NovaTeck Studio || MYLOSTACK DEVELOPMENT &nbsp;·&nbsp; Formule Sérénité</span><span>1 / 2</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <div class="renewal">
+      <div>
+        <strong>Formule Sérénité — Renouvellement annuel</strong>
+        <p>Le contrat est reconduit tacitement chaque année à la date anniversaire. Le Client peut résilier avant renouvellement par simple email avec un préavis de 30 jours. Le tarif est garanti à 500 €/an sans augmentation surprise la première année.</p>
+      </div>
+      <div class="price-pill">
+        <span>500 €</span>
+        <small>HT / an</small>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>Ce qui n'est pas inclus :</strong> Le nom de domaine reste à la charge du Client. Il est à acquérir directement via un registrar (ex. LWS). Un guide complet est fourni — l'opération prend 5 minutes et coûte généralement entre 10 et 20 €/an selon l'extension choisie. Le nom de domaine reste en pleine propriété du Client à tout moment.
+    </div>
+
+    <div class="note-box">
+      <strong>Pourquoi cette formule ?</strong> Sans contrat de maintenance, chaque intervention — même mineure — est facturée au cas par cas. Avec la Formule Sérénité à 500 €/an, la plateforme reste sécurisée, à jour, hébergée et évolutive toute l'année, sans mauvaise surprise budgétaire. Soit moins de <strong>42 € / mois</strong> pour une tranquillité d'esprit complète.
+    </div>
+
+    <div class="stitle">Conditions</div>
+    <div class="cgrid">
+      <div class="cbox">
+        <h4>Conditions de paiement</h4>
+        <div class="crow">
+          <span class="pct">100%</span>
+          <span class="cd">à la signature du présent devis, soit à réception de la facture</span>
+          <span class="cm">500 €</span>
+        </div>
+        <p class="vnote">Mode de règlement : Virement bancaire<br/>TVA non applicable, art. 293 B du CGI<br/>Facturation annuelle — renouvellement tacite sauf résiliation<br/>Résiliation possible avant renouvellement avec préavis de 30 jours<br/>Non cumulable avec d'autres offres promotionnelles</p>
+      </div>
+      <div class="cstack">
+        <div class="cbox">
+          <h4>Prise d'effet</h4>
+          <p style="font-size:7.5pt;color:#555;line-height:1.6;">La Formule Sérénité prend effet à la date de réception du paiement. La surveillance et la maintenance démarrent immédiatement.</p>
+        </div>
+        <div class="cbox">
+          <h4>Garantie & SLA</h4>
+          <p style="font-size:7.5pt;color:#555;line-height:1.6;">Réponse garantie sous 48h ouvrées. Correction des bugs critiques en priorité maximale. Infrastructure Vercel avec uptime 99,9% garanti.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stitle">Bon pour accord</div>
+    <p style="font-size:8pt;color:#555;margin-bottom:14px;">
+      En signant ce document, le Client accepte sans réserve les prestations et conditions décrites dans le présent devis. La reconduction annuelle est tacite. La résiliation doit être notifiée par email avec 30 jours de préavis avant la date anniversaire du contrat.
+    </p>
+
+    <div class="sgrid">
+      <div class="sbox" style="min-height:110px;">
+        <h4>Signature Prestataire</h4>
+        <p>Guillaume Bidallier<br/>NovaTeck Studio || MYLOSTACK DEVELOPMENT</p>
+        <div class="dline" style="margin-top:36px;">A Saint Loup, le ___/___/______</div>
+      </div>
+      <div class="sbox" style="min-height:110px;">
+        <h4>Signature Client</h4>
+        <p>Nom &amp; Qualité du signataire :</p>
+        <p style="font-size:8pt;color:#aaa;margin-top:4px;">Dufour Christina</p>
+        <div class="dline" style="margin-top:36px;">A _________________, le ___/___/______</div>
+      </div>
+    </div>
+    <p style="font-size:7.5pt;color:#aaa;text-align:center;margin-top:10px;">
+      Faire précéder la signature de la mention manuscrite « Bon pour accord »
+    </p>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-005 &nbsp;·&nbsp; NovaTeck Studio || MYLOSTACK DEVELOPMENT &nbsp;·&nbsp; Formule Sérénité</span><span>2 / 2</span>
+  </div>
+</div>
+
+</body>
+</html>

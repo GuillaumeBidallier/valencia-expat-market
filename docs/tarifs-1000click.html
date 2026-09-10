@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Tarifs Professionnels — 1000Click</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #13172b;
+    --navy2:   #1c2240;
+    --orange:  #E8571A;
+    --orange2: #c94a12;
+    --os:      #FFF3EE;
+    --indigo:  #4F46E5;
+    --indigol: #818cf8;
+    --gray:    #F3F4F6;
+    --gray2:   #E5E7EB;
+    --text:    #1F2937;
+    --muted:   #6B7280;
+  }
+
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #fff;
+    color: var(--text);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── PAGE WRAPPER ─────────────────────────────────── */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  .header {
+    background: var(--navy);
+    padding: 18px 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 5px; }
+  .header-left img { height: 19px; display: block; }
+  .header-tagline {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,.5);
+    font-weight: 500;
+    letter-spacing: .02em;
+    max-width: 220px;
+  }
+  .header-right { text-align: right; flex-shrink: 0; }
+  .header-right .doc-title {
+    font-size: 13pt;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+  }
+  .header-right .doc-year {
+    font-size: 7.5pt;
+    font-weight: 600;
+    color: var(--indigol);
+    margin-top: 3px;
+  }
+  .header-accent {
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange) 0%, var(--indigo) 100%);
+    flex-shrink: 0;
+  }
+
+  /* ── BODY ─────────────────────────────────────────── */
+  .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 22px 0;
+    overflow: hidden;
+  }
+
+  /* ── PARTICULIERS STRIP ──────────────────────────── */
+  .strip-free {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--gray);
+    border-radius: 10px;
+    padding: 9px 14px;
+    margin-top: 14px;
+    flex-shrink: 0;
+  }
+  .strip-free-left { display: flex; align-items: center; gap: 10px; }
+  .strip-free-icon {
+    width: 28px; height: 28px;
+    background: var(--navy);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .strip-free-label { font-size: 8.5pt; font-weight: 800; color: var(--navy); }
+  .strip-free-sub   { font-size: 7pt;   font-weight: 500; color: var(--muted); margin-top: 1px; }
+  .badge-free {
+    background: #D1FAE5; color: #065F46;
+    font-size: 7pt; font-weight: 800;
+    padding: 3px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .strip-free-features {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .strip-free-feat {
+    font-size: 6.5pt; color: var(--muted); font-weight: 500;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .strip-free-feat svg { flex-shrink: 0; }
+
+  /* ── PRO SECTION TITLE ───────────────────────────── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .section-header-line { flex: 1; height: 1px; background: var(--gray2); }
+  .section-title {
+    font-size: 7.5pt; font-weight: 800; color: var(--navy);
+    text-transform: uppercase; letter-spacing: .08em;
+    white-space: nowrap;
+  }
+
+  /* ── CARDS GRID ─────────────────────────────────── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  /* shared card base */
+  .card {
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* Premium — light */
+  .card-premium {
+    background: #fff;
+    border: 2px solid var(--orange);
+    box-shadow: 0 4px 24px rgba(232,87,26,.12);
+  }
+  /* Premium+ — dark */
+  .card-plus {
+    background: var(--navy);
+    border: 2px solid var(--indigol);
+    box-shadow: 0 4px 24px rgba(79,70,229,.18);
+  }
+
+  .card-badge {
+    position: absolute;
+    top: -11px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 6.5pt; font-weight: 800;
+    padding: 3px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: .04em;
+  }
+  .badge-popular { background: var(--orange); color: #fff; }
+  .badge-max     { background: var(--indigol); color: #fff; }
+
+  .card-name {
+    font-size: 11pt; font-weight: 900;
+    letter-spacing: -.02em;
+    margin-bottom: 4px;
+  }
+  .card-premium .card-name { color: var(--navy); }
+  .card-plus    .card-name { color: #fff; }
+
+  .card-price {
+    display: flex; align-items: baseline; gap: 4px;
+    margin-bottom: 2px;
+  }
+  .price-amount {
+    font-size: 28pt; font-weight: 900; letter-spacing: -.03em; line-height: 1;
+  }
+  .card-premium .price-amount { color: var(--orange); }
+  .card-plus    .price-amount { color: var(--indigol); }
+  .price-unit {
+    font-size: 9pt; font-weight: 600;
+  }
+  .card-premium .price-unit { color: var(--muted); }
+  .card-plus    .price-unit { color: rgba(255,255,255,.4); }
+
+  .card-monthly {
+    font-size: 7pt; font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .card-premium .card-monthly { color: var(--muted); }
+  .card-plus    .card-monthly { color: rgba(255,255,255,.4); }
+  .card-premium .card-monthly strong { color: var(--navy); }
+  .card-plus    .card-monthly strong { color: rgba(255,255,255,.65); }
+
+  .card-divider {
+    height: 1px;
+    margin-bottom: 12px;
+  }
+  .card-premium .card-divider { background: rgba(232,87,26,.2); }
+  .card-plus    .card-divider { background: rgba(255,255,255,.1); }
+
+  .card-features {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 8px;
+    flex: 1;
+  }
+  .card-feat {
+    font-size: 8pt; font-weight: 500;
+    display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.35;
+  }
+  .card-premium .card-feat { color: #374151; }
+  .card-plus    .card-feat { color: rgba(255,255,255,.8); }
+  .feat-check {
+    font-size: 9pt; font-weight: 900; line-height: 1.2; flex-shrink: 0;
+  }
+  .card-premium .feat-check { color: var(--orange); }
+  .card-plus    .feat-check { color: var(--indigol); }
+
+  .card-cta {
+    display: block;
+    margin-top: 14px;
+    padding: 9px 0;
+    border-radius: 10px;
+    font-size: 8pt; font-weight: 800;
+    text-align: center; text-decoration: none;
+    letter-spacing: .01em;
+  }
+  .card-premium .card-cta {
+    background: var(--orange); color: #fff;
+  }
+  .card-plus .card-cta {
+    background: var(--indigol); color: #fff;
+  }
+
+  /* ── INFRA STRIP ────────────────────────────────── */
+  .infra-strip {
+    background: var(--gray);
+    border-radius: 12px;
+    padding: 11px 16px;
+    margin-top: 14px;
+    flex-shrink: 0;
+  }
+  .infra-title {
+    font-size: 7pt; font-weight: 800; color: var(--navy);
+    text-transform: uppercase; letter-spacing: .06em;
+    margin-bottom: 9px;
+  }
+  .infra-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  }
+  .infra-item {
+    display: flex; align-items: center; gap: 7px;
+  }
+  .infra-icon {
+    width: 26px; height: 26px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .infra-icon.orange { background: var(--orange); }
+  .infra-icon.indigo { background: var(--indigo); }
+  .infra-icon.navy   { background: var(--navy); }
+  .infra-icon.green  { background: #10B981; }
+  .infra-label {
+    font-size: 7pt; font-weight: 700; color: var(--navy);
+    line-height: 1.2;
+  }
+  .infra-sub { font-size: 6pt; color: var(--muted); }
+
+  /* ── REASSURANCE BAR ────────────────────────────── */
+  .reassurance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 12px;
+    flex-shrink: 0;
+  }
+  .reassurance-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 7pt; font-weight: 600; color: var(--muted);
+  }
+
+  /* ── FOOTER ─────────────────────────────────────── */
+  .footer {
+    background: var(--navy);
+    margin-top: auto;
+    padding: 10px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .footer-url {
+    font-size: 9pt; font-weight: 900; color: #fff; letter-spacing: -.01em;
+  }
+  .footer-url span { color: var(--orange); }
+  .footer-contact {
+    font-size: 7pt; color: rgba(255,255,255,.5); font-weight: 500;
+    text-align: center;
+  }
+  .footer-year {
+    font-size: 7pt; color: rgba(255,255,255,.35); font-weight: 500;
+    text-align: right;
+  }
+
+  /* ── PRINT ───────────────────────────────────────── */
+  @media print {
+    html, body { width: 210mm; height: 297mm; }
+    .page { height: 297mm; overflow: hidden; }
+    .card { box-shadow: none !important; }
+    .card-premium { border: 2px solid var(--orange) !important; }
+    .card-plus    { border: 2px solid var(--indigol) !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <img src="../public/logo-1000click.png" alt="1000Click"/>
+      <p class="header-tagline">La plateforme des francophones en Espagne</p>
+    </div>
+    <div class="header-right">
+      <p class="doc-title">Tarifs Professionnels</p>
+      <p class="doc-year">Grille tarifaire 2026</p>
+    </div>
+  </div>
+  <div class="header-accent"></div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- PARTICULIERS FREE STRIP -->
+    <div class="strip-free">
+      <div class="strip-free-left">
+        <div class="strip-free-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <p class="strip-free-label">Particuliers</p>
+          <p class="strip-free-sub">Publication et consultation d'annonces entre particuliers</p>
+        </div>
+      </div>
+      <div class="strip-free-features">
+        <div class="strip-free-feat">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Photos + prix + description
+        </div>
+        <div class="strip-free-feat">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Contact direct
+        </div>
+        <div class="strip-free-feat">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Messagerie intégrée
+        </div>
+        <span class="badge-free">100% Gratuit</span>
+      </div>
+    </div>
+
+    <!-- PRO SECTION HEADER -->
+    <div class="section-header">
+      <div class="section-header-line"></div>
+      <p class="section-title">Espace Professionnel</p>
+      <div class="section-header-line"></div>
+    </div>
+
+    <!-- PRICING CARDS -->
+    <div class="cards-grid">
+
+      <!-- PREMIUM -->
+      <div class="card card-premium">
+        <div class="card-badge badge-popular">⭐ POPULAIRE</div>
+        <p class="card-name">Premium</p>
+        <div class="card-price">
+          <span class="price-amount">49,99</span>
+          <span class="price-unit">€&thinsp;/an</span>
+        </div>
+        <p class="card-monthly">Soit moins de <strong>4,20&thinsp;€&thinsp;/mois</strong></p>
+        <div class="card-divider"></div>
+        <ul class="card-features">
+          <li class="card-feat"><span class="feat-check">✓</span>Fiche pro complète — logo, photos, description</li>
+          <li class="card-feat"><span class="feat-check">✓</span>Badge <strong>Sponsorisé</strong> sur votre fiche</li>
+          <li class="card-feat"><span class="feat-check">✓</span>Boutons de contact directs — WhatsApp, téléphone, site web</li>
+          <li class="card-feat"><span class="feat-check">✓</span>Encarts dans les pages d'annonces de votre catégorie</li>
+          <li class="card-feat"><span class="feat-check">✓</span>Visible dans l'annuaire des professionnels</li>
+        </ul>
+        <a class="card-cta" href="https://1000click.es/professionnels">Démarrer avec Premium →</a>
+      </div>
+
+      <!-- PREMIUM+ -->
+      <div class="card card-plus">
+        <div class="card-badge badge-max">MAX VISIBILITÉ</div>
+        <p class="card-name">Premium+</p>
+        <div class="card-price">
+          <span class="price-amount">99,99</span>
+          <span class="price-unit">€&thinsp;/an</span>
+        </div>
+        <p class="card-monthly">Soit moins de <strong>8,40&thinsp;€&thinsp;/mois</strong></p>
+        <div class="card-divider"></div>
+        <ul class="card-features">
+          <li class="card-feat"><span class="feat-check">✓</span><span>Tout ce qu'inclut <strong style="color:#fff;">Premium</strong></span></li>
+          <li class="card-feat"><span class="feat-check">✓</span>Badge <strong style="color:#fff;">⭐ Recommandé</strong> sur votre fiche</li>
+          <li class="card-feat"><span class="feat-check">✓</span>Priorité absolue en tête de liste dans votre catégorie</li>
+          <li class="card-feat"><span class="feat-check">✓</span>Affiché en <strong style="color:#fff;">page d'accueil</strong> de la plateforme</li>
+          <li class="card-feat"><span class="feat-check">✓</span>Tableau de bord — statistiques de clics détaillées</li>
+        </ul>
+        <a class="card-cta" href="https://1000click.es/professionnels">Choisir Premium+ →</a>
+      </div>
+
+    </div>
+
+    <!-- INFRA STRIP -->
+    <div class="infra-strip">
+      <p class="infra-title">Inclus dans tout abonnement Pro</p>
+      <div class="infra-grid">
+        <div class="infra-item">
+          <div class="infra-icon orange">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <div>
+            <p class="infra-label">Paiement sécurisé</p>
+            <p class="infra-sub">Stripe · 3D Secure</p>
+          </div>
+        </div>
+        <div class="infra-item">
+          <div class="infra-icon indigo">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <p class="infra-label">SSL inclus</p>
+            <p class="infra-sub">HTTPS sécurisé</p>
+          </div>
+        </div>
+        <div class="infra-item">
+          <div class="infra-icon green">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg>
+          </div>
+          <div>
+            <p class="infra-label">Déploiement continu</p>
+            <p class="infra-sub">GitHub → Vercel</p>
+          </div>
+        </div>
+        <div class="infra-item">
+          <div class="infra-icon navy" style="border: 1px solid var(--gray2);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <p class="infra-label">Disponibilité 24/7</p>
+            <p class="infra-sub">Uptime garanti</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REASSURANCE -->
+    <div class="reassurance">
+      <div class="reassurance-item">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Sans engagement
+      </div>
+      <div class="reassurance-item">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Paiement annuel · renouvelable
+      </div>
+      <div class="reassurance-item">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Activation immédiate
+      </div>
+      <div class="reassurance-item">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Support réactif inclus
+      </div>
+      <div class="reassurance-item">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        ROI dès le 1er client trouvé
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p class="footer-url"><span>1000</span>Click<span>.es</span></p>
+    <p class="footer-contact">contact@1000click.es &nbsp;·&nbsp; Communauté francophone en Espagne</p>
+    <p class="footer-year">Tarifs 2026 · Tarifs HT<br/>Sous réserve de modification</p>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>

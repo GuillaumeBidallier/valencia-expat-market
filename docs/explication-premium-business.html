@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @page { size: A4; margin: 0; }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    background:#fff;
+    font-family:'Inter',Arial,sans-serif;
+    font-size:9.5pt;
+    color:#1a1a1a;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #fff;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  .page-body {
+    flex: 1 0 auto;
+    padding: 16mm 17mm 6mm 17mm;
+  }
+
+  .pf {
+    flex: 0 0 auto;
+    margin: 0 17mm 8mm 17mm;
+    padding-top: 4px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 6.5pt;
+    color: #bbb;
+  }
+
+  .n {
+    position: absolute;
+    top: 0; right: 0;
+    width: 34px; height: 34px;
+    background: #12122a;
+    color: #fff;
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .kicker { font-size:7pt; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#e87c2b; margin-bottom:6px; }
+  h1 { font-size:22pt; font-weight:800; letter-spacing:-0.5px; margin-bottom:5px; line-height:1.15; }
+  .h1sub { font-size:9pt; color:#777; margin-bottom:18px; }
+
+  .lead {
+    border-left:3px solid #12122a;
+    background:#fafafa;
+    padding:12px 15px; margin-bottom:18px; font-size:8.5pt;
+    line-height:1.65; color:#333;
+  }
+  .lead strong { color:#12122a; }
+
+  h2 { font-size:12pt; font-weight:800; margin:20px 0 9px; color:#12122a; }
+  h2 .num { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; background:#12122a; color:#fff; border-radius:50%; font-size:9pt; margin-right:8px; vertical-align:middle; }
+
+  p.body-text { font-size:8.5pt; line-height:1.7; color:#444; margin-bottom:10px; }
+
+  /* ── Why-not box ── */
+  .why-box {
+    border:1px solid #f3d9c4; background:#fff8f3;
+    padding:12px 15px; margin-bottom:18px; font-size:8.5pt; line-height:1.65; color:#5a3a1e;
+  }
+  .why-box strong { color:#c0611a; }
+
+  /* ── Feature grid ── */
+  .fgrid { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #e2e2e2; margin-bottom:18px; }
+  .fc { padding:11px 12px; border-right:1px solid #e2e2e2; break-inside:avoid; }
+  .fc:last-child { border-right:none; }
+  .ftag { display:inline-block; background:#12122a; color:#fff; font-size:6.5pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:2px 6px; margin-bottom:7px; }
+  .fc .fval { font-size:11pt; font-weight:800; color:#12122a; margin-bottom:3px; }
+  .fc p { font-size:7pt; color:#666; line-height:1.6; }
+
+  /* ── Two-column control levels ── */
+  .cgrid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px; }
+  .lvl-box { border:1px solid #e2e2e2; padding:13px 15px; break-inside:avoid; }
+  .lvl-head { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+  .lvl-badge { width:22px; height:22px; border-radius:50%; background:#12122a; color:#fff; font-size:9pt; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .lvl-head h4 { font-size:9pt; font-weight:700; color:#12122a; }
+  .lvl-box p { font-size:7.8pt; color:#555; line-height:1.65; }
+  .lvl-box .where { font-size:6.8pt; color:#999; margin-top:7px; font-style:italic; }
+
+  /* ── Scenario cards ── */
+  .scenario { border:1px solid #e2e2e2; border-left:3px solid #12122a; padding:11px 15px; margin-bottom:10px; break-inside:avoid; }
+  .scenario.off { border-left-color:#bbb; }
+  .scenario .who { font-size:8.5pt; font-weight:700; color:#12122a; margin-bottom:3px; }
+  .scenario p { font-size:8pt; color:#555; line-height:1.6; }
+  .scenario .result { display:inline-block; margin-top:6px; font-size:7.5pt; font-weight:700; padding:2px 8px; }
+  .scenario .result.boost { background:#12122a; color:#fff; }
+  .scenario .result.std { background:#eee; color:#666; }
+
+  /* ── Unchanged list ── */
+  .unchanged { border:1px solid #e2e2e2; background:#fafafa; padding:13px 15px; margin-bottom:18px; }
+  .u-row { display:flex; align-items:baseline; gap:9px; margin-bottom:7px; font-size:8.3pt; color:#444; }
+  .u-row:last-child { margin-bottom:0; }
+  .u-check { color:#12122a; font-weight:800; flex-shrink:0; }
+
+  /* ── Price callout ── */
+  .price-callout {
+    background:#12122a; color:#fff;
+    padding:16px 20px; margin-top:6px;
+    display:flex; align-items:center; justify-content:space-between;
+    break-inside:avoid;
+  }
+  .price-callout .pc-label { font-size:8pt; letter-spacing:.06em; text-transform:uppercase; color:#b8b8c8; margin-bottom:4px; }
+  .price-callout .pc-name { font-size:13pt; font-weight:800; }
+  .price-callout .pc-price { text-align:right; }
+  .price-callout .pc-amount { font-size:19pt; font-weight:800; color:#e87c2b; }
+  .price-callout .pc-sub { font-size:7.5pt; color:#b8b8c8; margin-top:2px; }
+
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <p class="kicker">Module Professionnels — Valencia Expat Market</p>
+    <h1>Le palier « Premium Business »</h1>
+    <p class="h1sub">Comment fonctionne le bonus de photos pour les professionnels Immobilier &amp; Automobiles</p>
+
+    <div class="lead">
+      Aujourd'hui, tous les utilisateurs partent de la même limite de photos sur leurs annonces — qu'ils soient un particulier ou un professionnel gérant un catalogue entier de biens ou de véhicules. Ce document explique le nouveau mécanisme qui permet à un professionnel de débloquer beaucoup plus de photos, et comment vous en gardez le contrôle total à tout moment.
+    </div>
+
+    <h2><span class="num">?</span>Pourquoi pas un système de codes promo</h2>
+    <div class="why-box">
+      L'idée d'un code promo à distribuer et à suivre a été écartée : elle demande de créer, distribuer et surveiller un objet en plus, pour un résultat plus lourd à gérer. <strong>La plateforme sait déjà identifier un professionnel</strong> grâce à son profil dans l'annuaire — inutile d'ajouter un intermédiaire. Le bonus de photos s'appuie directement sur ce qui existe déjà.
+    </div>
+
+    <h2><span class="num">1</span>Le mécanisme en un coup d'œil</h2>
+    <div class="fgrid">
+      <div class="fc">
+        <span class="ftag">Qui</span>
+        <div class="fval">Pros abonnés</div>
+        <p>Tout professionnel de l'annuaire souscrivant au palier Premium Business.</p>
+      </div>
+      <div class="fc">
+        <span class="ftag">Où</span>
+        <div class="fval">Son métier</div>
+        <p>Le bonus s'applique uniquement dans son domaine : Immobilier ou Automobiles.</p>
+      </div>
+      <div class="fc">
+        <span class="ftag">Combien</span>
+        <div class="fval">30 photos</div>
+        <p>Débloquées par défaut, au lieu de 3 gratuites / 12 après achat ponctuel.</p>
+      </div>
+      <div class="fc">
+        <span class="ftag">Réglable</span>
+        <div class="fval">100 % vous</div>
+        <p>Chiffre modifiable à tout moment, globalement ou pour un pro précis.</p>
+      </div>
+    </div>
+
+    <h2><span class="num">2</span>Le contrôle administrateur, à deux niveaux</h2>
+    <div class="cgrid2">
+      <div class="lvl-box">
+        <div class="lvl-head">
+          <div class="lvl-badge">1</div>
+          <h4>Réglage global par métier</h4>
+        </div>
+        <p>Dans les Paramètres de l'administration, un champ « Photos par défaut » pour Immobilier et un pour Automobiles, initialisés à 30. Vous les modifiez à tout moment, pour tous les professionnels Premium Business du métier concerné.</p>
+        <p class="where">Emplacement : Admin → Paramètres → Outils base de données</p>
+      </div>
+      <div class="lvl-box">
+        <div class="lvl-head">
+          <div class="lvl-badge">2</div>
+          <h4>Exception par professionnel</h4>
+        </div>
+        <p>Sur la fiche de chaque professionnel, un champ « Photos personnalisées », vide par défaut. Si vous le renseignez pour un pro en particulier, ce chiffre remplace le réglage global rien que pour lui — qu'il soit en Premium Business ou non.</p>
+        <p class="where">Emplacement : Admin → Gérer les professionnels → fiche du pro</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="pf">
+    <span>Le palier Premium Business — Valencia Expat Market</span>
+    <span>Page 1 / 2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <p class="kicker">Module Professionnels — Valencia Expat Market</p>
+    <h1 style="font-size:16pt;">Exemple concret &amp; récapitulatif</h1>
+    <p class="h1sub">Trois cas réels pour visualiser le fonctionnement</p>
+
+    <h2 style="margin-top:6px;"><span class="num">3</span>Exemples concrets</h2>
+
+    <div class="scenario">
+      <div class="who">🏠 Une agence immobilière, abonnée Premium Business</div>
+      <p>Elle dépose une annonce de vente d'appartement. Elle peut ajouter jusqu'à <strong>30 photos</strong> — de quoi montrer chaque pièce, l'extérieur, le quartier.</p>
+      <span class="result boost">30 photos débloquées</span>
+    </div>
+
+    <div class="scenario">
+      <div class="who">🚗 Un concessionnaire automobile, abonné Premium Business</div>
+      <p>Il publie une annonce de véhicule d'occasion. Même principe : <strong>30 photos</strong> disponibles pour présenter l'intérieur, l'extérieur, le moteur, les équipements.</p>
+      <span class="result boost">30 photos débloquées</span>
+    </div>
+
+    <div class="scenario off">
+      <div class="who">💼 Un professionnel Premium ou Premium+ (hors Premium Business)</div>
+      <p>Il garde le fonctionnement actuel de tout utilisateur : 3 photos gratuites, ou 12 après l'achat ponctuel existant (7,99 €). Aucun changement pour lui.</p>
+      <span class="result std">Limite standard</span>
+    </div>
+
+    <div class="scenario off">
+      <div class="who">⭐ Le cas particulier : un pro que vous voulez avantager personnellement</div>
+      <p>Peu importe son abonnement — vous lui fixez un nombre de photos sur mesure depuis sa fiche admin, qui prend le dessus sur tout le reste.</p>
+      <span class="result boost">Photos personnalisées</span>
+    </div>
+
+    <h2><span class="num">4</span>Ce qui ne change pas</h2>
+    <div class="unchanged">
+      <div class="u-row"><span class="u-check">✓</span> 3 photos gratuites pour tout utilisateur standard, comme aujourd'hui.</div>
+      <div class="u-row"><span class="u-check">✓</span> +9 photos supplémentaires (12 au total) via l'achat ponctuel existant à 7,99 €.</div>
+      <div class="u-row"><span class="u-check">✓</span> 15 photos pour les comptes administrateur.</div>
+      <div class="u-row"><span class="u-check">✓</span> Aucun code, aucun objet à distribuer ou à suivre dans le temps.</div>
+    </div>
+
+    <h2><span class="num">5</span>Le nouveau palier</h2>
+    <div class="price-callout">
+      <div>
+        <div class="pc-label">Nouveau palier d'abonnement pro</div>
+        <div class="pc-name">Premium Business</div>
+      </div>
+      <div class="pc-price">
+        <div class="pc-amount">179,99 €<span style="font-size:9pt;font-weight:600;">/mois</span></div>
+        <div class="pc-sub">ou 1 799 €/an (≈ 150 €/mois)</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pf">
+    <span>Le palier Premium Business — Valencia Expat Market</span>
+    <span>Page 2 / 2</span>
+  </div>
+</div>
+
+</body>
+</html>

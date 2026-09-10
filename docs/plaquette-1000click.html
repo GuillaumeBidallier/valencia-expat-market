@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>1000Click — Plaquette de présentation 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#1A1F36;--orange:#E8571A;--od:#C4471A;--os:#FFF3EE;--indigo:#4F46E5;--id:#312e81;--is:#EEF2FF;--gray:#F4F5F7;}
+html{font-family:'Inter',Arial,sans-serif;font-size:10pt;color:var(--navy);background:#d0d0d0;}
+.page{width:210mm;min-height:297mm;margin:0 auto 10px;position:relative;overflow:hidden;display:flex;flex-direction:column;background:#fff;}
+@page{size:A4;margin:0;}
+@media print{html{background:#fff;}.page{margin:0;page-break-after:always;break-after:page;height:297mm!important;overflow:hidden!important;min-height:unset!important;}.browser{box-shadow:none!important;border:none!important;border-radius:12px!important;overflow:hidden!important;}.browser-bar{background:#13172b!important;border:none!important;}.pcard{box-shadow:none!important;border:1px solid #e0e0e0!important;}.float{box-shadow:none!important;}*{animation:none!important;transition:none!important;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,87,26,.45)}70%{box-shadow:0 0 0 12px rgba(232,87,26,0)}}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes glowPulse{0%,100%{opacity:.18;transform:scale(1)}50%{opacity:.32;transform:scale(1.06)}}
+.au{animation:fadeUp .65s cubic-bezier(.22,.68,0,1.2) both;}
+.ai{animation:fadeIn .65s ease both;}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}
+.float{animation:float 4s ease-in-out infinite;}
+.float2{animation:float2 4.8s ease-in-out .5s infinite;}
+.grad-text{background:linear-gradient(135deg,#E8571A 0%,#ff9a5c 45%,#4F46E5 100%);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradShift 4s ease infinite;}
+.grid-bg{background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:32px 32px;}
+.glow-o{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(232,87,26,.4) 0%,transparent 70%);filter:blur(48px);pointer-events:none;}
+.glow-i{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.35) 0%,transparent 70%);filter:blur(56px);pointer-events:none;}
+.glow-pulse{animation:glowPulse 4s ease-in-out infinite;}
+.browser{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 24px 64px -12px rgba(0,0,0,.22),0 0 0 1px rgba(0,0,0,.06);}
+.browser-bar{background:#13172b;padding:5px 10px;display:flex;align-items:center;gap:7px;}
+.browser-bar::before{content:"9:41";font-size:5.5pt;font-weight:700;color:rgba(255,255,255,.65);white-space:nowrap;letter-spacing:.02em;}
+.b-dots{display:none;}
+.browser-url{flex:1;background:rgba(255,255,255,.07);border-radius:20px;padding:3px 10px;font-size:5.5pt;color:rgba(255,255,255,.45);border:none;text-align:center;letter-spacing:.01em;}
+.browser-bar::after{content:"";display:flex;align-items:center;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 12'%3E%3Crect x='0' y='2' width='5' height='8' rx='1.5' fill='rgba(255,255,255,.55)'/%3E%3Crect x='6' y='1' width='5' height='9' rx='1.5' fill='rgba(255,255,255,.55)'/%3E%3Crect x='12' y='0' width='5' height='10' rx='1.5' fill='rgba(255,255,255,.55)'/%3E%3Cpath d='M21 3h12a1 1 0 011 1v4a1 1 0 01-1 1H21a1 1 0 01-1-1V4a1 1 0 011-1zm0 .5v5h12v-5H21zm13 1.25v2.5a.75.75 0 000-2.5z' fill='rgba(255,255,255,.5)'/%3E%3Crect x='21.25' y='3.75' width='10.5' height='4.5' rx='.5' fill='rgba(255,255,255,.8)'/%3E%3C/svg%3E") no-repeat center;width:36px;height:12px;flex-shrink:0;}
+.slabel{font-size:7pt;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px;}
+.stitle{font-size:20pt;font-weight:900;line-height:1.08;margin-bottom:8px;letter-spacing:-.3px;}
+.ssub{font-size:8.5pt;color:#666;line-height:1.65;}
+.fl{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.fl li{display:flex;align-items:flex-start;gap:9px;font-size:8pt;line-height:1.5;}
+.fd{width:17px;height:17px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.fd span{width:5px;height:5px;border-radius:50%;background:#fff;}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:9mm 13mm 0;}
+.pc{padding:6mm 13mm 9mm;display:flex;flex-direction:column;flex:1;}
+.tag{display:inline-block;font-size:6.5pt;font-weight:800;padding:2px 8px;border-radius:20px;}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 — COUVERTURE -->
+<div class="page grid-bg" style="background:var(--navy);justify-content:space-between;">
+  <div class="glow-o glow-pulse" style="width:500px;height:500px;top:-140px;right:-100px;opacity:1;"></div>
+  <div class="glow-i glow-pulse" style="width:420px;height:420px;bottom:-80px;left:-60px;opacity:.9;animation-delay:2s;"></div>
+
+  <div style="padding:11mm 13mm 0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;">
+    <img src="../public/logo-1000click-white.png" style="height:34px;display:block;" alt="1000Click"/>
+    <div style="font-size:7pt;color:rgba(255,255,255,.35);font-weight:600;letter-spacing:.12em;text-transform:uppercase;">Dossier de présentation · 2026</div>
+  </div>
+
+  <div style="padding:6mm 13mm 0;flex:1;display:flex;flex-direction:column;position:relative;z-index:2;min-height:0;">
+    <!-- Texte centré verticalement dans la moitié haute -->
+    <div style="display:flex;flex-direction:column;justify-content:center;flex:1;">
+      <div class="au d1" style="display:inline-flex;align-items:center;gap:7px;background:rgba(232,87,26,.14);border:1px solid rgba(232,87,26,.32);border-radius:20px;padding:5px 14px;margin-bottom:16px;width:fit-content;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--orange);display:inline-block;animation:pulse 2s infinite;"></span>
+        <span style="font-size:7pt;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:.13em;">Plateforme digitale · Valencia, Espagne</span>
+      </div>
+      <h1 class="au d2" style="font-size:30pt;font-weight:900;color:#fff;line-height:1.07;letter-spacing:-.5px;margin-bottom:14px;">
+        La plateforme des<br/><span class="grad-text">expatriés francophones</span><br/>en Espagne
+      </h1>
+      <p class="au d3" style="font-size:9pt;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:20px;max-width:130mm;">
+        Petites annonces entre particuliers · Annuaire pro recommandé · Messagerie intégrée · Espace Pro
+      </p>
+      <div class="au d4" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 18px;text-align:center;"><p style="font-size:18pt;font-weight:900;color:var(--orange);">11</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:1px;">catégories</p></div>
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 18px;text-align:center;"><p style="font-size:18pt;font-weight:900;color:#fff;">7</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:1px;">langues</p></div>
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 18px;text-align:center;"><p style="font-size:18pt;font-weight:900;color:var(--indigo);">2</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:1px;">tiers Pro</p></div>
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 18px;text-align:center;"><p style="font-size:18pt;font-weight:900;color:#34d399;">100%</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:1px;">en ligne</p></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:10px;padding:8px 12px;width:fit-content;">
+        <span style="width:7px;height:7px;border-radius:50%;background:#34d399;flex-shrink:0;animation:pulse 2.4s infinite;display:inline-block;"></span>
+        <div><p style="font-size:7pt;font-weight:800;color:#34d399;">En ligne · 1000click.es</p><p style="font-size:6.5pt;color:rgba(255,255,255,.3);">Déployé sur Vercel · Production</p></div>
+      </div>
+    </div>
+    <!-- Logo grand format en bas, dans une carte blanche -->
+    <div style="display:flex;justify-content:center;align-items:center;padding:6mm 0 4mm;">
+      <div class="float" style="background:#fff;border-radius:22px;padding:18px 28px;box-shadow:0 30px 80px -15px rgba(0,0,0,.55);display:inline-block;max-width:150mm;">
+        <img src="../public/screens/screen-cover-logo.png" style="width:100%;height:auto;display:block;"/>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:0 13mm 9mm;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;">
+    <p style="font-size:6.5pt;color:rgba(255,255,255,.2);">Confidentiel · NovaTeck Studio — MYLOSTACK DEVELOPMENT · Guillaume Bidallier</p>
+    <p style="font-size:6.5pt;color:rgba(255,255,255,.2);">1 / 12</p>
+  </div>
+</div>
+
+
+<!-- PAGE 2 — VUE D'ENSEMBLE -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Vue d'ensemble</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--orange);">01 — Qu'est-ce que 1000Click ?</div>
+    <h2 class="stitle au d2">Une plateforme complète,<br/>clé en main, déjà en ligne</h2>
+    <p class="ssub au d3" style="max-width:145mm;margin-bottom:16px;">1000Click est la première plateforme communautaire dédiée aux expatriés francophones en Espagne. Particuliers et professionnels s'y retrouvent pour acheter, vendre, échanger des biens et services — et identifier les prestataires de confiance dans leur région.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div class="au d3" style="background:var(--os);border-radius:14px;padding:17px 15px;border:1px solid rgba(232,87,26,.13);">
+        <div style="width:40px;height:40px;border-radius:11px;background:var(--orange);display:flex;align-items:center;justify-content:center;margin-bottom:11px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <p style="font-size:11pt;font-weight:900;color:var(--navy);margin-bottom:6px;">Petites annonces</p>
+        <p style="font-size:7.5pt;color:#666;line-height:1.6;">Publication gratuite · 11 catégories · Recherche avancée · Photos · Messagerie directe</p>
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="tag" style="background:rgba(232,87,26,.1);color:var(--orange);">Immobilier</span>
+          <span class="tag" style="background:rgba(232,87,26,.1);color:var(--orange);">Véhicules</span>
+          <span class="tag" style="background:rgba(232,87,26,.1);color:var(--orange);">+9 autres</span>
+        </div>
+      </div>
+      <div class="au d4" style="background:var(--is);border-radius:14px;padding:17px 15px;border:1px solid rgba(79,70,229,.13);">
+        <div style="width:40px;height:40px;border-radius:11px;background:var(--indigo);display:flex;align-items:center;justify-content:center;margin-bottom:11px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg></div>
+        <p style="font-size:11pt;font-weight:900;color:var(--navy);margin-bottom:6px;">Annuaire Pro</p>
+        <p style="font-size:7.5pt;color:#666;line-height:1.6;">Fiches professionnelles · 2 niveaux · Géolocalisation · Statistiques de clics</p>
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="tag" style="background:rgba(79,70,229,.1);color:var(--indigo);">Premium 49,99€</span>
+          <span class="tag" style="background:rgba(79,70,229,.1);color:var(--indigo);">Premium+ 99,99€</span>
+        </div>
+      </div>
+      <div class="au d5" style="background:#f0fdf4;border-radius:14px;padding:17px 15px;border:1px solid rgba(16,185,129,.18);">
+        <div style="width:40px;height:40px;border-radius:11px;background:#10b981;display:flex;align-items:center;justify-content:center;margin-bottom:11px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <p style="font-size:11pt;font-weight:900;color:var(--navy);margin-bottom:6px;">Messagerie</p>
+        <p style="font-size:7.5pt;color:#666;line-height:1.6;">Conversations liées aux annonces · Interface intuitive · Temps réel · Notifications</p>
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="tag" style="background:rgba(16,185,129,.1);color:#059669;">Sécurisé</span>
+          <span class="tag" style="background:rgba(16,185,129,.1);color:#059669;">Historique complet</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--navy);border-radius:14px;display:grid;grid-template-columns:repeat(6,1fr);overflow:hidden;margin-bottom:14px;">
+      <div style="padding:15px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.07);"><p style="font-size:18pt;font-weight:900;color:var(--orange);">11</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:2px;">catégories</p></div>
+      <div style="padding:15px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.07);"><p style="font-size:18pt;font-weight:900;color:#fff;">7</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:2px;">langues</p></div>
+      <div style="padding:15px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.07);"><p style="font-size:18pt;font-weight:900;color:var(--indigo);">2</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:2px;">tiers Pro</p></div>
+      <div style="padding:15px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.07);"><p style="font-size:18pt;font-weight:900;color:#34d399;">∞</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:2px;">annonces</p></div>
+      <div style="padding:15px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.07);"><p style="font-size:18pt;font-weight:900;color:#fff;">&lt;1s</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:2px;">chargement</p></div>
+      <div style="padding:15px 10px;text-align:center;"><p style="font-size:18pt;font-weight:900;color:var(--orange);">100%</p><p style="font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:2px;">en ligne</p></div>
+    </div>
+
+    <div>
+      <p style="font-size:7pt;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Stack technique</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+        <span class="tag" style="background:var(--navy);color:#fff;">Next.js 16</span>
+        <span class="tag" style="background:#3178c6;color:#fff;">TypeScript</span>
+        <span class="tag" style="background:#06b6d4;color:#fff;">Tailwind CSS v4</span>
+        <span class="tag" style="background:#5a67d8;color:#fff;">Prisma ORM</span>
+        <span class="tag" style="background:#f48024;color:#fff;">MySQL · OVH</span>
+        <span class="tag" style="background:#000;color:#fff;">Vercel</span>
+        <span class="tag" style="background:#635bff;color:#fff;">Stripe</span>
+        <span class="tag" style="background:#f5a623;color:#fff;">Auth.js</span>
+        <span class="tag" style="background:#10b981;color:#fff;">Vercel Blob</span>
+        <span class="tag" style="background:#e11d48;color:#fff;">next-intl · i18n</span>
+        <span class="tag" style="background:var(--navy);color:rgba(255,255,255,.55);">HTTPS · SSL · RGPD</span>
+      </div>
+    </div>
+    <!-- Full-width homepage screenshot -->
+    <div class="float" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+        <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es</div></div>
+        <img src="../public/screens/screen-home-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">2 / 12</div>
+</div>
+
+<!-- PAGE 3 — PETITES ANNONCES (grand mockup) -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Petites annonces</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--orange);">02 — Module annonces</div>
+    <h2 class="stitle au d2">Déposer, trouver,<br/>vendre en 3 clics</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1.8fr;gap:16px;flex:1;margin-top:8px;">
+      <!-- Features left -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <p class="ssub" style="margin-bottom:14px;">Publication et consultation d'annonces entièrement gratuites, avec photos, prix, localisation et contact direct.</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Publication gratuite</strong><span style="font-size:7.5pt;color:#777;">Photos, description, prix, ville — en 3 minutes</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Recherche avancée</strong><span style="font-size:7.5pt;color:#777;">Mot-clé · Catégorie · Fourchette de prix · Ville</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">11 catégories</strong><span style="font-size:7.5pt;color:#777;">Immobilier, Véhicules, Emploi, Électronique, Jardinage, Services, Don, Animaux…</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Contact intégré</strong><span style="font-size:7.5pt;color:#777;">Messagerie interne + WhatsApp direct depuis la fiche</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Tableau de bord vendeur</strong><span style="font-size:7.5pt;color:#777;">Vues, favoris, statuts (active / vendue / expirée)</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Favoris</strong><span style="font-size:7.5pt;color:#777;">Sauvegarder des annonces pour y revenir</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">SEO optimisé</strong><span style="font-size:7.5pt;color:#777;">Chaque annonce indexée et partageable</span></div></li>
+        </ul>
+        <div style="margin-top:12px;background:var(--os);border-radius:10px;padding:12px;border:1px solid rgba(232,87,26,.15);">
+          <p style="font-size:7pt;font-weight:800;color:var(--orange);margin-bottom:4px;">Pro tip</p>
+          <p style="font-size:7.5pt;color:#555;line-height:1.5;">Les pros Premium+ apparaissent en encart sponsorisé sur les pages d'annonces de leur catégorie.</p>
+        </div>
+      </div>
+
+      <!-- BIG browser mockup right -->
+      <div class="float" style="height:100%;display:flex;flex-direction:column;">
+        <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+          <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es/annonces</div></div>
+          <img src="../public/screens/screen-annonces-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">3 / 12</div>
+</div>
+
+
+<!-- PAGE 4 — ANNUAIRE PRO (grand mockup fiche) -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Annuaire Pro</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--indigo);">03 — Professionnels recommandés</div>
+    <h2 class="stitle au d2">Une vitrine digitale<br/>ciblée expatriés</h2>
+
+    <div style="display:grid;grid-template-columns:1.8fr 1fr;gap:16px;flex:1;margin-top:8px;">
+      <!-- BIG browser mockup left -->
+      <div class="float" style="height:100%;display:flex;flex-direction:column;">
+        <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+          <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es/professionnels/sophie-martin</div></div>
+          <img src="../public/screens/screen-sophie-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+        </div>
+      </div>
+
+      <!-- Tiers right -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <p class="ssub" style="margin-bottom:14px;">Deux niveaux de visibilité pour s'adapter à chaque budget. Paiement annuel, sans engagement.</p>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="border:2px solid var(--orange);border-radius:11px;padding:12px 14px;background:var(--os);position:relative;">
+            <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:6pt;font-weight:800;padding:2px 10px;border-radius:8px;white-space:nowrap;">⭐ POPULAIRE</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+              <p style="font-size:9pt;font-weight:900;color:var(--navy);">Premium</p>
+              <p style="font-size:9pt;font-weight:900;color:var(--orange);">49,99 €<span style="font-size:6.5pt;color:#888;font-weight:500;">/an</span></p>
+            </div>
+            <p style="font-size:7pt;color:#888;margin-bottom:7px;">Visibilité dans tous les encarts</p>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;">
+              <li style="font-size:7pt;color:#555;display:flex;gap:5px;"><span style="color:var(--orange);font-weight:700;">✓</span>Logo + photos + description</li>
+              <li style="font-size:7pt;color:#555;display:flex;gap:5px;"><span style="color:var(--orange);font-weight:700;">✓</span>Badge Sponsorisé · WhatsApp</li>
+              <li style="font-size:7pt;color:#555;display:flex;gap:5px;"><span style="color:var(--orange);font-weight:700;">✓</span>Encarts sur pages annonces</li>
+            </ul>
+          </div>
+          <div style="border:2px solid var(--indigo);border-radius:11px;padding:12px 14px;background:var(--navy);position:relative;">
+            <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--indigo);color:#fff;font-size:6pt;font-weight:800;padding:2px 10px;border-radius:8px;white-space:nowrap;">MAX VISIBILITÉ</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+              <p style="font-size:9pt;font-weight:900;color:#fff;">Premium+</p>
+              <p style="font-size:9pt;font-weight:900;color:#818cf8;">99,99 €<span style="font-size:6.5pt;color:rgba(255,255,255,.3);font-weight:500;">/an</span></p>
+            </div>
+            <p style="font-size:7pt;color:rgba(255,255,255,.4);margin-bottom:7px;">Pour dominer sa catégorie</p>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;">
+              <li style="font-size:7pt;color:rgba(255,255,255,.7);display:flex;gap:5px;"><span style="color:#818cf8;font-weight:700;">✓</span>Tout Premium inclus</li>
+              <li style="font-size:7pt;color:rgba(255,255,255,.7);display:flex;gap:5px;"><span style="color:#818cf8;font-weight:700;">✓</span>Badge ⭐ Recommandé</li>
+              <li style="font-size:7pt;color:rgba(255,255,255,.7);display:flex;gap:5px;"><span style="color:#818cf8;font-weight:700;">✓</span>Tête de liste · Homepage</li>
+              <li style="font-size:7pt;color:rgba(255,255,255,.7);display:flex;gap:5px;"><span style="color:#818cf8;font-weight:700;">✓</span>Statistiques de clics</li>
+            </ul>
+          </div>
+          <p style="font-size:6.5pt;color:#aaa;margin-top:4px;line-height:1.5;">Paiement sécurisé par Stripe · Résiliable à tout moment</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">4 / 12</div>
+</div>
+
+
+<!-- PAGE 5 — ESPACE UTILISATEUR (Mon compte) -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Espace utilisateur</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--orange);">04 — Mon compte</div>
+    <h2 class="stitle au d2">Un tableau de bord<br/>personnel complet</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1.7fr;gap:16px;flex:1;margin-top:8px;">
+      <div style="display:flex;flex-direction:column;">
+        <p class="ssub" style="margin-bottom:14px;">Chaque utilisateur dispose d'un espace personnel pour gérer ses annonces, favoris, messages et préférences en un seul endroit.</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Mes annonces</strong><span style="font-size:7.5pt;color:#777;">Vues, favoris, statut · Modifier ou supprimer</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Mes favoris</strong><span style="font-size:7.5pt;color:#777;">Retrouver les annonces sauvegardées</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Messagerie intégrée</strong><span style="font-size:7.5pt;color:#777;">Conversations groupées par annonce</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Mon profil</strong><span style="font-size:7.5pt;color:#777;">Nom, email, mot de passe, préférences de contact</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Statistiques</strong><span style="font-size:7.5pt;color:#777;">Total annonces, vues cumulées, favoris reçus</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Préférences</strong><span style="font-size:7.5pt;color:#777;">Numéro WhatsApp, affichage téléphone, langue</span></div></li>
+        </ul>
+        <div style="margin-top:12px;">
+          <div style="background:var(--is);border-radius:10px;padding:12px;border:1px solid rgba(79,70,229,.15);">
+            <p style="font-size:7.5pt;font-weight:800;color:var(--indigo);margin-bottom:4px;">Espace Pro intégré</p>
+            <p style="font-size:7pt;color:#555;line-height:1.5;">Les professionnels accèdent directement à leur tableau de bord Pro depuis leur compte utilisateur.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="float" style="height:100%;display:flex;flex-direction:column;">
+        <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+          <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es/mon-compte</div></div>
+          <img src="../public/screens/screen-moncompte-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">5 / 12</div>
+</div>
+
+
+<!-- PAGE 6 — TABLEAU DE BORD PRO -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Espace professionnel</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--indigo);">05 — Tableau de bord Pro</div>
+    <h2 class="stitle au d2">Gérez votre visibilité<br/>depuis un seul endroit</h2>
+
+    <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:16px;flex:1;margin-top:8px;">
+      <!-- BIG Pro dashboard mockup -->
+      <div class="float" style="height:100%;display:flex;flex-direction:column;">
+        <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+          <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es/mon-compte/profil-pro</div></div>
+          <img src="../public/screens/screen-pros-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+        </div>
+      </div>
+
+      <!-- Features right -->
+      <div style="display:flex;flex-direction:column;">
+        <p class="ssub" style="margin-bottom:14px;">Le tableau de bord Pro donne au professionnel un contrôle total sur sa présence en ligne.</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Fiche éditable</strong><span style="font-size:7.5pt;color:#777;">Nom, description, catégorie, zones d'intervention</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Médias</strong><span style="font-size:7.5pt;color:#777;">Logo, bannière, galerie photos (jusqu'à 8)</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Statistiques Premium+</strong><span style="font-size:7.5pt;color:#777;">Vues, clics WhatsApp, téléphone, site web</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Abonnement Stripe</strong><span style="font-size:7.5pt;color:#777;">Gestion en ligne, renouvellement automatique</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Géolocalisation</strong><span style="font-size:7.5pt;color:#777;">Affichage prioritaire par zone</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Badges de confiance</strong><span style="font-size:7.5pt;color:#777;">Sponsorisé · Recommandé · Vérifié</span></div></li>
+        </ul>
+        <div style="margin-top:12px;background:var(--navy);border-radius:10px;padding:12px;">
+          <p style="font-size:7pt;font-weight:800;color:#fff;margin-bottom:5px;">Retour sur investissement</p>
+          <p style="font-size:7pt;color:rgba(255,255,255,.5);line-height:1.5;">À 49,99€/an, un seul client trouvé via la plateforme rembourse l'abonnement. Le Premium+ à 99,99€ offre une visibilité maximale pour moins de 9€/mois.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">6 / 12</div>
+</div>
+
+<!-- PAGE 7 — MESSAGERIE -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Messagerie</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--orange);">06 — Messagerie intégrée</div>
+    <h2 class="stitle au d2">Acheteurs et vendeurs<br/>en contact direct</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1.8fr;gap:16px;flex:1;margin-top:8px;">
+      <div style="display:flex;flex-direction:column;">
+        <p class="ssub" style="margin-bottom:14px;">Chaque conversation est liée à une annonce précise. Les échanges sont organisés, sécurisés et accessibles depuis tout appareil.</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Liée à l'annonce</strong><span style="font-size:7.5pt;color:#777;">Le contexte (titre, prix, photo) toujours visible en haut</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Design aux couleurs du site</strong><span style="font-size:7.5pt;color:#777;">Bulles indigo (envoyé) · Orange (reçu)</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Compteur non-lus</strong><span style="font-size:7.5pt;color:#777;">Badge visible depuis la navigation principale</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Envoi rapide</strong><span style="font-size:7.5pt;color:#777;">Touche Entrée pour envoyer · Shift+Entrée pour saut de ligne</span></div></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Sécurisé</strong><span style="font-size:7.5pt;color:#777;">Authentification requise · Aucun spam</span></div></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><div><strong style="display:block;font-size:8.5pt;">Historique complet</strong><span style="font-size:7.5pt;color:#777;">Toutes les conversations accessibles à tout moment</span></div></li>
+        </ul>
+        <div style="margin-top:12px;background:#f0fdf4;border-radius:10px;padding:12px;border:1px solid rgba(16,185,129,.15);">
+          <p style="font-size:7.5pt;font-weight:800;color:#059669;margin-bottom:4px;">Alternative WhatsApp</p>
+          <p style="font-size:7pt;color:#555;line-height:1.5;">Les professionnels Premium peuvent aussi être contactés directement par WhatsApp depuis leur fiche.</p>
+        </div>
+      </div>
+
+      <!-- BIG chat mockup -->
+      <div class="float" style="height:100%;display:flex;flex-direction:column;">
+        <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+          <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es/messages</div></div>
+          <img src="../public/screens/screen-messages-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">7 / 12</div>
+</div>
+
+
+<!-- PAGE 8 — ADMIN & SÉCURITÉ -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Administration & Sécurité</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--orange);">07 — Gestion & Sécurité</div>
+    <h2 class="stitle au d2">Administration complète<br/>et sécurité renforcée</h2>
+    <p class="ssub" style="margin-bottom:16px;max-width:140mm;">La plateforme intègre un panel d'administration complet permettant au propriétaire de gérer chaque aspect du site en temps réel.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;">
+      <!-- Admin panel -->
+      <div style="background:var(--navy);border-radius:14px;padding:18px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--orange);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        </div>
+        <p style="font-size:11pt;font-weight:900;color:#fff;margin-bottom:12px;">Panel Admin</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:rgba(255,255,255,.65);">Modération des annonces (auto / manuelle)</span></li>
+          <li><div class="fd" style="background:rgba(255,255,255,.25);"><span></span></div><span style="font-size:7.5pt;color:rgba(255,255,255,.65);">Gestion des utilisateurs et professionnels</span></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:rgba(255,255,255,.65);">Carousel homepage : images personnalisables</span></li>
+          <li><div class="fd" style="background:rgba(255,255,255,.25);"><span></span></div><span style="font-size:7.5pt;color:rgba(255,255,255,.65);">Bannière d'annonce site-wide configurable</span></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:rgba(255,255,255,.65);">Mode maintenance activable en 1 clic</span></li>
+          <li><div class="fd" style="background:rgba(255,255,255,.25);"><span></span></div><span style="font-size:7.5pt;color:rgba(255,255,255,.65);">Email de contact et paramètres globaux</span></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:rgba(255,255,255,.65);">Suivi des abonnements Stripe en temps réel</span></li>
+        </ul>
+      </div>
+
+      <!-- Security -->
+      <div style="background:#f0fdf4;border-radius:14px;padding:18px;border:1px solid rgba(16,185,129,.2);">
+        <div style="width:36px;height:36px;border-radius:10px;background:#10b981;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <p style="font-size:11pt;font-weight:900;color:var(--navy);margin-bottom:12px;">Sécurité & RGPD</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:#10b981;"><span></span></div><span style="font-size:7.5pt;color:#444;">HTTPS/SSL automatique via Vercel Edge</span></li>
+          <li><div class="fd" style="background:#10b981;"><span></span></div><span style="font-size:7.5pt;color:#444;">Authentification sécurisée (Auth.js + bcrypt)</span></li>
+          <li><div class="fd" style="background:#10b981;"><span></span></div><span style="font-size:7.5pt;color:#444;">Paiements via Stripe (aucune CB stockée)</span></li>
+          <li><div class="fd" style="background:#10b981;"><span></span></div><span style="font-size:7.5pt;color:#444;">Données hébergées UE · Conformité RGPD</span></li>
+          <li><div class="fd" style="background:#10b981;"><span></span></div><span style="font-size:7.5pt;color:#444;">Rôles admin / user / pro sécurisés côté serveur</span></li>
+          <li><div class="fd" style="background:#10b981;"><span></span></div><span style="font-size:7.5pt;color:#444;">Suppression de compte et anonymisation</span></li>
+          <li><div class="fd" style="background:#10b981;"><span></span></div><span style="font-size:7.5pt;color:#444;">Validation des inputs côté serveur (Zod)</span></li>
+        </ul>
+      </div>
+
+      <!-- Performance -->
+      <div style="background:var(--is);border-radius:14px;padding:18px;border:1px solid rgba(79,70,229,.13);">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--indigo);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <p style="font-size:11pt;font-weight:900;color:var(--navy);margin-bottom:12px;">Performance</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><span style="font-size:7.5pt;color:#444;">CDN mondial Vercel · latence &lt; 50ms</span></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><span style="font-size:7.5pt;color:#444;">SSR + ISR : pages ultra-rapides (&lt; 1s)</span></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><span style="font-size:7.5pt;color:#444;">Images optimisées automatiquement (next/image)</span></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><span style="font-size:7.5pt;color:#444;">Uptime garanti 99,9% — SLA Vercel</span></li>
+          <li><div class="fd" style="background:var(--indigo);"><span></span></div><span style="font-size:7.5pt;color:#444;">CI/CD automatique : GitHub → Vercel en 60s</span></li>
+        </ul>
+      </div>
+
+      <!-- Internationalisation -->
+      <div style="background:var(--os);border-radius:14px;padding:18px;border:1px solid rgba(232,87,26,.13);">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--orange);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        </div>
+        <p style="font-size:11pt;font-weight:900;color:var(--navy);margin-bottom:12px;">Internationalisation</p>
+        <ul class="fl">
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:#444;">7 langues : 🇫🇷 🇬🇧 🇪🇸 🇩🇪 🇮🇹 🇵🇹 🇳🇱</span></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:#444;">Détection automatique de la langue navigateur</span></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:#444;">Sélection manuelle dans la navbar</span></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:#444;">Interface 100% traduite (next-intl)</span></li>
+          <li><div class="fd" style="background:var(--orange);"><span></span></div><span style="font-size:7.5pt;color:#444;">Noms de villes et catégories localisés</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">8 / 12</div>
+</div>
+
+
+<!-- PAGE 9 — TARIFS & MODÈLE ÉCONOMIQUE -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Tarifs & modèle économique</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--indigo);">08 — Monétisation</div>
+    <h2 class="stitle au d2">Modèle économique<br/>clair et récurrent</h2>
+    <p class="ssub" style="margin-bottom:18px;max-width:145mm;">La plateforme génère des revenus via les abonnements Pro annuels. Chaque professionnel choisit son niveau de visibilité. Paiements 100% automatisés via Stripe — aucune intervention manuelle.</p>
+
+    <!-- Pricing cards big -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+
+      <!-- Premium -->
+      <div style="border:2.5px solid var(--orange);border-radius:16px;padding:20px 18px;background:var(--os);position:relative;display:flex;flex-direction:column;">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:7pt;font-weight:800;padding:3px 14px;border-radius:10px;white-space:nowrap;">⭐ POPULAIRE</div>
+        <p style="font-size:9pt;font-weight:900;color:var(--navy);margin-bottom:6px;">Premium</p>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
+          <span style="font-size:24pt;font-weight:900;color:var(--orange);">49,99 €</span>
+          <span style="font-size:8pt;color:#888;font-weight:500;">/an</span>
+        </div>
+        <p style="font-size:7.5pt;color:#888;margin-bottom:14px;line-height:1.5;">Soit moins de <strong>4,20€/mois</strong></p>
+        <div style="height:1px;background:rgba(232,87,26,.2);margin-bottom:12px;"></div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;flex:1;">
+          <li style="font-size:7.5pt;color:#555;display:flex;gap:7px;align-items:flex-start;"><span style="color:var(--orange);font-weight:700;font-size:9pt;line-height:1;">✓</span>Logo + photos + description complète</li>
+          <li style="font-size:7.5pt;color:#555;display:flex;gap:7px;align-items:flex-start;"><span style="color:var(--orange);font-weight:700;font-size:9pt;line-height:1;">✓</span>Badge Sponsorisé</li>
+          <li style="font-size:7.5pt;color:#555;display:flex;gap:7px;align-items:flex-start;"><span style="color:var(--orange);font-weight:700;font-size:9pt;line-height:1;">✓</span>WhatsApp + téléphone + site web</li>
+          <li style="font-size:7.5pt;color:#555;display:flex;gap:7px;align-items:flex-start;"><span style="color:var(--orange);font-weight:700;font-size:9pt;line-height:1;">✓</span>Encarts sur pages d'annonces</li>
+        </ul>
+      </div>
+
+      <!-- Premium+ -->
+      <div style="border:2.5px solid var(--indigo);border-radius:16px;padding:20px 18px;background:var(--navy);position:relative;display:flex;flex-direction:column;">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--indigo);color:#fff;font-size:7pt;font-weight:800;padding:3px 14px;border-radius:10px;white-space:nowrap;">MAX VISIBILITÉ</div>
+        <p style="font-size:9pt;font-weight:900;color:#fff;margin-bottom:6px;">Premium+</p>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
+          <span style="font-size:24pt;font-weight:900;color:#818cf8;">99,99 €</span>
+          <span style="font-size:8pt;color:rgba(255,255,255,.3);font-weight:500;">/an</span>
+        </div>
+        <p style="font-size:7.5pt;color:rgba(255,255,255,.4);margin-bottom:14px;line-height:1.5;">Soit moins de <strong style="color:rgba(255,255,255,.6);">8,40€/mois</strong></p>
+        <div style="height:1px;background:rgba(255,255,255,.1);margin-bottom:12px;"></div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;flex:1;">
+          <li style="font-size:7.5pt;color:rgba(255,255,255,.7);display:flex;gap:7px;align-items:flex-start;"><span style="color:#818cf8;font-weight:700;font-size:9pt;line-height:1;">✓</span>Tout ce qu'inclut Premium</li>
+          <li style="font-size:7.5pt;color:rgba(255,255,255,.7);display:flex;gap:7px;align-items:flex-start;"><span style="color:#818cf8;font-weight:700;font-size:9pt;line-height:1;">✓</span>Badge ⭐ Recommandé</li>
+          <li style="font-size:7.5pt;color:rgba(255,255,255,.7);display:flex;gap:7px;align-items:flex-start;"><span style="color:#818cf8;font-weight:700;font-size:9pt;line-height:1;">✓</span>Priorité absolue en tête de liste</li>
+          <li style="font-size:7.5pt;color:rgba(255,255,255,.7);display:flex;gap:7px;align-items:flex-start;"><span style="color:#818cf8;font-weight:700;font-size:9pt;line-height:1;">✓</span>Affiché sur la page d'accueil</li>
+          <li style="font-size:7.5pt;color:rgba(255,255,255,.7);display:flex;gap:7px;align-items:flex-start;"><span style="color:#818cf8;font-weight:700;font-size:9pt;line-height:1;">✓</span>Statistiques de clics détaillées</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Infrastructure strip -->
+    <div style="background:var(--gray);border-radius:12px;padding:14px 18px;margin-bottom:14px;">
+      <p style="font-size:8.5pt;font-weight:800;color:var(--navy);margin-bottom:12px;">Infrastructure incluse dans tout abonnement</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:30px;height:30px;border-radius:8px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg></div>
+          <div><p style="font-size:7.5pt;font-weight:700;color:var(--navy);">CI/CD automatique</p><p style="font-size:6.5pt;color:#888;">GitHub → Vercel</p></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:30px;height:30px;border-radius:8px;background:var(--indigo);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div><p style="font-size:7.5pt;font-weight:700;color:var(--navy);">SSL automatique</p><p style="font-size:6.5pt;color:#888;">HTTPS sécurisé</p></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:30px;height:30px;border-radius:8px;background:#10b981;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg></div>
+          <div><p style="font-size:7.5pt;font-weight:700;color:var(--navy);">CDN mondial</p><p style="font-size:6.5pt;color:#888;">Vercel Edge Network</p></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:30px;height:30px;border-radius:8px;background:#635bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+          <div><p style="font-size:7.5pt;font-weight:700;color:var(--navy);">Paiements Stripe</p><p style="font-size:6.5pt;color:#888;">PCI-DSS · Sécurisé</p></div>
+        </div>
+      </div>
+    </div>
+    <!-- Devenir Pro screenshot -->
+    <div class="float" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+        <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es/devenir-pro</div></div>
+        <img src="../public/screens/screen-devenir-pro-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">9 / 12</div>
+</div>
+
+<!-- PAGE 10 — VISIBILITÉ : OÙ APPARAISSENT LES PROS -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Visibilité Pro en pratique</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--orange);">09 — Où apparaissent les professionnels ?</div>
+    <h2 class="stitle au d2">Une présence partout<br/>sur la plateforme</h2>
+    <p class="ssub" style="margin-bottom:16px;max-width:145mm;">Les professionnels Premium et Premium+ apparaissent à de multiples endroits stratégiques sur la plateforme, maximisant leur exposition auprès de la communauté expatriée.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;">
+      <!-- Homepage -->
+      <div class="pcard" style="border-radius:13px;overflow:hidden;border:1px solid #ececec;box-shadow:0 8px 24px -6px rgba(0,0,0,.1);">
+        <div style="background:var(--navy);padding:8px 10px;display:flex;align-items:center;gap:6px;">
+          <img src="../public/logo-1000click-white.png" style="height:10px;" alt=""/>
+          <span style="font-size:6pt;color:rgba(255,255,255,.4);">1000click.es</span>
+        </div>
+        <!-- Hero section mini -->
+        <div style="background:linear-gradient(135deg,var(--navy) 0%,#2d2b6b 100%);padding:12px;text-align:center;">
+          <p style="font-size:8pt;font-weight:900;color:#fff;margin-bottom:4px;">Trouvez un professionnel<br/>de confiance</p>
+          <div style="background:rgba(255,255,255,.1);border-radius:6px;padding:5px 8px;font-size:6pt;color:rgba(255,255,255,.5);">🔍 Plombier Valencia...</div>
+        </div>
+        <!-- Pro cards strip -->
+        <div style="padding:8px;background:#f7f8fa;">
+          <p style="font-size:6pt;font-weight:800;color:var(--orange);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;">Pros ⭐ Recommandés</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="background:#fff;border-radius:7px;padding:6px;display:flex;gap:6px;align-items:center;border:1px solid rgba(79,70,229,.2);">
+              <div style="width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--orange),var(--od));display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:900;color:#fff;flex-shrink:0;">S</div>
+              <div style="flex:1;"><p style="font-size:6pt;font-weight:800;color:var(--navy);">Sophie Martin</p><p style="font-size:5.5pt;color:#888;">Architecte · Valencia</p></div>
+              <span style="font-size:5pt;background:var(--indigo);color:#fff;padding:1px 5px;border-radius:5px;font-weight:800;">Premium+</span>
+            </div>
+            <div style="background:#fff;border-radius:7px;padding:6px;display:flex;gap:6px;align-items:center;border:1px solid rgba(79,70,229,.1);">
+              <div style="width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#43e97b,#38f9d7);display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:900;color:#fff;flex-shrink:0;">M</div>
+              <div style="flex:1;"><p style="font-size:6pt;font-weight:800;color:var(--navy);">Marc Dupuis</p><p style="font-size:5.5pt;color:#888;">Plombier · Alicante</p></div>
+              <span style="font-size:5pt;background:var(--orange);color:#fff;padding:1px 5px;border-radius:5px;font-weight:800;">Premium</span>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fff;padding:6px 8px;border-top:1px solid #eee;text-align:center;"><p style="font-size:6pt;color:var(--indigo);font-weight:700;">Page d'accueil — Section Pros</p></div>
+      </div>
+
+      <!-- Fiche annonce -->
+      <div class="pcard" style="border-radius:13px;overflow:hidden;border:1px solid #ececec;box-shadow:0 8px 24px -6px rgba(0,0,0,.1);">
+        <div style="background:var(--navy);padding:8px 10px;display:flex;align-items:center;gap:6px;">
+          <img src="../public/logo-1000click-white.png" style="height:10px;" alt=""/>
+          <span style="font-size:6pt;color:rgba(255,255,255,.4);">annonce/appartement-t3-valencia</span>
+        </div>
+        <div style="padding:8px;background:#fff;">
+          <div style="height:55px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:7px;margin-bottom:7px;"></div>
+          <p style="font-size:7.5pt;font-weight:900;color:var(--navy);margin-bottom:2px;">Appartement T3 — Valencia centre</p>
+          <p style="font-size:8pt;font-weight:900;color:var(--orange);margin-bottom:6px;">850 € / mois</p>
+          <div style="height:1px;background:#f0f0f0;margin-bottom:7px;"></div>
+          <!-- Pro sidebar card -->
+          <div style="background:var(--is);border-radius:8px;padding:8px;border:1px solid rgba(79,70,229,.15);">
+            <p style="font-size:6pt;font-weight:800;color:var(--indigo);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em;">Professionnel recommandé</p>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <div style="width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--orange),var(--od));display:flex;align-items:center;justify-content:center;font-size:9pt;font-weight:900;color:#fff;flex-shrink:0;">S</div>
+              <div><p style="font-size:6.5pt;font-weight:800;color:var(--navy);">Sophie Martin</p><p style="font-size:6pt;color:#666;">Architecte · Valencia</p></div>
+            </div>
+            <div style="margin-top:5px;background:#25d366;border-radius:5px;padding:3px 6px;text-align:center;font-size:6pt;color:#fff;font-weight:800;">Contacter sur WhatsApp</div>
+          </div>
+        </div>
+        <div style="background:#f7f8fa;padding:6px 8px;border-top:1px solid #eee;text-align:center;"><p style="font-size:6pt;color:var(--indigo);font-weight:700;">Page de fiche annonce — Encart Pro</p></div>
+      </div>
+
+      <!-- Annuaire listing -->
+      <div class="pcard" style="border-radius:13px;overflow:hidden;border:1px solid #ececec;box-shadow:0 8px 24px -6px rgba(0,0,0,.1);">
+        <div style="background:var(--navy);padding:8px 10px;display:flex;align-items:center;gap:6px;">
+          <img src="../public/logo-1000click-white.png" style="height:10px;" alt=""/>
+          <span style="font-size:6pt;color:rgba(255,255,255,.4);">professionnels</span>
+        </div>
+        <div style="padding:8px;background:#fff;">
+          <div style="background:#f7f8fa;border-radius:6px;padding:5px 7px;font-size:6pt;color:#999;margin-bottom:7px;">🔍 Architecte Valencia</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="border:1.5px solid var(--indigo);border-radius:8px;padding:8px;background:var(--is);">
+              <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;">
+                <div style="width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--orange),var(--od));display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:900;color:#fff;flex-shrink:0;">S</div>
+                <div><p style="font-size:7pt;font-weight:800;color:var(--navy);">Sophie Martin</p><div style="display:flex;gap:3px;margin-top:1px;"><span style="font-size:5pt;background:var(--indigo);color:#fff;padding:1px 4px;border-radius:4px;font-weight:800;">⭐ Recommandée</span></div></div>
+              </div>
+              <p style="font-size:6pt;color:#666;">Architecte HMONP · 12 ans exp.</p>
+            </div>
+            <div style="border:1px solid #ececec;border-radius:8px;padding:8px;">
+              <div style="display:flex;gap:6px;align-items:center;">
+                <div style="width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#43e97b,#38f9d7);display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:900;color:#fff;flex-shrink:0;">P</div>
+                <div><p style="font-size:7pt;font-weight:800;color:var(--navy);">Pierre Moreau</p><span style="font-size:5pt;background:var(--os);color:var(--orange);padding:1px 4px;border-radius:4px;font-weight:800;">Sponsorisé</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#f7f8fa;padding:6px 8px;border-top:1px solid #eee;text-align:center;"><p style="font-size:6pt;color:var(--indigo);font-weight:700;">Annuaire — Liste filtrée</p></div>
+      </div>
+    </div>
+
+    <!-- Summary CTA box -->
+    <div style="background:linear-gradient(135deg,var(--navy) 0%,#2d2b6b 100%);border-radius:14px;padding:18px 22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;margin-bottom:14px;">
+      <div>
+        <p style="font-size:9.5pt;font-weight:900;color:#fff;margin-bottom:6px;">Un investissement rentable dès le premier client</p>
+        <p style="font-size:7.5pt;color:rgba(255,255,255,.5);line-height:1.6;">Pour un artisan ou prestataire de services, un seul nouveau client trouvé via 1000Click suffit à amortir l'abonnement Premium annuel. Avec le Premium+, la visibilité maximale garantit un retour sur investissement rapide.</p>
+      </div>
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="background:var(--orange);border-radius:12px;padding:12px 20px;">
+          <p style="font-size:8pt;font-weight:900;color:#fff;margin-bottom:2px;">À partir de</p>
+          <p style="font-size:18pt;font-weight:900;color:#fff;line-height:1;">49,99 €</p>
+          <p style="font-size:7pt;color:rgba(255,255,255,.7);">par an · soit 4,20€/mois</p>
+        </div>
+      </div>
+    </div>
+    <!-- Annonce detail screenshot showing the pro sidebar card in context -->
+    <div class="float" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div class="browser" style="flex:1;display:flex;flex-direction:column;">
+        <div class="browser-bar"><div class="b-dots"><span style="background:#ff5f57;"></span><span style="background:#ffbd2e;"></span><span style="background:#28c840;"></span></div><div class="browser-url">1000click.es/annonces/vélo-électrique</div></div>
+        <img src="../public/screens/screen-annonce-detail-mobile.jpg" style="width:100%;flex:1;object-fit:cover;object-position:top;min-height:0;display:block;"/>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">10 / 12</div>
+</div>
+
+
+<!-- PAGE 11 — POURQUOI CHOISIR 1000CLICK ? -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" style="height:21px;display:block;" alt="1000Click"/><span style="font-size:7pt;color:#bbb;font-weight:600;">Pourquoi 1000Click ?</span></div>
+  <div class="pc">
+    <div class="slabel au d1" style="color:var(--indigo);">10 — Avantages différenciants</div>
+    <h2 class="stitle au d2">Ce qui rend 1000Click<br/>unique sur le marché</h2>
+    <p class="ssub" style="margin-bottom:18px;max-width:145mm;">Contrairement aux grandes plateformes généralistes, 1000Click est entièrement pensée pour et par la communauté expatriée francophone en Espagne.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:var(--os);border-radius:13px;padding:16px;border:1px solid rgba(232,87,26,.13);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20"/></svg></div>
+            <p style="font-size:10pt;font-weight:900;color:var(--navy);">Niche ultra-ciblée</p>
+          </div>
+          <p style="font-size:8pt;color:#555;line-height:1.6;">Seule plateforme 100% dédiée aux francophones expatriés en Espagne. Pas de bruit, pas de généralisme — uniquement la communauté concernée.</p>
+        </div>
+        <div style="background:var(--is);border-radius:13px;padding:16px;border:1px solid rgba(79,70,229,.13);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:var(--indigo);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <p style="font-size:10pt;font-weight:900;color:var(--navy);">Confiance & recommandation</p>
+          </div>
+          <p style="font-size:8pt;color:#555;line-height:1.6;">Un système de badges (Vérifié, Sponsorisé, Recommandé) qui valorise les pros sérieux et rassure les utilisateurs avant tout contact.</p>
+        </div>
+        <div style="background:#f0fdf4;border-radius:13px;padding:16px;border:1px solid rgba(16,185,129,.15);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:#10b981;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <p style="font-size:10pt;font-weight:900;color:var(--navy);">Vitesse & fiabilité</p>
+          </div>
+          <p style="font-size:8pt;color:#555;line-height:1.6;">Temps de chargement inférieur à 1 seconde, 99,9% d'uptime garanti. Une expérience fluide sur mobile comme sur desktop.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:var(--navy);border-radius:13px;padding:16px;flex:1;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <p style="font-size:10pt;font-weight:900;color:#fff;">Communication directe</p>
+          </div>
+          <p style="font-size:8pt;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:12px;">Messagerie intégrée + WhatsApp direct depuis chaque fiche professionnelle. Le client contacte, le pro répond — sans intermédiaire.</p>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;background:rgba(255,255,255,.07);border-radius:8px;padding:8px;text-align:center;">
+              <p style="font-size:14pt;font-weight:900;color:var(--orange);">7</p>
+              <p style="font-size:6.5pt;color:rgba(255,255,255,.4);">langues</p>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,.07);border-radius:8px;padding:8px;text-align:center;">
+              <p style="font-size:11pt;font-weight:900;color:#818cf8;">49,99€</p>
+              <p style="font-size:6.5pt;color:rgba(255,255,255,.4);">dès/an</p>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,.07);border-radius:8px;padding:8px;text-align:center;">
+              <p style="font-size:14pt;font-weight:900;color:#34d399;">∞</p>
+              <p style="font-size:6.5pt;color:rgba(255,255,255,.4);">annonces</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--indigo),var(--id));border-radius:13px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <p style="font-size:10pt;font-weight:900;color:#fff;">Évolutif & maintenable</p>
+          </div>
+          <p style="font-size:8pt;color:rgba(255,255,255,.65);line-height:1.6;">Stack moderne et évolutive. Nouvelles fonctionnalités déployables rapidement. La plateforme grandit avec votre communauté.</p>
+          <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:5px;">
+            <span class="tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);">Next.js 16</span>
+            <span class="tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);">TypeScript</span>
+            <span class="tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);">Prisma</span>
+            <span class="tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);">Vercel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:9mm;right:13mm;font-size:6.5pt;font-weight:600;color:#ccc;">11 / 12</div>
+</div>
+
+
+<!-- PAGE 12 — CONTACT / CTA FINAL -->
+<div class="page grid-bg" style="background:var(--navy);justify-content:space-between;">
+  <div class="glow-o glow-pulse" style="width:450px;height:450px;bottom:-80px;right:-60px;opacity:.9;"></div>
+  <div class="glow-i glow-pulse" style="width:380px;height:380px;top:-60px;left:-40px;opacity:.85;animation-delay:2s;"></div>
+  <div class="glow-o" style="width:180px;height:180px;top:40%;left:40%;opacity:.2;filter:blur(50px);"></div>
+
+  <!-- Top -->
+  <div style="padding:11mm 13mm 0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;">
+    <img src="../public/logo-1000click-white.png" style="height:34px;display:block;" alt="1000Click"/>
+    <div style="font-size:7pt;color:rgba(255,255,255,.35);font-weight:600;letter-spacing:.1em;text-transform:uppercase;">Passons à l'action</div>
+  </div>
+
+  <!-- Center -->
+  <div style="padding:0 13mm;flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;">
+
+    <div class="au d1" style="display:inline-flex;align-items:center;gap:7px;background:rgba(232,87,26,.14);border:1px solid rgba(232,87,26,.32);border-radius:20px;padding:5px 14px;margin-bottom:18px;width:fit-content;">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--orange);display:inline-block;animation:pulse 2s infinite;"></span>
+      <span style="font-size:7pt;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:.12em;">Prêt à lancer votre présence digitale</span>
+    </div>
+
+    <h2 class="au d2" style="font-size:32pt;font-weight:900;color:#fff;line-height:1.05;letter-spacing:-.6px;margin-bottom:20px;">
+      Une question ?<br/><span class="grad-text">Contactez-nous.</span>
+    </h2>
+
+    <div class="au d3" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:155mm;margin-bottom:26px;">
+      <!-- Developer card -->
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:18px;backdrop-filter:blur(8px);">
+        <p style="font-size:7.5pt;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">Développeur</p>
+        <p style="font-size:12pt;font-weight:900;color:#fff;margin-bottom:2px;">Guillaume Bidallier</p>
+        <p style="font-size:8pt;color:rgba(255,255,255,.45);margin-bottom:12px;">NovaTeck Studio · MYLOSTACK DEVELOPMENT</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:20px;height:20px;border-radius:5px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.95 9.73a19.79 19.79 0 01-3.07-8.67A2 2 0 012.88 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg></div>
+            <span style="font-size:8pt;color:var(--orange);font-weight:600;">06 23 49 09 53</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <span style="font-size:8pt;color:rgba(255,255,255,.5);">bidallierguillaume@gmail.com</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg></div>
+            <span style="font-size:8pt;color:rgba(255,255,255,.5);">novateckstudio.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Site card -->
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:18px;backdrop-filter:blur(8px);">
+        <p style="font-size:7.5pt;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">La plateforme</p>
+        <p style="font-size:12pt;font-weight:900;color:#fff;margin-bottom:2px;">1000click.es</p>
+        <p style="font-size:8pt;color:rgba(255,255,255,.45);margin-bottom:12px;">En ligne · Production · Prêt à l'emploi</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:#34d399;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:8pt;color:#34d399;font-weight:600;">Production active · Vercel</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--indigo);display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:8pt;color:rgba(255,255,255,.5);">MySQL · OVH</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--orange);display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:8pt;color:rgba(255,255,255,.5);">GitHub · CI/CD automatique</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:#635bff;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:8pt;color:rgba(255,255,255,.5);">Paiements Stripe · PCI-DSS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary chips -->
+    <div class="au d4" style="display:flex;flex-wrap:wrap;gap:8px;">
+      <div style="background:rgba(232,87,26,.15);border:1px solid rgba(232,87,26,.3);border-radius:20px;padding:6px 14px;font-size:7.5pt;font-weight:700;color:var(--orange);">Petites annonces</div>
+      <div style="background:rgba(79,70,229,.15);border:1px solid rgba(79,70,229,.3);border-radius:20px;padding:6px 14px;font-size:7.5pt;font-weight:700;color:#818cf8;">Annuaire Pro</div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:7.5pt;font-weight:700;color:rgba(255,255,255,.6);">Messagerie</div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:7.5pt;font-weight:700;color:rgba(255,255,255,.6);">Paiements Stripe</div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:7.5pt;font-weight:700;color:rgba(255,255,255,.6);">Admin complet</div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:7.5pt;font-weight:700;color:rgba(255,255,255,.6);">7 langues</div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:7.5pt;font-weight:700;color:rgba(255,255,255,.6);">RGPD · SSL</div>
+    </div>
+  </div>
+
+  <!-- Bottom -->
+  <div style="padding:0 13mm 9mm;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;">
+    <p style="font-size:6.5pt;color:rgba(255,255,255,.18);">© 2026 NovaTeck Studio · Tous droits réservés · Document confidentiel</p>
+    <p style="font-size:6.5pt;color:rgba(255,255,255,.18);">12 / 12</p>
+  </div>
+</div>
+</body>
+</html>

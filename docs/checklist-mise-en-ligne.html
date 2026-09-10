@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Checklist Mise en Ligne — 1000Click</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #13172b;
+    --navy2:   #1c2240;
+    --orange:  #E8571A;
+    --indigo:  #4F46E5;
+    --indigol: #818cf8;
+    --green:   #10B981;
+    --red:     #EF4444;
+    --yellow:  #F59E0B;
+    --gray:    #F3F4F6;
+    --gray2:   #E5E7EB;
+    --text:    #1F2937;
+    --muted:   #6B7280;
+  }
+
+  html { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: #F8F9FB; }
+  body { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── TOP HEADER ─────────────────────────────────── */
+  .doc-header {
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .doc-header img { height: 20px; display: block; }
+  .doc-header-text {}
+  .doc-header h1 { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: -.03em; }
+  .doc-header p  { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px; font-weight: 500; }
+  .doc-header-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .doc-header-meta .badge {
+    display: inline-block;
+    background: var(--orange);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: .04em;
+  }
+  .doc-header-meta p { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 6px; }
+
+  /* ── PROGRESS BAR ───────────────────────────────── */
+  .progress-bar-wrap {
+    background: #fff;
+    border: 1px solid var(--gray2);
+    border-radius: 14px;
+    padding: 18px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    background: var(--gray);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--indigo));
+    border-radius: 99px;
+    width: 0%;
+    transition: width .4s ease;
+  }
+  .progress-label { font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+  .progress-count { font-size: 12px; font-weight: 800; color: var(--navy); }
+
+  /* ── SECTIONS ───────────────────────────────────── */
+  .section {
+    background: #fff;
+    border: 1px solid var(--gray2);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--gray2);
+  }
+  .section-header:hover { background: var(--gray); }
+  .section-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .icon-orange { background: #FFF3EE; }
+  .icon-indigo { background: #EEF2FF; }
+  .icon-green  { background: #ECFDF5; }
+  .icon-yellow { background: #FFFBEB; }
+  .icon-navy   { background: #EEF0F8; }
+  .icon-red    { background: #FEF2F2; }
+  .icon-purple { background: #F5F3FF; }
+  .icon-blue   { background: #EFF6FF; }
+
+  .section-title-wrap { flex: 1; }
+  .section-title { font-size: 14px; font-weight: 800; color: var(--navy); }
+  .section-subtitle { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 500; }
+  .section-stats {
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .stat-pill {
+    font-size: 10px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+    border: 1.5px solid var(--gray2);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .stat-pill.done { background: #ECFDF5; border-color: #A7F3D0; color: #065F46; }
+  .stat-pill.warn { background: #FFFBEB; border-color: #FDE68A; color: #92400E; }
+  .section-chevron { color: var(--muted); font-size: 12px; transition: transform .2s; }
+  .section.collapsed .section-chevron { transform: rotate(-90deg); }
+
+  .section-body { padding: 0 22px; }
+  .section.collapsed .section-body { display: none; }
+
+  /* ── ITEMS ──────────────────────────────────────── */
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--gray);
+    cursor: pointer;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: transparent; }
+
+  .item-check {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--gray2);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+    background: #fff;
+  }
+  .item.checked .item-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .item.checked .item-check::after {
+    content: '✓';
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+  }
+  .item.critical .item-check { border-color: var(--red); }
+  .item.critical.checked .item-check { background: var(--green); border-color: var(--green); }
+
+  .item-content { flex: 1; min-width: 0; }
+  .item-label {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .item.checked .item-label { color: var(--muted); text-decoration: line-through; }
+
+  .item-desc { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.5; font-weight: 400; }
+  .item.checked .item-desc { color: #D1D5DB; }
+
+  /* badges on items */
+  .tag-critical { background: #FEF2F2; color: var(--red);    border: 1px solid #FECACA; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 20px; letter-spacing: .04em; }
+  .tag-important{ background: #FFFBEB; color: #92400E;       border: 1px solid #FDE68A; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 20px; letter-spacing: .04em; }
+  .tag-optional { background: var(--gray); color: var(--muted); border: 1px solid var(--gray2); font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; letter-spacing: .04em; }
+  .tag-done     { background: #ECFDF5; color: #065F46;       border: 1px solid #A7F3D0; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 20px; letter-spacing: .04em; }
+
+  /* ── CODE / COMMANDS ────────────────────────────── */
+  .code-block {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #e2e8f0;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+  .code-block .comment { color: #64748b; }
+  .code-block .key     { color: var(--indigol); }
+  .code-block .val     { color: #86efac; }
+  .code-block .cmd     { color: var(--orange); }
+  .code-block .url     { color: #67e8f9; }
+
+  .env-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-top: 10px;
+    background: #F8F9FB;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .env-table th {
+    background: var(--gray);
+    font-weight: 700;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    border-bottom: 1px solid var(--gray2);
+  }
+  .env-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--gray);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .env-table tr:last-child td { border-bottom: none; }
+  .env-table .var-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--navy);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .env-table .var-desc { color: var(--muted); }
+  .env-table .var-src  { color: var(--indigo); font-weight: 600; white-space: nowrap; }
+  .env-required { color: var(--red);    font-weight: 800; }
+  .env-optional { color: var(--muted);  font-weight: 600; }
+
+  /* priority row colors */
+  .row-critical td { background: #fff5f5; }
+  .row-important td { background: #fffef5; }
+
+  /* ── NOTICE BOXES ───────────────────────────────── */
+  .notice {
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    font-size: 11px;
+    line-height: 1.6;
+    font-weight: 500;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .notice-icon { flex-shrink: 0; font-size: 14px; line-height: 1.4; }
+  .notice.info    { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+  .notice.warn    { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+  .notice.danger  { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+  .notice.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+
+  /* ── STEP LIST ──────────────────────────────────── */
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .steps li {
+    font-size: 11.5px;
+    color: var(--muted);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .steps li .num {
+    width: 18px; height: 18px;
+    background: var(--indigo);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 9px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .steps li code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: var(--gray);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--navy);
+  }
+
+  /* ── FOOTER ─────────────────────────────────────── */
+  .doc-footer {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray2);
+  }
+  .doc-footer p { font-size: 11px; color: var(--muted); }
+  .doc-footer strong { color: var(--navy); }
+
+  /* ── DONE SECTION ───────────────────────────────── */
+  .section[data-predone] .section-header { opacity: .75; }
+  .section[data-predone] .section-title  { color: var(--muted); }
+
+  /* ── STATUS BANNER ──────────────────────────────── */
+  .status-banner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .status-card {
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .status-card.done  { background: #ECFDF5; border: 1.5px solid #A7F3D0; }
+  .status-card.todo  { background: #FFFBEB; border: 1.5px solid #FDE68A; }
+  .status-card-icon  { font-size: 22px; line-height: 1; flex-shrink: 0; }
+  .status-card-title { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .status-card ul    { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .status-card li    { font-size: 11px; font-weight: 500; display: flex; align-items: flex-start; gap: 6px; }
+  .status-card.done li { color: #065F46; }
+  .status-card.todo li { color: #92400E; }
+  .status-card li::before { content: '•'; flex-shrink: 0; font-weight: 900; }
+
+  /* ── PRINT ──────────────────────────────────────── */
+  @media print {
+    body { background: #fff; max-width: 100%; }
+    .doc-header { border-radius: 0; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP HEADER -->
+<div class="doc-header">
+  <div>
+    <img src="../public/logo-1000click-white.png" alt="1000Click"/>
+    <div style="height:8px;"></div>
+    <div class="doc-header-text">
+      <h1>Checklist Mise en Ligne Officielle</h1>
+      <p>Configuration complète pour le déploiement en production de 1000clic.fr</p>
+    </div>
+  </div>
+  <div class="doc-header-meta">
+    <span class="badge">PRODUCTION</span>
+    <p>Rédigé le 14 juillet 2026</p>
+    <p style="margin-top:4px;">Next.js 15 · Vercel · Neon · Stripe · Resend · Pusher</p>
+  </div>
+</div>
+
+<!-- STATUS BANNER -->
+<div class="status-banner">
+  <div class="status-card done">
+    <div class="status-card-icon">✅</div>
+    <div>
+      <div class="status-card-title">Déjà en production — 1000clic.fr</div>
+      <ul>
+        <li>Domaine & DNS configurés (1000clic.fr + .com)</li>
+        <li>Vercel déployé, SSL actif</li>
+        <li>Variables d'environnement Vercel en place</li>
+        <li>Base de données Neon PostgreSQL opérationnelle</li>
+        <li>Migrations Prisma appliquées</li>
+        <li>Vercel Blob Storage actif (images annonces)</li>
+        <li>Pusher messaging temps réel fonctionnel</li>
+        <li>Cron Vercel configuré (expiration annonces)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="status-card todo">
+    <div class="status-card-icon">⏳</div>
+    <div>
+      <div class="status-card-title">Reste à faire / vérifier</div>
+      <ul>
+        <li>Stripe → passer en mode LIVE (clés sk_live_)</li>
+        <li>Resend → vérifier domaine 1000clic.fr (SPF/DKIM)</li>
+        <li>Remplacer privacy@vendo.es dans le code source</li>
+        <li>Google Analytics 4 + Search Console</li>
+        <li>Changer le mot de passe admin par défaut</li>
+        <li>Soumettre le sitemap à Google</li>
+        <li>Smoke tests complets en production</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div style="font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;">Progression</div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label"><span class="progress-count" id="progressCount">0</span> / <span id="progressTotal">0</span> tâches</div>
+</div>
+
+<!-- ─── 1. DOMAINE & DNS ────────────────────────── -->
+<div class="section collapsed" id="s1" data-predone>
+  <div class="section-header" onclick="toggle('s1')">
+    <div class="section-icon icon-orange">🌐</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Domaine & DNS</div>
+      <div class="section-subtitle">Pointer 1000clic.fr vers Vercel et configurer les enregistrements DNS</div>
+    </div>
+    <div class="section-stats">
+      <span class="stat-pill warn">Priorité #1</span>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Ajouter le domaine dans Vercel Dashboard <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">Project Settings → Domains → Add → entrer <strong>1000clic.fr</strong> et <strong>www.1000clic.fr</strong><br/>Vercel fournira les enregistrements DNS à ajouter chez votre registrar.</div>
+      </div>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Configurer les enregistrements DNS chez le registrar <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          Ajouter chez OVH / Namecheap / Gandi (registrar du domaine) :
+          <div class="code-block">
+            <span class="comment"># Enregistrement A (racine)</span><br/>
+            @ → <span class="val">76.76.21.21</span>   <span class="comment">TTL 3600</span><br/><br/>
+            <span class="comment"># CNAME pour www</span><br/>
+            www → <span class="val">cname.vercel-dns.com.</span>   <span class="comment">TTL 3600</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier la propagation DNS</div>
+        <div class="item-desc">Utiliser <strong>dnschecker.org</strong> ou <code>dig 1000clic.fr A</code> pour confirmer que le domaine pointe vers Vercel (peut prendre jusqu'à 48h).</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier le certificat SSL automatique</div>
+        <div class="item-desc">Vercel génère automatiquement un certificat Let's Encrypt. Confirmer que <strong>https://1000clic.fr</strong> est accessible sans avertissement.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Redirection www → apex <span class="tag-optional">RECOMMANDÉ</span></div>
+        <div class="item-desc">Dans Vercel, définir <strong>www.1000clic.fr</strong> comme redirection vers <strong>1000clic.fr</strong> (301 permanent) pour consolider le SEO.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 2. VARIABLES D'ENVIRONNEMENT ───────────── -->
+<div class="section collapsed" id="s2" data-predone>
+  <div class="section-header" onclick="toggle('s2')">
+    <div class="section-icon icon-indigo">⚙️</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Variables d'environnement — Vercel</div>
+      <div class="section-subtitle">Toutes les variables à configurer dans Project Settings → Environment Variables</div>
+    </div>
+    <div class="section-stats">
+      <span class="stat-pill warn">22 variables</span>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="notice warn">
+      <span class="notice-icon">⚠️</span>
+      <span>Toutes ces variables doivent être configurées sur Vercel en environnement <strong>Production</strong>. Ne jamais commit un fichier <code>.env.local</code> contenant de vraies clés dans le dépôt Git.</span>
+    </div>
+
+    <div style="margin-top:14px;"></div>
+
+    <table class="env-table">
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Description</th>
+          <th>Source / Valeur</th>
+          <th style="text-align:center;">Requis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- DB -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">BASE DE DONNÉES</td></tr>
+        <tr class="row-critical">
+          <td class="var-name">DATABASE_URL</td>
+          <td class="var-desc">URL Neon avec <code>?pgbouncer=true&sslmode=require</code> pour le pooling</td>
+          <td class="var-src">Dashboard Neon → Connection string (Pooled)</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-critical">
+          <td class="var-name">DIRECT_URL</td>
+          <td class="var-desc">URL Neon directe (sans pgbouncer) — utilisée pour les migrations Prisma</td>
+          <td class="var-src">Dashboard Neon → Connection string (Direct)</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <!-- AUTH -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">AUTHENTIFICATION</td></tr>
+        <tr class="row-critical">
+          <td class="var-name">AUTH_SECRET</td>
+          <td class="var-desc">Clé secrète NextAuth — doit être longue et aléatoire (min 32 chars)</td>
+          <td class="var-src"><code>openssl rand -base64 32</code></td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-critical">
+          <td class="var-name">NEXTAUTH_URL</td>
+          <td class="var-desc">URL canonique de l'app — utilisée par NextAuth pour les callbacks</td>
+          <td class="var-src"><code>https://1000clic.fr</code></td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <!-- APP -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">APPLICATION</td></tr>
+        <tr class="row-critical">
+          <td class="var-name">NEXT_PUBLIC_APP_URL</td>
+          <td class="var-desc">URL publique — utilisée pour OG images, sitemap, robots.txt</td>
+          <td class="var-src"><code>https://1000clic.fr</code></td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr>
+          <td class="var-name">ADMIN_EMAIL</td>
+          <td class="var-desc">Fallback email contact si non configuré en base de données</td>
+          <td class="var-src">Ex : <code>contact@1000clic.fr</code></td>
+          <td style="text-align:center;" class="env-optional">○</td>
+        </tr>
+        <!-- STRIPE -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">STRIPE (paiements)</td></tr>
+        <tr class="row-critical">
+          <td class="var-name">STRIPE_SECRET_KEY</td>
+          <td class="var-desc">Clé secrète Stripe — mode <strong>LIVE</strong> (commence par <code>sk_live_</code>)</td>
+          <td class="var-src">Stripe Dashboard → Developers → API Keys</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-critical">
+          <td class="var-name">NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</td>
+          <td class="var-desc">Clé publiable Stripe — mode <strong>LIVE</strong> (commence par <code>pk_live_</code>)</td>
+          <td class="var-src">Stripe Dashboard → Developers → API Keys</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-critical">
+          <td class="var-name">STRIPE_WEBHOOK_SECRET</td>
+          <td class="var-desc">Secret de signature du webhook Stripe (<code>whsec_...</code>)</td>
+          <td class="var-src">Stripe → Webhooks → endpoint créé → Signing secret</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">STRIPE_PRICE_PREMIUM_ANNUAL</td>
+          <td class="var-desc">ID du prix Stripe — Premium annuel (49,99€/an)</td>
+          <td class="var-src">Ex : <code>price_1abc...live</code></td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">STRIPE_PRICE_PREMIUM_MONTHLY</td>
+          <td class="var-desc">ID du prix Stripe — Premium mensuel</td>
+          <td class="var-src">Ex : <code>price_1xyz...live</code></td>
+          <td style="text-align:center;" class="env-optional">○</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">STRIPE_PRICE_PREMIUM_PLUS_ANNUAL</td>
+          <td class="var-desc">ID du prix Stripe — Premium+ annuel (99,99€/an)</td>
+          <td class="var-src">Ex : <code>price_1def...live</code></td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">STRIPE_PRICE_PREMIUM_PLUS_MONTHLY</td>
+          <td class="var-desc">ID du prix Stripe — Premium+ mensuel</td>
+          <td class="var-src">Ex : <code>price_1ghi...live</code></td>
+          <td style="text-align:center;" class="env-optional">○</td>
+        </tr>
+        <!-- RESEND -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">RESEND (emails)</td></tr>
+        <tr class="row-critical">
+          <td class="var-name">RESEND_API_KEY</td>
+          <td class="var-desc">Clé API Resend pour l'envoi d'emails transactionnels</td>
+          <td class="var-src">resend.com → API Keys</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-critical">
+          <td class="var-name">RESEND_FROM_EMAIL</td>
+          <td class="var-desc">Adresse expéditeur vérifiée sur le domaine 1000clic.fr</td>
+          <td class="var-src"><code>1000Click &lt;noreply@1000clic.fr&gt;</code></td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <!-- PUSHER -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">PUSHER (messagerie temps réel)</td></tr>
+        <tr class="row-important">
+          <td class="var-name">PUSHER_APP_ID</td>
+          <td class="var-desc">ID de l'application Pusher production</td>
+          <td class="var-src">pusher.com → App Keys</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">PUSHER_KEY</td>
+          <td class="var-desc">App Key Pusher (côté serveur)</td>
+          <td class="var-src">pusher.com → App Keys</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">PUSHER_SECRET</td>
+          <td class="var-desc">App Secret Pusher</td>
+          <td class="var-src">pusher.com → App Keys</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">PUSHER_CLUSTER</td>
+          <td class="var-desc">Cluster Pusher (ex: eu, mt1)</td>
+          <td class="var-src">pusher.com → App → Cluster</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">NEXT_PUBLIC_PUSHER_KEY</td>
+          <td class="var-desc">App Key Pusher (côté client, même valeur que PUSHER_KEY)</td>
+          <td class="var-src">Même que PUSHER_KEY</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <tr class="row-important">
+          <td class="var-name">NEXT_PUBLIC_PUSHER_CLUSTER</td>
+          <td class="var-desc">Cluster Pusher côté client</td>
+          <td class="var-src">Même que PUSHER_CLUSTER</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <!-- BLOB -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">VERCEL BLOB STORAGE (images)</td></tr>
+        <tr class="row-important">
+          <td class="var-name">BLOB_READ_WRITE_TOKEN</td>
+          <td class="var-desc">Token d'accès Vercel Blob pour l'upload d'images</td>
+          <td class="var-src">Vercel → Storage → Blob → Token</td>
+          <td style="text-align:center;" class="env-required">●</td>
+        </tr>
+        <!-- CRON -->
+        <tr><td colspan="4" style="background:var(--gray);font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 12px;">CRON & ANALYTICS</td></tr>
+        <tr>
+          <td class="var-name">CRON_SECRET</td>
+          <td class="var-desc">Secret pour protéger l'endpoint <code>/api/cron/expire-listings</code></td>
+          <td class="var-src"><code>openssl rand -hex 24</code></td>
+          <td style="text-align:center;" class="env-optional">○</td>
+        </tr>
+        <tr>
+          <td class="var-name">NEXT_PUBLIC_GA_ID</td>
+          <td class="var-desc">ID de mesure Google Analytics 4 (ex: G-XXXXXXXXXX)</td>
+          <td class="var-src">analytics.google.com → Admin → Data Streams</td>
+          <td style="text-align:center;" class="env-optional">○</td>
+        </tr>
+        <tr>
+          <td class="var-name">NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION</td>
+          <td class="var-desc">Valeur de vérification Google Search Console (balise HTML)</td>
+          <td class="var-src">search.google.com/search-console</td>
+          <td style="text-align:center;" class="env-optional">○</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="item" onclick="check(this)" style="margin-top:12px;">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Toutes les variables configurées sur Vercel Production <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">Vérifier que chaque variable listée ci-dessus est bien définie sur Vercel → Project Settings → Environment Variables (scope : Production).</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 3. BASE DE DONNÉES (NEON) ───────────────── -->
+<div class="section collapsed" id="s3" data-predone>
+  <div class="section-header" onclick="toggle('s3')">
+    <div class="section-icon icon-green">🗄️</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Base de données — Neon PostgreSQL</div>
+      <div class="section-subtitle">Migration, seed admin, connection pooling</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Appliquer le schéma Prisma en production <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          Depuis le repo local avec <code>DATABASE_URL</code> pointant sur Neon production :
+          <div class="code-block"><span class="cmd">npx prisma migrate deploy</span></div>
+          Cette commande applique toutes les migrations en attente de façon non-destructive.
+        </div>
+      </div>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Créer le compte administrateur <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          <div class="code-block"><span class="cmd">npx tsx prisma/make-admin.ts</span></div>
+          Crée (ou met à jour) <strong>admin@vendo.es</strong> avec le rôle ADMIN.<br/>
+          <strong style="color:var(--red);">⚠ Changer le mot de passe par défaut immédiatement après via le panneau admin.</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Configurer le SiteSettings initial</div>
+        <div class="item-desc">
+          Se connecter avec le compte admin et aller dans <strong>Paramètres → Email de contact</strong>. Définir <code>contact@1000clic.fr</code> comme email de contact. Configurer aussi les images hero et le texte d'annonce.
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier le connection pooling Neon</div>
+        <div class="item-desc">
+          <code>DATABASE_URL</code> doit inclure <code>?pgbouncer=true</code> — c'est la chaîne "Pooled" de Neon.<br/>
+          <code>DIRECT_URL</code> est la chaîne sans pgbouncer (utilisée uniquement par Prisma Migrate).
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Activer les backups automatiques Neon <span class="tag-important">IMPORTANT</span></div>
+        <div class="item-desc">Dans le dashboard Neon, vérifier que les sauvegardes automatiques sont activées. Neon conserve un historique de 7 jours par défaut sur le plan payant.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 4. STRIPE ────────────────────────────────── -->
+<div class="section" id="s4">
+  <div class="section-header" onclick="toggle('s4')">
+    <div class="section-icon icon-purple">💳</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Stripe — Paiements en production</div>
+      <div class="section-subtitle">Activer le mode live, créer les produits/prix, configurer le webhook</div>
+    </div>
+    <div class="section-stats">
+      <span class="stat-pill warn">Mode TEST → LIVE</span>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="notice danger">
+      <span class="notice-icon">🔴</span>
+      <span>Ne pas confondre les clés TEST (<code>sk_test_</code>) et LIVE (<code>sk_live_</code>). En production, seules les clés LIVE doivent être utilisées. Les paiements en mode test ne génèrent aucun vrai encaissement.</span>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Activer le compte Stripe en mode Live <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">Sur dashboard.stripe.com : désactiver le "Test mode" (toggle en haut à droite). Compléter l'onboarding Stripe si ce n'est pas fait (informations légales, RIB/IBAN).</div>
+      </div>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Créer les 4 produits et prix en mode Live <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          Stripe Dashboard → Products → Create :
+          <div class="code-block">
+            <span class="comment"># Produit 1 : Abonnement Premium</span><br/>
+            Nom : <span class="val">Premium</span><br/>
+            Prix annuel : <span class="val">49,99 EUR</span> / an  → récupérer l'ID (<span class="key">price_...</span>)<br/>
+            Prix mensuel : <span class="val">4,99 EUR</span> / mois → récupérer l'ID (<span class="key">price_...</span>)<br/><br/>
+            <span class="comment"># Produit 2 : Abonnement Premium+</span><br/>
+            Nom : <span class="val">Premium+</span><br/>
+            Prix annuel : <span class="val">99,99 EUR</span> / an  → récupérer l'ID (<span class="key">price_...</span>)<br/>
+            Prix mensuel : <span class="val">9,99 EUR</span> / mois → récupérer l'ID (<span class="key">price_...</span>)
+          </div>
+          Reporter ces IDs dans les variables Vercel <code>STRIPE_PRICE_*</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Configurer le Webhook Stripe production <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          Stripe → Developers → Webhooks → Add endpoint :
+          <div class="code-block">
+            URL : <span class="url">https://1000clic.fr/api/webhooks/stripe</span><br/>
+            Événements à écouter :<br/>
+            &nbsp;&nbsp;<span class="val">checkout.session.completed</span><br/>
+            &nbsp;&nbsp;<span class="val">customer.subscription.updated</span><br/>
+            &nbsp;&nbsp;<span class="val">customer.subscription.deleted</span><br/>
+            &nbsp;&nbsp;<span class="val">invoice.payment_succeeded</span><br/>
+            &nbsp;&nbsp;<span class="val">invoice.payment_failed</span>
+          </div>
+          Copier le <strong>Signing Secret</strong> (<code>whsec_...</code>) dans la variable <code>STRIPE_WEBHOOK_SECRET</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Tester un vrai paiement en production</div>
+        <div class="item-desc">Effectuer un vrai abonnement Premium depuis l'interface. Vérifier que le webhook reçoit l'événement et que le compte passe bien en statut <code>premium</code> en base.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Configurer l'email d'envoi des reçus Stripe <span class="tag-optional">RECOMMANDÉ</span></div>
+        <div class="item-desc">Stripe Dashboard → Settings → Emails → activer les reçus automatiques. Personnaliser avec le logo 1000Click et l'URL du site.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 5. RESEND (EMAILS) ───────────────────────── -->
+<div class="section" id="s5">
+  <div class="section-header" onclick="toggle('s5')">
+    <div class="section-icon icon-yellow">📧</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Resend — Emails transactionnels</div>
+      <div class="section-subtitle">Vérifier le domaine, configurer SPF / DKIM / DMARC</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Ajouter et vérifier le domaine sur Resend <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          resend.com → Domains → Add Domain → entrer <strong>1000clic.fr</strong>.<br/>
+          Resend fournit les enregistrements DNS à ajouter chez votre registrar :
+          <ul class="steps">
+            <li><span class="num">1</span>Enregistrement <strong>SPF</strong> (TXT) — autorise Resend à envoyer pour votre domaine</li>
+            <li><span class="num">2</span>Enregistrement <strong>DKIM</strong> (TXT ou CNAME) — signature cryptographique des emails</li>
+            <li><span class="num">3</span>Enregistrement <strong>DMARC</strong> (TXT) — politique de rejet des emails non signés</li>
+          </ul>
+          Une fois les DNS propagés, cliquer "Verify" dans Resend.
+        </div>
+      </div>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Mettre à jour RESEND_FROM_EMAIL <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          Remplacer la valeur actuelle par :
+          <div class="code-block">RESEND_FROM_EMAIL=<span class="val">1000Click &lt;noreply@1000clic.fr&gt;</span></div>
+          Sur Vercel : Project Settings → Environment Variables → modifier.
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Tester l'envoi d'email depuis le formulaire de contact</div>
+        <div class="item-desc">Remplir et soumettre <strong>/contact</strong> en production. Vérifier que l'email arrive bien dans la boîte configurée dans SiteSettings.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier le score de délivrabilité</div>
+        <div class="item-desc">Utiliser <strong>mail-tester.com</strong> pour envoyer un email de test et vérifier que le score est ≥ 9/10 (SPF, DKIM, DMARC, pas de spam).</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 6. PUSHER ─────────────────────────────────── -->
+<div class="section collapsed" id="s6" data-predone>
+  <div class="section-header" onclick="toggle('s6')">
+    <div class="section-icon icon-blue">⚡</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Pusher — Messagerie temps réel</div>
+      <div class="section-subtitle">Créer une app Pusher dédiée à la production</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Créer une app Pusher production <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          pusher.com → Create App → choisir le cluster <strong>eu</strong> (Europe) pour les performances.<br/>
+          Ne pas réutiliser l'app de développement en production.
+        </div>
+      </div>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Reporter les 6 variables Pusher dans Vercel <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">Récupérer App ID, Key, Secret, Cluster depuis Pusher → App Keys et les configurer dans Vercel (4 variables serveur + 2 variables NEXT_PUBLIC_).</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Tester la messagerie en temps réel en production</div>
+        <div class="item-desc">Ouvrir deux onglets avec deux comptes différents. S'envoyer un message et vérifier que la notification et le message arrivent en temps réel sans rafraîchissement.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 7. VERCEL BLOB ────────────────────────────── -->
+<div class="section collapsed" id="s7" data-predone>
+  <div class="section-header" onclick="toggle('s7')">
+    <div class="section-icon icon-navy">🗃️</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Vercel Blob — Stockage d'images</div>
+      <div class="section-subtitle">Configurer le stockage des photos d'annonces et des profils pros</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Créer un Blob Store sur Vercel <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">Vercel Dashboard → Storage → Create → Blob → choisir un nom (ex: <code>1000click-images</code>). Récupérer le token <code>BLOB_READ_WRITE_TOKEN</code> et le configurer dans les env vars.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier remotePatterns dans next.config.ts</div>
+        <div class="item-desc">
+          Le fichier <code>next.config.ts</code> inclut déjà <code>*.vercel-storage.com</code>. Vérifier que ce pattern couvre bien l'URL générée par votre Blob Store.
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Tester l'upload d'image en production</div>
+        <div class="item-desc">Créer une annonce avec photos depuis l'interface de production. Vérifier que les images s'affichent bien depuis l'URL Vercel Blob.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 8. CONTENU À METTRE À JOUR ──────────────── -->
+<div class="section" id="s8">
+  <div class="section-header" onclick="toggle('s8')">
+    <div class="section-icon icon-red">✏️</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Contenu à mettre à jour dans le code</div>
+      <div class="section-subtitle">Références à l'ancien domaine vendo.es encore présentes dans le code source</div>
+    </div>
+    <div class="section-stats">
+      <span class="stat-pill warn">5 fichiers</span>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <span>L'email de contact principal est désormais géré dynamiquement via le panneau admin (SiteSettings). Les éléments ci-dessous sont des références "secondaires" encore codées en dur.</span>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label"><code>app/confidentialite/page.tsx</code> — Email DPO <span class="tag-important">IMPORTANT</span></div>
+        <div class="item-desc">Remplacer <code>privacy@vendo.es</code> par <code>privacy@1000clic.fr</code> (3 occurrences aux lignes 81, 207, 221-222).</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label"><code>app/cookies/page.tsx</code> — Email DPO <span class="tag-important">IMPORTANT</span></div>
+        <div class="item-desc">Remplacer <code>privacy@vendo.es</code> par <code>privacy@1000clic.fr</code> (lignes 216-217).</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label"><code>app/connexion/page.tsx</code> — Placeholder email <span class="tag-optional">MINEUR</span></div>
+        <div class="item-desc">Le placeholder du champ email est <code>demo@vendo.es</code>. Remplacer par <code>votre@email.com</code> ou <code>demo@1000clic.fr</code>.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label"><code>app/mon-compte/profil-pro/create/OnboardingWizard.tsx</code> — Preview URL <span class="tag-optional">MINEUR</span></div>
+        <div class="item-desc">La preview du slug affiche <code>vendo.es/professionnels/</code> (ligne 118). Remplacer par <code>1000clic.fr/professionnels/</code>.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Mettre à jour l'email admin dans make-admin.ts <span class="tag-optional">RECOMMANDÉ</span></div>
+        <div class="item-desc">Le script crée <code>admin@vendo.es</code>. Envisager de changer pour <code>admin@1000clic.fr</code> et re-exécuter le script en production si souhaité.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 9. SEO & ANALYTICS ───────────────────────── -->
+<div class="section" id="s9">
+  <div class="section-header" onclick="toggle('s9')">
+    <div class="section-icon icon-orange">📊</div>
+    <div class="section-title-wrap">
+      <div class="section-title">SEO & Analytics</div>
+      <div class="section-subtitle">Google Analytics 4, Search Console, sitemap</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Créer une propriété Google Analytics 4</div>
+        <div class="item-desc">analytics.google.com → Créer une propriété → URL : <code>1000clic.fr</code>. Récupérer l'ID de mesure (<code>G-XXXXXXXXXX</code>) et le mettre dans <code>NEXT_PUBLIC_GA_ID</code> sur Vercel.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier sur Google Search Console</div>
+        <div class="item-desc">search.google.com/search-console → Add property → URL : <code>https://1000clic.fr</code>. Utiliser la méthode "HTML tag" : récupérer la valeur de vérification et la mettre dans <code>NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION</code>.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Soumettre le sitemap à Google</div>
+        <div class="item-desc">Dans Search Console → Sitemaps → Ajouter <code>https://1000clic.fr/sitemap.xml</code>. Le sitemap est auto-généré par <code>app/sitemap.ts</code>.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier robots.txt</div>
+        <div class="item-desc">Accéder à <code>https://1000clic.fr/robots.txt</code> et vérifier que les bonnes pages sont exclues (admin, api, etc.) et que le sitemap est référencé.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 10. SÉCURITÉ ─────────────────────────────── -->
+<div class="section" id="s10">
+  <div class="section-header" onclick="toggle('s10')">
+    <div class="section-icon icon-red">🔒</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Sécurité</div>
+      <div class="section-subtitle">Secrets forts, mot de passe admin, CORS, rate limiting</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Générer un AUTH_SECRET fort et unique <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">
+          <div class="code-block"><span class="cmd">openssl rand -base64 32</span></div>
+          Ne jamais réutiliser la clé de développement en production.
+        </div>
+      </div>
+    </div>
+
+    <div class="item critical" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Changer le mot de passe admin par défaut <span class="tag-critical">CRITIQUE</span></div>
+        <div class="item-desc">Le script <code>make-admin.ts</code> définit <code>Admin1234!</code>. Se connecter immédiatement après la création et changer via <strong>Mon compte → Changer le mot de passe</strong>.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier les headers de sécurité</div>
+        <div class="item-desc">Tester avec <strong>securityheaders.com</strong>. Le fichier <code>next.config.ts</code> inclut déjà CORP et COOP. Envisager d'ajouter CSP, X-Frame-Options, Referrer-Policy.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier le rate limiting sur les API sensibles</div>
+        <div class="item-desc">Les routes <code>/api/contact</code>, <code>/api/auth/register</code>, <code>/api/auth/forgot-password</code> utilisent <code>lib/rate-limit.ts</code>. Vérifier que le store Redis/KV est opérationnel en production.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Activer le mode maintenance si besoin lors du lancement <span class="tag-optional">OPTIONNEL</span></div>
+        <div class="item-desc">Panneau admin → Paramètres → Mode maintenance. Permet de bloquer l'accès pendant les dernières opérations de configuration.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 11. CRON & AUTOMATISMES ─────────────────── -->
+<div class="section collapsed" id="s11" data-predone>
+  <div class="section-header" onclick="toggle('s11')">
+    <div class="section-icon icon-green">⏰</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Cron & Automatismes</div>
+      <div class="section-subtitle">Expiration des annonces, tâches programmées</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier le cron Vercel dans vercel.json <span class="tag-done">DÉJÀ FAIT</span></div>
+        <div class="item-desc">
+          Le fichier <code>vercel.json</code> définit déjà le cron :
+          <div class="code-block">
+            path: <span class="val">/api/cron/expire-listings</span><br/>
+            schedule: <span class="val">0 3 * * *</span>  <span class="comment"># tous les jours à 3h UTC</span>
+          </div>
+          Logique : annonces PENDING depuis +7j → EXPIRED, annonces ACTIVE depuis +60j → EXPIRED.
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Configurer CRON_SECRET <span class="tag-optional">RECOMMANDÉ</span></div>
+        <div class="item-desc">
+          Générer un secret et le configurer sur Vercel pour que le cron soit protégé :
+          <div class="code-block"><span class="cmd">openssl rand -hex 24</span><br/>→ configurer dans CRON_SECRET sur Vercel</div>
+          Vercel inclut automatiquement ce secret dans le header Authorization des appels cron.
+        </div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Vérifier les logs cron après le premier déclenchement</div>
+        <div class="item-desc">Vercel Dashboard → Logs → filtrer par <code>/api/cron/expire-listings</code>. Confirmer que la fonction s'exécute sans erreur.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 12. TESTS POST-LANCEMENT ─────────────────── -->
+<div class="section" id="s12">
+  <div class="section-header" onclick="toggle('s12')">
+    <div class="section-icon icon-indigo">🧪</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Tests post-lancement — Smoke Tests</div>
+      <div class="section-subtitle">Valider chaque fonctionnalité critique en conditions réelles</div>
+    </div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Inscription d'un nouvel utilisateur</div>
+        <div class="item-desc">Créer un compte avec une vraie adresse email → vérifier la réception de l'email de bienvenue (si configuré).</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Publication d'une annonce avec photos</div>
+        <div class="item-desc">Déposer une annonce avec 3+ photos → vérifier que les images s'affichent depuis Vercel Blob → vérifier que l'annonce passe en PENDING ou ACTIVE selon le paramètre autoPublish.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Envoi d'un message entre deux utilisateurs</div>
+        <div class="item-desc">Envoyer un message depuis une annonce → vérifier la notification Pusher en temps réel → vérifier le compteur de messages non lus.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Souscription Premium via Stripe</div>
+        <div class="item-desc">Souscrire à un abonnement Premium en live → vérifier le webhook Stripe → vérifier que le compte passe bien en statut pro avec badge.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Formulaire de contact</div>
+        <div class="item-desc">Soumettre le formulaire /contact → vérifier que l'email arrive bien à l'adresse configurée dans SiteSettings.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Mot de passe oublié / réinitialisation</div>
+        <div class="item-desc">Tester le flow complet de reset de mot de passe → vérifier que l'email avec le lien de réinitialisation arrive.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Panneau admin — accès et fonctionnalités</div>
+        <div class="item-desc">Se connecter avec le compte admin → vérifier la modération des annonces, l'export DB, la gestion des utilisateurs.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Test mobile — responsive</div>
+        <div class="item-desc">Tester sur iOS Safari et Android Chrome : navbar, formulaires, défilement des annonces, messagerie.</div>
+      </div>
+    </div>
+
+    <div class="item" onclick="check(this)">
+      <div class="item-check"></div>
+      <div class="item-content">
+        <div class="item-label">Performance — Core Web Vitals <span class="tag-optional">RECOMMANDÉ</span></div>
+        <div class="item-desc">Lancer <strong>PageSpeed Insights</strong> (pagespeed.web.dev) sur la page d'accueil. Viser LCP < 2.5s, INP < 200ms, CLS < 0.1.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <p>Document généré par <strong>Guillaume Bidallier / NovaTeck Studio</strong> — 1000clic.fr</p>
+  <p style="text-align:right;">Mise à jour : juillet 2026</p>
+</div>
+
+<script>
+  // ── TOGGLE SECTIONS ────────────────────────────────
+  function toggle(id) {
+    document.getElementById(id).classList.toggle('collapsed')
+  }
+
+  // ── CHECK ITEMS ────────────────────────────────────
+  function check(el) {
+    el.classList.toggle('checked')
+    updateProgress()
+    saveState()
+  }
+
+  // ── AUTO-CHECK PREDONE SECTIONS ────────────────────
+  function autocheckDone() {
+    document.querySelectorAll('.section[data-predone]').forEach(sec => {
+      // Add "FAIT ✓" badge to section stats
+      const stats = sec.querySelector('.section-stats')
+      if (stats) {
+        const existing = stats.querySelector('.pill-fait')
+        if (!existing) {
+          const pill = document.createElement('span')
+          pill.className = 'stat-pill done pill-fait'
+          pill.textContent = 'FAIT ✓'
+          stats.prepend(pill)
+        }
+      }
+      // Auto-check all items
+      sec.querySelectorAll('.item').forEach(item => {
+        item.classList.add('checked')
+      })
+    })
+  }
+
+  // ── PROGRESS ───────────────────────────────────────
+  function updateProgress() {
+    const all     = document.querySelectorAll('.item').length
+    const done    = document.querySelectorAll('.item.checked').length
+    const pct     = all > 0 ? Math.round(done / all * 100) : 0
+    document.getElementById('progressFill').style.width = pct + '%'
+    document.getElementById('progressCount').textContent = done
+    document.getElementById('progressTotal').textContent  = all
+    // update section pills
+    document.querySelectorAll('.section').forEach(sec => {
+      const items = sec.querySelectorAll('.item').length
+      const doneItems = sec.querySelectorAll('.item.checked').length
+      const pill = sec.querySelector('.stat-pill')
+      if (pill && pill.classList.contains('warn') || (items > 0 && !pill?.classList.contains('warn'))) {
+        // only update if it has a stat pill already showing counts
+      }
+    })
+  }
+
+  // ── PERSISTENCE ────────────────────────────────────
+  function saveState() {
+    const items = document.querySelectorAll('.item')
+    const state = []
+    items.forEach((el, i) => state.push(el.classList.contains('checked')))
+    try { localStorage.setItem('checklist-1000click', JSON.stringify(state)) } catch(e) {}
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem('checklist-1000click')
+      if (!raw) return
+      const state = JSON.parse(raw)
+      const items = document.querySelectorAll('.item')
+      items.forEach((el, i) => { if (state[i]) el.classList.add('checked') })
+    } catch(e) {}
+  }
+
+  // ── INIT ───────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    autocheckDone()   // pre-check sections already live
+    loadState()       // then restore any manual overrides
+    updateProgress()
+  })
+</script>
+</body>
+</html>

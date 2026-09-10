@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @page { size: A4; margin: 0; }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    background:#fff;
+    font-family:'Inter',Arial,sans-serif;
+    font-size:9.5pt;
+    color:#1a1a1a;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #fff;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  .page-body {
+    flex: 1 0 auto;
+    padding: 14mm 17mm 6mm 17mm;
+  }
+
+  .pf {
+    flex: 0 0 auto;
+    margin: 0 17mm 8mm 17mm;
+    padding-top: 4px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 6.5pt;
+    color: #bbb;
+  }
+  .pf span:last-child { white-space: nowrap; }
+
+  .n {
+    position: absolute;
+    top: 0; right: 0;
+    width: 34px; height: 34px;
+    background: #12122a;
+    color: #fff;
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  h1 { font-size:24pt; font-weight:800; letter-spacing:-0.5px; margin-bottom:3px; }
+  .h1sub { font-size:8pt; color:#888; margin-bottom:14px; }
+  .stitle { font-size:10.5pt; font-weight:700; margin:12px 0 7px; }
+
+  .parties {
+    display:grid; grid-template-columns:1fr 1fr;
+    border:1px solid #e2e2e2; margin-bottom:13px;
+  }
+  .party { padding:10px 13px; break-inside:avoid; page-break-inside:avoid; }
+  .party+.party { border-left:1px solid #e2e2e2; }
+  .plabel { font-size:6.5pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#999; margin-bottom:7px; }
+  .prow { display:grid; grid-template-columns:76px 1fr; font-size:7.5pt; gap:1.5px 6px; margin-bottom:1.5px; }
+  .prow .k { color:#aaa; }
+  .prow .v { font-weight:600; }
+
+  .objet {
+    border-left:3px solid #12122a;
+    padding:6px 11px; margin-bottom:13px; font-size:8pt;
+  }
+  .objet b { font-size:7pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#666; margin-right:6px; }
+
+  .stack { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #e2e2e2; margin-bottom:13px; }
+  .sc { padding:8px 11px; border-right:1px solid #e2e2e2; break-inside:avoid; page-break-inside:avoid; }
+  .sc:last-child { border-right:none; }
+  .stag { display:inline-block; background:#12122a; color:#fff; font-size:6.5pt; font-weight:700; padding:2px 6px; margin-bottom:5px; }
+  .sc p { font-size:7pt; color:#555; line-height:1.85; }
+
+  table { width:100%; border-collapse:collapse; font-size:8pt; }
+  thead { display: table-header-group; }
+  thead tr { background:#12122a; color:#fff; }
+  th { padding:6px 8px; font-weight:600; font-size:7pt; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  th.r { text-align:right; } th.c { text-align:center; }
+  tbody tr { border-bottom:1px solid #f0f0f0; break-inside:avoid; page-break-inside:avoid; }
+  tbody tr:nth-child(even) { background:#fafafa; }
+  td { padding:6.5px 8px; vertical-align:top; }
+  td.num  { width:18px; color:#aaa; font-size:7pt; font-weight:600; }
+  td.prix { width:90px; text-align:right; font-weight:700; white-space:nowrap; }
+  td.desc strong { display:block; font-weight:700; margin-bottom:1.5px; font-size:8pt; }
+  td.desc p { font-size:7pt; color:#555; line-height:1.5; }
+
+  tr.new-line { background:#fff8f3 !important; border-bottom:2px solid #e87c2b !important; border-top:2px solid #e87c2b; }
+  tr.rm-line { background:#f7f7f7 !important; }
+  .new-badge { display:inline-block; background:#e87c2b; color:#fff; font-size:6.5pt; font-weight:700; padding:1px 5px; border-radius:3px; margin-left:6px; vertical-align:middle; letter-spacing:.03em; }
+  .rm-badge { display:inline-block; background:#999; color:#fff; font-size:6.5pt; font-weight:700; padding:1px 5px; border-radius:3px; margin-left:6px; vertical-align:middle; letter-spacing:.03em; }
+
+  .tv { white-space:nowrap; }
+
+  .subtotal-row { background:#f4f4f4 !important; border-bottom:1px solid #e0e0e0 !important; }
+  .subtotal-row td { padding:6px 8px; font-weight:600; font-size:7.5pt; }
+  .subtotal-row .tl { text-align:right; color:#555; letter-spacing:.05em; }
+  .subtotal-row .tv { text-align:right; width:90px; }
+
+  .discount-row { background:#fff8f5 !important; border-bottom:1px solid #fde8dd !important; }
+  .discount-row td { padding:6px 8px; }
+  .discount-row .tl { text-align:right; font-size:7pt; color:#c0392b; font-weight:700; letter-spacing:.05em; }
+  .discount-row .tv { text-align:right; font-weight:800; color:#c0392b; font-size:9pt; width:90px; }
+
+  .trow { background:#12122a !important; color:#fff; border:none !important; }
+  .trow td { padding:8px 8px; font-weight:700; }
+  .trow .tl { text-align:right; font-size:7.5pt; letter-spacing:.07em; }
+  .trow .tv { text-align:right; font-size:11pt; width:90px; }
+  .tva { font-size:6.5pt; color:#aaa; text-align:right; margin-top:3px; }
+
+  .pt { width:100%; border-collapse:collapse; font-size:8pt; margin-bottom:13px; }
+  .pt thead tr { background:#12122a; color:#fff; }
+  .pt th { padding:6px 8px; font-size:7pt; font-weight:600; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+  .pt th.r { text-align:right; }
+  .pt tbody tr { border-bottom:1px solid #f0f0f0; break-inside:avoid; page-break-inside:avoid; }
+  .pt tbody tr:nth-child(even) { background:#fafafa; }
+  .pt td { padding:6px 8px; }
+  .pt td.r { text-align:right; font-weight:600; }
+  .pt td.strike { text-align:right; color:#aaa; text-decoration:line-through; }
+  .pt .dark { background:#12122a !important; color:#fff; }
+  .pt .dark td { padding:7px 8px; font-weight:700; }
+  .pt .dark .r { text-align:right; }
+
+  .cgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:13px; }
+  .cbox { border:1px solid #e2e2e2; padding:10px 12px; font-size:7.5pt; break-inside:avoid; page-break-inside:avoid; }
+  .cbox h4 { font-size:7.5pt; font-weight:700; margin-bottom:8px; }
+  .crow { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .pct { background:#12122a; color:#fff; font-weight:700; font-size:8pt; padding:3px 6px; min-width:32px; text-align:center; }
+  .crow .cd { flex:1; font-size:7pt; color:#555; }
+  .crow .cm { font-weight:700; font-size:8pt; }
+  .vnote { font-size:6.5pt; color:#aaa; margin-top:4px; }
+
+  .note-box {
+    border:1px solid #e2e2e2;
+    background:#fafafa;
+    padding:8px 12px;
+    font-size:7pt;
+    color:#555;
+    line-height:1.6;
+    margin-bottom:13px;
+  }
+  .note-box strong { color:#12122a; }
+
+  .cgv h2 { font-size:10.5pt; font-weight:700; margin-bottom:12px; }
+  .ci { margin-bottom:8px; break-inside:avoid; page-break-inside:avoid; }
+  .ci h4 { font-size:8pt; font-weight:700; margin-bottom:2px; }
+  .ci p { font-size:7pt; color:#444; line-height:1.6; text-align:justify; }
+
+  .sgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .sbox { border:1px solid #e2e2e2; padding:10px 12px; min-height:66px; break-inside:avoid; page-break-inside:avoid; }
+  .sbox h4 { font-size:6.5pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:6px; }
+  .sbox p { font-size:7.5pt; color:#555; }
+  .dline { font-size:7.5pt; color:#aaa; margin-top:18px; }
+
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE 1 — Prestations ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1>Devis MSD-2026-009</h1>
+    <p class="h1sub">04 août 2026 &nbsp;·&nbsp; Valide 30 jours &nbsp;·&nbsp; Actualise et remplace le devis MSD-2026-008</p>
+
+    <div class="parties">
+      <div class="party">
+        <div class="plabel">Émetteur</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">NovaTeck Studio || MYLOSTACK DEVELOPMENT</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Guillaume Bidallier</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">14 chemin de la prée, 17380 Saint Loup</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">France</span></div>
+        <div class="prow"><span class="k">N° entreprise :</span><span class="v">92421320000018</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">06 23 49 09 53</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">bidallierguillaume@gmail.com</span></div>
+        <div class="prow"><span class="k">Site :</span><span class="v">novateckstudio.com</span></div>
+      </div>
+      <div class="party">
+        <div class="plabel">Destinataire</div>
+        <div class="prow"><span class="k">Société :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Contact :</span><span class="v">Dufour Christina</span></div>
+        <div class="prow"><span class="k">Adresse :</span><span class="v">—</span></div>
+        <div class="prow"><span class="k">Pays :</span><span class="v">Belgique</span></div>
+        <div class="prow"><span class="k">Téléphone :</span><span class="v">+32 471 49 08 03</span></div>
+        <div class="prow"><span class="k">Email :</span><span class="v">Agence1991@gmail.com</span></div>
+        <div class="prow"><span class="k">N° TVA :</span><span class="v">—</span></div>
+      </div>
+    </div>
+
+    <div class="objet">
+      <b>Objet :</b> Actualisation du Module Professionnels — Conditions générales mises à jour (facturation sur justificatif, suppression automatique des annonces à 90 jours), nouvelle grille tarifaire professionnelle Smart / Pro / VIP avec emplacements publicitaires dédiés, système de codes promotionnels VIP, et renommage « Devenir pro » → « Espace pro », pour la plateforme Valencia Expat Market
+    </div>
+
+    <div class="note-box">
+      <strong>Contexte :</strong> Ce devis actualise et remplace le devis MSD-2026-008 suite aux arbitrages transmis par email par la cliente. Le palier d'abonnement « Premium Business » est abandonné et remplacé par la nouvelle grille tarifaire ci-dessous ; les systèmes d'attributs Immobilier et Automobile, le badge professionnel, le bloc contact, la vitrine annonces et le module de dossier de candidature restent inchangés. <strong>Une remise commerciale de 70 % est appliquée sur l'ensemble du devis</strong>, et la refonte de la page d'accueil reste offerte, hors périmètre chiffré.
+    </div>
+
+    <div class="stitle" style="margin-top:0;">Stack technique</div>
+    <div class="stack">
+      <div class="sc"><div class="stag">Interface</div><p>Badge pro<br/>Bloc contact + logo<br/>Bannières dédiées par palier</p></div>
+      <div class="sc"><div class="stag">Dossier candidature</div><p>Formulaire multi-étapes<br/>Upload documents<br/>Stockage sécurisé</p></div>
+      <div class="sc"><div class="stag">Base de données</div><p>Prisma / MySQL<br/>Grille 3 paliers<br/>Suppression auto 90j</p></div>
+      <div class="sc"><div class="stag">Paiements</div><p>Stripe — prix annuels<br/>Codes promotionnels<br/>Migration abonnés</p></div>
+    </div>
+
+    <div class="stitle">Prestations détaillées</div>
+
+    <table>
+      <thead><tr>
+        <th>#</th><th>Composant &amp; Description</th><th class="r">Tarif catalogue</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td class="desc">
+            <strong>Badge Professionnel</strong>
+            <p>Badge visible sur la fiche profil du professionnel · repris automatiquement sur toutes ses annonces (carte annonce dans les listes et fiche détail) · cohérent avec la charte graphique existante</p>
+          </td>
+          <td class="prix">100 €</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="desc">
+            <strong>Système d'attributs Immobilier complet</strong>
+            <p>Types de bien, surfaces habitable/terrain, type de vente, pièces/chambres, étage, ascenseur, extérieur, exposition, caractéristiques (climatisation incluse), état du bien, classe énergie (DPE) · un jeu de champs par sous-catégorie Immobilier · sélection multiple et compteurs par palier · filtres de recherche sur 3 niveaux de catégories</p>
+          </td>
+          <td class="prix">300 €</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="desc">
+            <strong>Système d'attributs Automobile complet</strong>
+            <p>Marque, modèle, année, kilométrage, carburant, boîte de vitesses, puissance, nombre de portes/places, état du véhicule, contrôle technique, équipements (climatisation, GPS, caméra de recul…) en sélection multiple · même moteur d'attributs partagé avec l'Immobilier · filtres de recherche dédiés</p>
+          </td>
+          <td class="prix">300 €</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="desc">
+            <strong>Bloc « Publié par » cliquable</strong>
+            <p>Logo du professionnel affiché à droite du bloc « Contacter le vendeur / Publié par » sur la fiche annonce · bloc entièrement cliquable renvoyant vers le profil du professionnel</p>
+          </td>
+          <td class="prix">75 €</td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="desc">
+            <strong>Vitrine annonces sur le profil pro</strong>
+            <p>Section marketing mettant en avant les dernières annonces publiées par le professionnel sur sa fiche profil · lien « Voir toutes ses annonces » vers une liste complète</p>
+          </td>
+          <td class="prix">200 €</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="desc">
+            <strong>Module « Déposer mon dossier maintenant » (Immobilier)</strong>
+            <p>Bouton sur les annonces Immobilier (pro et particulier) ouvrant un formulaire dédié · parcours différencié location / achat (identité, situation professionnelle ou financière, revenus ou apport, garant, animaux, durée souhaitée…) · upload multi-documents (pièce d'identité, justificatifs de revenus, avis d'imposition, justificatif de domicile, RIB, pièces du garant ou attestation bancaire) · réception des dossiers côté pro / admin</p>
+          </td>
+          <td class="prix">450 €</td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td class="desc">
+            <strong>Formulaire de contact pro Automobile</strong>
+            <p>Bloc de contact à droite du profil des professionnels de la catégorie Automobile · choix du mode de contact (email / téléphone) · champs nom, email, téléphone · objet de la demande (projet d'achat / essai de véhicule / reprise de véhicule) · champ message facultatif · bouton d'envoi</p>
+          </td>
+          <td class="prix">150 €</td>
+        </tr>
+        <tr class="rm-line">
+          <td class="num">—</td>
+          <td class="desc">
+            <strong>Palier d'abonnement « Premium Business » <span class="rm-badge">ABANDONNÉ</span></strong>
+            <p>Retiré à la demande de la cliente · remplacé par la nouvelle grille tarifaire Smart / Pro / VIP (poste 10 ci-dessous)</p>
+          </td>
+          <td class="prix" style="color:#999;">—</td>
+        </tr>
+        <tr class="new-line">
+          <td class="num">8</td>
+          <td class="desc">
+            <strong>Conditions générales &amp; suppression automatique <span class="new-badge">NOUVEAU</span></strong>
+            <p>Ajout aux CGU : mention permettant aux professionnels de demander une facture sur présentation de justificatif de paiement (envoi par email) · mention de suppression automatique de toutes les annonces après 90 jours, vendues ou non · implémentation technique de la suppression automatique effective (tâche planifiée quotidienne)</p>
+          </td>
+          <td class="prix">150 €</td>
+        </tr>
+        <tr class="new-line">
+          <td class="num">9</td>
+          <td class="desc">
+            <strong>Nouvelle grille tarifaire professionnelle <span class="new-badge">NOUVEAU</span></strong>
+            <p>Remplacement des paliers Premium / Premium+ par trois formules annuelles : <em>Smart</em> (99 €/an, présence annuaire), <em>Pro</em> (299 €/an, + bannière publicitaire latérale sur le site), <em>VIP</em> (499 €/an, + photos illimitées sur les annonces + bannière publicitaire grand format en page d'accueil) · nouveau mécanisme d'attribution des emplacements publicitaires par palier · migration des abonnés existants vers les nouvelles formules</p>
+          </td>
+          <td class="prix">500 €</td>
+        </tr>
+        <tr class="new-line">
+          <td class="num">10</td>
+          <td class="desc">
+            <strong>Codes promotionnels — formule VIP <span class="new-badge">NOUVEAU</span></strong>
+            <p>Système de codes promotionnels applicables à la souscription de la formule VIP · génération et gestion des codes depuis l'administration · réduction en pourcentage ou montant fixe au choix · suivi des codes utilisés</p>
+          </td>
+          <td class="prix">200 €</td>
+        </tr>
+        <tr class="new-line">
+          <td class="num">11</td>
+          <td class="desc">
+            <strong>Renommage « Devenir pro » → « Espace pro » <span class="new-badge">NOUVEAU</span></strong>
+            <p>Mise à jour de l'intitulé sur l'ensemble du site : menu de navigation, liens, page dédiée</p>
+          </td>
+          <td class="prix">30 €</td>
+        </tr>
+        <tr class="new-line">
+          <td class="num">12</td>
+          <td class="desc">
+            <strong>Refonte intégrale de la page d'accueil <span class="new-badge">OFFERT</span></strong>
+            <p>Nouvelle direction artistique de la homepage · blocs marketing repensés (mise en avant Immobilier, Automobile et Professionnels recommandés) · hiérarchie visuelle et parcours utilisateur optimisés pour la conversion · offerte, hors périmètre chiffré de ce devis</p>
+          </td>
+          <td class="prix" style="color:#12122a;font-weight:700;">Offert</td>
+        </tr>
+
+        <tr class="subtotal-row">
+          <td colspan="2" class="tl">TOTAL TARIF CATALOGUE HT</td>
+          <td class="tv">2 455 €</td>
+        </tr>
+        <tr class="discount-row">
+          <td colspan="2" class="tl">REMISE COMMERCIALE (70 %)</td>
+          <td class="tv">− 1 718,50 €</td>
+        </tr>
+        <tr class="trow">
+          <td colspan="2" class="tl">TOTAL NET À PAYER TTC</td>
+          <td class="tv">736,50 €</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tva">Prestataire non assujetti à la TVA — article 293 B du CGI · Prix exprimés en euros HT · Poste 12 offert, non inclus dans le total</p>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-009 — Actualisation Module Professionnels — Valencia Expat Market</span>
+    <span>NovaTeck Studio || MYLOSTACK DEVELOPMENT · Guillaume Bidallier · 06 23 49 09 53</span>
+    <span>Page 1 / 3</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE 2 — Récapitulatif & Planning ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1 style="font-size:17pt;margin-bottom:2px;">Récapitulatif &amp; Livrables</h1>
+    <p class="h1sub">Devis MSD-2026-009 &nbsp;·&nbsp; 04 août 2026</p>
+
+    <div class="stitle" style="margin-top:0;">Récapitulatif financier</div>
+    <table class="pt">
+      <thead><tr>
+        <th>Désignation</th>
+        <th class="r">Tarif catalogue</th>
+        <th class="r">Remise</th>
+        <th class="r">Net HT</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>Ensemble des prestations (11 postes chiffrés)</td>
+          <td class="strike">2 455 €</td>
+          <td class="r" style="color:#c0392b;font-weight:700;">− 1 718,50 €</td>
+          <td class="r">736,50 €</td>
+        </tr>
+        <tr class="dark">
+          <td><strong>TOTAL NET À RÉGLER TTC</strong></td>
+          <td class="r strike">2 455 €</td>
+          <td class="r">−&thinsp;70 %</td>
+          <td class="r"><strong>736,50 €</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="vnote">+ Refonte intégrale de la page d'accueil — offerte, hors périmètre chiffré de ce devis</p>
+
+    <div class="stitle">Livrables &amp; Paiement</div>
+    <div class="cgrid">
+      <div class="cbox">
+        <h4>Livrables inclus</h4>
+        <div class="crow"><div class="cd">✓ &nbsp;Badge visible profil + annonces</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Système d'attributs Immobilier complet</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Système d'attributs Automobile complet</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Bloc contact avec logo cliquable</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Vitrine annonces sur le profil pro</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Module dossier de candidature + upload sécurisé</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Formulaire de contact Automobile</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;CGU mises à jour (facture, suppression 90 jours)</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Suppression automatique des annonces à 90 jours</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Grille tarifaire Smart / Pro / VIP + bannières dédiées</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Codes promotionnels formule VIP</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Renommage « Devenir pro » → « Espace pro »</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Refonte intégrale de la page d'accueil (offerte)</div></div>
+        <div class="crow"><div class="cd">✓ &nbsp;Code source versionné sur GitHub</div></div>
+      </div>
+      <div class="cbox">
+        <h4>Modalités de paiement</h4>
+        <div class="crow"><div class="pct">60%</div><div class="cd">à la commande (acompte)</div><div class="cm">441,90 €</div></div>
+        <div class="crow"><div class="pct">40%</div><div class="cd">à la livraison finale</div><div class="cm">294,60 €</div></div>
+        <p class="vnote">Paiement par virement bancaire · TVA non applicable, art. 293 B du CGI</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-009 — Actualisation Module Professionnels — Valencia Expat Market</span>
+    <span>NovaTeck Studio || MYLOSTACK DEVELOPMENT · Guillaume Bidallier · 06 23 49 09 53</span>
+    <span>Page 2 / 3</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE 3 — Conditions générales & Signatures ══════════════════════ -->
+<div class="page">
+  <div class="n">N</div>
+  <div class="page-body">
+
+    <h1 style="font-size:17pt;margin-bottom:2px;">Conditions générales</h1>
+    <p class="h1sub">Devis MSD-2026-009 &nbsp;·&nbsp; 04 août 2026</p>
+
+    <div class="cgv">
+      <div class="ci">
+        <h4>1. Acceptation</h4>
+        <p>Ce devis actualise et remplace le devis MSD-2026-008 émis précédemment. Il est valable 30 jours à compter de sa date d'émission. L'acceptation se matérialise par le retour du devis signé ou par un accord écrit par email. Toute modification du périmètre après acceptation fera l'objet d'un avenant tarifé séparément.</p>
+      </div>
+      <div class="ci">
+        <h4>2. Modalités de paiement</h4>
+        <p>60 % à la commande (441,90 € TTC) et 40 % à la livraison finale (294,60 € TTC). Paiement par virement bancaire. Tout retard de paiement entraîne la suspension immédiate des travaux et une pénalité de 1,5 % par mois de retard.</p>
+      </div>
+      <div class="ci">
+        <h4>3. Documents et données personnelles</h4>
+        <p>Les documents déposés par les utilisateurs dans le cadre du module « Déposer mon dossier » (pièces d'identité, justificatifs de revenus, documents bancaires) sont stockés de manière sécurisée et ne sont accessibles qu'au professionnel destinataire et à l'administration de la plateforme, conformément au RGPD.</p>
+      </div>
+      <div class="ci">
+        <h4>4. Propriété intellectuelle</h4>
+        <p>Le code source développé dans le cadre de ce devis est cédé au client à la réception du solde. NovaTeck Studio se réserve le droit de mentionner la réalisation dans ses références commerciales.</p>
+      </div>
+      <div class="ci">
+        <h4>5. Garantie</h4>
+        <p>Garantie de correction des bugs imputables au développement pendant 30 jours après la livraison finale, sans facturation supplémentaire. Les évolutions fonctionnelles après livraison sont facturées séparément.</p>
+      </div>
+    </div>
+
+    <div class="stitle">Bon pour accord</div>
+    <div class="sgrid">
+      <div class="sbox">
+        <h4>Bon pour accord — Prestataire</h4>
+        <p>NovaTeck Studio || MYLOSTACK DEVELOPMENT<br/>Guillaume Bidallier</p>
+        <div class="dline">Signature : ___________________________</div>
+      </div>
+      <div class="sbox">
+        <h4>Bon pour accord — Client</h4>
+        <p>Dufour Christina<br/>Date : ___________________________</p>
+        <div class="dline">Signature : ___________________________</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pf">
+    <span>Devis MSD-2026-009 — Actualisation Module Professionnels — Valencia Expat Market</span>
+    <span>NovaTeck Studio || MYLOSTACK DEVELOPMENT · Guillaume Bidallier · 06 23 49 09 53</span>
+    <span>Page 3 / 3</span>
+  </div>
+</div>
+
+</body>
+</html>
