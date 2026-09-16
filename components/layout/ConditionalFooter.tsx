@@ -7,5 +7,6 @@ export default function ConditionalFooter() {
   if (pathname.startsWith('/messages')) return null
   if (pathname.startsWith('/carte/')) return null
   if (pathname.startsWith('/admin')) return null
+  if (pathname.startsWith('/manuel')) return null
   return <Footer />
 }

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   Menu, LayoutDashboard, FileText, Users, Star, Flag, CreditCard,
-  BarChart3, BookOpen, Tags, Settings2, Wrench, Headphones, ShieldCheck,
+  BarChart3, BookOpen, BookMarked, Tags, Settings2, Wrench, Headphones, ShieldCheck,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -25,6 +25,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin/categories', label: 'Catégories', icon: Tags },
   { href: '/admin/parametres', label: 'Paramètres', icon: Settings2 },
   { href: '/admin/parametres#maintenance', label: 'Maintenance', icon: Wrench },
+  { href: '/manuel', label: 'Aide', icon: BookMarked },
 ]
 
 export default function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {

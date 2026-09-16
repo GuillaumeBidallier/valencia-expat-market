@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 
 export default function ConditionalMain({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const noPublicChrome = pathname.startsWith('/admin')
+  const noPublicChrome = pathname.startsWith('/admin') || pathname.startsWith('/manuel')
 
   return (
     <main id="main-content" className={noPublicChrome ? '' : 'pt-[calc(104px+var(--announcement-h))]'}>
