@@ -6,7 +6,7 @@ export default function ConditionalMain({ children }: { children: React.ReactNod
   const noPublicChrome = pathname.startsWith('/admin')
 
   return (
-    <main id="main-content" className={noPublicChrome ? '' : 'pt-[104px]'}>
+    <main id="main-content" className={noPublicChrome ? '' : 'pt-[calc(104px+var(--announcement-h))]'}>
       {children}
     </main>
   )

@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react'
 import { AuthProvider } from '@/context/AuthContext'
 import { ListingsProvider } from '@/context/ListingsContext'
 import { PageThemeProvider } from '@/context/PageThemeContext'
+import AnnouncementBanner from '@/components/layout/AnnouncementBanner'
 import ConditionalNavbar from '@/components/layout/ConditionalNavbar'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import ConditionalMain from '@/components/layout/ConditionalMain'
@@ -12,6 +13,7 @@ import { LocaleProvider, type SupportedLocale } from '@/components/providers/Loc
 import CookieBanner from '@/components/CookieBanner'
 import ConsentScripts from '@/components/ConsentScripts'
 import { getLocale } from 'next-intl/server'
+import { getAnnouncement } from '@/lib/site-settings.server'
 
 const inter = Inter({ subsets: ['latin'] })
 const nunito = Nunito({
@@ -51,6 +53,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
+  const announcement = await getAnnouncement()
 
   return (
     <html lang={locale}>
@@ -62,6 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <AuthProvider>
               <ListingsProvider>
                 <PageThemeProvider>
+                  {announcement && <AnnouncementBanner text={announcement.text} />}
                   <ConditionalNavbar />
                   <ConditionalMain>{children}</ConditionalMain>
                   <ConditionalFooter />

@@ -2,6 +2,10 @@ import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { isHeroSlide, SITE_SETTINGS_TAG, type HeroSlide } from '@/lib/hero-slides'
 
+export interface Announcement {
+  text: string
+}
+
 const fetchHeroSlides = unstable_cache(
   async (): Promise<HeroSlide[]> => {
     const settings = await prisma.siteSettings.findUnique({
@@ -30,5 +34,32 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
     return await fetchHeroSlides()
   } catch {
     return []
+  }
+}
+
+const fetchAnnouncement = unstable_cache(
+  async (): Promise<Announcement | null> => {
+    const settings = await prisma.siteSettings.findUnique({
+      where: { id: 'default' },
+      select: { announcementText: true, announcementEnabled: true },
+    })
+    if (!settings?.announcementEnabled) return null
+    const text = settings.announcementText?.trim()
+    return text ? { text } : null
+  },
+  ['announcement'],
+  { revalidate: 60, tags: [SITE_SETTINGS_TAG] }
+)
+
+/**
+ * The announcement banner configured in /admin/parametres, or null when it is
+ * disabled, empty or unreadable — the banner is decoration, never a reason to
+ * fail a page render. Server components / route handlers only.
+ */
+export async function getAnnouncement(): Promise<Announcement | null> {
+  try {
+    return await fetchAnnouncement()
+  } catch {
+    return null
   }
 }

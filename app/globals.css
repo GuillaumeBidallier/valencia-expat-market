@@ -18,6 +18,12 @@
   --font-family-sans: 'Inter', sans-serif;
 }
 
+:root {
+  /* Hauteur du bandeau d'annonce ; AnnouncementBanner la passe à sa hauteur
+     réelle quand il est visible. Navbar et ConditionalMain s'y réfèrent. */
+  --announcement-h: 0px;
+}
+
 * {
   box-sizing: border-box;
 }

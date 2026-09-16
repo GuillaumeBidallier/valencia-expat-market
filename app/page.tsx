@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { preload } from 'react-dom'
 import LandingHome from '@/components/home/LandingHome'
 import { DEFAULT_HERO_SLIDES } from '@/lib/hero-slides'
-import { getHeroSlides } from '@/lib/hero-slides.server'
+import { getHeroSlides } from '@/lib/site-settings.server'
 
 export const metadata: Metadata = {
   title: '1000Click — Petites annonces francophones en Belgique',

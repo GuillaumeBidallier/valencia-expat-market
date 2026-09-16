@@ -143,7 +143,7 @@ export default function Navbar() {
   const light = transparent || vehiculesTheme
 
   return (
-    <header role="banner" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <header role="banner" className={`fixed top-[var(--announcement-h)] left-0 right-0 z-50 transition-all duration-300 ${
       vehiculesTheme
         ? 'bg-[#0a0a0f] border-b border-white/10'
         : transparent
