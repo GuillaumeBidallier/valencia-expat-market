@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<title>1000Click — Présentation commerciale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{
+  --orange:#E8571A; --od:#C4471A; --os:#FFF3EE;
+  --navy:#1A1F36;   --indigo:#4F46E5; --is:#EEF2FF; --id:#312e81;
+  --gray:#F4F5F7;   --line:#E6E3DF;   --ink:#3C4152; --mute:#8A8F9E;
+  --be-black:#14140F; --be-yellow:#FDBE01; --be-red:#EF0110;
+  --ok:#059669;
+  --disp:'Nunito','Trebuchet MS',sans-serif;
+  --body:'Inter',Arial,sans-serif;
+}
+@page{size:A4;margin:0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:#54585F;}
+body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased;}
+
+.page{
+  width:210mm;height:297mm;background:#fff;position:relative;overflow:hidden;
+  margin:0 auto 8mm;display:flex;flex-direction:column;
+}
+.page.dark{background:var(--navy);}
+
+/* ── Filet tricolore, écho au pin du logo ─────────────────────── */
+.tri{display:flex;height:2.4mm;flex-shrink:0;}
+.tri i{flex:1;}
+.tri i:nth-child(1){background:var(--be-black);}
+.tri i:nth-child(2){background:var(--be-yellow);}
+.tri i:nth-child(3){background:var(--be-red);}
+.page.dark .tri i:nth-child(1){background:#54544A;}
+
+/* ── En-tête / pied de page courants ──────────────────────────── */
+.ph{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9mm 14mm 0;flex-shrink:0;
+}
+.ph img{height:6.5mm;display:block;}
+.ph span{font-size:7.6pt;color:#B4B8C2;font-weight:600;letter-spacing:.02em;}
+.pf{
+  padding:0 14mm 8mm;display:flex;justify-content:space-between;align-items:flex-end;
+  font-size:6.5pt;color:#C0C4CE;flex-shrink:0;
+}
+.body{padding:8mm 14mm 0;flex:1;display:flex;flex-direction:column;min-height:0;}
+
+/* ── Typographie ──────────────────────────────────────────────── */
+.kicker{
+  font-size:7.5pt;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:3mm;display:flex;align-items:center;gap:2.5mm;
+}
+.kicker::before{content:"";width:7mm;height:.8mm;background:var(--orange);display:block;}
+.kicker.ind{color:var(--indigo);} .kicker.ind::before{background:var(--indigo);}
+h1{font-family:var(--disp);font-weight:900;font-size:33pt;line-height:1.02;letter-spacing:-.02em;color:#fff;}
+h2{font-family:var(--disp);font-weight:900;font-size:22pt;line-height:1.12;letter-spacing:-.015em;color:var(--navy);margin-bottom:4mm;}
+.page.dark h2{color:#fff;}
+h3{font-family:var(--disp);font-weight:800;font-size:11.5pt;color:var(--navy);margin-bottom:1.6mm;}
+.page.dark h3{color:#fff;}
+p{font-size:9.4pt;line-height:1.65;}
+.lead{font-size:10.6pt;line-height:1.6;color:#5A5F70;max-width:150mm;}
+.page.dark .lead{color:rgba(255,255,255,.62);}
+strong{font-weight:700;color:var(--navy);}
+.page.dark strong{color:#fff;}
+.num{font-variant-numeric:tabular-nums;}
+
+/* ── Couverture ───────────────────────────────────────────────── */
+.cover{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 16mm;position:relative;}
+.cover-glow{
+  position:absolute;width:150mm;height:150mm;border-radius:50%;right:-55mm;top:-30mm;
+  background:radial-gradient(circle,rgba(232,87,26,.30),rgba(232,87,26,0) 68%);
+}
+.cover-glow2{
+  position:absolute;width:110mm;height:110mm;border-radius:50%;left:-40mm;bottom:-25mm;
+  background:radial-gradient(circle,rgba(79,70,229,.30),rgba(79,70,229,0) 68%);
+}
+.cover-in{position:relative;z-index:2;}
+.tag{
+  display:inline-block;font-size:7pt;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--be-yellow);border:1px solid rgba(253,190,1,.45);border-radius:20px;padding:1.6mm 5mm;margin-bottom:8mm;
+}
+
+/* ── Grilles ──────────────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:5mm;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:4.5mm;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:3.5mm;}
+
+.card{border:1px solid var(--line);border-radius:3.5mm;padding:6mm;background:#fff;}
+.card.soft{background:var(--os);border-color:rgba(232,87,26,.22);}
+.card.ind{background:var(--is);border-color:rgba(79,70,229,.2);}
+.card.dk{background:#232842;border-color:rgba(255,255,255,.1);}
+.card p{color:#61667A;font-size:8.8pt;}
+.card.dk p{color:rgba(255,255,255,.6);}
+
+.ico{
+  width:11mm;height:11mm;border-radius:3mm;display:flex;align-items:center;justify-content:center;
+  font-size:13pt;margin-bottom:3.5mm;background:var(--os);
+}
+.ico.ind{background:var(--is);}
+
+/* ── Étapes numérotées ────────────────────────────────────────── */
+.steps{display:flex;flex-direction:column;gap:3.5mm;}
+.step{display:flex;gap:4mm;align-items:flex-start;}
+.step-n{
+  width:8mm;height:8mm;border-radius:50%;background:var(--navy);color:#fff;flex-shrink:0;
+  font-family:var(--disp);font-weight:900;font-size:9pt;display:flex;align-items:center;justify-content:center;
+}
+
+/* ── Tableau des formules ─────────────────────────────────────── */
+table{width:100%;border-collapse:collapse;font-size:8.4pt;}
+th,td{padding:3.1mm 3.4mm;text-align:left;border-bottom:1px solid var(--line);}
+thead th{
+  font-size:6.5pt;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);
+  background:var(--gray);border-bottom:1px solid var(--line);
+}
+thead th.c{text-align:center;}
+td.c{text-align:center;font-weight:700;}
+td.y{color:var(--ok);} td.n{color:#D6D9E0;}
+tbody tr:last-child td{border-bottom:none;}
+.tw{border:1px solid var(--line);border-radius:3.5mm;overflow:hidden;}
+
+/* ── Cartes tarifaires ────────────────────────────────────────── */
+.tier{border:.7mm solid var(--line);border-radius:4mm;padding:5mm;display:flex;flex-direction:column;position:relative;}
+.tier.hi{border-color:var(--indigo);}
+.tier.top{border-color:var(--indigo);background:var(--navy);}
+.tier-badge{
+  position:absolute;top:-2.6mm;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:5.8pt;font-weight:900;letter-spacing:.06em;color:#fff;padding:.9mm 3.2mm;border-radius:6px;
+}
+.tier-name{font-family:var(--disp);font-weight:900;font-size:12pt;color:var(--navy);margin-bottom:1mm;}
+.tier.top .tier-name{color:#fff;}
+.tier-price{font-family:var(--disp);font-weight:900;font-size:24pt;line-height:1;color:var(--orange);}
+.tier.hi .tier-price{color:var(--indigo);} .tier.top .tier-price{color:#9aa0ff;}
+.tier-per{font-size:7pt;color:var(--mute);font-weight:600;}
+.tier.top .tier-per{color:rgba(255,255,255,.45);}
+.tier-sub{font-size:7.8pt;color:var(--mute);margin:1.5mm 0 3.5mm;}
+.tier.top .tier-sub{color:rgba(255,255,255,.45);}
+.tier ul{list-style:none;flex:1;display:flex;flex-direction:column;gap:1.8mm;}
+.tier li{font-size:8.2pt;color:#5A5F70;display:flex;gap:2mm;line-height:1.4;}
+.tier.top li{color:rgba(255,255,255,.72);}
+.tier li b{color:var(--orange);font-weight:800;}
+.tier.hi li b{color:var(--indigo);} .tier.top li b{color:#9aa0ff;}
+
+/* ── Divers ───────────────────────────────────────────────────── */
+.stat{text-align:center;padding:4mm 2mm;}
+.stat b{display:block;font-family:var(--disp);font-weight:900;font-size:19pt;color:var(--navy);line-height:1;}
+.page.dark .stat b{color:#fff;}
+.stat span{font-size:7.6pt;color:var(--mute);display:block;margin-top:1.5mm;line-height:1.35;}
+.quote{border-left:.8mm solid var(--orange);background:var(--os);padding:4mm 5mm;border-radius:0 3mm 3mm 0;}
+.chips{display:flex;flex-wrap:wrap;gap:2mm;}
+.chip{
+  font-size:7.8pt;font-weight:600;color:var(--navy);background:var(--gray);
+  border-radius:20px;padding:1.4mm 3.4mm;border:1px solid var(--line);
+}
+.rule{height:1px;background:var(--line);margin:5mm 0;}
+.anchor{margin-top:auto;padding-bottom:2mm;}
+
+@media print{
+  html{background:#fff;}
+  .page{margin:0;page-break-after:always;break-after:page;}
+  .page:last-child{page-break-after:auto;}
+  *{animation:none!important;transition:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ 1 · COUVERTURE ═══════════════ -->
+<div class="page dark">
+  <div class="tri"><i></i><i></i><i></i></div>
+  <div class="cover">
+    <div class="cover-glow"></div>
+    <div class="cover-glow2"></div>
+    <div class="cover-in">
+      <img src="../public/logo-1000click-white.png" style="height:20mm;display:block;margin-bottom:12mm;" alt="1000Click"/>
+      <span class="tag">Présentation commerciale · 2026</span>
+      <h1>La plateforme<br/>des francophones<br/><span style="color:var(--orange);">en Belgique</span></h1>
+      <p class="lead" style="margin-top:8mm;max-width:118mm;">
+        Petites annonces entre particuliers, annuaire de professionnels francophones
+        et contenus pratiques — réunis sur un seul site, pensé pour une communauté
+        précise plutôt que pour tout le monde.
+      </p>
+      <div style="display:flex;gap:10mm;margin-top:14mm;">
+        <div><p style="font-size:7pt;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:.1em;text-transform:uppercase;">En ligne</p>
+             <p style="font-size:10pt;color:#fff;font-weight:800;margin-top:1mm;">www.1000click.com</p></div>
+        <div><p style="font-size:7pt;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:.1em;text-transform:uppercase;">Espace pro</p>
+             <p style="font-size:10pt;color:#fff;font-weight:800;margin-top:1mm;">dès 99 € HT / an</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="pf" style="color:rgba(255,255,255,.3);"><span>1000Click — Présentation commerciale</span><span>1 / 8</span></div>
+</div>
+
+<!-- ═══════════════ 2 · LE CONSTAT ═══════════════ -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" alt="1000Click"/><span>Le constat</span></div>
+  <div class="body">
+    <p class="kicker">01 — Pourquoi 1000Click</p>
+    <h2>Une communauté nombreuse,<br/>mal servie par les plateformes généralistes</h2>
+    <p class="lead" style="margin-bottom:7mm;">
+      Les grandes plateformes d'annonces couvrent toute la Belgique, dans toutes les langues, pour
+      tous les publics. Efficaces pour vendre un canapé ; beaucoup moins pour trouver un
+      comptable qui parle votre langue ou un logement dans le quartier que vous visez.
+    </p>
+
+    <div class="g2" style="margin-bottom:6mm;">
+      <div class="card">
+        <div class="ico">🔍</div>
+        <h3>Chercher dans sa langue</h3>
+        <p>Une démarche administrative, un bail, un devis de travaux : dès que le sujet devient
+        sérieux, échanger dans sa langue cesse d'être un confort et devient une condition.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🤝</div>
+        <h3>Trouver quelqu'un de confiance</h3>
+        <p>Sans réseau local, le bouche-à-oreille ne fonctionne pas. Reste le hasard des moteurs
+        de recherche, sans aucun filtre sur qui parle votre langue.</p>
+      </div>
+      <div class="card">
+        <div class="ico ind">📍</div>
+        <h3>Rester dans son périmètre</h3>
+        <p>Une annonce à Bruxelles n'intéresse pas quelqu'un installé à Liège. La proximité
+        géographique est un critère de tri, pas un détail.</p>
+      </div>
+      <div class="card">
+        <div class="ico ind">⏱️</div>
+        <h3>Aller vite</h3>
+        <p>Une installation concentre en quelques semaines des dizaines de besoins : meubles,
+        logement, véhicule, assurance, école, comptable.</p>
+      </div>
+    </div>
+
+    <div class="quote anchor">
+      <p style="font-size:10pt;color:var(--navy);font-weight:600;line-height:1.55;">
+        1000Click ne cherche pas à concurrencer les généralistes sur leur volume.
+        La plateforme répond à une question qu'ils ne posent pas :
+        <strong>où trouver, près de chez moi, des particuliers et des professionnels francophones ?</strong>
+      </p>
+    </div>
+  </div>
+  <div class="pf"><span>1000Click — Présentation commerciale</span><span>2 / 8</span></div>
+</div>
+
+<!-- ═══════════════ 3 · LA PLATEFORME ═══════════════ -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" alt="1000Click"/><span>La plateforme</span></div>
+  <div class="body">
+    <p class="kicker">02 — Ce que propose le site</p>
+    <h2>Trois usages, un seul compte</h2>
+    <p class="lead" style="margin-bottom:6mm;">
+      Le site tient sur trois piliers complémentaires. Un visiteur venu pour une annonce
+      découvre l'annuaire ; un professionnel référencé profite du trafic des annonces.
+    </p>
+
+    <div class="g3" style="margin-bottom:6mm;">
+      <div class="card soft">
+        <div class="ico">🏷️</div>
+        <h3>Petites annonces</h3>
+        <p>Dépôt gratuit et illimité entre particuliers. Onze catégories, des critères
+        spécifiques par univers, et une messagerie interne qui évite d'exposer son numéro.</p>
+      </div>
+      <div class="card ind">
+        <div class="ico ind">⭐</div>
+        <h3>Annuaire professionnel</h3>
+        <p>Une fiche par professionnel, avec page dédiée, photos, description et lien direct.
+        C'est le socle payant de la plateforme.</p>
+      </div>
+      <div class="card">
+        <div class="ico">📖</div>
+        <h3>Contenus pratiques</h3>
+        <p>Un blog sur la vie quotidienne en Belgique, qui attire depuis les moteurs de
+        recherche un public déjà en recherche active.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:3mm;">Les onze catégories d'annonces</h3>
+    <div class="chips" style="margin-bottom:6mm;">
+      <span class="chip">Véhicules</span><span class="chip">Immobilier</span><span class="chip">Maison &amp; Mobilier</span>
+      <span class="chip">Multimédia &amp; Informatique</span><span class="chip">Mode &amp; Beauté</span>
+      <span class="chip">Loisirs &amp; Sports</span><span class="chip">Enfants &amp; Famille</span>
+      <span class="chip">Animaux</span><span class="chip">Services</span><span class="chip">Dons</span><span class="chip">Autres</span>
+    </div>
+
+    <div class="rule anchor" style="margin-bottom:5mm;"></div>
+
+    <div class="g4">
+      <div class="stat"><b>7</b><span>langues d'interface</span></div>
+      <div class="stat"><b>11</b><span>catégories d'annonces</span></div>
+      <div class="stat"><b>10</b><span>familles de métiers</span></div>
+      <div class="stat"><b>0 €</b><span>pour les particuliers</span></div>
+    </div>
+    <p style="font-size:7pt;color:var(--mute);text-align:center;margin-top:1mm;">
+      Interface disponible en français, néerlandais, anglais, allemand, espagnol, ukrainien et russe.
+    </p>
+  </div>
+  <div class="pf"><span>1000Click — Présentation commerciale</span><span>3 / 8</span></div>
+</div>
+
+<!-- ═══════════════ 4 · POUR LES PROS ═══════════════ -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" alt="1000Click"/><span>L'offre professionnelle</span></div>
+  <div class="body">
+    <p class="kicker ind">03 — Pour les professionnels</p>
+    <h2>Une audience qui cherche déjà<br/>ce que vous vendez</h2>
+    <p class="lead" style="margin-bottom:6mm;">
+      Le trafic d'un annuaire généraliste est large et froid. Ici, un visiteur qui consulte
+      une annonce immobilière à Bruxelles est, le même mois, un client potentiel pour un
+      déménageur, un notaire, un assureur et un artisan. C'est cette simultanéité qui se vend.
+    </p>
+
+    <h3 style="margin-bottom:3mm;">Dix familles de métiers référencées</h3>
+    <div class="g4" style="margin-bottom:6mm;">
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">🏠</span><br/><strong>Immobilier</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">⚖️</span><br/><strong>Juridique &amp; fiscal</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">📊</span><br/><strong>Comptabilité</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">🚚</span><br/><strong>Déménagement</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">🛡️</span><br/><strong>Assurance</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">🏥</span><br/><strong>Santé</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">🚗</span><br/><strong>Automobile</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">📚</span><br/><strong>Éducation</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">🔧</span><br/><strong>Services &amp; artisans</strong></p></div>
+      <div class="card" style="padding:3.5mm;"><p style="font-size:8pt;"><span style="font-size:11pt;">💼</span><br/><strong>Autres pros</strong></p></div>
+    </div>
+
+    <div class="g2 anchor">
+      <div class="card soft">
+        <h3>Ce que vous obtenez</h3>
+        <p style="margin-top:2mm;">Une fiche complète, une page à votre adresse
+        <strong>/professionnels/votre-nom</strong>, vos coordonnées, vos photos et un lien direct
+        vers votre site. Selon la formule, des emplacements publicitaires sur le reste du site.</p>
+      </div>
+      <div class="card">
+        <h3>Ce que ça vous coûte</h3>
+        <p style="margin-top:2mm;">De <strong>99 € HT à 499 € HT par an</strong>, facturation annuelle,
+        résiliable à tout moment. Pour un artisan, <strong>un seul client obtenu dans l'année
+        rembourse l'abonnement</strong>.</p>
+      </div>
+    </div>
+  </div>
+  <div class="pf"><span>1000Click — Présentation commerciale</span><span>4 / 8</span></div>
+</div>
+
+<!-- ═══════════════ 5 · LES FORMULES ═══════════════ -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" alt="1000Click"/><span>Les formules</span></div>
+  <div class="body">
+    <p class="kicker">04 — Tarifs</p>
+    <h2>Trois formules, un seul engagement : aucun</h2>
+    <p class="lead" style="margin-bottom:7mm;">
+      Facturation annuelle, résiliable à tout moment, paiement sécurisé par Stripe.
+      Tous les montants sont indiqués hors taxes.
+    </p>
+
+    <div class="g3" style="margin-bottom:6mm;">
+      <div class="tier">
+        <p class="tier-name">Smart</p>
+        <div><span class="tier-price num">99 €</span> <span class="tier-per">HT / an</span></div>
+        <p class="tier-sub">Être présent, simplement</p>
+        <ul>
+          <li><b>✓</b>Fiche professionnelle visible</li>
+          <li><b>✓</b>Page dédiée dans l'annuaire</li>
+          <li><b>✓</b>Lien vers votre site web</li>
+        </ul>
+      </div>
+      <div class="tier hi">
+        <span class="tier-badge" style="background:var(--indigo);">★ LE PLUS CHOISI</span>
+        <p class="tier-name">Pro</p>
+        <div><span class="tier-price num">299 €</span> <span class="tier-per">HT / an</span></div>
+        <p class="tier-sub">Gagner en visibilité</p>
+        <ul>
+          <li><b>✓</b>Tout ce qu'inclut Smart</li>
+          <li><b>✓</b>Bannière sur le côté du site</li>
+          <li><b>✓</b>Présence élargie sur la plateforme</li>
+        </ul>
+      </div>
+      <div class="tier top">
+        <span class="tier-badge" style="background:#9aa0ff;color:var(--navy);">VISIBILITÉ MAXIMALE</span>
+        <p class="tier-name">VIP</p>
+        <div><span class="tier-price num">499 €</span> <span class="tier-per">HT / an</span></div>
+        <p class="tier-sub">Dominer sa catégorie</p>
+        <ul>
+          <li><b>✓</b>Tout ce qu'inclut Pro</li>
+          <li><b>✓</b>Badge ★ Recommandé</li>
+          <li><b>✓</b>Bannière grand format en accueil</li>
+          <li><b>✓</b>Photos illimitées sur vos annonces</li>
+          <li><b>✓</b>Statistiques de clics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:46%;">Comparatif détaillé</th>
+            <th class="c">Gratuit</th><th class="c">Smart</th><th class="c">Pro</th><th class="c">VIP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Fiche professionnelle visible</td><td class="c n">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+          <tr><td>Page dédiée dans l'annuaire</td><td class="c n">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+          <tr><td>Lien vers votre site web</td><td class="c n">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+          <tr><td>Bannière publicitaire latérale</td><td class="c n">—</td><td class="c n">—</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+          <tr><td>Photos illimitées sur vos annonces</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">✓</td></tr>
+          <tr><td>Bannière grand format en page d'accueil</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">✓</td></tr>
+          <tr><td>Badge « Recommandé »</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">✓</td></tr>
+          <tr><td>Statistiques de clics</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="g3 anchor" style="margin-top:6mm;">
+      <div class="card soft" style="padding:4.5mm;"><p style="font-size:8.6pt;"><strong>Sans engagement</strong><br/>Résiliation à tout moment depuis votre espace, sans justification ni préavis.</p></div>
+      <div class="card" style="padding:4.5mm;"><p style="font-size:8.6pt;"><strong>Changement de formule</strong><br/>Vous pouvez monter ou descendre de palier en cours d'année.</p></div>
+      <div class="card" style="padding:4.5mm;"><p style="font-size:8.6pt;"><strong>Fiche modifiable</strong><br/>Textes, photos et coordonnées se corrigent à tout moment, sans surcoût.</p></div>
+    </div>
+  </div>
+  <div class="pf"><span>1000Click — Présentation commerciale</span><span>5 / 8</span></div>
+</div>
+
+<!-- ═══════════════ 6 · CARTE DE VISITE ═══════════════ -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" alt="1000Click"/><span>Option</span></div>
+  <div class="body">
+    <p class="kicker ind">05 — En complément</p>
+    <h2>La carte de visite numérique</h2>
+    <p class="lead" style="margin-bottom:7mm;">
+      Une option indépendante de votre formule, à <strong>3,99 € HT par mois</strong>,
+      sans engagement et résiliable en un clic.
+    </p>
+
+    <div class="g2" style="margin-bottom:6mm;">
+      <div class="card soft">
+        <div class="ico">🔗</div>
+        <h3>Une page à votre nom</h3>
+        <p>Votre carte vit à l'adresse <strong>1000click.com/carte/votre-nom</strong>.
+        Un lien unique à mettre dans votre signature d'e-mail, sur vos réseaux ou vos
+        supports imprimés.</p>
+      </div>
+      <div class="card ind">
+        <div class="ico ind">📱</div>
+        <h3>Un QR code prêt à imprimer</h3>
+        <p>Généré automatiquement. Sur un flyer, une vitrine ou un véhicule : votre
+        interlocuteur scanne et vous a en main, sans rien retaper.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:3mm;">Ce qu'elle affiche</h3>
+    <div class="g4" style="margin-bottom:7mm;">
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>Titre ou spécialité</strong><br/>Ce que vous faites, en une ligne</p></div>
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>Accroche</strong><br/>Votre phrase de présentation</p></div>
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>E-mail de contact</strong><br/>Celui de votre choix</p></div>
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>Identité visuelle</strong><br/>Logo, bannière, couleurs</p></div>
+    </div>
+
+    <div class="quote anchor">
+      <p style="font-size:9.4pt;color:var(--navy);line-height:1.6;">
+        <strong>À qui elle sert le plus ?</strong> Aux métiers qui rencontrent physiquement leurs clients —
+        artisans, agents immobiliers, praticiens. Une carte papier se perd et ne se met pas à jour.
+        Celle-ci se corrige depuis votre espace, et le lien reste le même.
+      </p>
+    </div>
+  </div>
+  <div class="pf"><span>1000Click — Présentation commerciale</span><span>6 / 8</span></div>
+</div>
+
+<!-- ═══════════════ 7 · COMMENT ÇA MARCHE ═══════════════ -->
+<div class="page">
+  <div class="ph"><img src="../public/logo-1000click.png" alt="1000Click"/><span>Mise en route</span></div>
+  <div class="body">
+    <p class="kicker">06 — En pratique</p>
+    <h2>En ligne en quelques minutes</h2>
+    <p class="lead" style="margin-bottom:7mm;">
+      Aucun rendez-vous, aucun dossier à constituer. La création de fiche est entièrement
+      autonome, du premier écran au paiement.
+    </p>
+
+    <div class="steps" style="margin-bottom:7mm;">
+      <div class="step"><div class="step-n">1</div>
+        <div><h3>Créez votre compte</h3>
+        <p style="color:#61667A;">Une adresse e-mail et un mot de passe suffisent. Gratuit, sans carte bancaire.</p></div></div>
+      <div class="step"><div class="step-n">2</div>
+        <div><h3>Remplissez votre fiche</h3>
+        <p style="color:#61667A;">Activité, catégorie, ville, description, photos et logo. Un assistant vous guide écran par écran.</p></div></div>
+      <div class="step"><div class="step-n">3</div>
+        <div><h3>Choisissez votre formule</h3>
+        <p style="color:#61667A;">Smart, Pro ou VIP. Paiement par carte via Stripe, facturation annuelle.</p></div></div>
+      <div class="step"><div class="step-n">4</div>
+        <div><h3>Votre fiche est en ligne</h3>
+        <p style="color:#61667A;">Immédiatement visible dans l'annuaire. Modifiable à tout moment depuis votre espace.</p></div></div>
+    </div>
+
+    <div class="rule"></div>
+
+    <h3 class="anchor" style="margin-bottom:3mm;">Ce qui est inclus, quelle que soit la formule</h3>
+    <div class="g4">
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>Paiement sécurisé</strong><br/>Stripe · PCI-DSS. Aucune coordonnée bancaire stockée par 1000Click.</p></div>
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>Connexion chiffrée</strong><br/>HTTPS sur l'ensemble du site, certificat renouvelé automatiquement.</p></div>
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>Conformité RGPD</strong><br/>Consentement aux cookies, droit d'accès et de suppression.</p></div>
+      <div class="card" style="padding:4mm;"><p style="font-size:7.5pt;"><strong>Modération active</strong><br/>Filtrage automatique des contenus illicites et traitement des signalements.</p></div>
+    </div>
+  </div>
+  <div class="pf"><span>1000Click — Présentation commerciale</span><span>7 / 8</span></div>
+</div>
+
+<!-- ═══════════════ 8 · CONTACT ═══════════════ -->
+<div class="page dark">
+  <div class="tri"><i></i><i></i><i></i></div>
+  <div class="body" style="justify-content:center;padding:0 16mm;position:relative;">
+    <div class="cover-glow" style="opacity:.75;"></div>
+    <div style="position:relative;z-index:2;">
+      <p class="kicker" style="color:var(--be-yellow);">07 — Pour aller plus loin</p>
+      <h2 style="font-size:26pt;margin-bottom:6mm;">Votre fiche peut être<br/>en ligne aujourd'hui</h2>
+      <p class="lead" style="margin-bottom:10mm;max-width:120mm;">
+        Créez votre compte, remplissez votre fiche, choisissez votre formule.
+        Résiliable à tout moment, sans justification.
+      </p>
+
+      <div class="g2" style="max-width:150mm;margin-bottom:12mm;">
+        <div class="card dk">
+          <h3>Créer votre fiche</h3>
+          <p style="margin-top:1.5mm;">www.1000click.com<br/><strong style="color:var(--orange);">/devenir-pro</strong></p>
+        </div>
+        <div class="card dk">
+          <h3>Voir l'annuaire</h3>
+          <p style="margin-top:1.5mm;">www.1000click.com<br/><strong style="color:var(--orange);">/professionnels</strong></p>
+        </div>
+      </div>
+
+      <img src="../public/logo-1000click-white.png" style="height:13mm;display:block;margin-bottom:5mm;" alt="1000Click"/>
+      <p style="font-size:8pt;color:rgba(255,255,255,.45);">
+        contact@1000click.com &nbsp;·&nbsp; www.1000click.com
+      </p>
+      <p style="font-size:6.5pt;color:rgba(255,255,255,.3);margin-top:6mm;line-height:1.6;max-width:135mm;">
+        Document commercial non contractuel. Tarifs indiqués hors taxes, en vigueur à la date d'édition
+        et susceptibles d'évolution. Les fonctionnalités décrites correspondent aux formules
+        Smart, Pro et VIP telles que proposées sur www.1000click.com.
+      </p>
+    </div>
+  </div>
+  <div class="pf" style="color:rgba(255,255,255,.3);"><span>1000Click — Présentation commerciale</span><span>8 / 8</span></div>
+</div>
+
+</body>
+</html>
