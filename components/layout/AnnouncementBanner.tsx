@@ -57,7 +57,8 @@ export default function AnnouncementBanner({ text }: { text: string }) {
   const pathname = usePathname()
   const dismissedKey = useSyncExternalStore(subscribe, getDismissedKey, () => null)
 
-  const hidden = dismissedKey === messageKey(text) || pathname.startsWith('/admin')
+  // Masqué partout où l'habillage public l'est : l'annonce s'adresse aux visiteurs.
+  const hidden = dismissedKey === messageKey(text) || pathname.startsWith('/admin') || pathname.startsWith('/manuel')
 
   useEffect(() => {
     const root = document.documentElement
