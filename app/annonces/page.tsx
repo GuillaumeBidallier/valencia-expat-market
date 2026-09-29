@@ -268,7 +268,7 @@ async function AnnoncesContent({ searchParams }: Props) {
           <AnnoncesFilters dark={isVehiculesTheme} immobilier={isImmobilierTheme} />
         </Suspense>
 
-        <div className="flex flex-col lg:flex-row gap-4 items-start mt-4">
+        <div className="flex flex-col lg:flex-row gap-4 lg:items-start mt-4">
 
           <AnnoncesUI
             listings={listings}

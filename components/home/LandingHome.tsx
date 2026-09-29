@@ -387,7 +387,7 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
 
       {/* ── Cartes promo Véhicules / Immobilier ─────────────────────── */}
       <section className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-10">
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
           {/* Véhicules — badge sur le bord GAUCHE */}
           <div className="relative rounded-2xl">
@@ -424,7 +424,7 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
                 </div>
               ))}
             </div>
-            <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-indigo-primary border-4 border-white flex items-center justify-center shadow-md">
+            <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/4 sm:-translate-x-1/2 w-12 h-12 rounded-full bg-indigo-primary border-4 border-white flex items-center justify-center shadow-md">
               <Car size={20} className="text-white" />
             </div>
           </div>
@@ -464,7 +464,7 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
                 </div>
               ))}
             </div>
-            <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-12 h-12 rounded-full bg-orange-primary border-4 border-white flex items-center justify-center shadow-md">
+            <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/4 sm:translate-x-1/2 w-12 h-12 rounded-full bg-orange-primary border-4 border-white flex items-center justify-center shadow-md">
               <Home size={20} className="text-white" />
             </div>
           </div>

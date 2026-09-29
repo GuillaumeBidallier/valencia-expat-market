@@ -294,7 +294,7 @@ export default function Navbar() {
               className={`flex items-center gap-1 text-white px-3 py-1.5 rounded-lg font-bold text-xs transition-colors whitespace-nowrap ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
             >
               <Plus size={13} aria-hidden="true" />
-              {t('postAd')}
+              <span className="max-[359px]:sr-only">{t('postAd')}</span>
             </Link>
             <button
               className={`p-2 rounded-lg transition-colors ${light ? 'text-white hover:bg-white/10' : 'text-navy hover:bg-gray-100'}`}
