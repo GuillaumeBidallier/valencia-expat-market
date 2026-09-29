@@ -202,7 +202,7 @@ export default function AdminAnnoncesClient({
           <h1 className="text-2xl font-black text-navy tracking-tight">Annonces</h1>
           <p className="text-sm text-gray-400 mt-0.5">Gérez toutes les annonces déposées sur la plateforme.</p>
         </div>
-        <button
+        <button data-tour="annonces-autopublish"
           onClick={toggleAutoPublish}
           disabled={togglingAuto}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-colors disabled:opacity-50 shadow-sm ${
@@ -252,7 +252,7 @@ export default function AdminAnnoncesClient({
       </div>
 
       {/* ── Filters: tabs + search + category ──────────────────── */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div data-tour="annonces-filters" className="flex flex-wrap items-center gap-2">
         {TABS.map(s => (
           <button
             key={s}
@@ -269,7 +269,7 @@ export default function AdminAnnoncesClient({
         ))}
 
         {tab !== 'REPORTED' && (
-          <div className="flex items-center gap-2 ml-auto">
+          <div data-tour="annonces-search" className="flex items-center gap-2 ml-auto">
             <div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" />
               <input

@@ -23,7 +23,7 @@ export default function CookiesPage() {
 
       {/* Hero */}
       <div className="relative overflow-hidden min-h-[200px] sm:min-h-[240px]">
-        <Image src="/valencia-hero.jpg" alt="Politique cookies 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
+        <Image src="/brussels-hero.png" alt="Politique cookies 1000Click" fill sizes="100vw" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-hero-dark/95 via-hero-dark/75 to-hero-dark/30" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex flex-col justify-center min-h-[200px] sm:min-h-[240px]">
           <p className="text-orange-primary text-xs font-black uppercase tracking-widest mb-2">Légal · Cookies</p>

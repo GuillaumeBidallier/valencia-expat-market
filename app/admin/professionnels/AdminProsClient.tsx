@@ -123,7 +123,7 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
           <h1 className="text-2xl font-black text-navy tracking-tight">Professionnels</h1>
           <p className="text-sm text-gray-400 mt-0.5">Gérez l&apos;annuaire des professionnels référencés.</p>
         </div>
-        <button
+        <button data-tour="pros-add"
           onClick={openNew}
           className="flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-sm"
         >
@@ -132,7 +132,7 @@ export default function AdminProsClient({ initialPros }: { initialPros: Professi
       </div>
 
       {/* ── Tier stat cards ─────────────────────────────────── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div data-tour="pros-tiers" className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {statCards.map(s => {
           const isActive = tierFilter === s.key
           return (

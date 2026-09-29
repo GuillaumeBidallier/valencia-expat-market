@@ -349,7 +349,7 @@ export default function AdminSignalementsClient({ initialListings }: { initialLi
         </div>
 
       {/* ── Legend ─────────────────────────────────────────────── */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4">
+      <div data-tour="reports-legend" className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4">
         <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-3">Légende des actions</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[

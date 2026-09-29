@@ -179,7 +179,7 @@ export default async function AdminStatsPage() {
       </div>
 
       {/* ── Hero KPI row ───────────────────────────────────────────── */}
-      <div>
+      <div data-tour="stats-kpis">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           <KpiCard
             label="Utilisateurs"

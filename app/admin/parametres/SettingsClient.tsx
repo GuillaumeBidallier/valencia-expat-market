@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
+import { useSearchParams } from 'next/navigation'
 import {
   Image as ImageIcon, Plus, Trash2, GripVertical, Save,
   Megaphone, Mail, ShieldAlert, CheckCircle2, AlertTriangle,
@@ -103,12 +104,16 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
   const [resetListingsResult, setResetListingsResult] = useState<{ count: number } | null>(null)
   const [resetListingsError, setResetListingsError]   = useState('')
 
+  // ?tab=maintenance (sidebar link) — read on every change, so clicking the link
+  // while already on this page still switches tab. #maintenance kept for old bookmarks.
+  const tabParam = useSearchParams().get('tab')
   useEffect(() => {
     const t = setTimeout(() => {
-      if (window.location.hash === '#maintenance') setActiveTab('maintenance')
+      const wanted = tabParam ?? (window.location.hash === '#maintenance' ? 'maintenance' : null)
+      if (wanted && TABS.some(tab => tab.key === wanted)) setActiveTab(wanted as TabKey)
     }, 0)
     return () => clearTimeout(t)
-  }, [])
+  }, [tabParam])
 
   const current = useMemo(
     () => ({ autoPublish, heroImages, announcementText, announcementEnabled, contactEmail, maintenanceMode }),
@@ -246,10 +251,11 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
     <div className="flex flex-col sm:flex-row gap-6">
 
       {/* ── Tab nav ─────────────────────────────────────────── */}
-      <nav className="flex sm:flex-col gap-1 sm:w-56 shrink-0 overflow-x-auto sm:overflow-visible pb-1 sm:pb-0 sm:sticky sm:top-6 sm:self-start">
+      <nav data-tour="settings-tabs" className="flex sm:flex-col gap-1 sm:w-56 shrink-0 overflow-x-auto sm:overflow-visible pb-1 sm:pb-0 sm:sticky sm:top-6 sm:self-start">
         {TABS.map(tab => (
           <button
             key={tab.key}
+            data-tour={`settings-tab-${tab.key}`}
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors shrink-0 sm:shrink ${
               activeTab === tab.key
@@ -270,7 +276,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
       <div className="flex-1 min-w-0 space-y-5">
 
         {/* Save bar */}
-        <div className="flex items-center justify-end gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3">
+        <div data-tour="settings-save" className="flex items-center justify-end gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3">
           {saveError && <p className="text-sm text-red-500">{saveError}</p>}
           {saved && (
             <p className="text-sm text-emerald-600 flex items-center gap-1.5 font-medium">
@@ -465,7 +471,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
 
         {/* ── Maintenance ─────────────────────────────────────────── */}
         {activeTab === 'maintenance' && (
-          <div id="maintenance" className="scroll-mt-6">
+          <div data-tour="settings-maintenance" id="maintenance" className="scroll-mt-6">
             <SectionCard
               icon={<ShieldAlert size={18} />}
               iconBg={maintenanceMode ? 'bg-red-50' : 'bg-gray-50'}

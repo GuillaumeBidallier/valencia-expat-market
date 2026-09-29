@@ -28,23 +28,24 @@ model Site {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  siteId             String
-  site               Site                @relation(fields: [siteId], references: [id])
-  name               String
-  email              String
-  passwordHash       String
-  role               Role                @default(USER)
-  blocked            Boolean             @default(false)
-  createdAt          DateTime            @default(now())
-  showPhone          Boolean             @default(true)
-  showWhatsapp       Boolean             @default(true)
-  listings           Listing[]
-  favorites          Favorite[]
-  sentMessages       Message[]           @relation("Sender")
-  receivedMessages   Message[]           @relation("Receiver")
-  professional       Professional?
-  rentalApplications RentalApplication[]
+  id                   String              @id @default(cuid())
+  siteId               String
+  site                 Site                @relation(fields: [siteId], references: [id])
+  name                 String
+  email                String
+  passwordHash         String
+  role                 Role                @default(USER)
+  blocked              Boolean             @default(false)
+  createdAt            DateTime            @default(now())
+  showPhone            Boolean             @default(true)
+  showWhatsapp         Boolean             @default(true)
+  adminTourCompletedAt DateTime?
+  listings             Listing[]
+  favorites            Favorite[]
+  sentMessages         Message[]           @relation("Sender")
+  receivedMessages     Message[]           @relation("Receiver")
+  professional         Professional?
+  rentalApplications   RentalApplication[]
 
   @@unique([siteId, email])
 }

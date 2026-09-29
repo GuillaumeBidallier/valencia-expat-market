@@ -137,7 +137,7 @@ export default async function AdminPage() {
       </div>
 
       {/* ── Stat cards ──────────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div data-tour="dashboard-stats" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {statCards.map(s => (
           <Link key={s.label} href={s.href} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:border-gray-200 transition-colors">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${s.iconBg}`}>
@@ -208,10 +208,10 @@ export default async function AdminPage() {
       </div>
 
       {/* ── À modérer ───────────────────────────────────────── */}
-      <PendingModerationPanel initialListings={pendingListings} />
+      <div data-tour="dashboard-moderation"><PendingModerationPanel initialListings={pendingListings} /></div>
 
       {/* ── Modules de gestion / Accès rapides ─────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-5">
+      <div data-tour="dashboard-modules" className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-5">
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
           <p className="text-sm font-black text-navy mb-4">Modules de gestion</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

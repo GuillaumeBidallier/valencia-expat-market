@@ -19,6 +19,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   ])
 
   const adminName = (session.user as { name?: string }).name ?? 'Admin'
+  const tourState = session.user.id
+    ? await prisma.user.findUnique({ where: { id: session.user.id }, select: { adminTourCompletedAt: true } })
+    : null
 
   return (
     <AdminShell
@@ -26,6 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       notificationCount={pendingCount + reportedListingsCount + firewallBlockedCount}
       sites={sites}
       currentSiteId={siteId}
+      tourAutoStart={!!tourState && !tourState.adminTourCompletedAt}
     >
       {children}
     </AdminShell>

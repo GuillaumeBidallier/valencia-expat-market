@@ -190,7 +190,7 @@ export default function AdminParefeuClient({
       </div>
 
       {/* ── Explication ─────────────────────────────────────── */}
-      <div className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-4 flex gap-3">
+      <div data-tour="firewall-info" className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-4 flex gap-3">
         <Shield size={18} className="text-blue-400 flex-shrink-0 mt-0.5" />
         <div className="text-sm text-blue-700">
           <strong>Comment fonctionne le pare-feu ?</strong> Chaque annonce soumise (même en mode publication automatique) est analysée automatiquement. Si du contenu interdit est détecté (armes, drogues, prostitution…), l&apos;annonce est bloquée avant publication et l&apos;utilisateur voit un message d&apos;erreur explicite. <br />

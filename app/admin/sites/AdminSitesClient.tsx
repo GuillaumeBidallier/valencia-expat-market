@@ -130,7 +130,7 @@ export default function AdminSitesClient({ initialSites }: { initialSites: Site[
           <p className="mb-4 text-red-500 text-xs bg-red-50 rounded-lg px-3 py-2">{error}</p>
         )}
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100">
+        <div data-tour="sites-list" className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100">
           {sites.map(site => (
             <div key={site.id} className="p-5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">

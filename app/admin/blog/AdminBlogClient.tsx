@@ -77,7 +77,7 @@ export default function AdminBlogClient({ posts }: { posts: BlogPost[] }) {
           <h1 className="text-2xl font-black text-navy tracking-tight">Blog</h1>
           <p className="text-sm text-gray-400 mt-0.5">Gérez les articles du blog.</p>
         </div>
-        <Link
+        <Link data-tour="blog-new"
           href="/admin/blog/new"
           className="flex items-center gap-2 bg-orange-primary hover:bg-orange-dark text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-sm"
         >

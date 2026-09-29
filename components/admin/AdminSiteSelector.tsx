@@ -22,7 +22,7 @@ export default function AdminSiteSelector({ sites, currentSiteId }: { sites: Sit
   }
 
   return (
-    <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5">
+    <div data-tour="site-selector" className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5">
       <Globe size={15} className="text-gray-400" />
       <select
         value={currentSiteId}

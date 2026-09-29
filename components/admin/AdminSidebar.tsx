@@ -1,9 +1,10 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { START_EVENT } from './tour/AdminTour'
 import {
   Menu, LayoutDashboard, FileText, Users, Star, Flag, CreditCard,
-  BarChart3, BookOpen, BookMarked, Tags, Settings2, Wrench, Headphones, ShieldCheck,
+  BarChart3, BookOpen, BookMarked, Tags, Settings2, Wrench, Headphones, ShieldCheck, Compass,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -11,21 +12,22 @@ interface NavItem {
   href: string
   label: string
   icon: LucideIcon
+  tour: string
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { href: '/admin', label: 'Tableau de bord', icon: LayoutDashboard },
-  { href: '/admin/annonces', label: 'Annonces', icon: FileText },
-  { href: '/admin/utilisateurs', label: 'Utilisateurs', icon: Users },
-  { href: '/admin/professionnels', label: 'Professionnels', icon: Star },
-  { href: '/admin/signalements', label: 'Signalements', icon: Flag },
-  { href: '/admin/paiements', label: 'Paiements', icon: CreditCard },
-  { href: '/admin/statistiques', label: 'Statistiques', icon: BarChart3 },
-  { href: '/admin/blog', label: 'Blog', icon: BookOpen },
-  { href: '/admin/categories', label: 'Catégories', icon: Tags },
-  { href: '/admin/parametres', label: 'Paramètres', icon: Settings2 },
-  { href: '/admin/parametres#maintenance', label: 'Maintenance', icon: Wrench },
-  { href: '/manuel', label: 'Aide', icon: BookMarked },
+  { href: '/admin', label: 'Tableau de bord', icon: LayoutDashboard, tour: 'nav-dashboard' },
+  { href: '/admin/annonces', label: 'Annonces', icon: FileText, tour: 'nav-annonces' },
+  { href: '/admin/utilisateurs', label: 'Utilisateurs', icon: Users, tour: 'nav-utilisateurs' },
+  { href: '/admin/professionnels', label: 'Professionnels', icon: Star, tour: 'nav-professionnels' },
+  { href: '/admin/signalements', label: 'Signalements', icon: Flag, tour: 'nav-signalements' },
+  { href: '/admin/paiements', label: 'Paiements', icon: CreditCard, tour: 'nav-paiements' },
+  { href: '/admin/statistiques', label: 'Statistiques', icon: BarChart3, tour: 'nav-statistiques' },
+  { href: '/admin/blog', label: 'Blog', icon: BookOpen, tour: 'nav-blog' },
+  { href: '/admin/categories', label: 'Catégories', icon: Tags, tour: 'nav-categories' },
+  { href: '/admin/parametres', label: 'Paramètres', icon: Settings2, tour: 'nav-parametres' },
+  { href: '/admin/parametres?tab=maintenance', label: 'Maintenance', icon: Wrench, tour: 'nav-maintenance' },
+  { href: '/manuel', label: 'Aide', icon: BookMarked, tour: 'nav-aide' },
 ]
 
 export default function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
@@ -49,15 +51,16 @@ export default function AdminSidebar({ collapsed, onToggle }: { collapsed: boole
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-3 px-2.5 space-y-0.5">
+      <nav data-tour="sidebar" className="flex-1 overflow-y-auto py-3 px-2.5 space-y-0.5">
         {NAV_ITEMS.map(item => {
-          const base = item.href.split('#')[0]
+          const base = item.href.split(/[?#]/)[0]
           const isActive = base === '/admin' ? pathname === '/admin' : pathname.startsWith(base)
           const Icon = item.icon
           return (
             <Link
               key={item.href}
               href={item.href}
+              data-tour={item.tour}
               title={collapsed ? item.label : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors border-l-[3px] ${
                 isActive
@@ -89,6 +92,14 @@ export default function AdminSidebar({ collapsed, onToggle }: { collapsed: boole
               Contacter le support
             </a>
           </div>
+          <button
+            type="button"
+            data-tour="tour-replay"
+            onClick={() => window.dispatchEvent(new Event(START_EVENT))}
+            className="w-full flex items-center justify-center gap-2 rounded-lg border border-dashed border-gray-200 py-2 text-xs font-semibold text-gray-500 hover:border-orange-primary hover:text-orange-primary transition-colors"
+          >
+            <Compass size={14} /> Revoir le guide
+          </button>
           <p className="flex items-center justify-center gap-1.5 text-[11px] text-gray-400 font-medium">
             <ShieldCheck size={13} /> 1000Click Admin
           </p>

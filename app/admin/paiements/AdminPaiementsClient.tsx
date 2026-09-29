@@ -87,7 +87,7 @@ export default function AdminPaiementsClient({
             </button>
           )
         })}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+        <div data-tour="payments-arr" className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 bg-emerald-50">
             <TrendingUp size={17} className="text-emerald-600" />
           </div>

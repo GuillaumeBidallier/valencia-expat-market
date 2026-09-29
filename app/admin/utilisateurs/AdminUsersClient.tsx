@@ -125,7 +125,7 @@ export default function AdminUsersClient({
       </div>
 
       {/* ── Stat cards ──────────────────────────────────────── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div data-tour="users-filters" className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {statCards.map(s => {
           const isActive = filter === s.key
           return (
@@ -147,7 +147,7 @@ export default function AdminUsersClient({
       </div>
 
       {/* ── Search ──────────────────────────────────────────── */}
-      <div className="relative max-w-sm">
+      <div data-tour="users-search" className="relative max-w-sm">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" />
         <input
           value={query}

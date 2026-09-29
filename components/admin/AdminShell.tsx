@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import AdminSidebar from './AdminSidebar'
 import AdminTopBar from './AdminTopBar'
+import AdminTour from './tour/AdminTour'
 
 interface Site { id: string; name: string; domain: string; country: string }
 
@@ -10,12 +11,14 @@ export default function AdminShell({
   notificationCount,
   sites,
   currentSiteId,
+  tourAutoStart,
   children,
 }: {
   adminName: string
   notificationCount: number
   sites: Site[]
   currentSiteId: string
+  tourAutoStart: boolean
   children: React.ReactNode
 }) {
   const [collapsed, setCollapsed] = useState(false)
@@ -32,6 +35,7 @@ export default function AdminShell({
         />
         <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
       </div>
+      <AdminTour autoStart={tourAutoStart} />
     </div>
   )
 }

@@ -81,3 +81,27 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Admin onboarding tour (components/admin/tour) ─────────────────────── */
+.admin-tour-ring {
+  box-shadow: 0 0 0 3px var(--color-orange-primary, #E8571A), 0 0 0 8px rgb(232 87 26 / 0.25);
+  animation: admin-tour-pulse 1.8s ease-in-out infinite;
+}
+@keyframes admin-tour-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px var(--color-orange-primary, #E8571A), 0 0 0 6px rgb(232 87 26 / 0.35); }
+  50%      { box-shadow: 0 0 0 3px var(--color-orange-primary, #E8571A), 0 0 0 16px rgb(232 87 26 / 0); }
+}
+.admin-tour-card { animation: admin-tour-in 0.35s ease-out both; }
+@keyframes admin-tour-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+.admin-tour-hint { animation: admin-tour-nudge 1.4s ease-in-out infinite; }
+@keyframes admin-tour-nudge {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-tour-ring, .admin-tour-card, .admin-tour-hint { animation: none; }
+  .admin-tour * { transition: none !important; }
+}
