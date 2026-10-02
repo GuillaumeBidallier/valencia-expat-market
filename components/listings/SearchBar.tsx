@@ -120,7 +120,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
     <>
       <div className="bg-white rounded-2xl shadow-lg p-2.5">
         {/* Mobile : 3 lignes empilées */}
-        <div className="flex flex-col gap-2 sm:hidden">
+        <div className="flex flex-col gap-2 md:hidden">
           <div className="relative flex items-center gap-2 bg-gray-50 rounded-xl px-4">
             <Search size={16} className="text-gray-400 shrink-0" aria-hidden="true" />
             <label htmlFor="search-query-mobile" className="sr-only">{t('placeholder')}</label>
@@ -173,7 +173,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
         </div>
 
         {/* Desktop : ligne unique */}
-        <div role="search" aria-label="Rechercher des annonces" className="hidden sm:flex gap-2">
+        <div role="search" aria-label="Rechercher des annonces" className="hidden md:flex gap-2">
           <div className="relative flex-1 flex items-center gap-2 bg-gray-50 rounded-xl px-4">
             <Search size={16} className="text-gray-400 shrink-0" aria-hidden="true" />
             <label htmlFor="search-query" className="sr-only">{t('placeholder')}</label>
@@ -205,7 +205,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
             }`}
           >
             <MapPin size={15} aria-hidden="true" className={`shrink-0 ${geo ? 'text-orange-primary' : 'text-gray-400'}`} />
-            <span className="font-medium max-w-[150px] truncate" aria-hidden="true">{locationLabel}</span>
+            <span className="font-medium max-w-[80px] lg:max-w-[150px] truncate" aria-hidden="true">{locationLabel}</span>
             <ChevronDown size={14} className="shrink-0 opacity-60" aria-hidden="true" />
           </button>
           <label htmlFor="search-category" className="sr-only">{t('all_categories')}</label>
@@ -213,7 +213,7 @@ export default function SearchBar({ defaultQuery = '', defaultCategory = '', def
             id="search-category"
             value={category}
             onChange={e => setCategory(e.target.value)}
-            className="px-4 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white cursor-pointer hover:border-indigo-primary transition-colors min-w-[170px]"
+            className="px-4 py-3 text-sm text-gray-600 border border-gray-200 rounded-xl focus:outline-none bg-white cursor-pointer hover:border-indigo-primary transition-colors w-36 lg:w-auto lg:min-w-[170px]"
           >
             <option value="">{t('all_categories')}</option>
             {categories.map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}

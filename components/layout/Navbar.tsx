@@ -180,16 +180,17 @@ export default function Navbar() {
               )}
             </Link>
 
-            <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-6">
+            <nav aria-label="Navigation principale" className="hidden lg:flex items-center gap-5 xl:gap-6">
               {[
-                { label: t('listings'),      href: '/annonces' },
+                // Below xl the search icon already leads to /annonces, so its text link waits for the room.
+                { label: t('listings'),      href: '/annonces', wide: true },
                 { label: t('professionals'), href: '/professionnels' },
                 { label: 'Espace Pro',      href: '/devenir-pro' },
-              ].map(({ label, href }) => (
+              ].map(({ label, href, wide }) => (
                 <Link
                   key={href}
                   href={href}
-                  className={`text-sm font-medium transition-colors ${
+                  className={`${wide ? 'hidden xl:inline' : ''} text-sm font-medium whitespace-nowrap transition-colors ${
                     light ? 'text-white/90 hover:text-white' : 'text-gray-600 hover:text-navy'
                   }`}
                 >
@@ -200,7 +201,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <Link
               href="/annonces"
               aria-label={t('listings')}
@@ -215,7 +216,7 @@ export default function Navbar() {
               <>
                 <Link
                   href="/deposer-annonce"
-                  className={`flex items-center gap-1.5 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
+                  className={`flex items-center gap-1.5 text-white px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
                 >
                   <Plus size={15} />
                   {t('postAd')}
@@ -257,14 +258,14 @@ export default function Navbar() {
               <>
                 <Link
                   href="/inscription"
-                  className={`flex items-center gap-1.5 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
+                  className={`flex items-center gap-1.5 text-white px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${vehiculesTheme ? "bg-red-600 hover:bg-red-700" : "bg-orange-primary hover:bg-orange-dark"}`}
                 >
                   <Plus size={15} />
                   {t('postAd')}
                 </Link>
                 <Link
                   href="/connexion"
-                  className={`text-sm font-normal transition-colors px-2.5 py-1.5 ${
+                  className={`text-sm font-normal whitespace-nowrap transition-colors px-2.5 py-1.5 ${
                     light ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-navy'
                   }`}
                 >
@@ -279,7 +280,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile : Recherche + Déposer + hamburger */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2">
             <Link
               href="/annonces"
               aria-label={t('listings')}
@@ -313,7 +314,7 @@ export default function Navbar() {
 
       {/* Mobile menu — always solid */}
       {menuOpen && (
-        <nav id="mobile-menu" aria-label="Navigation mobile" className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
+        <nav id="mobile-menu" aria-label="Navigation mobile" className="lg:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
           <Link href="/annonces" className="text-sm font-medium text-navy" onClick={() => setMenuOpen(false)}>{t('listings')}</Link>
           <Link href="/professionnels" className="text-sm font-semibold text-orange-primary" onClick={() => setMenuOpen(false)}>{t('professionals')}</Link>
           <hr />

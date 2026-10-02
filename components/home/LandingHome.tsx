@@ -294,7 +294,7 @@ export default function LandingHome({ heroSlides, stats }: { heroSlides?: HeroSl
     <div className="min-h-screen bg-white">
 
       {/* ── Hero : carrousel d'images configuré dans /admin/parametres ── */}
-      <section className="relative -mt-[104px] min-h-[540px] sm:min-h-[580px] overflow-hidden">
+      <section className="relative -mt-16 md:-mt-[104px] min-h-[540px] sm:min-h-[580px] overflow-hidden">
         {slides.map((slide, i) => (
           <Image
             key={slide.src}

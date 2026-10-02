@@ -42,9 +42,8 @@ export default function ConnexionPage() {
     setLoading(false)
   }
 
-  // -mt-10 : le layout réserve la place de la barre des catégories, masquée sous md.
   return (
-    <div className="bg-gray-50 min-h-[calc(100svh-4rem)] -mt-10 md:mt-0 lg:py-12 lg:px-6">
+    <div className="bg-gray-50 min-h-[calc(100svh-4rem)] lg:py-12 lg:px-6">
       <div className="mx-auto max-w-5xl lg:grid lg:grid-cols-[1fr_1.05fr] lg:rounded-3xl lg:overflow-hidden lg:shadow-[0_24px_60px_-20px_rgba(26,31,54,0.35)] bg-white">
 
         {/* ── Panneau marque ── */}
