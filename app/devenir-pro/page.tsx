@@ -9,7 +9,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Espace Pro sur 1000Click — Touchez la communauté francophone en Belgique',
-  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès de milliers de francophones installés en Belgique. Dès 99 € HT/an.',
+  description: 'Créez votre fiche professionnelle sur 1000Click et devenez visible auprès des francophones de Belgique. Dès 99 € HT/an.',
 }
 
 /* ─── Animation keyframes ─────────────────────────────────────────────────── */
@@ -286,7 +286,7 @@ export default function DevenirProPage() {
 
           {/* Subtext */}
           <p className="au d3 text-white/60 text-lg max-w-xl mb-10 leading-relaxed">
-            1000Click connecte les professionnels avec une communauté de milliers de francophones installés en Belgique — une audience qualifiée qui cherche activement vos services.
+            1000Click connecte les professionnels avec la communauté francophone de Belgique — une audience qualifiée qui cherche activement vos services.
           </p>
 
           {/* CTAs */}

@@ -60,7 +60,7 @@ export default function VehiculesHero({ subcategories, currentCat }: { subcatego
           Trouvez le véhicule<br />qui vous correspond <span className="text-red-500">à 100%</span>
         </h1>
         <p className="text-white/50 text-sm mb-7 max-w-md">
-          Des milliers d&apos;annonces automobiles vérifiées chaque jour en Belgique.
+          Voitures, motos et utilitaires, entre particuliers et professionnels en Belgique.
         </p>
 
         {/* Barre de recherche sombre */}

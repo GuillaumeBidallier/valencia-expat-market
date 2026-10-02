@@ -19,13 +19,12 @@ interface ProAd {
 type AdSize = 'banner' | 'rectangle' | 'inline' | 'skyscraper'
 const COUNTS: Record<AdSize, number> = { skyscraper: 4, inline: 2, banner: 1, rectangle: 1 }
 
-/* ─── Fallback mock (affiché pendant le chargement) ──────── */
+/* ─── Auto-promo 1000Click (affichée tant qu'aucun pro n'a pris de pub) ──
+ * Uniquement nos propres offres : jamais d'annonceur inventé. */
+const HOUSE_HREF = '/publicite'
 const MOCK = [
-  { id: 'm1', emoji: '🏠', title: 'Immo Bruxelles Francophone',  desc: 'Location & vente en Belgique.', url: 'immobruxelles.be',    color: '#1A5FA0', cta: 'Voir les biens'  },
-  { id: 'm2', emoji: '🚚', title: 'Trans-Expat Déménagements',   desc: 'France ↔ Belgique. Devis en 24h.',  url: 'transexpat.com',     color: '#E8571A', cta: 'Devis gratuit'   },
-  { id: 'm3', emoji: '📚', title: 'École Française Bruxelles',    desc: 'Homologuée AEFE. Inscriptions.', url: 'ecolevfr.be',        color: '#0D7C3A', cta: 'En savoir plus'  },
-  { id: 'm4', emoji: '🩺', title: 'AssurSanté BE',              desc: 'Mutuelle santé. Assistance 24h.', url: 'assursante.be', color: '#7C3AED', cta: 'Mon devis'       },
-  { id: 'm5', emoji: '🏦', title: 'Pretto',                     desc: 'Simulation gratuite en 2 min. Estimation de prêt immobilier.', url: 'pretto.be', color: '#5B3DF5', cta: 'Simuler mon prêt' },
+  { id: 'h1', emoji: '📣', title: 'Votre entreprise ici',            desc: 'Faites connaître votre activité aux visiteurs de 1000Click.', url: '1000click.com/publicite', color: '#E8571A', cta: 'Devenir annonceur' },
+  { id: 'h2', emoji: '💼', title: 'Professionnels : soyez visibles', desc: 'Fiche pro, logo et lien vers votre site, en Belgique.',        url: '1000click.com/publicite', color: '#1A5FA0', cta: 'Voir les offres'   },
 ]
 
 /* ─── AdSense slot ───────────────────────────────────────── */
@@ -114,10 +113,10 @@ function ProCard({ pro, compact = false }: { pro: ProAd; compact?: boolean }) {
   )
 }
 
-/* ─── Carte mock (skeleton visuel) ───────────────────────── */
+/* ─── Carte auto-promo ───────────────────────── */
 function MockCard({ m, compact = false }: { m: typeof MOCK[0]; compact?: boolean }) {
   return (
-    <div className="flex flex-col bg-white border border-gray-200 rounded-xl overflow-hidden opacity-70">
+    <a href={HOUSE_HREF} className="flex flex-col bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-sm transition-shadow">
       <div className="h-24 flex items-center justify-center text-4xl" style={{ backgroundColor: m.color + '15', borderBottom: `2px solid ${m.color}30` }}>
         {m.emoji}
       </div>
@@ -125,11 +124,11 @@ function MockCard({ m, compact = false }: { m: typeof MOCK[0]; compact?: boolean
         <p className="font-bold text-navy text-xs leading-tight line-clamp-1">{m.title}</p>
         <p className="text-[10px] text-green-700 mb-1">{m.url}</p>
         {!compact && <p className="text-[10px] text-gray-500 line-clamp-2 mb-2">{m.desc}</p>}
-        <button className="w-full text-white text-[10px] font-semibold px-2 py-1.5 rounded" style={{ backgroundColor: m.color }}>
+        <span className="block text-center w-full text-white text-[10px] font-semibold px-2 py-1.5 rounded" style={{ backgroundColor: m.color }}>
           {m.cta}
-        </button>
+        </span>
       </div>
-    </div>
+    </a>
   )
 }
 
@@ -172,7 +171,7 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
         ) : items ? (
           items.slice(0, 4).map(p => <ProCard key={p.id} pro={p} />)
         ) : (
-          MOCK.slice(seed % 4, seed % 4 + 4).map((m, i) => <MockCard key={i} m={MOCK[(seed + i) % MOCK.length]} />)
+          MOCK.map((m, i) => <MockCard key={m.id} m={MOCK[(seed + i) % MOCK.length]} />)
         )}
 
         <p className="text-[10px] text-gray-300 text-center">
@@ -214,7 +213,7 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
             </div>
           </a>
         ) : (
-          <div className="flex items-center gap-4 px-4 py-2.5">
+          <a href={HOUSE_HREF} className="flex items-center gap-4 px-4 py-2.5 hover:bg-orange-50 transition-colors">
             <div className="w-8 h-8 rounded flex items-center justify-center shrink-0 text-lg" style={{ backgroundColor: mock.color + '20' }}>
               {mock.emoji}
             </div>
@@ -222,10 +221,10 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
               <p className="font-bold text-navy text-sm">{mock.title}</p>
               <p className="text-xs text-gray-500 truncate">{mock.desc}</p>
             </div>
-            <button className="text-white text-xs font-semibold px-4 py-1.5 rounded whitespace-nowrap shrink-0" style={{ backgroundColor: mock.color }}>
+            <span className="text-white text-xs font-semibold px-4 py-1.5 rounded whitespace-nowrap shrink-0" style={{ backgroundColor: mock.color }}>
               {mock.cta}
-            </button>
-          </div>
+            </span>
+          </a>
         )}
       </div>
     )
@@ -247,7 +246,7 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
         ) : pro ? (
           <ProCard pro={pro} />
         ) : (
-          <div className="p-4">
+          <a href={HOUSE_HREF} className="block p-4 hover:bg-orange-50 transition-colors">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 rounded flex items-center justify-center shrink-0 text-lg" style={{ backgroundColor: mock.color + '20' }}>{mock.emoji}</div>
               <div>
@@ -256,8 +255,8 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
               </div>
             </div>
             <p className="text-xs text-gray-500 leading-relaxed mb-3">{mock.desc}</p>
-            <button className="w-full text-white text-xs font-semibold px-3 py-2 rounded" style={{ backgroundColor: mock.color }}>{mock.cta}</button>
-          </div>
+            <span className="block text-center w-full text-white text-xs font-semibold px-3 py-2 rounded" style={{ backgroundColor: mock.color }}>{mock.cta}</span>
+          </a>
         )}
       </div>
     )
@@ -294,14 +293,14 @@ export default function AdUnit({ size = 'inline', seed = 0, category, neighborho
                 </div>
               </a>
             ) : (
-              <div key={i} className="flex items-center gap-3 p-3">
+              <a key={i} href={HOUSE_HREF} className="flex items-center gap-3 p-3 hover:bg-orange-50 transition-colors">
                 <div className="w-8 h-8 rounded flex items-center justify-center shrink-0 text-lg" style={{ backgroundColor: mock.color + '20' }}>{mock.emoji}</div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-navy text-xs leading-tight">{mock.title}</p>
                   <p className="text-[11px] text-green-700 mb-0.5">{mock.url}</p>
                   <p className="text-[11px] text-gray-500 line-clamp-2">{mock.desc}</p>
                 </div>
-              </div>
+              </a>
             )
           })}
         </div>

@@ -3,6 +3,7 @@ import { preload } from 'react-dom'
 import LandingHome from '@/components/home/LandingHome'
 import { DEFAULT_HERO_SLIDES } from '@/lib/hero-slides'
 import { getHeroSlides } from '@/lib/site-settings.server'
+import { getHomeStats } from '@/lib/home-stats.server'
 
 export const metadata: Metadata = {
   title: '1000Click — Petites annonces francophones en Belgique',
@@ -11,10 +12,10 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const heroSlides = await getHeroSlides()
+  const [heroSlides, stats] = await Promise.all([getHeroSlides(), getHomeStats()])
   const first = (heroSlides[0] ?? DEFAULT_HERO_SLIDES[0]).src
 
   preload(first, { as: 'image', fetchPriority: 'high' })
 
-  return <LandingHome heroSlides={heroSlides} />
+  return <LandingHome heroSlides={heroSlides} stats={stats} />
 }

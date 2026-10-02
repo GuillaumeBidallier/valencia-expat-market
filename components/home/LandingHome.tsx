@@ -16,6 +16,7 @@ import { isVehicleCategory, FUEL } from '@/lib/vehicleAttributes'
 import { isRealEstateCategory } from '@/lib/realEstateAttributes'
 import type { Listing } from '@/types'
 import type { CategoryTree } from '@/types'
+import type { HomeStats } from '@/lib/home-stats.server'
 
 function formatSpecs(listing: Listing): string | null {
   const attrs = listing.attributes ?? {}
@@ -262,7 +263,18 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
 
 const HERO_SLIDE_DURATION = 6000
 
-export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }) {
+const fmt = (n: number) => n.toLocaleString('fr-BE')
+
+type Figure = { icon: typeof Tag; value: string; label: string; sub?: string }
+
+/** Keeps only the figures that exist — HomeStats nulls out the ones too small to show. */
+function figures(list: { icon: typeof Tag; value: number | null; label: string; sub?: string }[]): Figure[] {
+  return list.flatMap(f => (f.value === null ? [] : [{ ...f, value: fmt(f.value) }]))
+}
+
+const STAT_COLS: Record<number, string> = { 1: 'sm:grid-cols-1', 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-3', 4: 'sm:grid-cols-4' }
+
+export default function LandingHome({ heroSlides, stats }: { heroSlides?: HeroSlide[]; stats: HomeStats }) {
   const allCategories = useCategories()
   const categoryItems = allCategories.filter(c => !c.parentId)
 
@@ -320,7 +332,7 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
             href="/annonces?cat=vehicules"
             className="bg-indigo-primary text-white text-xs font-bold px-4 py-2.5 rounded-full hover:bg-indigo-dark transition-colors whitespace-nowrap"
           >
-            Parmi des milliers d&apos;annonces
+            Voir les annonces
           </Link>
         </div>
 
@@ -403,7 +415,7 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
               <div className="relative z-10 p-6">
                 <p className="text-indigo-200 text-[11px] font-black uppercase tracking-widest mb-2">Véhicules</p>
                 <p className="text-white text-2xl font-black leading-tight mb-2">Trouvez votre<br /><span className="text-indigo-300">véhicule idéal</span></p>
-                <p className="text-white/70 text-sm mb-4 max-w-xs">Voitures, motos, utilitaires et pièces détachées. Des milliers d&apos;annonces au meilleur prix.</p>
+                <p className="text-white/70 text-sm mb-4 max-w-xs">Voitures, motos, utilitaires et pièces détachées, entre particuliers et professionnels.</p>
                 <span className="inline-flex items-center gap-1.5 bg-indigo-primary text-white text-sm font-bold px-4 py-2.5 rounded-xl group-hover:bg-indigo-dark transition-colors">
                   Voir les véhicules →
                 </span>
@@ -411,9 +423,11 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
             </Link>
             <div className="bg-navy rounded-b-2xl px-6 sm:px-8 pl-14 py-4 flex items-center justify-between gap-3">
               {[
-                { icon: Repeat, value: '23k+', label: 'Véhicules disponibles' },
-                { icon: TrendingUp, value: '1k+', label: 'Nouvelles annonces / jour' },
-                { icon: ShieldCheck, value: '98%', label: 'Satisfaction client' },
+                ...figures([
+                  { icon: Repeat, value: stats.vehicles, label: 'Véhicules disponibles' },
+                  { icon: TrendingUp, value: stats.vehiclesThisWeek, label: 'Nouvelles cette semaine' },
+                ]),
+                { icon: ShieldCheck, value: 'Gratuit', label: 'Dépôt d’annonce' },
               ].map(s => (
                 <div key={s.label} className="flex items-center gap-2 min-w-0">
                   <s.icon size={16} className="text-indigo-300 shrink-0" />
@@ -451,9 +465,11 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
             </Link>
             <div className="bg-navy rounded-b-2xl px-6 sm:px-8 pr-14 py-4 flex items-center justify-between gap-3">
               {[
-                { icon: Repeat, value: '15k+', label: 'Biens disponibles' },
-                { icon: TrendingUp, value: '850+', label: 'Nouvelles annonces / jour' },
-                { icon: ShieldCheck, value: '97%', label: 'Utilisateurs satisfaits' },
+                ...figures([
+                  { icon: Repeat, value: stats.realEstate, label: 'Biens disponibles' },
+                  { icon: TrendingUp, value: stats.realEstateThisWeek, label: 'Nouvelles cette semaine' },
+                ]),
+                { icon: ShieldCheck, value: 'Gratuit', label: 'Dépôt d’annonce' },
               ].map(s => (
                 <div key={s.label} className="flex items-center gap-2 min-w-0">
                   <s.icon size={16} className="text-orange-300 shrink-0" />
@@ -502,26 +518,32 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
       {/* ── Grille compacte : autre style visuel, cards plus petites ─── */}
       <SmallListingsGrid categories={allCategories} />
 
-      {/* ── Bandeau chiffres clés ───────────────────────────────────── */}
-      <section className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-10">
-        <div className="bg-navy rounded-2xl px-6 sm:px-10 py-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
-          {[
-            { icon: Tag, value: '50k+', label: 'Annonces actives', sub: 'Trouvez ce que vous cherchez' },
-            { icon: Users, value: '20k+', label: 'Membres actifs', sub: 'Une communauté en croissance' },
-            { icon: MapPin, value: '50+', label: 'Villes couvertes', sub: 'Partout en Belgique' },
-            { icon: Handshake, value: '98%', label: 'Satisfaction', sub: 'Nos utilisateurs nous font confiance' },
-          ].map(stat => (
-            <div key={stat.label} className="flex items-center gap-3">
-              <stat.icon size={26} className="text-orange-primary shrink-0" />
-              <div>
-                <p className="text-2xl font-black text-white leading-none">{stat.value}</p>
-                <p className="text-sm font-bold text-white/90 mt-1">{stat.label}</p>
-                <p className="text-xs text-white/40 mt-0.5 hidden sm:block">{stat.sub}</p>
-              </div>
+      {/* ── Bandeau chiffres clés (vrais chiffres ; masqué tant qu'ils sont trop petits) ── */}
+      {(() => {
+        const band = figures([
+          { icon: Tag, value: stats.activeListings, label: 'Annonces actives', sub: 'Trouvez ce que vous cherchez' },
+          { icon: Users, value: stats.members, label: 'Membres inscrits', sub: 'Une communauté en croissance' },
+          { icon: MapPin, value: stats.cities, label: 'Villes représentées', sub: 'Partout en Belgique' },
+          { icon: Handshake, value: stats.professionals, label: 'Professionnels', sub: 'Inscrits sur 1000Click' },
+        ])
+        if (band.length === 0) return null
+        return (
+          <section className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-10">
+            <div className={`bg-navy rounded-2xl px-6 sm:px-10 py-8 grid grid-cols-2 ${STAT_COLS[band.length]} gap-8`}>
+              {band.map(stat => (
+                <div key={stat.label} className="flex items-center gap-3">
+                  <stat.icon size={26} className="text-orange-primary shrink-0" />
+                  <div>
+                    <p className="text-2xl font-black text-white leading-none">{stat.value}</p>
+                    <p className="text-sm font-bold text-white/90 mt-1">{stat.label}</p>
+                    <p className="text-xs text-white/40 mt-0.5 hidden sm:block">{stat.sub}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+        )
+      })()}
 
       {/* ── CTA finale : déposer une annonce ─────────────────────────── */}
       <section className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-14">
@@ -529,7 +551,7 @@ export default function LandingHome({ heroSlides }: { heroSlides?: HeroSlide[] }
           <div className="relative z-10 p-8 sm:p-10">
             <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-3">Prêt à publier votre annonce ?</h2>
             <p className="text-white/70 text-sm mb-6 max-w-sm">
-              Rejoignez des milliers d&apos;utilisateurs et vendez, louez ou trouvez rapidement ce dont vous avez besoin.
+              Le dépôt est gratuit : vendez, louez ou trouvez rapidement ce dont vous avez besoin.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
