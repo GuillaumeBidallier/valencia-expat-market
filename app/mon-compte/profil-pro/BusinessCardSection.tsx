@@ -36,7 +36,7 @@ export default function BusinessCardSection({ pro, cardSuccessParam }: Props) {
 
   const qrRef = useRef<HTMLDivElement>(null)
 
-  const baseUrl  = process.env.NEXT_PUBLIC_APP_URL ?? 'https://1000click.es'
+  const baseUrl  = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.1000click.com'
   const cardUrl  = `${baseUrl}/carte/${pro.slug}`
 
   const startCheckout = async (plan: Plan) => {

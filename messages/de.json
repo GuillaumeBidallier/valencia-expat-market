@@ -48,7 +48,6 @@
   },
   "Auth": {
     "login_title": "Anmelden",
-    "demo_hint": "Demo-Konto: demo@1000click.com / demo1234",
     "email": "E-Mail-Adresse",
     "password": "Passwort",
     "forgot": "Passwort vergessen?",

@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import { useTranslations } from 'next-intl'
+import VendoLogo from '@/components/layout/VendoLogo'
 
 export default function InscriptionPage() {
   const router = useRouter()
@@ -41,13 +42,8 @@ export default function InscriptionPage() {
   return (
     <div className="min-h-screen bg-orange-soft flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-8">
-        <div className="flex items-center gap-2.5 mb-6 justify-center">
-          <div className="w-9 h-9 bg-orange-primary rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-lg">V</span>
-          </div>
-          <div className="leading-tight">
-            <div className="text-navy font-bold text-lg tracking-wider uppercase">1000Click</div>
-          </div>
+        <div className="flex mb-6 justify-center">
+          <VendoLogo size="lg" />
         </div>
 
         <h1 className="text-xl font-bold text-navy mb-1 text-center">{t('register_title')}</h1>

@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import { useTranslations } from 'next-intl'
+import VendoLogo from '@/components/layout/VendoLogo'
 
 export default function ConnexionPage() {
   const { login } = useAuth()
@@ -32,22 +33,16 @@ export default function ConnexionPage() {
   return (
     <div className="min-h-screen bg-orange-soft flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-sm p-8">
-        <div className="flex items-center gap-2.5 mb-6 justify-center">
-          <div className="w-9 h-9 bg-orange-primary rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-lg">V</span>
-          </div>
-          <div className="leading-tight">
-            <div className="text-navy font-bold text-lg tracking-wider uppercase">1000Click</div>
-          </div>
+        <div className="flex mb-6 justify-center">
+          <VendoLogo size="lg" />
         </div>
 
         <h1 className="text-xl font-bold text-navy mb-1 text-center">{t('login_title')}</h1>
-        <p className="text-sm text-gray-400 mb-6 text-center">{t('demo_hint')}</p>
 
         {error && <div className="bg-red-50 text-red-600 text-sm rounded-lg px-4 py-2.5 mb-4">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input id="email" label={t('email')} type="email" placeholder="demo@1000click.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
+          <Input id="email" label={t('email')} type="email" placeholder="marie@exemple.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
           <Input id="password" label={t('password')} type="password" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
           <div className="text-right">
             <Link href="/mot-de-passe-oublie" className="text-xs text-orange-primary hover:underline">{t('forgot')}</Link>

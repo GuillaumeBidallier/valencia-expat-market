@@ -3,6 +3,7 @@ import { useState, useRef } from 'react'
 import { CheckCircle, ChevronLeft, ChevronRight, Loader2, Zap, Upload, X } from 'lucide-react'
 import { proCategories } from '@/lib/proCategories'
 import type { ProPlan } from '@/lib/stripe'
+import VendoLogo from '@/components/layout/VendoLogo'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -461,10 +462,8 @@ export default function OnboardingWizard() {
 
           {/* Logo */}
           <div className="flex items-center gap-2 mb-8 justify-center">
-            <div className="w-8 h-8 bg-orange-primary rounded-full flex items-center justify-center">
-              <span className="text-white font-black text-base">V</span>
-            </div>
-            <span className="text-navy font-black text-base tracking-wider uppercase">1000Click Pro</span>
+            <VendoLogo size="md" />
+            <span className="text-navy font-black text-base tracking-wider uppercase">Pro</span>
           </div>
 
           <ProgressBar step={step} />
