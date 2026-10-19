@@ -3,6 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { SITE_SETTINGS_TAG } from '@/lib/hero-slides'
+import { normalizeSocialUrl, normalizeWhatsapp } from '@/lib/social-links'
 
 const DEFAULT_SETTINGS = {
   id: 'default',
@@ -12,6 +13,9 @@ const DEFAULT_SETTINGS = {
   announcementEnabled: false,
   contactEmail: null,
   maintenanceMode: false,
+  facebookUrl: null,
+  instagramUrl: null,
+  whatsappNumber: null,
 }
 
 async function getSettings() {
@@ -41,6 +45,9 @@ export async function PUT(req: NextRequest) {
     announcementEnabled,
     contactEmail,
     maintenanceMode,
+    facebookUrl,
+    instagramUrl,
+    whatsappNumber,
   } = body
 
   const data: Record<string, unknown> = {}
@@ -50,6 +57,20 @@ export async function PUT(req: NextRequest) {
   if (typeof announcementEnabled === 'boolean') data.announcementEnabled = announcementEnabled
   if (contactEmail !== undefined) data.contactEmail = contactEmail || null
   if (typeof maintenanceMode === 'boolean') data.maintenanceMode = maintenanceMode
+
+  const social = [
+    ['facebookUrl', facebookUrl, normalizeSocialUrl, 'Le lien Facebook'],
+    ['instagramUrl', instagramUrl, normalizeSocialUrl, 'Le lien Instagram'],
+    ['whatsappNumber', whatsappNumber, normalizeWhatsapp, "Le numéro WhatsApp (avec l'indicatif du pays, par exemple +32)"],
+  ] as const
+  for (const [field, raw, normalize, label] of social) {
+    if (raw === undefined) continue
+    const value = normalize(raw)
+    if (value === 'invalid') {
+      return NextResponse.json({ error: `${label} n'est pas valide.` }, { status: 400 })
+    }
+    data[field] = value
+  }
 
   const settings = await prisma.siteSettings.upsert({
     where: { id: 'default' },

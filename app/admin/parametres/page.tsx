@@ -41,6 +41,9 @@ export default async function AdminParametresPage() {
           announcementEnabled: settings.announcementEnabled,
           contactEmail: settings.contactEmail ?? '',
           maintenanceMode: settings.maintenanceMode,
+          facebookUrl: settings.facebookUrl ?? '',
+          instagramUrl: settings.instagramUrl ?? '',
+          whatsappNumber: settings.whatsappNumber ?? '',
         }}
       />
     </div>

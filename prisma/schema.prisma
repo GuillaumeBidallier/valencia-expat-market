@@ -106,6 +106,9 @@ model SiteSettings {
   announcementEnabled Boolean @default(false)
   contactEmail        String?
   maintenanceMode     Boolean @default(false)
+  facebookUrl         String?
+  instagramUrl        String?
+  whatsappNumber      String?
 }
 
 model RateLimitHit {

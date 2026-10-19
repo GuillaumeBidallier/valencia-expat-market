@@ -250,6 +250,7 @@ export const TOUR_STEPS: TourStep[] = [
         <p>{b('Général')} : publication automatique et e-mail de contact.</p>
         <p>{b('Apparence')} : les images qui défilent en haut de la page d’accueil.</p>
         <p>{b('Bannière du site')} : un bandeau d’information en haut de toutes les pages.</p>
+        <p>{b('Réseaux sociaux')} : vos liens Facebook, Instagram et WhatsApp, en bas de toutes les pages.</p>
         <p>{b('Base de données')} : export et remises à zéro.</p>
       </>
     ),

@@ -5,7 +5,7 @@ import {
   Image as ImageIcon, Plus, Trash2, GripVertical, Save,
   Megaphone, Mail, ShieldAlert, CheckCircle2, AlertTriangle,
   Loader2, Upload, ExternalLink, Database, RotateCcw, Download,
-  Settings2, X, Info,
+  Settings2, X, Info, Share2,
 } from 'lucide-react'
 
 interface HeroSlide { src: string; alt: string }
@@ -17,6 +17,9 @@ interface InitialSettings {
   announcementEnabled: boolean
   contactEmail: string
   maintenanceMode: boolean
+  facebookUrl: string
+  instagramUrl: string
+  whatsappNumber: string
 }
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
@@ -64,6 +67,7 @@ const TABS = [
   { key: 'general',     label: 'Général',          icon: <Settings2 size={16} /> },
   { key: 'apparence',   label: 'Apparence',         icon: <ImageIcon size={16} /> },
   { key: 'annonce',     label: 'Bannière du site',  icon: <Megaphone size={16} /> },
+  { key: 'reseaux',     label: 'Réseaux sociaux',   icon: <Share2 size={16} /> },
   { key: 'maintenance', label: 'Maintenance',       icon: <ShieldAlert size={16} /> },
   { key: 'database',    label: 'Base de données',   icon: <Database size={16} /> },
 ] as const
@@ -79,6 +83,9 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
   const [announcementEnabled, setAnnouncementEnabled] = useState(initialSettings.announcementEnabled)
   const [contactEmail, setContactEmail]           = useState(initialSettings.contactEmail)
   const [maintenanceMode, setMaintenanceMode]     = useState(initialSettings.maintenanceMode)
+  const [facebookUrl, setFacebookUrl]             = useState(initialSettings.facebookUrl)
+  const [instagramUrl, setInstagramUrl]           = useState(initialSettings.instagramUrl)
+  const [whatsappNumber, setWhatsappNumber]       = useState(initialSettings.whatsappNumber)
 
   const [savedSettings, setSavedSettings] = useState(initialSettings)
 
@@ -116,8 +123,8 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
   }, [tabParam])
 
   const current = useMemo(
-    () => ({ autoPublish, heroImages, announcementText, announcementEnabled, contactEmail, maintenanceMode }),
-    [autoPublish, heroImages, announcementText, announcementEnabled, contactEmail, maintenanceMode],
+    () => ({ autoPublish, heroImages, announcementText, announcementEnabled, contactEmail, maintenanceMode, facebookUrl, instagramUrl, whatsappNumber }),
+    [autoPublish, heroImages, announcementText, announcementEnabled, contactEmail, maintenanceMode, facebookUrl, instagramUrl, whatsappNumber],
   )
   const isDirty = useMemo(() => JSON.stringify(current) !== JSON.stringify(savedSettings), [current, savedSettings])
 
@@ -234,11 +241,19 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(current),
         })
-        if (!res.ok) {
-          const j = await res.json()
-          throw new Error(j.error ?? 'Erreur')
+        const j = await res.json()
+        if (!res.ok) throw new Error(j.error ?? 'Erreur')
+        // The API normalises the social links (adds https://, keeps the phone digits): show what was stored.
+        const stored = {
+          ...current,
+          facebookUrl: j.facebookUrl ?? '',
+          instagramUrl: j.instagramUrl ?? '',
+          whatsappNumber: j.whatsappNumber ?? '',
         }
-        setSavedSettings(current)
+        setFacebookUrl(stored.facebookUrl)
+        setInstagramUrl(stored.instagramUrl)
+        setWhatsappNumber(stored.whatsappNumber)
+        setSavedSettings(stored)
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
       } catch (err) {
@@ -466,6 +481,38 @@ export default function SettingsClient({ initialSettings }: { initialSettings: I
                 </p>
               </div>
             </div>
+          </SectionCard>
+        )}
+
+        {/* ── Réseaux sociaux ─────────────────────────────────────── */}
+        {activeTab === 'reseaux' && (
+          <SectionCard
+            icon={<Share2 size={18} />} iconBg="bg-orange-soft" iconColor="text-orange-primary"
+            title="Réseaux sociaux"
+            sub="Les icônes en bas de toutes les pages du site. Un champ vide masque l'icône correspondante."
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {([
+                { id: 'facebookUrl', label: 'Page Facebook', placeholder: 'https://www.facebook.com/votrepage', value: facebookUrl, set: setFacebookUrl, type: 'url', help: "L'adresse de votre page, copiée depuis le navigateur." },
+                { id: 'instagramUrl', label: 'Compte Instagram', placeholder: 'https://www.instagram.com/votrecompte', value: instagramUrl, set: setInstagramUrl, type: 'url', help: "L'adresse de votre profil Instagram." },
+                { id: 'whatsappNumber', label: 'Numéro WhatsApp', placeholder: '+32 470 12 34 56', value: whatsappNumber, set: setWhatsappNumber, type: 'tel', help: 'Avec l’indicatif du pays (+32). Un clic ouvre une conversation avec ce numéro.' },
+              ] as const).map(f => (
+                <div key={f.id} className="flex flex-col gap-1.5">
+                  <label htmlFor={f.id} className="text-sm font-bold text-navy">{f.label}</label>
+                  <input
+                    id={f.id}
+                    type={f.type}
+                    inputMode={f.type === 'tel' ? 'tel' : 'url'}
+                    placeholder={f.placeholder}
+                    value={f.value}
+                    onChange={e => f.set(e.target.value)}
+                    className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-primary/30 focus:border-indigo-primary"
+                  />
+                  <p className="text-xs text-gray-400">{f.help}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 text-xs text-gray-500">Pensez à cliquer sur <b>Sauvegarder</b> en haut : le bas de page du site est mis à jour aussitôt.</p>
           </SectionCard>
         )}
 

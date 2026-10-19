@@ -13,7 +13,7 @@ import { LocaleProvider, type SupportedLocale } from '@/components/providers/Loc
 import CookieBanner from '@/components/CookieBanner'
 import ConsentScripts from '@/components/ConsentScripts'
 import { getLocale } from 'next-intl/server'
-import { getAnnouncement } from '@/lib/site-settings.server'
+import { getAnnouncement, getSocialLinks } from '@/lib/site-settings.server'
 
 const inter = Inter({ subsets: ['latin'] })
 const nunito = Nunito({
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
-  const announcement = await getAnnouncement()
+  const [announcement, socialLinks] = await Promise.all([getAnnouncement(), getSocialLinks()])
 
   return (
     <html lang={locale}>
@@ -68,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   {announcement && <AnnouncementBanner text={announcement.text} />}
                   <ConditionalNavbar />
                   <ConditionalMain>{children}</ConditionalMain>
-                  <ConditionalFooter />
+                  <ConditionalFooter socialLinks={socialLinks} />
                 </PageThemeProvider>
               </ListingsProvider>
             </AuthProvider>

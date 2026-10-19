@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { isHeroSlide, SITE_SETTINGS_TAG, type HeroSlide } from '@/lib/hero-slides'
+import { NO_SOCIAL_LINKS, whatsappHref, type SocialLinks } from '@/lib/social-links'
 
 export interface Announcement {
   text: string
@@ -61,5 +62,33 @@ export async function getAnnouncement(): Promise<Announcement | null> {
     return await fetchAnnouncement()
   } catch {
     return null
+  }
+}
+
+const fetchSocialLinks = unstable_cache(
+  async (): Promise<SocialLinks> => {
+    const settings = await prisma.siteSettings.findUnique({
+      where: { id: 'default' },
+      select: { facebookUrl: true, instagramUrl: true, whatsappNumber: true },
+    })
+    return {
+      facebook: settings?.facebookUrl || null,
+      instagram: settings?.instagramUrl || null,
+      whatsapp: settings?.whatsappNumber ? whatsappHref(settings.whatsappNumber) : null,
+    }
+  },
+  ['social-links'],
+  { revalidate: 60, tags: [SITE_SETTINGS_TAG] }
+)
+
+/**
+ * Footer social links configured in /admin/parametres. Unset or unreadable
+ * links come back null and their icon is not shown. Server only.
+ */
+export async function getSocialLinks(): Promise<SocialLinks> {
+  try {
+    return await fetchSocialLinks()
+  } catch {
+    return NO_SOCIAL_LINKS
   }
 }
