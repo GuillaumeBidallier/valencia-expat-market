@@ -6,6 +6,8 @@ import { z } from 'zod'
 import { headers } from 'next/headers'
 import { authConfig } from './auth.config'
 
+const USER_RECHECK_MS = 5 * 60 * 1000
+
 const credentialsSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
@@ -41,10 +43,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     ...authConfig.callbacks,
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id
         token.role = (user as { role?: string }).role
+        token.checkedAt = Date.now()
+        return token
+      }
+      // A JWT outlives its account: re-check every few minutes that the user still
+      // exists and isn't blocked. Returning null makes Auth.js clear the session
+      // cookie, instead of letting writes fail on a dangling user id.
+      if (token.id && Date.now() - ((token.checkedAt as number | undefined) ?? 0) > USER_RECHECK_MS) {
+        const current = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { blocked: true, role: true },
+        })
+        if (!current || current.blocked) return null
+        token.role = current.role
+        token.checkedAt = Date.now()
       }
       return token
     },
