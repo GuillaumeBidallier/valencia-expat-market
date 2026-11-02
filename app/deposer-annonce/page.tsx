@@ -59,6 +59,7 @@ function DeposerAnnonceForm() {
   const [uploadError, setUploadError] = useState('')
   const [errors, setErrors]         = useState<Record<string, string>>({})
   const [firewallError, setFirewallError] = useState<{ category: string; message: string } | null>(null)
+  const [submitError, setSubmitError] = useState('')
 
   // Check for existing active upgrade on mount
   useEffect(() => {
@@ -164,6 +165,8 @@ function DeposerAnnonceForm() {
   const validate = () => {
     const e: Record<string, string> = {}
     if (!form.title.trim())    e.title        = t('err_title')
+    else if (form.title.trim().length < 3) e.title = t('err_title_short')
+    if (form.description.trim().length < 10) e.description = t('err_description')
     if (!form.categorySlug)    e.categorySlug = t('err_category')
     if (!location)             e.neighborhood = t('err_location')
     setErrors(e)
@@ -175,6 +178,7 @@ function DeposerAnnonceForm() {
     if (!validate() || !location) return
     setLoading(true)
     setFirewallError(null)
+    setSubmitError('')
     try {
       const { id, pendingReview } = await addListing({
         title:        form.title,
@@ -207,6 +211,7 @@ function DeposerAnnonceForm() {
         setFirewallError({ category: e.category ?? 'Contenu interdit', message: e.message })
       } else {
         console.error('Erreur lors de la publication', err)
+        setSubmitError(t('err_submit'))
       }
       setLoading(false)
     }
@@ -276,6 +281,7 @@ function DeposerAnnonceForm() {
               placeholder={t('p_description')}
               className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-primary transition resize-none"
             />
+            {errors.description && <p className="text-xs text-red-500">{errors.description}</p>}
           </div>
         </div>
 
@@ -399,6 +405,10 @@ function DeposerAnnonceForm() {
               <p className="text-xs text-red-400 mt-2">{t('blocked_hint')}</p>
             </div>
           </div>
+        )}
+
+        {submitError && (
+          <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{submitError}</p>
         )}
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
