@@ -12,10 +12,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Email requis' }, { status: 400 })
   }
 
-  // Always return 200 to avoid user enumeration
   const siteId = await getCurrentSiteId()
   const user = await prisma.user.findFirst({ where: { email: email.toLowerCase().trim(), siteId } })
-  if (!user) return NextResponse.json({ ok: true })
+  if (!user) return NextResponse.json({ error: 'unknown_email' }, { status: 404 })
 
   // Invalidate old tokens for this user
   await prisma.passwordResetToken.updateMany({

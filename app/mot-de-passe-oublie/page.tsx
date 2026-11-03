@@ -17,11 +17,19 @@ export default function ForgotPasswordPage() {
     setLoading(true)
     setError('')
     try {
-      await fetch('/api/auth/forgot-password', {
+      const res = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim() }),
       })
+      if (res.status === 404) {
+        setError('Aucun compte n\'existe avec cette adresse e-mail. Vérifiez l\'adresse saisie ou créez un compte.')
+        return
+      }
+      if (!res.ok) {
+        setError('Une erreur est survenue. Réessayez.')
+        return
+      }
       setSent(true)
     } catch {
       setError('Impossible de contacter le serveur. Réessayez.')
@@ -45,7 +53,7 @@ export default function ForgotPasswordPage() {
             </div>
             <h1 className="text-xl font-black text-navy mb-3">Email envoyé !</h1>
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
-              Si un compte existe avec l&apos;adresse <strong className="text-navy">{email}</strong>, vous allez recevoir un email avec un lien de réinitialisation dans les prochaines minutes.
+              Un email a été envoyé à <strong className="text-navy">{email}</strong>. Vous allez recevoir un email avec un lien de réinitialisation dans les prochaines minutes.
             </p>
             <p className="text-xs text-gray-400 mb-6">Pensez à vérifier vos spams.</p>
             <Link href="/connexion" className="inline-block text-sm font-semibold text-orange-primary hover:underline">
@@ -62,7 +70,14 @@ export default function ForgotPasswordPage() {
               Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.
             </p>
 
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            {error && (
+              <p role="alert" className="text-red-500 text-sm mb-4">
+                {error}
+                {error.startsWith('Aucun compte') && (
+                  <> <Link href="/inscription" className="font-semibold underline">Créer un compte</Link></>
+                )}
+              </p>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
