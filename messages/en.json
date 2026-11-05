@@ -111,6 +111,8 @@
     "err_title_short": "Title must be at least 3 characters",
     "err_description": "Description is required (at least 10 characters)",
     "err_submit": "Publishing failed. Check the fields and try again.",
+    "err_photos": "Your listing is published, but {count} photo(s) could not be uploaded. Open the listing to add them.",
+    "view_listing": "View my listing",
     "err_category": "Please choose a category",
     "err_location": "Please enter and select a neighbourhood or city",
     "files_rejected": "{count} file(s) skipped — JPG/PNG/WebP, max 5 MB.",

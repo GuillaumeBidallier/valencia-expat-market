@@ -111,6 +111,8 @@
     "err_title_short": "Le titre doit faire au moins 3 caractères",
     "err_description": "La description est obligatoire (10 caractères minimum)",
     "err_submit": "La publication a échoué. Vérifiez les champs et réessayez.",
+    "err_photos": "Votre annonce est publiée, mais {count} photo(s) n'ont pas pu être envoyées. Ouvrez l'annonce pour les ajouter.",
+    "view_listing": "Voir mon annonce",
     "err_category": "Choisissez une catégorie",
     "err_location": "Saisissez et sélectionnez un quartier ou une ville",
     "files_rejected": "{count} fichier(s) ignoré(s) — JPG/PNG/WebP, max 5 Mo.",

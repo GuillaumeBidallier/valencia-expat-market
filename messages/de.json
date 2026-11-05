@@ -111,6 +111,8 @@
     "err_title_short": "Der Titel muss mindestens 3 Zeichen haben",
     "err_description": "Beschreibung ist erforderlich (mindestens 10 Zeichen)",
     "err_submit": "Veröffentlichung fehlgeschlagen. Prüfe die Felder und versuche es erneut.",
+    "err_photos": "Ihre Anzeige ist veröffentlicht, aber {count} Foto(s) konnten nicht hochgeladen werden. Öffnen Sie die Anzeige, um sie hinzuzufügen.",
+    "view_listing": "Meine Anzeige ansehen",
     "err_category": "Wähle eine Kategorie",
     "err_location": "Stadtteil oder Stadt eingeben und auswählen",
     "files_rejected": "{count} Datei(en) übersprungen — JPG/PNG/WebP, max. 5 MB.",

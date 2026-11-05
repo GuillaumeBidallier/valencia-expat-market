@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ImagePlus, X, ArrowLeft, Loader2 } from 'lucide-react'
+import { compressImage } from '@/lib/compress-image'
 import { neighborhoods } from '@/lib/neighborhoods'
 import CategoryPicker from '@/components/ui/CategoryPicker'
 import VehicleAttributesFields from '@/components/listings/VehicleAttributesFields'
@@ -129,9 +130,18 @@ export default function EditListingClient({ listing }: Props) {
 
       // 3 — Upload new images
       if (newFiles.length > 0) {
-        const fd = new FormData()
-        newFiles.forEach(f => fd.append('files', f))
-        await fetch(`/api/listings/${listing.id}/images`, { method: 'POST', body: fd })
+        let failed = 0
+        for (const f of newFiles) {
+          const fd = new FormData()
+          fd.append('files', await compressImage(f))
+          const res = await fetch(`/api/listings/${listing.id}/images`, { method: 'POST', body: fd }).catch(() => null)
+          if (!res?.ok) failed++
+        }
+        if (failed > 0) {
+          setUploadError(`${failed} photo(s) n'ont pas pu être envoyées. Réessayez avec des photos plus légères.`)
+          setSaving(false)
+          return
+        }
       }
 
       router.push(`/annonces/${listing.id}`)

@@ -111,6 +111,8 @@
     "err_title_short": "De titel moet minstens 3 tekens bevatten",
     "err_description": "Beschrijving is verplicht (minstens 10 tekens)",
     "err_submit": "Publiceren mislukt. Controleer de velden en probeer opnieuw.",
+    "err_photos": "Je advertentie is geplaatst, maar {count} foto('s) konden niet worden geüpload. Open de advertentie om ze toe te voegen.",
+    "view_listing": "Mijn advertentie bekijken",
     "err_category": "Kies een categorie",
     "err_location": "Voer een wijk of stad in en selecteer deze",
     "files_rejected": "{count} bestand(en) overgeslagen — JPG/PNG/WebP, max. 5 MB.",

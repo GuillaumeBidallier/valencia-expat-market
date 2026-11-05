@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button'
 import CategoryPicker from '@/components/ui/CategoryPicker'
 import VehicleAttributesFields from '@/components/listings/VehicleAttributesFields'
 import CityAutocomplete, { type CitySelection } from '@/components/listings/CityAutocomplete'
+import { compressImage } from '@/lib/compress-image'
 import { FREE_MAX_PHOTOS, UPGRADED_MAX_PHOTOS, VIP_UNLIMITED_PHOTOS } from '@/lib/stripe'
 import { isRealEstateCategory } from '@/lib/realEstateAttributes'
 import { isVehicleCategory } from '@/lib/vehicleAttributes'
@@ -60,6 +61,7 @@ function DeposerAnnonceForm() {
   const [errors, setErrors]         = useState<Record<string, string>>({})
   const [firewallError, setFirewallError] = useState<{ category: string; message: string } | null>(null)
   const [submitError, setSubmitError] = useState('')
+  const [createdId, setCreatedId] = useState<string | null>(null)
 
   // Check for existing active upgrade on mount
   useEffect(() => {
@@ -193,10 +195,22 @@ function DeposerAnnonceForm() {
       })
 
       if (files.length > 0) {
-        const fd = new FormData()
-        files.forEach(f => fd.append('files', f))
-        const res = await fetch(`/api/listings/${id}/images`, { method: 'POST', body: fd })
-        if (!res.ok) console.error('Upload images failed', await res.text())
+        let failed = 0
+        for (const f of files) {
+          const fd = new FormData()
+          fd.append('files', await compressImage(f))
+          const res = await fetch(`/api/listings/${id}/images`, { method: 'POST', body: fd }).catch(() => null)
+          if (!res?.ok) {
+            failed++
+            console.error('Upload images failed', res ? await res.text() : 'network error')
+          }
+        }
+        if (failed > 0) {
+          setCreatedId(id)
+          setSubmitError(t('err_photos', { count: failed }))
+          setLoading(false)
+          return
+        }
       }
 
       // Consume the upgrade token after successful submission
@@ -411,9 +425,15 @@ function DeposerAnnonceForm() {
           <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{submitError}</p>
         )}
 
-        <Button type="submit" size="lg" className="w-full" disabled={loading}>
-          {loading ? t('submitting') : t('submit')}
-        </Button>
+        {createdId ? (
+          <a href={`/annonces/${createdId}`} className="block w-full text-center rounded-xl bg-navy text-white font-semibold px-4 py-3">
+            {t('view_listing')}
+          </a>
+        ) : (
+          <Button type="submit" size="lg" className="w-full" disabled={loading}>
+            {loading ? t('submitting') : t('submit')}
+          </Button>
+        )}
       </form>
     </div>
   )

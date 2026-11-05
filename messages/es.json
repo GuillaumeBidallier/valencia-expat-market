@@ -111,6 +111,8 @@
     "err_title_short": "El título debe tener al menos 3 caracteres",
     "err_description": "La descripción es obligatoria (mínimo 10 caracteres)",
     "err_submit": "No se pudo publicar. Revisa los campos e inténtalo de nuevo.",
+    "err_photos": "Tu anuncio está publicado, pero {count} foto(s) no se pudieron subir. Abre el anuncio para añadirlas.",
+    "view_listing": "Ver mi anuncio",
     "err_category": "Elige una categoría",
     "err_location": "Introduce y selecciona un barrio o ciudad",
     "files_rejected": "{count} archivo(s) ignorado(s) — JPG/PNG/WebP, máx. 5 MB.",
