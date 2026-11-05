@@ -16,10 +16,14 @@ export async function GET(req: NextRequest) {
 
   const tiers: ('PREMIUM_PLUS' | 'VIP')[] = tierFilter === 'VIP' ? ['VIP'] : ['PREMIUM_PLUS', 'VIP']
   const baseOrder = [{ tier: 'desc' as const }, { featured: 'desc' as const }, { name: 'asc' as const }]
+  const now = new Date()
+  // A tier counts if it is paid (active Stripe subscription) or gifted by the admin and not yet expired.
   const activeFilter = {
     tier: { in: tiers },
-    subscriptionStatus: 'active',
-    subscriptionCurrentPeriodEnd: { gt: new Date() },
+    OR: [
+      { subscriptionStatus: 'active', subscriptionCurrentPeriodEnd: { gt: now } },
+      { giftTierExpiresAt: { gt: now } },
+    ],
   }
 
   // 1. Pros avec zone correspondant au quartier de l'annonce (Géo Pub)
