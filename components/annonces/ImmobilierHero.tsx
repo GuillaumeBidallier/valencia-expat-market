@@ -82,9 +82,13 @@ export default function ImmobilierHero({ subcategories, currentCat }: { subcateg
         </div>
       </div>
 
-      {/* Sous-catégories — équi-réparties sur toute la largeur, comme la page Véhicules */}
+      {/* Sous-catégories — défilement horizontal sous 1024 px (les libellés ne tiennent pas à 8 colonnes),
+          équi-réparties sur toute la largeur au-dessus */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
-        <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${subcategories.length}, minmax(0, 1fr))` }}>
+        <div
+          className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:overflow-visible lg:pb-0 lg:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]"
+          style={{ '--cols': subcategories.length } as React.CSSProperties}
+        >
           {subcategories.map(sub => {
             const Icon = SUB_ICONS[sub.slug] ?? Home
             const isActive = sub.slug === currentCat
@@ -92,7 +96,7 @@ export default function ImmobilierHero({ subcategories, currentCat }: { subcateg
               <Link
                 key={sub.slug}
                 href={`/annonces?cat=${sub.slug}`}
-                className={`flex flex-col items-center gap-2 px-3 py-4 rounded-xl border transition-colors ${
+                className={`flex flex-col items-center gap-2 px-2 lg:px-3 py-4 rounded-xl border transition-colors w-[100px] shrink-0 lg:w-auto lg:shrink ${
                   isActive
                     ? 'bg-white border-orange-primary'
                     : 'bg-white border-gray-200 hover:border-orange-primary/40'
