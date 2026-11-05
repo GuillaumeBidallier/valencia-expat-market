@@ -374,7 +374,7 @@ export default function LandingHome({ heroSlides, stats }: { heroSlides?: HeroSl
       {/* ── Icônes catégories : chevauche le bas du hero ─────────────── */}
       <section className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 -mt-[52px] pb-6">
         <div
-          className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-[repeat(var(--cat-count),minmax(0,1fr))] gap-3"
+          className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:overflow-visible lg:pb-0 lg:grid-cols-[repeat(var(--cat-count),minmax(0,1fr))]"
           style={{ '--cat-count': categoryItems.length } as React.CSSProperties}
         >
           {categoryItems.map(cat => {
@@ -383,7 +383,7 @@ export default function LandingHome({ heroSlides, stats }: { heroSlides?: HeroSl
               <Link
                 key={cat.slug}
                 href={`/annonces?cat=${cat.slug}`}
-                className="flex flex-col items-center gap-2 py-4 px-2 bg-white border border-gray-100 rounded-xl hover:border-indigo-primary/40 hover:shadow-sm transition-all group"
+                className="flex flex-col items-center gap-2 py-4 px-2 w-[100px] shrink-0 lg:w-auto lg:shrink bg-white border border-gray-100 rounded-xl hover:border-indigo-primary/40 hover:shadow-sm transition-all group"
               >
                 <div className="w-10 h-10 rounded-full bg-indigo-soft flex items-center justify-center group-hover:bg-indigo-primary transition-colors">
                   {Icon
