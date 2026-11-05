@@ -44,6 +44,11 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   const parsed = updateSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides' }, { status: 400 })
 
+  // Moderation is the admin's call: an owner must not be able to put back a refused or pending listing
+  if (parsed.data.status && (listing.status === 'REJECTED' || listing.status === 'PENDING')) {
+    return NextResponse.json({ error: 'Annonce en cours de modération' }, { status: 403 })
+  }
+
   // Re-run firewall if title or description changed
   if (parsed.data.title !== undefined || parsed.data.description !== undefined) {
     const newTitle       = parsed.data.title       ?? listing.title

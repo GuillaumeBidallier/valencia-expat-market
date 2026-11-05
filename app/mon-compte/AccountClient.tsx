@@ -256,7 +256,7 @@ export default function AccountClient({ user, initialListings, initialFavorites,
                 <button onClick={() => handleStatusChange(listing.id, 'SOLD')} disabled={isLoading} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-emerald-600 px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 transition-colors disabled:opacity-40">
                   <CheckCircle2 size={12} /> Marquer vendu
                 </button>
-              ) : (
+              ) : !['REJECTED', 'PENDING'].includes(listing.status) && (
                 <button onClick={() => handleStatusChange(listing.id, 'ACTIVE')} disabled={isLoading} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-600 px-2.5 py-1.5 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-40">
                   <RefreshCcw size={12} /> Remettre en ligne
                 </button>
