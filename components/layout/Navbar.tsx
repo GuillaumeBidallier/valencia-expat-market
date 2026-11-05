@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
-import { Menu, X, ChevronDown, Plus, MessageSquare, ShieldCheck, Search } from 'lucide-react'
+import { Menu, X, ChevronDown, Plus, MessageSquare, ShieldCheck, Search, LogOut } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import VendoLogo from '@/components/layout/VendoLogo'
@@ -253,6 +253,17 @@ export default function Navbar() {
                 >
                   {(user?.name ?? 'M').charAt(0).toUpperCase()}
                 </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  aria-label={t('logout')}
+                  title={t('logout')}
+                  className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+                    light ? 'text-white/90 hover:bg-white/10' : 'text-gray-500 hover:bg-gray-100'
+                  }`}
+                >
+                  <LogOut size={17} aria-hidden="true" />
+                </button>
               </>
             ) : (
               <>
@@ -336,6 +347,13 @@ export default function Navbar() {
                 </Link>
               )}
               <Link href="/deposer-annonce" onClick={() => setMenuOpen(false)} className={`text-white px-4 py-2.5 rounded-lg font-bold text-sm text-center ${vehiculesTheme ? "bg-red-600" : "bg-orange-primary"}`}>{t('postAd')}</Link>
+              <button
+                type="button"
+                onClick={() => { setMenuOpen(false); logout() }}
+                className="flex items-center justify-center gap-2 border border-gray-300 text-navy px-4 py-2.5 rounded-lg font-semibold text-sm"
+              >
+                <LogOut size={15} aria-hidden="true" /> {t('logout')}
+              </button>
             </>
           ) : (
             <>

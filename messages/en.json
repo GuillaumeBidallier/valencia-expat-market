@@ -7,6 +7,7 @@
     "login": "Log in",
     "messages": "Messages",
     "account": "My account",
+    "logout": "Log out",
     "admin": "Admin"
   },
   "Hero": {

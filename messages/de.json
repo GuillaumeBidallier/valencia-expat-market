@@ -7,6 +7,7 @@
     "login": "Anmelden",
     "messages": "Nachrichten",
     "account": "Mein Konto",
+    "logout": "Abmelden",
     "admin": "Admin"
   },
   "Hero": {
